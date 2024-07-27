@@ -26,3 +26,8 @@ code {
   --my-brand-color: #fecf0a;
   --amber-9: var(--my-brand-color);
 }
+
+.blur-filter-8 {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}

@@ -10,7 +10,7 @@ const NavigationMenu = () => {
   return (
     <Box style={{ position: "fixed", bottom: "0", width: "100%" }}>
       <Flex justify="center" m="4">
-        <Card>
+        <Card className="blur-filter-8" variant="surface">
           <Flex gap="3" align="center">
             {routes.map((route, i) => 
             <>

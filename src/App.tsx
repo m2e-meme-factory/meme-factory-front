@@ -8,6 +8,8 @@ import VerifyForm from "./pages/VerifyForm";
 import Profile from "./pages/Profile";
 import BasePageWrapper from "./components/BasePageWrapper";
 import { routes } from "./pages/router";
+import ProjectsPage from "./pages/TasksPage/TasksPage";
+import TasksPage from "./pages/TasksPage/TasksPage";
 
 function App() {
   const { webApp } = useTelegram();
@@ -29,7 +31,7 @@ function App() {
                 </BasePageWrapper>
               } />)}
             <Route path="/verify" element={<VerifyForm />} />
-            {/* <Route
+              <Route
               path="/profile"
               element={
                 <BasePageWrapper>
@@ -37,14 +39,14 @@ function App() {
                 </BasePageWrapper>
               }
             />
-            <Route
-              path="/tasks"
-              element={
-                <BasePageWrapper>
-                  <Heading m="4">Tasks Page</Heading>
-                </BasePageWrapper>
-              }
-            />
+              <Route
+                  path="/tasks"
+                  element={
+                      <BasePageWrapper>
+                          <TasksPage/>
+                      </BasePageWrapper>
+                  }
+              />
             <Route
               path="/about"
               element={
@@ -52,7 +54,7 @@ function App() {
                   <Heading m="4">About</Heading>
                 </BasePageWrapper>
               }
-            /> */}
+            />
           </Routes>
         </BrowserRouter>
         {/* <DriverForm /> */}

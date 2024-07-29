@@ -27,20 +27,11 @@ export const task: Task = {
     authorId: 123,
     title: "Design a Landing Page",
     description: `
-    # Design a Landing Page
-
-    We need a designer to create a visually appealing and user-friendly landing page for our new product.
-
-    ## Requirements
+    Requirements
     - Use the company's color palette
     - Include a call-to-action button
     - Showcase the product features with icons and images
     - Design should be responsive and mobile-friendly
-
-    ## Deliverables
-    - High-fidelity mockups in Figma
-    - Exported assets (images, icons)
-    - Style guide document
     `,
     bannerUrl: 'https://example.com/path-to-banner-image.jpg',
     files: [

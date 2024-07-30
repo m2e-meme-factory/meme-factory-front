@@ -1,6 +1,6 @@
 import { Box, Button, Card, Flex, Separator } from '@radix-ui/themes';
 import { Link, useLocation } from 'react-router-dom';
-import { routes } from '../../pages/router';
+import { navigationRoutes } from '../consts/navigationRoutes';
 
 
 
@@ -12,35 +12,18 @@ const NavigationMenu = () => {
       <Flex justify="center" m="4">
         <Card className="blur-filter-8" variant="surface">
           <Flex gap="3" align="center">
-            {routes.map((route, i) => 
+            {navigationRoutes.map((route, i) =>
             <>
                   <Link to={route.path}>
                   <Button size="3" variant={location.pathname == route.path ? "solid" : "outline"}>
                     {route.title}
                   </Button>
                 </Link>
-                {i != routes.length - 1 && 
+                {i != navigationRoutes.length - 1 &&
                   <Separator size="2" orientation="vertical" />
                 }
             </>
             )}
-            {/* <Link to={"/tasks"}>
-              <Button size="3" variant="outline">
-                Tasks
-              </Button>
-            </Link>
-            <Separator size="2" orientation="vertical" />
-
-            <Link to={"/profile"}>
-              <Button size="3">ProfilePage</Button>
-            </Link>
-            <Separator size="2" orientation="vertical" />
-
-            <Link to={"/about"}>
-              <Button size="3" variant="outline">
-                About
-              </Button>
-            </Link> */}
           </Flex>
         </Card>
       </Flex>

@@ -1,5 +1,5 @@
 import About from "./About";
-import Profile from "./Profile";
+import ProfilePage from "./ProfilePage/ProfilePage";
 import Tasks from "./Tasks";
 import TasksPage from "./TasksPage/TasksPage";
 
@@ -8,7 +8,7 @@ export const routes = [
     {
         title: "Profile",
         path: "/profile",
-        component: Profile
+        component: ProfilePage
     },
     {
         title: "Tasks",

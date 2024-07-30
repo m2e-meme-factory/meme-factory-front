@@ -4,7 +4,7 @@ import { TelegramProvider, useTelegram } from "./hooks/useTelegram";
 import { Heading, Theme } from "@radix-ui/themes";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import VerifyForm from "./pages/VerifyForm";
-import Profile from "./pages/Profile";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import BasePageWrapper from "./components/BasePageWrapper";
 import { routes } from "./pages/router";
 import TasksPage from "./pages/TasksPage/TasksPage";
@@ -40,7 +40,7 @@ function App() {
                             path="/profile"
                             element={
                                 <BasePageWrapper>
-                                    <Profile />
+                                    <ProfilePage />
                                 </BasePageWrapper>
                             }
                         />

@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import {Avatar, Badge, Button, Card, Em, Flex, Heading, Text} from "@radix-ui/themes";
 import { task } from '../../consts/task-example';
-import {DollarOutlined, TagsOutlined, TeamOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import {
+    DollarOutlined,
+    FileOutlined,
+    PushpinOutlined,
+    TagsOutlined,
+    TeamOutlined,
+    UnorderedListOutlined
+} from "@ant-design/icons";
 import styles from './TaskPage.module.css';
 import { shortenDescription } from "../../utils/shortenDescription";
 import avatarFallback from '../../imgs/avatar-fallback.svg';
+import TaskCard from "../TasksPage/components/TaskCard/TaskCard";
+import AttachmentCard from "./components/AttachmentCard/AttachmentCard";
+import SubtaskCard from "./components/SubtaskCard/SubtaskCard";
 
 const IMAGE_URL = 'https://cdna.artstation.com/p/assets/images/images/012/308/904/large/divya-jain-firewatch-dhj.jpg?1534140299';
 
@@ -59,11 +69,19 @@ const TaskPage = () => {
                             </Flex>
                         </Card>
                     </Flex>
-                    <Flex direction='column'>
+                    <Flex direction='column' mb='5'>
                         <Flex align='center' mb='2'>
                             <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }}/>
                             <Text weight="medium" size='5'>Subtasks</Text>
                         </Flex>
+                        <SubtaskCard id={task.id} description={task.description} price={typeof task.price !== "number" ? task.price.min : task.price} title={task.title}/>
+                    </Flex>
+                    <Flex direction="column">
+                        <Flex align='center' mb='2'>
+                            <PushpinOutlined style={{ color: 'yellow', marginRight: '8px' }}/>
+                            <Text weight="medium" size='5'>Attachments</Text>
+                        </Flex>
+                        {task.files && task.files.map((file, index) => (<AttachmentCard name={file.filename} url={file.url}/>))}
                     </Flex>
                 </Flex>
             </Flex>

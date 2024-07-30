@@ -1,5 +1,5 @@
 import {Flex, Heading, Text} from "@radix-ui/themes";
-import {task} from "../../../consts/task-example"
+import {task} from "../../../../consts/task-example"
 import styled from "styled-components";
 import {DollarOutlined, TagsOutlined} from "@ant-design/icons";
 import React from "react";
@@ -15,21 +15,21 @@ const TaskContentText = styled(Text)`
 
 const TaskContent = () => {
     return (<Flex direction="column" m="4">
-        <TaskContentHeading>{task.title}</TaskContentHeading>
-        <TaskContentText color="gray" weight="medium">{task.category}</TaskContentText>
-        <Flex>
-            <TagsOutlined style={{color: 'black', marginRight: '8px'}} />
-            <TaskContentText weight="medium">
+        <Heading>{task.title}</Heading>
+        <Text mb='3' color="yellow" weight="medium">{task.category}</Text>
+        <Flex mb='3'>
+            <TagsOutlined style={{color: 'yellow', marginRight: '8px'}}/>
+            <Text weight="medium">
                 Tags: {task.tags.map((tag, index) => (
                 <span key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
                         {tag}
                     </span>
             ))}
-            </TaskContentText>
+            </Text>
         </Flex>
         <Flex>
-            <DollarOutlined style={{color: 'black', marginRight: '8px'}}/>
-            <TaskContentText weight="medium" >Price: 1000</TaskContentText>
+            <DollarOutlined style={{color: 'yellow', marginRight: '8px'}} />
+            <Text weight="medium" >Price: 1000$</Text>
         </Flex>
     </Flex>)
 }

@@ -32,7 +32,7 @@ const NavigationMenu = () => {
             <Separator size="2" orientation="vertical" />
 
             <Link to={"/profile"}>
-              <Button size="3">Profile</Button>
+              <Button size="3">ProfilePage</Button>
             </Link>
             <Separator size="2" orientation="vertical" />
 

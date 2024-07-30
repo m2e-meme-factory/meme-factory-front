@@ -1,8 +1,9 @@
 import {Text, Flex, Heading, Card} from "@radix-ui/themes";
 import React from "react";
-import Banner from "./components/Banner";
+import CardBanner from "./components/CardBanner/CardBanner";
 import styled from "styled-components";
-import TaskContent from "./components/TaskContent";
+import TaskContent from "./components/TaskContent/TaskContent";
+import TaskCard from "./components/TaskCard/TaskCard";
 
 const TasksPage = () => {
     const StyledCard = styled(Card)`
@@ -18,12 +19,7 @@ const TasksPage = () => {
             <Text color="gray">Earn M2E by completing them</Text>
         </Flex>
         <Flex m="4" direction="column">
-            <StyledCard>
-                <Flex direction="column">
-                    <Banner/>
-                    <TaskContent/>
-                </Flex>
-            </StyledCard>
+            <TaskCard/>
         </Flex>
     </>)
 }

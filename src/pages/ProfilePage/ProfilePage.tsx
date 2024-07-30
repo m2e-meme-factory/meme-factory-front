@@ -43,13 +43,13 @@ import {
   CopyIcon,
 } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { useTelegram } from "../hooks/useTelegram";
-import { getRefData, getUserData, verifyUser } from "../api/api";
+import { useTelegram } from "../../hooks/useTelegram";
+import { getRefData, getUserData, verifyUser } from "../../api/api";
 import * as z from "zod";
-import NavigationMenuDemo from "../components/NavigationMenu";
+import NavigationMenuDemo from "../../components/NavigationMenu";
 import { Link } from "react-router-dom";
-import CopyableCode from "../components/CopyableCode";
-import CopyableTextField from "../components/CopyableTextField";
+import CopyableCode from "../../components/CopyableCode";
+import CopyableTextField from "../../components/CopyableTextField";
 
 export const transformPhoneNumber = (phoneNumber: string) => {
   let phoneRegex =
@@ -83,7 +83,7 @@ const formDataSchema = z.object({
     .email({ message: "Неверный формат email" }),
 });
 
-export default function Profile() {
+export default function ProfilePage() {
 
   
   const { user, webApp } = useTelegram();

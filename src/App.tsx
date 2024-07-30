@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import { TelegramProvider, useTelegram } from "./hooks/useTelegram";
+import { TelegramProvider, useTelegram } from "./shared/hooks/useTelegram";
 import { Heading, Theme } from "@radix-ui/themes";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import VerifyForm from "./pages/VerifyForm";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import BasePageWrapper from "./components/BasePageWrapper";
+import BasePageWrapper from "./shared/components/BasePageWrapper";
 import { routes } from "./pages/router";
 import TasksPage from "./pages/TasksPage/TasksPage";
 import TaskPage from "./pages/TaskPage/TaskPage"; // Импорт нового компонента

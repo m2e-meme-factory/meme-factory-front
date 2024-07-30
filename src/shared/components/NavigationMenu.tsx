@@ -1,6 +1,6 @@
 import { Box, Button, Card, Flex, Separator } from '@radix-ui/themes';
 import { Link, useLocation } from 'react-router-dom';
-import { routes } from '../pages/router';
+import { routes } from '../../pages/router';
 
 
 

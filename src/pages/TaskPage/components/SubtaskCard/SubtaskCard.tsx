@@ -4,8 +4,8 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from "@radix-ui/react-icons";
 import './index.css'
 import {RocketOutlined} from "@ant-design/icons";
-import {task} from "../../../../consts/task-example";
-import {shortenDescription} from "../../../../utils/shortenDescription";
+import {task} from "../../../../shared/consts/task-example";
+import {shortenDescription} from "../../../../shared/utils/helpers/shortenDescription";
 import ModalSubtaskInfo from "./ModalSubtaskInfo";
 import ModalSubtaskForm from "./ModalSubtaskForm";
 

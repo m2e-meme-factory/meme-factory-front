@@ -1,6 +1,6 @@
     // TelegramProvider
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import type { ITelegramUser, IWebApp } from "./types";
+    import {ITelegramUser, IWebApp} from "../../@types/app";
 
 export interface ITelegramContext {
   webApp?: IWebApp;

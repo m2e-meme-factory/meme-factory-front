@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import {Button, Flex, Text} from "@radix-ui/themes";
-import {task} from "../../../../consts/task-example";
-import {shortenDescription} from "../../../../utils/shortenDescription";
+import {task} from "../../../../shared/consts/task-example";
+import {shortenDescription} from "../../../../shared/utils/helpers/shortenDescription";
 import React, {FC, useState} from "react";
 
 interface ModalInfoProps {

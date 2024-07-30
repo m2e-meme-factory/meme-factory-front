@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Avatar, Badge, Button, Card, Em, Flex, Heading, Text} from "@radix-ui/themes";
-import { task } from '../../consts/task-example';
+import { task } from '../../shared/consts/task-example';
 import {
     DollarOutlined,
     FileOutlined,
@@ -10,8 +10,8 @@ import {
     UnorderedListOutlined
 } from "@ant-design/icons";
 import styles from './TaskPage.module.css';
-import { shortenDescription } from "../../utils/shortenDescription";
-import avatarFallback from '../../imgs/avatar-fallback.svg';
+import { shortenDescription } from "../../shared/utils/helpers/shortenDescription";
+import avatarFallback from '../../shared/imgs/avatar-fallback.svg';
 import TaskCard from "../TasksPage/components/TaskCard/TaskCard";
 import AttachmentCard from "./components/AttachmentCard/AttachmentCard";
 import SubtaskCard from "./components/SubtaskCard/SubtaskCard";

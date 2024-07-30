@@ -1,5 +1,5 @@
 import {Flex, Heading, Text} from "@radix-ui/themes";
-import {task} from "../../../../consts/task-example"
+import {task} from "../../../../shared/consts/task-example"
 import styled from "styled-components";
 import {DollarOutlined, TagsOutlined} from "@ant-design/icons";
 import React from "react";

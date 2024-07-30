@@ -1,7 +1,7 @@
 import {Text, Flex, Heading} from "@radix-ui/themes";
 import React from "react";
 import TaskCard from "./components/TaskCard/TaskCard";
-import Select from "../../components/Select/Select";
+import Select from "../../shared/components/Select/Select";
 
 const TasksPage = () => {
 

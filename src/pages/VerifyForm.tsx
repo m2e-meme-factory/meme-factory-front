@@ -35,8 +35,8 @@ import {
   CrossCircledIcon,
 } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { useTelegram } from "../hooks/useTelegram";
-import { verifyUser } from "../api/api";
+import { useTelegram } from "../shared/hooks/useTelegram";
+import { verifyUser } from "../shared/utils/api/api";
 import * as z from "zod";
 
 export const transformPhoneNumber = (phoneNumber: string) => {

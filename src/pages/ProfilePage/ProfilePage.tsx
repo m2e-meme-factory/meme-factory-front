@@ -4,13 +4,14 @@ import {
   Text,
   Card,
   DataList,
-  Badge, Heading,
+  Badge, Heading, Spinner, Flex,
 } from "@radix-ui/themes";
 import { useTelegram } from "../../shared/hooks/useTelegram";
 import CopyableCode from "../../shared/components/CopyableCode";
 import CopyableTextField from "../../shared/components/CopyableTextField";
 import { useGetRefData } from "../../shared/utils/api/hooks/useGetRefData";
 import { useGetUserData } from "../../shared/utils/api/hooks/useGetUserData";
+import styles from './ProfilePage.module.css';
 
 export default function ProfilePage() {
   const { user, webApp } = useTelegram();
@@ -23,7 +24,7 @@ export default function ProfilePage() {
   const { data: refData, isLoading: refLoading } = useGetRefData("", refId);
 
   if (userLoading || refLoading) {
-    return <div>Loading...</div>;
+    return <Flex className={styles.LoadingContainer} align='center' justify='center'><Spinner size='3'/></Flex>;
   }
 
   const userData = userRes?.data?.user;

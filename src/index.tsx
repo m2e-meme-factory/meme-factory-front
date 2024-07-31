@@ -4,13 +4,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "@radix-ui/themes/styles.css";
 import "./index.css";
+import ProviderWrapper from "./ProviderWrapper";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App/>
+    <ProviderWrapper>
+        <App/>
+    </ProviderWrapper>
   </React.StrictMode>
   
 );

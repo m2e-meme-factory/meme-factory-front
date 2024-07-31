@@ -6,19 +6,16 @@ import { RouterProvider} from "react-router-dom";
 import {router} from "./Router";
 
 function App() {
-    const { webApp } = useTelegram();
     return (
-        <TelegramProvider>
-            <Theme
+        <Theme
                 accentColor="amber"
                 appearance={"dark"}
                 grayColor="mauve"
                 radius="medium"
                 hasBackground={false}
-            >
-                <RouterProvider router={router}/>
-            </Theme>
-        </TelegramProvider>
+        >
+            <RouterProvider router={router}/>
+        </Theme>
     );
 }
 

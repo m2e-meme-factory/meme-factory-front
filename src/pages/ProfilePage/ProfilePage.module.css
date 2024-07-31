@@ -1,3 +1,27 @@
 .LoadingContainer {
     height: 100vh;
 }
+
+.ConnectButton {
+    background-color: #fecf0a;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    color: black;
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s,background-color .08s ease-in;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.ConnectButton:focus {
+    background-color: #ffd844;
+}
+

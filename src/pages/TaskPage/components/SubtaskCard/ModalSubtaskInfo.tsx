@@ -21,9 +21,9 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
   return (
     <>
       <Dialog.Description>
-        <Flex mt='5' direction='column'>
+        <Flex direction='column'>
           <Text className='TextAccent'>Description:</Text>
-          <Text>
+          <Text className='Description'>
             {isDescVisible ? task.description : shortenDescription(task.description)}
             <Button
               variant='ghost'

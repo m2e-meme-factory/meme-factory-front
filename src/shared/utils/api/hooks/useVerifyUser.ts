@@ -1,15 +1,8 @@
-import {useQuery} from "@tanstack/react-query";
-import {verifyUser} from "../requests";
-import {VerifyUserData} from "../../../../@types/api";
+import {useMutation} from "@tanstack/react-query";
+import {verifyUser, VerifyUserConfig} from "../requests/verifyUser";
 
-export const useVerifyUser = (query_id: string, userData: VerifyUserData) => {
-    const query = useQuery({
-        queryKey: ['verifyUser', query_id],
-        queryFn: () => {
-            return verifyUser(query_id, userData)
-        },
-        select: (data) => data
+export const useVerifyUser = () => {
+    useMutation({
+        mutationFn: (config: VerifyUserConfig) => verifyUser(config)
     });
-
-    return {...query};
 }

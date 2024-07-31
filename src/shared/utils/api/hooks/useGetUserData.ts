@@ -1,11 +1,11 @@
 import {useQuery} from "@tanstack/react-query";
-import {getUserData} from "../requests";
+import {getUserData} from "../requests/getUserData";
 
-export const useVerifyUser = (query_id: string, user_id: string) => {
+export const useGetUserData = (query_id: string, user_id: string) => {
     const query = useQuery({
         queryKey: ['getUser', user_id],
         queryFn: () => {
-            return getUserData({query_id, user_id})
+            return getUserData({params: {query_id, user_id}})
         },
         select: (data) => data
     });

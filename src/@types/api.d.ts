@@ -7,6 +7,11 @@ export interface VerifyUserData {
     email: string;
 }
 
+export interface VerifyUserRequestData {
+    queryId: string;
+    userData: VerifyUserData;
+}
+
 export interface GetUserDataParams {
     query_id: string;
     user_id: string;

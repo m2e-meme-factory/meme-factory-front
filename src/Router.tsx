@@ -7,6 +7,8 @@ import TasksPage from './pages/TasksPage/TasksPage';
 import About from './pages/AboutPage/About';
 import VerifyForm from './pages/VerifyPage/VerifyForm';
 import MyProjectsPage from './pages/MyProjectsPage/MyProjectsPage';
+import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
+import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
 
 export const router = createBrowserRouter([
   {
@@ -34,8 +36,12 @@ export const router = createBrowserRouter([
         element: <VerifyForm />,
       },
       {
-        path: ROUTES.MY_PROJECTS,
-        element: <MyProjectsPage/>
+        path: ROUTES.CREATE_PROJECT,
+        element: <CreateProjectPage />,
+      },
+      {
+        path: ROUTES.PROFILE_SETTINGS,
+        element: <ProfileSettingsPage/>
       }
     ],
   },

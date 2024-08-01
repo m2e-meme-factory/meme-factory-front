@@ -5,4 +5,5 @@ export const ROUTES = {
   TASK: '/tasks/:id',
   HOME: '/',
   VERIFY: '/verify',
+  MY_PROJECTS: '/my-projects',
 };

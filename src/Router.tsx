@@ -6,6 +6,7 @@ import TaskPage from './pages/TaskPage/TaskPage';
 import TasksPage from './pages/TasksPage/TasksPage';
 import About from './pages/AboutPage/About';
 import VerifyForm from './pages/VerifyPage/VerifyForm';
+import MyProjectsPage from './pages/MyProjectsPage/MyProjectsPage';
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
         path: ROUTES.VERIFY,
         element: <VerifyForm />,
       },
+      {
+        path: ROUTES.MY_PROJECTS,
+        element: <MyProjectsPage/>
+      }
     ],
   },
 ]);

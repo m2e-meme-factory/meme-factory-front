@@ -2,29 +2,29 @@ import TaskCard from '../TasksPage/components/TaskCard/TaskCard';
 import React from 'react';
 import { Button, Flex, Heading, IconButton } from '@radix-ui/themes';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import MyProjectCard from './components/MyProjectCard/MyProjectCard';
 
 const MyProjectsPage = () => {
-  const navigate = useNavigate();
-
   return (
-    <Flex m='4' direction="column">
-      <Flex align='center' justify='between'>
-        <Flex align='center'>
-          <IconButton size='1' onClick={() => navigate(-1)} mr='3'><ArrowLeftIcon/></IconButton>
-          <Heading>My projects</Heading>
-        </Flex>
-        <Link to='/projects/create'>
-          <Button>Create new</Button>
+    <Flex m='4' direction='column'>
+      <Flex direction='column'>
+        <Heading>My projects</Heading>
+        <Link to='/create-project'>
+          <Button style={{ width: '100%' }} size='3' mt='3'>
+            Create project
+          </Button>
         </Link>
       </Flex>
       <Flex mt='4' direction='column'>
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
+        <MyProjectCard
+          title='Sample project'
+          category='Design'
+          freelancersCount={999}
+          status='published'
+        ></MyProjectCard>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
 export default MyProjectsPage;

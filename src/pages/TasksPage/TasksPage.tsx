@@ -10,7 +10,7 @@ const TasksPage = () => {
   return (
     <>
       <Flex m='4' direction='column'>
-        <Heading>Recent Tasks</Heading>
+        <Heading>Public projects</Heading>
         <Text color='gray'>Earn M2E by completing them</Text>
       </Flex>
       <Flex justify='between' p='4' direction='column'>

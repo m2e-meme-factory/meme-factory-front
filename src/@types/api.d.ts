@@ -7,6 +7,13 @@ export interface VerifyUserData {
   email: string;
 }
 
+export interface Subtask {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+}
+
 export interface VerifyUserRequestData {
   queryId: string;
   userData: VerifyUserData;

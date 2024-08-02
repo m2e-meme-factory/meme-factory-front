@@ -18,9 +18,11 @@ import CopyableCode from '../../shared/components/CopyableCode';
 import CopyableTextField from '../../shared/components/CopyableTextField';
 import { useGetRefData } from '../../shared/utils/api/hooks/useGetRefData';
 import { useGetUserData } from '../../shared/utils/api/hooks/useGetUserData';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, GearIcon } from '@radix-ui/react-icons';
 import styles from './ProfilePage.module.css';
 import { Link } from 'react-router-dom';
+import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
+import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
 
 export default function ProfilePage() {
   const { user, webApp } = useTelegram();
@@ -50,16 +52,23 @@ export default function ProfilePage() {
     <Tabs.Root defaultValue='account'>
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
-        <Tabs.Trigger value='wallet'>Wallet</Tabs.Trigger>
-        <Tabs.Trigger value='socials'>Socials</Tabs.Trigger>
+        <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
         {type === 'platform' && <Tabs.Trigger value='dashboard'>Dashboard</Tabs.Trigger>}
+        {type === 'platform' && <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>}
       </Tabs.List>
 
       <Box pt='3'>
         <Tabs.Content value='account'>
           <Card m='4'>
             <Grid gap='4'>
-              <Heading>Profile</Heading>
+              <Flex align='center'>
+                <Heading mr='3'>Profile</Heading>
+                <Link to='/profile/settings'>
+                  <IconButton variant='soft'>
+                    <GearIcon />
+                  </IconButton>
+                </Link>
+              </Flex>
               <DataList.Root>
                 <DataList.Item align='center'>
                   <DataList.Label minWidth='88px'>Status</DataList.Label>
@@ -132,29 +141,23 @@ export default function ProfilePage() {
           </Card>
         </Tabs.Content>
 
-        <Tabs.Content value='wallet'>
-          <Card m='4'>
-            <Heading>Wallet</Heading>
-            <button className={styles.ConnectButton}>Connect Wallet</button>
-          </Card>
-        </Tabs.Content>
-
-        <Tabs.Content value='socials'>
-          <Card m='4'>
-            <Heading>Socials</Heading>
-            <button className={styles.ConnectButton}>Connect Socials</button>
-          </Card>
-        </Tabs.Content>
-
         <Tabs.Content value='dashboard'>
           <Card m='4'>
             <Flex justify='between'>
               <Heading>Dashboard</Heading>
-              <Link to='/my-projects'>
-                <Button>My projects</Button>
+              <Link to='/create-project'>
+                <Button>Create Project</Button>
               </Link>
             </Flex>
           </Card>
+        </Tabs.Content>
+
+        <Tabs.Content value='my-projects'>
+          <MyProjectsPage />
+        </Tabs.Content>
+
+        <Tabs.Content value='transactions'>
+          <TransactionsHistoryPage />
         </Tabs.Content>
       </Box>
     </Tabs.Root>

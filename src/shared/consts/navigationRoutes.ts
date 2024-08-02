@@ -8,8 +8,8 @@ export const navigationRoutes = [
     path: '/profile',
   },
   {
-    title: 'Tasks',
-    path: '/tasks',
+    title: 'Projects',
+    path: '/projects',
   },
   {
     title: 'About',

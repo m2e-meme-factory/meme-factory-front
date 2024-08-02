@@ -41,8 +41,8 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PROFILE_SETTINGS,
-        element: <ProfileSettingsPage/>
-      }
+        element: <ProfileSettingsPage />,
+      },
     ],
   },
 ]);

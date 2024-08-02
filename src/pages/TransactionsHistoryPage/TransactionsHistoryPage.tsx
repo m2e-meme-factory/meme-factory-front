@@ -21,7 +21,6 @@ const TransactionsHistoryPage = () => {
             <Dialog.Content className='DialogContent'>
               <Dialog.Title className='DialogTitle'>Filters</Dialog.Title>
               <Form.Root className='FormRoot'>
-
                 <Form.Field className='FormField' name='sender'>
                   <div
                     style={{
@@ -83,9 +82,16 @@ const TransactionsHistoryPage = () => {
         </Dialog.Root>
       </Flex>
       <Flex direction='column'>
-        <TransactionCard sender='Some sender' receiver='Some receiver' projectId='312' value={26323} taskTitle='Create react app'></TransactionCard>
+        <TransactionCard
+          sender='Some sender'
+          receiver='Some receiver'
+          projectId='312'
+          value={26323}
+          taskTitle='Create react app'
+        ></TransactionCard>
       </Flex>
-    </Flex>)
-}
+    </Flex>
+  );
+};
 
 export default TransactionsHistoryPage;

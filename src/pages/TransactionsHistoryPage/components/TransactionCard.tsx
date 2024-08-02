@@ -10,16 +10,24 @@ interface TransactionCardProps {
   value: number;
 }
 
-const TransactionCard: FC<TransactionCardProps> = ({sender, receiver, projectId, taskTitle, value}) => {
+const TransactionCard: FC<TransactionCardProps> = ({
+  sender,
+  receiver,
+  projectId,
+  taskTitle,
+  value,
+}) => {
   return (
     <Card mt='3'>
-      <Heading size='5' mb='3'>Task: {taskTitle}</Heading>
+      <Heading size='5' mb='3'>
+        Task: {taskTitle}
+      </Heading>
       <Card>
         <Flex align='center' justify='between'>
           <Flex direction='column' align='center'>
             <Text weight='medium'>{sender}</Text>
             <Flex>
-              <ArrowDownIcon fontSize='30'/>
+              <ArrowDownIcon fontSize='30' />
             </Flex>
             <Text weight='medium'>{receiver}</Text>
           </Flex>
@@ -27,7 +35,7 @@ const TransactionCard: FC<TransactionCardProps> = ({sender, receiver, projectId,
         </Flex>
       </Card>
     </Card>
-  )
-}
+  );
+};
 
 export default TransactionCard;

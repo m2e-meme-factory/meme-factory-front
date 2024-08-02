@@ -64,7 +64,9 @@ export default function ProfilePage() {
               <Flex align='center'>
                 <Heading mr='3'>Profile</Heading>
                 <Link to='/profile/settings'>
-                  <IconButton variant='soft'><GearIcon/></IconButton>
+                  <IconButton variant='soft'>
+                    <GearIcon />
+                  </IconButton>
                 </Link>
               </Flex>
               <DataList.Root>
@@ -155,9 +157,8 @@ export default function ProfilePage() {
         </Tabs.Content>
 
         <Tabs.Content value='transactions'>
-          <TransactionsHistoryPage/>
+          <TransactionsHistoryPage />
         </Tabs.Content>
-
       </Box>
     </Tabs.Root>
   );

@@ -3,10 +3,10 @@ import { StylesConfig } from 'react-select';
 export const CUSTOM_SELECT_STYLES: StylesConfig<any, true> = {
   control: (provided, state) => ({
     ...provided,
-    width: '91vw',
-    backgroundColor: '#121212',
-    borderColor: state.isFocused ? '#fecf0a' : 'grey',
-    boxShadow: state.isFocused ? `0 0 0 1px #fecf0a` : 'none',
+    'width': '91vw',
+    'backgroundColor': '#121212',
+    'borderColor': state.isFocused ? '#fecf0a' : 'grey',
+    'boxShadow': state.isFocused ? `0 0 0 1px #fecf0a` : 'none',
     '&:hover': {
       borderColor: state.isFocused ? '#fecf0a' : 'grey',
     },
@@ -18,8 +18,8 @@ export const CUSTOM_SELECT_STYLES: StylesConfig<any, true> = {
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isFocused ? '#fecf0a' : '#121212',
-    color: state.isFocused ? 'black' : 'white',
+    'backgroundColor': state.isFocused ? '#fecf0a' : '#121212',
+    'color': state.isFocused ? 'black' : 'white',
     '&:active': {
       backgroundColor: '#fecf0a',
       color: 'black',
@@ -44,7 +44,7 @@ export const CUSTOM_SELECT_STYLES: StylesConfig<any, true> = {
   }),
   multiValueRemove: (provided) => ({
     ...provided,
-    color: 'black',
+    'color': 'black',
     ':hover': {
       backgroundColor: 'red',
       color: 'white',

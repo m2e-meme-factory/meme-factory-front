@@ -10,7 +10,9 @@ const FreelancerLogsPage = () => {
     <>
       <Card m='4'>
         <Flex align='center' justify='between'>
-          <IconButton onClick={() => navigate(-1)} size='3'><ArrowLeftIcon></ArrowLeftIcon></IconButton>
+          <IconButton onClick={() => navigate(-1)} size='3'>
+            <ArrowLeftIcon></ArrowLeftIcon>
+          </IconButton>
           <Flex align='center' justify='start'>
             <Avatar mr='3' src='/' fallback='/'></Avatar>
             <Heading>Ilon Mosquito</Heading>

@@ -13,9 +13,8 @@ interface SubtaskCardProps {
 }
 
 const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) => {
-
   const handleDelete = () => {
-    setSubtask(prevSubtasks => prevSubtasks.filter(subtask => subtask.id !== id));
+    setSubtask((prevSubtasks) => prevSubtasks.filter((subtask) => subtask.id !== id));
   };
 
   return (

@@ -13,7 +13,7 @@ import { ArrowLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 import styles from './CreateProjectPage.module.css';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
 import Select from 'react-select';
-import {CUSTOM_SELECT_STYLES} from '../../styles/customSelectStyles';
+import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
 import { Subtask } from '../../@types/api';
 
 const CreateProjectPage = () => {
@@ -28,11 +28,11 @@ const CreateProjectPage = () => {
 
   const handleTagsChange = (selectedTags: any) => {
     console.log('handleTagsChange:', selectedTags);
-  }
+  };
 
   const handleCategoryChange = (selectedTags: any) => {
     console.log('handleTagsChange:', selectedTags);
-  }
+  };
 
   const handlePriceModeChange = () => {
     setPriceMode(priceMode === 'single' ? 'range' : 'single');
@@ -41,7 +41,7 @@ const CreateProjectPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton size='1' onClick={() => navigate(-1)} mr='3'>
+        <IconButton size='2' onClick={() => navigate(-1)} mr='3'>
           <ArrowLeftIcon />
         </IconButton>
         <Heading>Create Project</Heading>
@@ -175,12 +175,12 @@ const CreateProjectPage = () => {
           {priceMode === 'single' ? 'Set Min/Max Price' : 'Set Single Price'}
         </Button>
 
-        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks}/>
+        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
         <Form.Submit asChild>
-          <button className='Button' style={{ marginTop: 10 }}>
+          <Button className='Button' style={{ marginTop: 10 }}>
             Create Project
-          </button>
+          </Button>
         </Form.Submit>
       </Form.Root>
     </Flex>

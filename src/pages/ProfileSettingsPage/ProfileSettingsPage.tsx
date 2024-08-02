@@ -10,7 +10,11 @@ const ProfileSettingsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <Link to='/profile'><IconButton mr='3' size='1'><ArrowLeftIcon></ArrowLeftIcon></IconButton></Link>
+        <Link to='/profile'>
+          <IconButton mr='3' size='2'>
+            <ArrowLeftIcon></ArrowLeftIcon>
+          </IconButton>
+        </Link>
         <Heading>Profile Settings</Heading>
       </Flex>
       <Card mt='5'>

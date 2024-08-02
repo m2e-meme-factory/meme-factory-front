@@ -1,6 +1,11 @@
 import { Button, Card, Flex, Table, Heading, IconButton, Text } from '@radix-ui/themes';
 import React from 'react';
-import { ArrowLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import {
+  ArrowLeftIcon,
+  ChevronRightIcon,
+  MagnifyingGlassIcon,
+  Pencil1Icon,
+} from '@radix-ui/react-icons';
 import { useNavigate } from 'react-router-dom';
 
 const ProjectDetailsPage = () => {
@@ -10,7 +15,7 @@ const ProjectDetailsPage = () => {
     <Flex m='4' direction='column'>
       <Flex align='center'>
         <IconButton mr='3' onClick={() => navigate(-1)}>
-          <ArrowLeftIcon/>
+          <ArrowLeftIcon />
         </IconButton>
         <Heading>Project details</Heading>
       </Flex>
@@ -32,8 +37,14 @@ const ProjectDetailsPage = () => {
       <Card mt='5'>
         <Heading mb='3'>Actions</Heading>
         <Flex align='center' justify='between'>
-          <Button m='1' size='3'><MagnifyingGlassIcon/>View Project Page</Button>
-          <Button m='1' size='3'><Pencil1Icon/>Edit Project</Button>
+          <Button m='1' size='3'>
+            <MagnifyingGlassIcon />
+            View Project Page
+          </Button>
+          <Button m='1' size='3'>
+            <Pencil1Icon />
+            Edit Project
+          </Button>
         </Flex>
       </Card>
 
@@ -48,17 +59,17 @@ const ProjectDetailsPage = () => {
         </Table.Header>
 
         <Table.Body>
-
           <Table.Row>
-            <Table.RowHeaderCell onClick={() => navigate('/about')}>Danilo Sousa</Table.RowHeaderCell>
+            <Table.RowHeaderCell onClick={() => navigate('/about')}>
+              Danilo Sousa
+            </Table.RowHeaderCell>
             <Table.Cell>1</Table.Cell>
             <Table.Cell>$20000</Table.Cell>
           </Table.Row>
-
         </Table.Body>
       </Table.Root>
     </Flex>
-  )
-}
+  );
+};
 
 export default ProjectDetailsPage;

@@ -19,9 +19,7 @@ type FormData = {
   price: number;
 };
 
-
-const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({subtasks, setSubtasks}) => {
-
+const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubtasks }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,11 +34,10 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({subtasks, setSubta
       price: parseFloat(formData.get('price') as string),
     };
 
-    setSubtasks(prevSubtasks => [...prevSubtasks, data as Subtask]);
+    setSubtasks((prevSubtasks) => [...prevSubtasks, data as Subtask]);
     setModalOpen(false);
     console.log(data);
   };
-
 
   return (
     <Flex mb='3' direction='column'>
@@ -124,7 +121,11 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({subtasks, setSubta
                 </Form.Submit>
               </Form.Root>
               <Dialog.Close asChild>
-                <button className='IconButton' onClick={() => setModalOpen(false)} aria-label='Close'>
+                <button
+                  className='IconButton'
+                  onClick={() => setModalOpen(false)}
+                  aria-label='Close'
+                >
                   <Cross2Icon />
                 </button>
               </Dialog.Close>

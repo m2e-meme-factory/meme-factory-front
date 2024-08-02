@@ -14,6 +14,7 @@ import styles from './CreateProjectPage.module.css';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
 import Select from 'react-select';
 import {CUSTOM_SELECT_STYLES} from '../../styles/customSelectStyles';
+import { Subtask } from '../../@types/api';
 
 const CreateProjectPage = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const CreateProjectPage = () => {
   const [category, setCategory] = useState(null);
   const [priceMode, setPriceMode] = useState('single');
   const [price, setPrice] = useState({ single: 0, min: 0, max: 0 });
+  const [subtasks, setSubtasks] = useState<Subtask[]>([]);
   const animatedComponents = makeAnimated();
 
   const handleTagsChange = (selectedTags: any) => {
@@ -173,7 +175,7 @@ const CreateProjectPage = () => {
           {priceMode === 'single' ? 'Set Min/Max Price' : 'Set Single Price'}
         </Button>
 
-        <CreateSubtaskSection />
+        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks}/>
 
         <Form.Submit asChild>
           <button className='Button' style={{ marginTop: 10 }}>

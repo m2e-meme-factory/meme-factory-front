@@ -8,7 +8,7 @@ export interface VerifyUserData {
 }
 
 export interface Subtask {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;

@@ -11,6 +11,7 @@ import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
 import React from 'react';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
+import FreelancerLogsPage from './pages/FreelancerLogsPage/FreelancerLogsPage';
 
 export const router = createBrowserRouter([
   {
@@ -47,8 +48,12 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PROJECT_DETAILS,
-        element: <ProjectDetailsPage/>
-      }
+        element: <ProjectDetailsPage />,
+      },
+      {
+        path: ROUTES.LOGS,
+        element: <FreelancerLogsPage />,
+      },
     ],
   },
 ]);

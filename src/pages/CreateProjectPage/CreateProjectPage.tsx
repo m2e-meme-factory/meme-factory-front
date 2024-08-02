@@ -1,9 +1,10 @@
-import { Text, Button, Flex, Heading, IconButton, Select, Separator } from '@radix-ui/themes';
+import { Text, Button, Flex, Heading, IconButton, Separator } from '@radix-ui/themes';
 import * as Form from '@radix-ui/react-form';
 import './CreateProjectPage.module.css';
 import React, { useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
 import { CATEGORIES } from '../../shared/consts/categories';
+import makeAnimated from 'react-select/animated';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
@@ -11,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 import styles from './CreateProjectPage.module.css';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
+import Select from 'react-select';
+import {CUSTOM_SELECT_STYLES} from '../../styles/customSelectStyles';
 
 const CreateProjectPage = () => {
   const navigate = useNavigate();
@@ -19,6 +22,15 @@ const CreateProjectPage = () => {
   const [category, setCategory] = useState(null);
   const [priceMode, setPriceMode] = useState('single');
   const [price, setPrice] = useState({ single: 0, min: 0, max: 0 });
+  const animatedComponents = makeAnimated();
+
+  const handleTagsChange = (selectedTags: any) => {
+    console.log('handleTagsChange:', selectedTags);
+  }
+
+  const handleCategoryChange = (selectedTags: any) => {
+    console.log('handleTagsChange:', selectedTags);
+  }
 
   const handlePriceModeChange = () => {
     setPriceMode(priceMode === 'single' ? 'range' : 'single');
@@ -86,36 +98,29 @@ const CreateProjectPage = () => {
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className='FormLabel'>Tags</Form.Label>
           </div>
-          <Form.Control asChild>
-            <Select.Root>
-              <Select.Trigger style={{ width: '91vw' }} />
-              <Select.Content>
-                <Select.Group>
-                  {TAGS.map((tag, index) => (
-                    <Select.Item value={tag.value}>{tag.label}</Select.Item>
-                  ))}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </Form.Control>
+          <Select
+            onChange={handleTagsChange}
+            placeholder='Select tags'
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            options={TAGS}
+            styles={CUSTOM_SELECT_STYLES}
+          />
         </Form.Field>
 
         <Form.Field name='category'>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className='FormLabel'>Category</Form.Label>
           </div>
-          <Form.Control asChild>
-            <Select.Root>
-              <Select.Trigger style={{ width: '91vw' }} />
-              <Select.Content>
-                <Select.Group>
-                  {CATEGORIES.map((category, index) => (
-                    <Select.Item value={category.value}>{category.label}</Select.Item>
-                  ))}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </Form.Control>
+          <Select
+            onChange={handleCategoryChange}
+            placeholder='Select category'
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            options={CATEGORIES}
+            styles={CUSTOM_SELECT_STYLES}
+          />
         </Form.Field>
 
         <Form.Field className='FormField' name='price'>

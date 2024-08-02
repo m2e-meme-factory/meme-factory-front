@@ -6,6 +6,11 @@ export interface ITelegramUser {
   language_code: string;
 }
 
+export interface Option {
+  label: string;
+  value: string;
+}
+
 export interface IWebApp {
   initData: string;
   initDataUnsafe: {

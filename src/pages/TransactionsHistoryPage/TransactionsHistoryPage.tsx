@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Table } from '@radix-ui/themes';
+import { Button, Flex, Heading, ScrollArea, Table } from '@radix-ui/themes';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import React from 'react';
@@ -81,27 +81,29 @@ const TransactionsHistoryPage = () => {
         </Dialog.Root>
       </Flex>
       <Flex direction='column'>
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>Task</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
+        <ScrollArea type="always" scrollbars="horizontal" style={{ height: 'fit-content' }}>
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeaderCell>Task</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
+              </Table.Row>
+            </Table.Header>
 
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>
-                Some big task title to check how cell size adjusts to text size
-              </Table.Cell>
-              <Table.Cell>Ilon Muskulistiy</Table.Cell>
-              <Table.Cell>Kanye South</Table.Cell>
-              <Table.Cell>$39284</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table.Root>
+            <Table.Body>
+              <Table.Row>
+                <Table.RowHeaderCell>
+                  Some big task title to check how cell size adjusts to text size
+                </Table.RowHeaderCell>
+                <Table.RowHeaderCell>Ilon Muskulistiy</Table.RowHeaderCell>
+                <Table.RowHeaderCell>Kanye South</Table.RowHeaderCell>
+                <Table.RowHeaderCell>$39284</Table.RowHeaderCell>
+              </Table.Row>
+            </Table.Body>
+          </Table.Root>
+        </ScrollArea>
       </Flex>
     </Flex>
   );

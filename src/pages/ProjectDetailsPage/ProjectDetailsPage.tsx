@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Table, Heading, IconButton, Text } from '@radix-ui/themes';
+import { Button, Card, Flex, Table, Heading, IconButton, Text, ScrollArea } from '@radix-ui/themes';
 import React from 'react';
 import {
   ArrowLeftIcon,
@@ -49,25 +49,27 @@ const ProjectDetailsPage = () => {
       </Card>
 
       <Heading mt='5'>Freelancers</Heading>
-      <Table.Root>
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Tasks done</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Income</Table.ColumnHeaderCell>
-          </Table.Row>
-        </Table.Header>
+      <ScrollArea type="always" scrollbars="horizontal" style={{ height: 'fit-content' }}>
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Tasks done</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Income</Table.ColumnHeaderCell>
+            </Table.Row>
+          </Table.Header>
 
-        <Table.Body>
-          <Table.Row>
-            <Table.RowHeaderCell onClick={() => navigate('/about')}>
-              Danilo Sousa
-            </Table.RowHeaderCell>
-            <Table.Cell>1</Table.Cell>
-            <Table.Cell>$20000</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table.Root>
+          <Table.Body>
+            <Table.Row>
+              <Table.RowHeaderCell onClick={() => navigate('/about')}>
+                Danilo Sousa
+              </Table.RowHeaderCell>
+              <Table.Cell>1</Table.Cell>
+              <Table.Cell>$20000</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table.Root>
+      </ScrollArea>
     </Flex>
   );
 };

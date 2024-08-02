@@ -1,9 +1,8 @@
-import { Button, Flex, Heading } from '@radix-ui/themes';
+import { Button, Flex, Heading, Table } from '@radix-ui/themes';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import React from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import TransactionCard from './components/TransactionCard';
 
 const TransactionsHistoryPage = () => {
   return (
@@ -82,13 +81,27 @@ const TransactionsHistoryPage = () => {
         </Dialog.Root>
       </Flex>
       <Flex direction='column'>
-        <TransactionCard
-          sender='Some sender'
-          receiver='Some receiver'
-          projectId='312'
-          value={26323}
-          taskTitle='Create react app'
-        ></TransactionCard>
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeaderCell>Task</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
+            </Table.Row>
+          </Table.Header>
+
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>
+                Some big task title to check how cell size adjusts to text size
+              </Table.Cell>
+              <Table.Cell>Ilon Muskulistiy</Table.Cell>
+              <Table.Cell>Kanye South</Table.Cell>
+              <Table.Cell>$39284</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table.Root>
       </Flex>
     </Flex>
   );

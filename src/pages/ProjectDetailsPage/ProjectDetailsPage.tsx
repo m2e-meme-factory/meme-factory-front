@@ -49,7 +49,7 @@ const ProjectDetailsPage = () => {
       </Card>
 
       <Heading mt='5'>Freelancers</Heading>
-      <ScrollArea type="always" scrollbars="horizontal" style={{ height: 'fit-content' }}>
+      <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
         <Table.Root>
           <Table.Header>
             <Table.Row>

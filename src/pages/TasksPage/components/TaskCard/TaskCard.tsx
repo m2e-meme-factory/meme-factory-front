@@ -4,14 +4,14 @@ import TaskContent from '../TaskContent/TaskContent';
 import React from 'react';
 import styled from 'styled-components';
 
-const TaskCard = () => {
-  const StyledCard = styled(Card)`
-    padding: 0;
-    margin: 0 0 15px;
-    width: 100%;
-    background-color: #121212;
-  `;
+const StyledCard = styled(Card)`
+  padding: 0;
+  margin: 0 0 15px;
+  width: 100%;
+  background-color: #121212;
+`;
 
+const TaskCard = () => {
   return (
     <StyledCard>
       <Flex direction='column'>

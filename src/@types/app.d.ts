@@ -6,10 +6,18 @@ export interface ITelegramUser {
   language_code: string;
 }
 
-export interface Option {
-  label: string;
-  value: string;
-}
+type Price = {
+  single?: number;
+  min?: number;
+  max?: number;
+};
+
+type FormError = {
+  field: string;
+  message: string;
+};
+
+export type Option = { label: string; value: string };
 
 export interface IWebApp {
   initData: string;

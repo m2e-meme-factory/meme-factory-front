@@ -12,7 +12,7 @@
     border: 1px solid #fecf0a;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    min-height: 100px;
+    min-height: 20vh;
     box-sizing: border-box;
     height: auto;
 }

@@ -4,8 +4,6 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import './index.css';
 import { RocketOutlined } from '@ant-design/icons';
-import { task } from '../../../../shared/consts/task-example';
-import { shortenDescription } from '../../../../shared/utils/helpers/shortenDescription';
 import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 
@@ -18,21 +16,25 @@ interface TaskCardProps {
 
 const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleSendProposalClick = () => {
     setIsFormVisible(!isFormVisible);
   };
 
-  const handleDialogOpenChange = (open: boolean) => {
-    if (!open) {
-      setIsFormVisible(false);
-    }
+  const handleDialogClose = () => {
+    setModalVisible(false);
+    setIsFormVisible(false);
+  };
+
+  const handleDialogOpen = () => {
+    setModalVisible(true);
   };
 
   return (
-    <Dialog.Root onOpenChange={handleDialogOpenChange}>
+    <Dialog.Root open={isModalVisible}>
       <Dialog.Trigger asChild>
-        <Card className='SubtaskCard'>
+        <Card className='SubtaskCard' onClick={handleDialogOpen}>
           <Flex>
             <RocketOutlined style={{ color: 'yellow', marginRight: '15px' }} />
             <Flex direction='column'>
@@ -54,7 +56,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
           </Dialog.Title>
           {isFormVisible ? (
             <>
-              <ModalSubtaskForm />
+              <ModalSubtaskForm closeDialog={handleDialogClose} />
             </>
           ) : (
             <>
@@ -65,7 +67,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
             </>
           )}
           <Dialog.Close asChild>
-            <button className='IconButton' aria-label='Close'>
+            <button onClick={handleDialogClose} className='IconButton' aria-label='Close'>
               <Cross2Icon />
             </button>
           </Dialog.Close>

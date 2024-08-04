@@ -4,7 +4,26 @@ import * as Dialog from '@radix-ui/react-dialog';
 import React from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
+interface FormDataFields {
+  sender: string;
+  receiver: string;
+  projectId: string;
+}
+
 const TransactionsHistoryPage = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const data: FormDataFields = {
+      sender: formData.get('sender') as string,
+      receiver: formData.get('receiver') as string,
+      projectId: formData.get('project-id') as string,
+    };
+
+    console.log(data);
+  };
+
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
@@ -19,7 +38,7 @@ const TransactionsHistoryPage = () => {
             <Dialog.Overlay className='DialogOverlay' />
             <Dialog.Content className='DialogContent'>
               <Dialog.Title className='DialogTitle'>Filters</Dialog.Title>
-              <Form.Root className='FormRoot'>
+              <Form.Root className='FormRoot' onSubmit={handleSubmit}>
                 <Form.Field className='FormField' name='sender'>
                   <div
                     style={{

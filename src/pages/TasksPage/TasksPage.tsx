@@ -1,23 +1,32 @@
-import { Text, Flex, Heading } from '@radix-ui/themes';
+import { Text, Flex, Heading, Button } from '@radix-ui/themes';
 import React, { useState } from 'react';
 import TaskCard from './components/TaskCard/TaskCard';
 import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
 import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
-import Select from 'react-select';
+import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { Option } from '../../@types/app';
 
 const TasksPage = () => {
-  const [tags, setTags] = useState([]);
-  const [category, setCategory] = useState(null);
+  const [tags, setTags] = useState<string[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
   const animatedComponents = makeAnimated();
 
-  const handleTagsChange = (selectedTags: any) => {
-    console.log('handleTagsChange:', selectedTags);
+  const handleTagsChange = (selectedTags: MultiValue<Option>) => {
+    const tags = selectedTags.map((tag) => tag.value);
+    console.log('handleTagsChange:', tags);
+    setTags(tags);
   };
 
-  const handleCategoryChange = (selectedTags: any) => {
-    console.log('handleTagsChange:', selectedTags);
+  const handleCategoryChange = (selectedCategory: SingleValue<Option>) => {
+    const category = selectedCategory ? selectedCategory.value : null;
+    console.log('handleTagsChange:', category);
+    setCategory(category);
+  };
+
+  const handleFindButtonClick = () => {
+    console.log('handleFindButtonClick', tags, category);
   };
 
   return (
@@ -33,10 +42,12 @@ const TasksPage = () => {
           </Text>
           <Select
             onChange={handleCategoryChange}
-            placeholder='Select tags'
+            placeholder='Select category'
             closeMenuOnSelect={false}
+            components={animatedComponents}
             options={CATEGORIES}
             styles={CUSTOM_SELECT_STYLES}
+            isMulti={false}
           />
         </Flex>
         <Flex direction='column'>
@@ -53,6 +64,9 @@ const TasksPage = () => {
             styles={CUSTOM_SELECT_STYLES}
           />
         </Flex>
+        <Button mt='3' onClick={handleFindButtonClick}>
+          Find
+        </Button>
       </Flex>
       <Flex m='4' direction='column'>
         <TaskCard />

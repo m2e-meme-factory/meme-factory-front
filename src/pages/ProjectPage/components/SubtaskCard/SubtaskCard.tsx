@@ -8,7 +8,7 @@ import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 
 interface TaskCardProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;

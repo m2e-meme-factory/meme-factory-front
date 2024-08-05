@@ -5,7 +5,7 @@ import { shortenDescription } from '../../../../shared/utils/helpers/shortenDesc
 import React, { FC, useState } from 'react';
 
 interface ModalInfoProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;

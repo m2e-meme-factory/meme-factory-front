@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Text, Card, Flex, Heading } from '@radix-ui/themes';
-import CardBanner from '../../../TasksPage/components/CardBanner/CardBanner';
+import CardBanner from '../../../PublicProjectsPage/components/CardBanner/CardBanner';
 import { task } from '../../../../shared/consts/task-example';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';

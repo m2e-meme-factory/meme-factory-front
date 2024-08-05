@@ -8,7 +8,7 @@ export interface VerifyUserData {
 }
 
 export interface Subtask {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -17,6 +17,72 @@ export interface Subtask {
 export interface VerifyUserRequestData {
   queryId: string;
   userData: VerifyUserData;
+}
+
+enum EventType {
+  PROJECT_CREATED = 'PROJECT_CREATED',
+  PROJECT_UPDATED = 'PROJECT_UPDATED',
+  PROJECT_DELETED = 'PROJECT_DELETED',
+  APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
+  APPLICATION_APPROVED = 'APPLICATION_APPROVED',
+  APPLICATION_REJECTED = 'APPLICATION_REJECTED',
+  TASK_COMPLETED = 'TASK_COMPLETED',
+  TASK_UPDATED = 'TASK_UPDATED',
+  TRANSACTION_COMPLETED = 'TRANSACTION_COMPLETED',
+  DISPUTE_OPENED = 'DISPUTE_OPENED',
+  DISPUTE_RESOLVED = 'DISPUTE_RESOLVED',
+  USER_MESSAGE = 'USER_MESSAGE',
+  RATING_GIVEN = 'RATING_GIVEN',
+}
+
+enum Role {
+  CREATOR = 'creator',
+  ADVISER = 'adviser',
+}
+
+interface LogDetails {
+  transactionId?: number;
+  message?: string;
+  amount?: number;
+  subtaskId?: number;
+}
+
+interface LogEntry {
+  id: number;
+  projectId: number;
+  userId: number;
+  role: Role;
+  eventType: EventType;
+  description?: string;
+  createdAt: Date;
+  details: LogDetails;
+}
+
+interface Transaction {
+  id: number;
+  projectId: number;
+  taskId: number;
+  fromUserId: number;
+  toUserId: number;
+  amount: number;
+  createdAt: Date;
+}
+
+enum DisputeStatus {
+  OPEN = 'open',
+  RESOLVED = 'resolved',
+  CLOSED = 'closed',
+}
+
+interface Dispute {
+  id: string;
+  projectId: string;
+  initiatorId: string;
+  defendantId: string;
+  reason: string;
+  status: DisputeStatus;
+  creationDate: string;
+  resolutionDate?: string;
 }
 
 export interface GetUserDataParams {
@@ -34,6 +100,31 @@ export type ApiRequestConfig = AxiosRequestConfig;
 export type RequestConfig<Params = undefined> = Params extends undefined
   ? { config?: ApiRequestConfig }
   : { params: Params; config?: ApiRequestConfig };
+
+export interface User {
+  id: string;
+  telegramId: string;
+  username: string;
+  role: Role;
+  isBanned: boolean;
+  isVerified: boolean;
+  createdAt: Date;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  bannerUrl: string;
+  attachedFiles: string[];
+  category: string;
+  tags: string[];
+  price: number;
+  tasks: Subtask[];
+  creatorId: string;
+  creationDate: Date;
+  status: string;
+}
 
 export type VerifyUserResponse = AxiosResponse<any>;
 export type GetUserDataResponse = AxiosResponse<any>;

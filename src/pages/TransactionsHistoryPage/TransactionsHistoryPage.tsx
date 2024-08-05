@@ -1,11 +1,29 @@
-import { Button, Flex, Heading } from '@radix-ui/themes';
+import { Button, Flex, Heading, ScrollArea, Table } from '@radix-ui/themes';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import React from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import TransactionCard from './components/TransactionCard';
+
+interface FormDataFields {
+  sender: string;
+  receiver: string;
+  projectId: string;
+}
 
 const TransactionsHistoryPage = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const data: FormDataFields = {
+      sender: formData.get('sender') as string,
+      receiver: formData.get('receiver') as string,
+      projectId: formData.get('project-id') as string,
+    };
+
+    console.log(data);
+  };
+
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
@@ -20,7 +38,7 @@ const TransactionsHistoryPage = () => {
             <Dialog.Overlay className='DialogOverlay' />
             <Dialog.Content className='DialogContent'>
               <Dialog.Title className='DialogTitle'>Filters</Dialog.Title>
-              <Form.Root className='FormRoot'>
+              <Form.Root className='FormRoot' onSubmit={handleSubmit}>
                 <Form.Field className='FormField' name='sender'>
                   <div
                     style={{
@@ -82,13 +100,29 @@ const TransactionsHistoryPage = () => {
         </Dialog.Root>
       </Flex>
       <Flex direction='column'>
-        <TransactionCard
-          sender='Some sender'
-          receiver='Some receiver'
-          projectId='312'
-          value={26323}
-          taskTitle='Create react app'
-        ></TransactionCard>
+        <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeaderCell>Task</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              <Table.Row>
+                <Table.RowHeaderCell>
+                  Some big task title to check how cell size adjusts to text size
+                </Table.RowHeaderCell>
+                <Table.RowHeaderCell>Ilon Muskulistiy</Table.RowHeaderCell>
+                <Table.RowHeaderCell>Kanye South</Table.RowHeaderCell>
+                <Table.RowHeaderCell>$39284</Table.RowHeaderCell>
+              </Table.Row>
+            </Table.Body>
+          </Table.Root>
+        </ScrollArea>
       </Flex>
     </Flex>
   );

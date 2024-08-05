@@ -1,19 +1,22 @@
 import { Card, Flex, IconButton, Text } from '@radix-ui/themes';
 import { RocketOutlined } from '@ant-design/icons';
-import React, { FC } from 'react';
-import { Cross2Icon, TrashIcon } from '@radix-ui/react-icons';
+import React, { Dispatch, FC, SetStateAction } from 'react';
+import { TrashIcon } from '@radix-ui/react-icons';
 import styles from './CreatedSubtask.module.css';
-import * as Form from '@radix-ui/react-form';
-import * as Dialog from '@radix-ui/react-dialog';
+import { Subtask } from '../../../../@types/api';
 
 interface SubtaskCardProps {
-  id: number;
+  id: string;
   title: string;
-  description: string;
   price: number;
+  setSubtask: Dispatch<SetStateAction<Subtask[]>>;
 }
 
-const CreatedSubtask: FC<SubtaskCardProps> = ({ id, title, description, price }) => {
+const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) => {
+  const handleDelete = () => {
+    setSubtask((prevSubtasks) => prevSubtasks.filter((subtask) => subtask.id !== id));
+  };
+
   return (
     <Card className={styles.CreatedSubtask}>
       <Flex justify='between' align='center'>
@@ -28,7 +31,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ id, title, description, price })
             </Text>
           </Flex>
         </Flex>
-        <IconButton>
+        <IconButton onClick={handleDelete}>
           <TrashIcon></TrashIcon>
         </IconButton>
       </Flex>

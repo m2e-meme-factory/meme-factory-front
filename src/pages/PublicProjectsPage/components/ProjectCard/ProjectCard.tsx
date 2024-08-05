@@ -1,25 +1,25 @@
 import { Card, Flex } from '@radix-ui/themes';
 import CardBanner from '../CardBanner/CardBanner';
-import TaskContent from '../TaskContent/TaskContent';
+import ProjectCardContent from '../ProjectCardContent/ProjectCardContent';
 import React from 'react';
 import styled from 'styled-components';
 
-const TaskCard = () => {
-  const StyledCard = styled(Card)`
-    padding: 0;
-    margin: 0 0 15px;
-    width: 100%;
-    background-color: #121212;
-  `;
+const StyledCard = styled(Card)`
+  padding: 0;
+  margin: 0 0 15px;
+  width: 100%;
+  background-color: #121212;
+`;
 
+const ProjectCard = () => {
   return (
     <StyledCard>
       <Flex direction='column'>
         <CardBanner />
-        <TaskContent />
+        <ProjectCardContent />
       </Flex>
     </StyledCard>
   );
 };
 
-export default TaskCard;
+export default ProjectCard;

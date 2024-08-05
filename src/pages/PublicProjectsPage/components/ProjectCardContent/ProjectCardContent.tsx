@@ -13,7 +13,7 @@ const TaskContentText = styled(Text)`
   weight: ${(props) => props.weight || 'regular'};
 `;
 
-const TaskContent = () => {
+const ProjectCardContent = () => {
   return (
     <Flex direction='column' m='4'>
       <Heading>{task.title}</Heading>
@@ -39,4 +39,4 @@ const TaskContent = () => {
   );
 };
 
-export default TaskContent;
+export default ProjectCardContent;

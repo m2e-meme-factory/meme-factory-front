@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import './index.css';
 
-const ModalSubtaskForm = () => {
+interface ModalSubtaskFormProps {
+  closeDialog: () => void;
+}
+
+interface ProposalFormFields {
+  hourPrice: number;
+  hoursEstimated: number;
+  coverLetter: string;
+}
+
+const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const hourPrice = parseFloat(formData.get('hour-price') as string);
+    const hoursEstimated = parseFloat(formData.get('hours-estimated') as string);
+    const coverLetter = formData.get('cover-letter') as string;
+
+    const data: ProposalFormFields = {
+      hourPrice: isNaN(hourPrice) ? 0 : hourPrice,
+      hoursEstimated: isNaN(hoursEstimated) ? 0 : hoursEstimated,
+      coverLetter: coverLetter ?? '',
+    };
+
+    console.log(data);
+
     setIsDialogOpen(true);
   };
 
   const handleConfirm = () => {
-    setIsFormSubmitted(true);
     setIsDialogOpen(false);
+    closeDialog();
   };
 
   const handleCancel = () => {

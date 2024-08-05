@@ -8,7 +8,7 @@ import {
   TeamOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import styles from './TaskPage.module.css';
+import styles from './ProjectPage.module.css';
 import { shortenDescription } from '../../shared/utils/helpers/shortenDescription';
 import avatarFallback from '../../shared/imgs/avatar-fallback.svg';
 import AttachmentCard from './components/AttachmentCard/AttachmentCard';
@@ -19,9 +19,10 @@ import descriptionSection from './components/Description/DescriptionSection';
 const IMAGE_URL =
   'https://cdna.artstation.com/p/assets/images/images/012/308/904/large/divya-jain-firewatch-dhj.jpg?1534140299';
 
-const TaskPage = () => {
+const ProjectPage = () => {
   const [isDescVisible, setIsDescVisible] = useState(false);
-  const descriptionExample = "<h1>daffafdafdafsadf</h1><h3>sdfafasdf</h3><p>asdffsafdsafdfasfads</p>";
+  const descriptionExample =
+    '<h1>daffafdafdafsadf</h1><h3>sdfafasdf</h3><p>asdffsafdsafdfasfads</p>';
   const handleToggleDescription = () => {
     setIsDescVisible(!isDescVisible);
   };
@@ -38,7 +39,7 @@ const TaskPage = () => {
             Category: {task.category}
           </Text>
           <Flex mb='5'>
-            <TaskDescriptionDisplay description={descriptionExample}/>
+            <TaskDescriptionDisplay description={descriptionExample} />
           </Flex>
           <Flex align='center' direction='row' mb='2'>
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
@@ -105,4 +106,4 @@ const TaskPage = () => {
   );
 };
 
-export default TaskPage;
+export default ProjectPage;

@@ -1,6 +1,6 @@
 import { Text, Flex, Heading, Button } from '@radix-ui/themes';
 import React, { useState } from 'react';
-import TaskCard from './components/TaskCard/TaskCard';
+import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
 import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
@@ -69,7 +69,7 @@ const TasksPage = () => {
         </Button>
       </Flex>
       <Flex m='4' direction='column'>
-        <TaskCard />
+        <ProjectCard />
       </Flex>
     </>
   );

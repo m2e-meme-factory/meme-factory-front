@@ -1,4 +1,4 @@
-import TaskCard from '../TasksPage/components/TaskCard/TaskCard';
+import ProjectCard from '../PublicProjectsPage/components/ProjectCard/ProjectCard';
 import React from 'react';
 import { Button, Flex, Heading, IconButton } from '@radix-ui/themes';
 import { Link, useNavigate } from 'react-router-dom';

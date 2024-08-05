@@ -58,6 +58,11 @@ interface LogEntry {
   details: LogDetails;
 }
 
+export interface UpdateProjectPayload {
+  projectId: string;
+  project: Project;
+}
+
 interface Transaction {
   id: number;
   projectId: number;
@@ -126,6 +131,12 @@ export interface Project {
   status: string;
 }
 
+//TODO: specify response types for each request
 export type VerifyUserResponse = AxiosResponse<any>;
 export type GetUserDataResponse = AxiosResponse<any>;
 export type GetRefDataResponse = AxiosResponse<any>;
+export type CreateProjectResponse = AxiosResponse<Project>;
+export type GetPublicProjectsResponse = AxiosResponse<Project[]>;
+export type GetProjectResponse = AxiosResponse<Project>;
+export type UpdateProjectResponse = AxiosResponse<Project>;
+export type DeleteProjectResponse = AxiosResponse<any>;

@@ -1,8 +1,8 @@
 export const ROUTES = {
   ABOUT: '/about',
   PROFILE: '/profile',
-  TASKS: '/projects',
-  TASK: '/projects/:id',
+  PUBLIC_PROJECTS: '/projects',
+  PROJECT_PAGE: '/projects/:id',
   HOME: '/',
   VERIFY: '/verify',
   MY_PROJECTS: '/my-projects',

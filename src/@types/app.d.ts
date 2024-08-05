@@ -70,6 +70,17 @@ export interface IWebApp {
   HapticFeedback: any;
 }
 
+export interface ITelegramContext {
+  webApp?: IWebApp;
+  user?: ITelegramUser;
+  unsafeData?: {
+    query_id: string;
+    user: ITelegramUser;
+    auth_date: string;
+    hash: string;
+  };
+}
+
 export interface IDrive {
   id: number;
   from: string;

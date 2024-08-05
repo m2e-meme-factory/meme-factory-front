@@ -1,15 +1,20 @@
-// TelegramProvider
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { ITelegramUser, IWebApp } from '../../@types/app';
 
 export interface ITelegramContext {
   webApp?: IWebApp;
   user?: ITelegramUser;
+  unsafeData?: {
+    query_id: string;
+    user: ITelegramUser;
+    auth_date: string;
+    hash: string;
+  };
 }
 
 export const TelegramContext = createContext<ITelegramContext>({});
 
-export const TelegramProvider = ({ children }: { children: React.ReactNode }) => {
+export const TelegramProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [webApp, setWebApp] = useState<IWebApp | null>(null);
 
   useEffect(() => {
@@ -21,20 +26,23 @@ export const TelegramProvider = ({ children }: { children: React.ReactNode }) =>
   }, []);
 
   const value = useMemo(() => {
-    console.log('hi', webApp);
     return webApp
       ? {
-          webApp,
-          unsafeData: webApp.initDataUnsafe,
-          user: webApp.initDataUnsafe.user,
-        }
+        webApp,
+        unsafeData: webApp.initDataUnsafe as {
+          query_id: string;
+          user: ITelegramUser;
+          auth_date: string;
+          hash: string;
+        },
+        user: webApp.initDataUnsafe?.user,
+      }
       : {};
   }, [webApp]);
 
   return (
     <TelegramContext.Provider value={value}>
-      {/* Make sure to include script tag with "beforeInteractive" strategy to pre-load web-app script */}
-      {webApp ? children : ''}
+      {webApp ? children : null}
     </TelegramContext.Provider>
   );
 };

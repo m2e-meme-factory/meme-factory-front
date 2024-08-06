@@ -12,7 +12,7 @@ import { ArrowLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
-import { Subtask } from '../../@types/api';
+import { SubtaskInfo } from '../../@types/api';
 import { FormError, Option, Price } from '../../@types/app';
 
 const CreateProjectPage = () => {
@@ -25,7 +25,7 @@ const CreateProjectPage = () => {
   const [category, setCategory] = useState<string | null>(null);
   const [priceMode, setPriceMode] = useState<'single' | 'range'>('single');
   const [price, setPrice] = useState<Price>({});
-  const [subtasks, setSubtasks] = useState<Subtask[]>([]);
+  const [subtasks, setSubtasks] = useState<SubtaskInfo[]>([]);
   const [singleFile, setSingleFile] = useState<File | null>(null);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);

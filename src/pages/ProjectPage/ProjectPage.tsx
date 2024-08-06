@@ -13,20 +13,20 @@ import AttachmentCard from './components/AttachmentCard/AttachmentCard';
 import SubtaskCard from './components/SubtaskCard/SubtaskCard';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const IMAGE_URL =
   'https://cdna.artstation.com/p/assets/images/images/012/308/904/large/divya-jain-firewatch-dhj.jpg?1534140299';
 
 const ProjectPage = () => {
-  const id = useParams().toString();
+  const { id } = useParams();
   const {data} = useGetProject(id);
   const task = data?.data;
 
   return (
     <Flex direction='column'>
       <Flex className={styles.bannerContainer}>
-        <img src={IMAGE_URL} alt='banner' className={styles.bannerImage} />
+        <img src={task?.bannerUrl} alt='banner' className={styles.bannerImage} />
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
@@ -79,10 +79,10 @@ const ProjectPage = () => {
             </Flex>
             {task?.tasks && task?.tasks.map((subtask, index) => (
               <SubtaskCard
-                id={subtask.id}
-                description={subtask.description}
-                price={subtask.price}
-                title={subtask.title}
+                id={subtask.task.id}
+                description={subtask.task.description}
+                price={subtask.task.price}
+                title={subtask.task.title}
               />
             ))}
           </Flex>
@@ -93,8 +93,8 @@ const ProjectPage = () => {
                 Attachments
               </Text>
             </Flex>
-            {task?.attachedFiles &&
-              task?.attachedFiles.map((file, index) => (
+            {task?.files &&
+              task?.files.map((file, index) => (
                 <AttachmentCard name={file} url={'/'} />
               ))}
           </Flex>

@@ -7,11 +7,17 @@ export interface VerifyUserData {
   email: string;
 }
 
-export interface Subtask {
+export interface SubtaskInfo {
   id: string;
   title: string;
   description: string;
   price: number;
+}
+
+export interface Subtask {
+  projectId: string;
+  task: SubtaskInfo;
+  taskId: string;
 }
 
 export interface VerifyUserRequestData {
@@ -130,7 +136,7 @@ export interface Project {
   title: string;
   description: string;
   bannerUrl: string;
-  attachedFiles: string[];
+  files: string[];
   category: string;
   tags: string[];
   price: number;
@@ -138,6 +144,17 @@ export interface Project {
   creatorId: string;
   creationDate: Date;
   status: string;
+}
+
+export interface CreateProjectDTO {
+  title: string;
+  description: string;
+  bannerUrl: string;
+  attachedFiles: string[];
+  category: string;
+  tags: string[];
+  price: number;
+  tasks: SubtaskInfo[];
 }
 
 //TODO: specify response types for each request

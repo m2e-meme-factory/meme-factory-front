@@ -3,13 +3,13 @@ import { RocketOutlined } from '@ant-design/icons';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import { TrashIcon } from '@radix-ui/react-icons';
 import styles from './CreatedSubtask.module.css';
-import { Subtask } from '../../../../@types/api';
+import { SubtaskInfo } from '../../../../@types/api';
 
 interface SubtaskCardProps {
   id: string;
   title: string;
   price: number;
-  setSubtask: Dispatch<SetStateAction<Subtask[]>>;
+  setSubtask: Dispatch<SetStateAction<SubtaskInfo[]>>;
 }
 
 const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) => {

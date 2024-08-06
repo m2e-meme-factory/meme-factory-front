@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Flex } from '@radix-ui/themes';
 import styles from './CardBanner.module.css';
 
-const IMAGE_URL =
+const FALLBACK_IMAGE =
   'https://cdna.artstation.com/p/assets/images/images/012/308/904/large/divya-jain-firewatch-dhj.jpg?1534140299';
 
-const CardBanner = () => {
+interface CardBannerProps {
+  bannerUrl?: string;
+}
+
+const CardBanner: FC<CardBannerProps> = ({bannerUrl}) => {
   return (
     <Flex className={styles.bannerContainer}>
-      <img src={IMAGE_URL} alt='CardBannerImage' className={styles.bannerImage} />
+      <img src={bannerUrl ? bannerUrl : FALLBACK_IMAGE} alt='CardBannerImage' className={styles.bannerImage} />
     </Flex>
   );
 };

@@ -1,8 +1,10 @@
 import { Card, Flex } from '@radix-ui/themes';
 import CardBanner from '../CardBanner/CardBanner';
 import ProjectCardContent from '../ProjectCardContent/ProjectCardContent';
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
+import { Project } from '../../../../@types/api';
+import { useNavigate } from 'react-router-dom';
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -11,12 +13,18 @@ const StyledCard = styled(Card)`
   background-color: #121212;
 `;
 
-const ProjectCard = () => {
+interface ProjectCardProps {
+  project: Project;
+}
+
+const ProjectCard: FC<ProjectCardProps> = ({project}) => {
+  const navigate = useNavigate();
+
   return (
-    <StyledCard>
+    <StyledCard onClick={() => navigate(`/projects/${project.id}`)}>
       <Flex direction='column'>
-        <CardBanner />
-        <ProjectCardContent />
+        <CardBanner bannerUrl={project.bannerUrl} />
+        <ProjectCardContent project={project}/>
       </Flex>
     </StyledCard>
   );

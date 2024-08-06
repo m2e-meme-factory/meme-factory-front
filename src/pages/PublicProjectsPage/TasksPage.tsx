@@ -7,11 +7,19 @@ import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
+import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
+import Loading from '../../shared/components/Loading';
 
 const TasksPage = () => {
+  const {data, isLoading, error} = useGetPublicProjects();
+
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const animatedComponents = makeAnimated();
+
+  if (isLoading) {
+    return <Loading/>;
+  }
 
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
@@ -69,7 +77,9 @@ const TasksPage = () => {
         </Button>
       </Flex>
       <Flex m='4' direction='column'>
-        <ProjectCard />
+        {data?.data && data?.data.map((project, index) => (
+          <ProjectCard key={index} project={project} />
+        ))}
       </Flex>
     </>
   );

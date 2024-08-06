@@ -10,7 +10,6 @@ export const useLogin = (initDataString?: string) => {
      }
      return Promise.reject('Invalid init data');
     },
-    staleTime: 50 * 60 * 1000,
     select: (data) => data,
   });
 

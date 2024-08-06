@@ -1,4 +1,5 @@
 import {
+  CreateProjectDTO,
   CreateProjectResponse, DeleteProjectResponse, GetProjectResponse,
   GetPublicProjectsResponse,
   Project,
@@ -6,7 +7,7 @@ import {
 } from '../../../../../@types/api';
 import api from '../../api';
 
-export type CreateProjectConfig = RequestConfig<Project>;
+export type CreateProjectConfig = RequestConfig<CreateProjectDTO>;
 export type GetPublicProjectsConfig = RequestConfig;
 export type GetOrDeleteProjectConfig = RequestConfig<string>;
 export type UpdateProjectConfig = RequestConfig<UpdateProjectPayload>;

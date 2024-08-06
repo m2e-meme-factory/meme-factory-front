@@ -12,11 +12,16 @@ import { ArrowLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
-import { SubtaskInfo } from '../../@types/api';
+import { CreateProjectDTO, SubtaskInfo } from '../../@types/api';
 import { FormError, Option, Price } from '../../@types/app';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
+import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
+  const user = useSelector((state: RootState) => state.user.user);
+  const createProjectMutation = useCreateProject();
 
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
@@ -128,23 +133,32 @@ const CreateProjectPage = () => {
 
   const handleCreateProject = () => {
     const errors = validateForm();
+
     if (errors.length === 0) {
-      const projectData = {
+      let projectPrice = priceMode === 'range' ? price.min : price.single;
+
+      const projectData: CreateProjectDTO = {
+        authorId: user?.id,
         title,
         description,
         tags,
         category,
-        price,
-        subtasks,
-        singleFile: singleFile ? singleFile.name : null,
-        multipleFiles: multipleFiles.map((file) => file.name),
+        price: projectPrice ? projectPrice : 0,
+        subtasks: subtasks.map((subtask) => {
+          const { id, ...rest } = subtask;
+          return rest;
+        }),
+        bannerUrl: singleFile ? singleFile.name : null,
+        files: multipleFiles.map((file) => file.name),
       };
 
       console.log('Project Data:', projectData);
+      createProjectMutation.mutate({ params: projectData });
     } else {
       setFormErrors(errors);
     }
   };
+
 
   return (
     <Flex m='4' direction='column'>

@@ -66,7 +66,7 @@ interface LogEntry {
 
 export interface UpdateProjectPayload {
   projectId: string;
-  project: Project;
+  project: CreateProjectDTO;
 }
 
 interface Transaction {
@@ -131,6 +131,12 @@ export interface User {
   createdAt: Date;
 }
 
+export interface CreateSubtaskDTO {
+  title: string;
+  description: string;
+  price: number;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -149,12 +155,13 @@ export interface Project {
 export interface CreateProjectDTO {
   title: string;
   description: string;
-  bannerUrl: string;
-  attachedFiles: string[];
-  category: string;
+  bannerUrl: string | null;
+  files: string[];
+  category: string | null;
   tags: string[];
   price: number;
-  tasks: SubtaskInfo[];
+  subtasks: CreateSubtaskDTO[];
+  authorId: string | undefined;
 }
 
 //TODO: specify response types for each request

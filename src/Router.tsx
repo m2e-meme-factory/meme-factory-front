@@ -11,6 +11,7 @@ import React from 'react';
 import ProtectedRoute from './shared/components/ProtectedRoute';
 import TasksPage from './pages/PublicProjectsPage/TasksPage';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
+import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
         path: ROUTES.LOGS,
         element: <ProtectedRoute element={<FreelancerLogsPage />} />,
       },
+      {
+        path: ROUTES.EDIT,
+        element: <ProtectedRoute element={<EditProjectPage/>} />,
+      }
     ],
   },
 ]);

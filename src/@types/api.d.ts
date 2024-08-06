@@ -147,7 +147,7 @@ export interface Project {
   tags: string[];
   price: number;
   tasks: Subtask[];
-  creatorId: string;
+  authorId: string;
   creationDate: Date;
   status: string;
 }

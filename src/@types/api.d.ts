@@ -144,6 +144,7 @@ export interface Project {
 export type VerifyUserResponse = AxiosResponse<any>;
 export type GetUserDataResponse = AxiosResponse<any>;
 export type GetRefDataResponse = AxiosResponse<any>;
+export type LoginResponse = AxiosResponse<LoginResponseData>
 export type CreateProjectResponse = AxiosResponse<Project>;
 export type GetPublicProjectsResponse = AxiosResponse<Project[]>;
 export type GetProjectResponse = AxiosResponse<Project>;

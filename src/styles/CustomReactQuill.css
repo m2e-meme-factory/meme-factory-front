@@ -1,0 +1,18 @@
+.ql-editor {
+    width: 90vw;
+    box-sizing: border-box;
+}
+.ql-toolbar.ql-snow {
+    background-color: #fecf0a;
+    border: 1px solid #fecf0a;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.ql-container.ql-snow {
+    border: 1px solid #fecf0a;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    min-height: 20vh;
+    box-sizing: border-box;
+    height: auto;
+}

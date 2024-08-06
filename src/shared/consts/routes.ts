@@ -4,7 +4,6 @@ export const ROUTES = {
   PUBLIC_PROJECTS: '/projects',
   PROJECT_PAGE: '/projects/:id',
   HOME: '/',
-  VERIFY: '/verify',
   MY_PROJECTS: '/my-projects',
   CREATE_PROJECT: '/create-project',
   PROFILE_SETTINGS: '/profile/settings',

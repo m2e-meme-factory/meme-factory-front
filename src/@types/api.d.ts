@@ -95,7 +95,16 @@ export interface GetRefDataParams {
   ref_id: string;
 }
 
+export interface LoginPayload {
+  initData: { initData: string };
+}
+
 export type ApiRequestConfig = AxiosRequestConfig;
+
+export interface LoginResponseData {
+  token: string;
+  user: User;
+}
 
 export type RequestConfig<Params = undefined> = Params extends undefined
   ? { config?: ApiRequestConfig }
@@ -106,7 +115,7 @@ export interface User {
   telegramId: string;
   username: string;
   role: Role;
-  isBanned: boolean;
+  isBaned: boolean;
   isVerified: boolean;
   createdAt: Date;
 }
@@ -129,3 +138,4 @@ export interface Project {
 export type VerifyUserResponse = AxiosResponse<any>;
 export type GetUserDataResponse = AxiosResponse<any>;
 export type GetRefDataResponse = AxiosResponse<any>;
+export type LoginResponse = AxiosResponse<LoginResponseData>

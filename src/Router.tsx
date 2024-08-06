@@ -2,7 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import BasePageWrapper from './shared/components/BasePageWrapper';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import About from './pages/AboutPage/About';
-import VerifyForm from './pages/VerifyPage/VerifyForm';
 import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
@@ -28,15 +27,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <ProtectedRoute element={<TasksPage />} />,
+        element: <TasksPage />,
       },
       {
         path: ROUTES.ABOUT,
         element: <About />,
-      },
-      {
-        path: ROUTES.VERIFY,
-        element: <VerifyForm />,
       },
       {
         path: ROUTES.CREATE_PROJECT,

@@ -3,8 +3,8 @@ import {
   VerifyUserData,
   VerifyUserRequestData,
   VerifyUserResponse,
-} from '../../../../@types/api';
-import api from '../api';
+} from '../../../../../@types/api';
+import api from '../../api';
 
 export type VerifyUserConfig = RequestConfig<VerifyUserRequestData>;
 

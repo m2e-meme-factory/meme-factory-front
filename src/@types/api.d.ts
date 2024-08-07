@@ -97,13 +97,19 @@ interface Dispute {
 }
 
 export interface GetUserDataParams {
-  query_id: string;
   user_id: string;
 }
 
+export interface GetUserByIdParams {
+  id: string;
+}
+
+export interface GetUserByTelegramParams {
+  id: number;
+}
+
 export interface GetRefDataParams {
-  query_id: string;
-  ref_id: string;
+  telegramId: string;
 }
 
 export interface LoginPayload {
@@ -129,6 +135,17 @@ export interface User {
   isBaned: boolean;
   isVerified: boolean;
   createdAt: Date;
+}
+
+export interface UserWithRef {
+  id: number,
+  telegramId: string,
+  username: string,
+  isBaned: boolean,
+  isVerified: boolean,
+  createdAt: Date,
+  inviterRefCode?: string,
+  refCode: string;
 }
 
 export interface CreateSubtaskDTO {
@@ -166,7 +183,7 @@ export interface CreateProjectDTO {
 
 //TODO: specify response types for each request
 export type VerifyUserResponse = AxiosResponse<any>;
-export type GetUserDataResponse = AxiosResponse<any>;
+export type GetUserDataResponse = AxiosResponse<UserWithRef>;
 export type GetRefDataResponse = AxiosResponse<any>;
 export type LoginResponse = AxiosResponse<LoginResponseData>
 export type CreateProjectResponse = AxiosResponse<Project>;

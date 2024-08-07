@@ -12,7 +12,7 @@ interface CardBannerProps {
 const CardBanner: FC<CardBannerProps> = ({bannerUrl}) => {
   return (
     <Flex className={styles.bannerContainer}>
-      <img src={bannerUrl ? bannerUrl : FALLBACK_IMAGE} alt='CardBannerImage' className={styles.bannerImage} />
+      <img src={bannerUrl ? bannerUrl : FALLBACK_IMAGE} className={styles.bannerImage}  alt={' '}/>
     </Flex>
   );
 };

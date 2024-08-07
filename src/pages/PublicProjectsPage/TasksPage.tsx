@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
-import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
+import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
 
 const TasksPage = () => {
   const {data, isLoading, error} = useGetPublicProjects();
@@ -54,7 +54,7 @@ const TasksPage = () => {
             closeMenuOnSelect={false}
             components={animatedComponents}
             options={CATEGORIES}
-            styles={CUSTOM_SELECT_STYLES}
+            styles={CUSTOM_SELECT_STYLES_SINGLE}
             isMulti={false}
           />
         </Flex>
@@ -69,7 +69,7 @@ const TasksPage = () => {
             components={animatedComponents}
             isMulti
             options={TAGS}
-            styles={CUSTOM_SELECT_STYLES}
+            styles={CUSTOM_SELECT_STYLES_MULTI}
           />
         </Flex>
         <Button mt='3' onClick={handleFindButtonClick}>

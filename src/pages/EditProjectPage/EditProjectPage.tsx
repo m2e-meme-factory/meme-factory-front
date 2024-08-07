@@ -1,4 +1,4 @@
-import { Text, Button, Flex, Heading, IconButton, TextField } from '@radix-ui/themes';
+import { Text, Button, Flex, Heading, IconButton, TextField, Card } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
 import React, { ChangeEvent, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
@@ -8,17 +8,19 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, ButtonIcon, TrashIcon } from '@radix-ui/react-icons';
 import Select, { MultiValue, SingleValue } from 'react-select';
-import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
+import {
+  CUSTOM_SELECT_STYLES_MULTI,
+  CUSTOM_SELECT_STYLES_SINGLE,
+} from '../../styles/customSelectStyles';
 import { CreateProjectDTO, SubtaskInfo } from '../../@types/api';
 import { FormError, Option, Price } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
-import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
 import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskSection/CreateSubstaskSection';
 import { useUpdateProject } from '../../shared/utils/api/hooks/project/useUpdateProject';
-import { PROJECT_STATUSES } from '../../shared/consts/project-statuses';
+import ProjectStatusSelect from './components/ProjectStatusSelect';
 
 const EditProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -38,6 +40,20 @@ const EditProjectPage = () => {
   const [singleFile, setSingleFile] = useState<File | null>(null);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
+  const [attachedFiles, setAttachedFiles] = useState<string[]>(project ? project.files : []);
+  const [attachedBanner, setAttachedBanner] = useState<string | null>(project ? project.bannerUrl : null);
+
+  const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
+
+  const tagsOptionsSelected = project?.tags.map((tag) => ({
+    value: tag,
+    label: capitalizeFirstLetter(tag)
+  }));
+
+  const categoryOptionSelected = {
+    value: project?.category,
+    label: capitalizeFirstLetter(project?.category ? project?.category : ''),
+  };
 
   const handleSingleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -140,6 +156,9 @@ const EditProjectPage = () => {
 
     if (errors.length === 0) {
       let projectPrice = priceMode === 'range' ? price.min : price.single;
+      const fileNamesFromMultipleFiles = multipleFiles.map((file) => file.name);
+      const combinedFileNames = [...fileNamesFromMultipleFiles, ...attachedFiles];
+
 
       const projectData: CreateProjectDTO = {
         authorId: user?.id,
@@ -152,19 +171,18 @@ const EditProjectPage = () => {
           const { id, ...rest } = subtask;
           return rest;
         }),
-        bannerUrl: singleFile ? singleFile.name : null,
-        files: multipleFiles.map((file) => file.name),
+        bannerUrl: singleFile ? singleFile.name : (attachedBanner ? attachedBanner : null),
+        files: combinedFileNames
       };
 
-      console.log('Project Data:', projectData);
-      if (project) {
+      if (project && projectData) {
         updateProjectMutation.mutate({params: {projectId: project.id, project: projectData}});
+        navigate(`/projects/${project.id}`);
       }
     } else {
       setFormErrors(errors);
     }
   };
-
 
   return (
     <Flex m='4' direction='column'>
@@ -172,7 +190,7 @@ const EditProjectPage = () => {
         <IconButton size='2' onClick={() => navigate(-1)} mr='3'>
           <ArrowLeftIcon />
         </IconButton>
-        <Heading>Create Project</Heading>
+        <Heading>Edit Project</Heading>
       </Flex>
       <Flex direction='column'>
         <Text weight='medium' mt='3' mb='1'>
@@ -200,11 +218,39 @@ const EditProjectPage = () => {
         <Text weight='medium' mt='3' mb='1'>
           Banner
         </Text>
-        <input type='file' onChange={handleSingleFileChange} />
+        {attachedBanner && (
+          <Card mb='3'>
+            <Flex align='center' justify='between'>
+              <Text>{attachedBanner}</Text>
+              <IconButton ml='3' onClick={() => setAttachedBanner(null)}>
+                <TrashIcon></TrashIcon>
+              </IconButton>
+            </Flex>
+          </Card>
+        )}
+        {!attachedBanner && (
+          <input type="file" onChange={handleSingleFileChange} />
+        )}
 
-        <Text weight='medium' mt='3' mb='1'>
+        <Text weight="medium" mt="3">
           Files
         </Text>
+        <Flex>
+          {attachedFiles.length > 0 && (
+            <ul>
+              {attachedFiles.map((file, index) => (
+                <li key={index}>
+                  <Flex align='center' justify='between'>
+                    <Text>{file}</Text>
+                    <IconButton onClick={ () => setAttachedFiles((prevState) => prevState.filter((files) => file !== file))}>
+                      <TrashIcon></TrashIcon>
+                    </IconButton>
+                  </Flex>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Flex>
         <input type='file' multiple onChange={handleMultipleFilesChange} />
         {multipleFiles.length > 0 && (
           <ul>
@@ -220,25 +266,27 @@ const EditProjectPage = () => {
           Tags
         </Text>
         <Select
+          defaultValue={tagsOptionsSelected}
           onChange={handleTagsChange}
           placeholder='Select tags'
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
           options={TAGS}
-          styles={CUSTOM_SELECT_STYLES}
+          styles={CUSTOM_SELECT_STYLES_MULTI}
         />
 
         <Text weight='medium' mt='3' mb='1'>
           Category
         </Text>
         <Select
+          defaultValue={categoryOptionSelected}
           onChange={handleCategoryChange}
           placeholder='Select category'
           closeMenuOnSelect={true}
           components={animatedComponents}
           options={CATEGORIES}
-          styles={CUSTOM_SELECT_STYLES}
+          styles={CUSTOM_SELECT_STYLES_SINGLE}
           isMulti={false}
         />
         {formErrors.find((error) => error.field === 'category') && (
@@ -312,15 +360,7 @@ const EditProjectPage = () => {
           Edit Project
         </Button>
 
-        <Select
-          placeholder='Select status'
-          closeMenuOnSelect={true}
-          components={animatedComponents}
-          options={PROJECT_STATUSES}
-          styles={CUSTOM_SELECT_STYLES}
-          isMulti={false}
-        />
-        <Button style={{marginTop: '20px', marginBottom: '20px'}}>Change status</Button>
+        {project && <ProjectStatusSelect projectId={project.id}/>}
       </Flex>
     </Flex>
   );

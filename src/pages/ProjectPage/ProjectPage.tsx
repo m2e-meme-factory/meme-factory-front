@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
+import { Project } from '../../@types/api';
 
 const ProjectPage = () => {
   const [isUserCreator, setIsUserCreator] = useState(false);
@@ -25,22 +26,28 @@ const ProjectPage = () => {
 
   const { id } = useParams();
   const { data, isLoading, error } = useGetProject(id);
-  const task = data?.data;
+  const [currentProject, setCurrentProject] = useState<Project>();
   const user = useSelector((state: RootState) => state.user.user);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (task && user) {
-      setIsUserCreator(task.authorId == user.id);
+    if (currentProject && user) {
+      setIsUserCreator(currentProject.authorId == user.id);
     }
-  }, [task, user]);
+  }, [currentProject, user]);
 
   useEffect(() => {
-    if (task) {
-      dispatch(setProject(task));
+    if (currentProject) {
+      dispatch(setProject(currentProject));
     }
-  }, [task]);
+  }, [currentProject]);
+
+  useEffect(() => {
+    if (data) {
+      setCurrentProject(data.data);
+    }
+  }, [data]);
 
   if (isLoading) {
     return <Loading />;
@@ -53,25 +60,25 @@ const ProjectPage = () => {
   return (
     <Flex direction='column'>
       <Flex className={styles.bannerContainer}>
-        <img src={task?.bannerUrl} alt='banner' className={styles.bannerImage} />
+        <img src={currentProject?.bannerUrl} alt='banner' className={styles.bannerImage} />
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
           <Flex align='center' justify='between'>
-            <Heading weight='medium'>{task?.title}</Heading>
+            <Heading weight='medium'>{currentProject?.title}</Heading>
             {isUserCreator && <Button onClick={handleEditClick}>Edit project</Button>}
           </Flex>
           <Text color='yellow' weight='medium' mb='5'>
-            Category: {task?.category}
+            Category: {currentProject?.category}
           </Text>
           <Flex mb='5'>
-            <TaskDescriptionDisplay description={task?.description || ''} />
+            <TaskDescriptionDisplay description={currentProject?.description || ''} />
           </Flex>
           <Flex align='center' direction='row' mb='2'>
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
             <Text weight='medium' size='5'>
               Tags:{' '}
-              {task?.tags && task?.tags.map((tag, index) => (
+              {currentProject?.tags && currentProject?.tags.map((tag, index) => (
                 <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
                   {tag}
                 </Badge>
@@ -107,7 +114,7 @@ const ProjectPage = () => {
                 Subtasks
               </Text>
             </Flex>
-            {task?.tasks && task?.tasks.map((subtask, index) => (
+            {currentProject?.tasks && currentProject?.tasks.map((subtask, index) => (
               <SubtaskCard
                 key={index}
                 id={subtask.task.id}
@@ -124,7 +131,7 @@ const ProjectPage = () => {
                 Attachments
               </Text>
             </Flex>
-            {task?.files && task?.files.map((file, index) => (
+            {currentProject?.files && currentProject?.files.map((file, index) => (
               <AttachmentCard key={index} name={file} url={'/'} />
             ))}
           </Flex>

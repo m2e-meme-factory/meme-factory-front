@@ -236,7 +236,7 @@ const EditProjectPage = () => {
           Files
         </Text>
         <Flex>
-          {attachedFiles.length > 0 && (
+          {attachedFiles && (
             <ul>
               {attachedFiles.map((file, index) => (
                 <li key={index}>

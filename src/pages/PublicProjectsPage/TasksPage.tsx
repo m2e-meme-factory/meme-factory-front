@@ -1,5 +1,5 @@
 import { Text, Flex, Heading, Button } from '@radix-ui/themes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
@@ -9,13 +9,21 @@ import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
 import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
+import { Project } from '../../@types/api';
 
 const TasksPage = () => {
-  const {data, isLoading, error} = useGetPublicProjects();
+  const {data, isLoading, error, refetch } = useGetPublicProjects();
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
   const animatedComponents = makeAnimated();
+
+  useEffect(() => {
+    if (data) {
+      setProjects(data.data);
+    }
+  }, [data]);
 
   if (isLoading) {
     return <Loading/>;
@@ -77,7 +85,7 @@ const TasksPage = () => {
         </Button>
       </Flex>
       <Flex m='4' direction='column'>
-        {data?.data && data?.data.map((project, index) => (
+        {projects.map((project, index) => (
           <ProjectCard key={index} project={project} />
         ))}
       </Flex>

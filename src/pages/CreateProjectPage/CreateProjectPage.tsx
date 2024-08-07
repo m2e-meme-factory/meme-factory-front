@@ -11,7 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
 import Select, { MultiValue, SingleValue } from 'react-select';
-import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
+import {
+  CUSTOM_SELECT_STYLES_MULTI,
+  CUSTOM_SELECT_STYLES_SINGLE,
+} from '../../styles/customSelectStyles';
 import { CreateProjectDTO, SubtaskInfo } from '../../@types/api';
 import { FormError, Option, Price } from '../../@types/app';
 import { useSelector } from 'react-redux';
@@ -154,6 +157,7 @@ const CreateProjectPage = () => {
 
       console.log('Project Data:', projectData);
       createProjectMutation.mutate({ params: projectData });
+      navigate('/projects')
     } else {
       setFormErrors(errors);
     }
@@ -220,7 +224,7 @@ const CreateProjectPage = () => {
           components={animatedComponents}
           isMulti
           options={TAGS}
-          styles={CUSTOM_SELECT_STYLES}
+          styles={CUSTOM_SELECT_STYLES_MULTI}
         />
 
         <Text weight='medium' mt='3' mb='1'>
@@ -232,7 +236,7 @@ const CreateProjectPage = () => {
           closeMenuOnSelect={false}
           components={animatedComponents}
           options={CATEGORIES}
-          styles={CUSTOM_SELECT_STYLES}
+          styles={CUSTOM_SELECT_STYLES_SINGLE}
           isMulti={false}
         />
         {formErrors.find((error) => error.field === 'category') && (

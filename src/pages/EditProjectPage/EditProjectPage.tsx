@@ -18,6 +18,7 @@ import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
 import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskSection/CreateSubstaskSection';
 import { useUpdateProject } from '../../shared/utils/api/hooks/project/useUpdateProject';
+import { PROJECT_STATUSES } from '../../shared/consts/project-statuses';
 
 const EditProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -234,7 +235,7 @@ const EditProjectPage = () => {
         <Select
           onChange={handleCategoryChange}
           placeholder='Select category'
-          closeMenuOnSelect={false}
+          closeMenuOnSelect={true}
           components={animatedComponents}
           options={CATEGORIES}
           styles={CUSTOM_SELECT_STYLES}
@@ -313,9 +314,9 @@ const EditProjectPage = () => {
 
         <Select
           placeholder='Select status'
-          closeMenuOnSelect={false}
+          closeMenuOnSelect={true}
           components={animatedComponents}
-          options={[]}
+          options={PROJECT_STATUSES}
           styles={CUSTOM_SELECT_STYLES}
           isMulti={false}
         />

@@ -85,6 +85,14 @@ enum DisputeStatus {
   CLOSED = 'closed',
 }
 
+enum ProjectStatus {
+  DRAFT = 'draft',
+  MODERATION = 'moderation',
+  PUBLISHED = 'published',
+  NOT_ACCEPTED = 'not_accepted',
+  CLOSED = 'closed'
+}
+
 interface Dispute {
   id: string;
   projectId: string;
@@ -166,7 +174,12 @@ export interface Project {
   tasks: Subtask[];
   authorId: string;
   creationDate: Date;
-  status: 'draft' | 'moderation' | 'published' | 'not_accepted' | 'closed';
+  status: ProjectStatus;
+}
+
+export interface UpdateStatusPayload {
+  id: string;
+  payload: { status: ProjectStatus };
 }
 
 export interface CreateProjectDTO {
@@ -186,8 +199,3 @@ export type VerifyUserResponse = AxiosResponse<any>;
 export type GetUserDataResponse = AxiosResponse<UserWithRef>;
 export type GetRefDataResponse = AxiosResponse<any>;
 export type LoginResponse = AxiosResponse<LoginResponseData>
-export type CreateProjectResponse = AxiosResponse<Project>;
-export type GetPublicProjectsResponse = AxiosResponse<Project[]>;
-export type GetProjectResponse = AxiosResponse<Project>;
-export type UpdateProjectResponse = AxiosResponse<Project>;
-export type DeleteProjectResponse = AxiosResponse<any>;

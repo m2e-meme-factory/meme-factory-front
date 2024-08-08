@@ -166,7 +166,7 @@ export interface Project {
   tasks: Subtask[];
   authorId: string;
   creationDate: Date;
-  status: string;
+  status: 'draft' | 'moderation' | 'published' | 'not_accepted' | 'closed';
 }
 
 export interface CreateProjectDTO {

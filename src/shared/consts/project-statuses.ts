@@ -2,11 +2,23 @@ import { Option } from '../../@types/app';
 
 export const PROJECT_STATUSES: Option[] = [
   {
-    label: 'Active',
-    value: 'active'
+    label: 'Draft',
+    value: 'draft'
   },
   {
-    label: 'Deleted',
-    value: 'deleted'
-  }
+    label: 'Moderation',
+    value: 'moderation'
+  },
+  {
+    label: 'Published',
+    value: 'published'
+  },
+  {
+    label: 'Rejected',
+    value: 'not_accepted'
+  },
+  {
+    label: 'Closed',
+    value: 'closed'
+  },
 ]

@@ -90,7 +90,7 @@ export default function ProfilePage() {
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>Creator</DataList.Value>
+                  <DataList.Value>{user?.role}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Grid>

@@ -8,6 +8,9 @@ export const useGetPublicProjects = () => {
       return getPublicProjects({});
     },
     select: (data) => data,
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   });
 
   return { ...query };

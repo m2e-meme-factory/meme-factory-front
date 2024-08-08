@@ -1,10 +1,28 @@
-import ProjectCard from '../PublicProjectsPage/components/ProjectCard/ProjectCard';
-import React from 'react';
-import { Button, Flex, Heading, IconButton } from '@radix-ui/themes';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, Flex, Heading } from '@radix-ui/themes';
+import { Link } from 'react-router-dom';
 import MyProjectCard from './components/MyProjectCard/MyProjectCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
+import Loading from '../../shared/components/Loading';
+import { useGetMyProjects } from '../../shared/utils/api/hooks/project/useGetMyProjects';
+import { Project } from 'api';
 
 const MyProjectsPage = () => {
+  const currentUser = useSelector((state: RootState) => state.user.user);
+  const { data: projects, isLoading } = useGetMyProjects(currentUser?.id);
+  const [myProjects, setMyProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    if (projects) {
+      setMyProjects(projects.data);
+    }
+  }, [projects]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Flex m='4' direction='column'>
       <Flex direction='column'>
@@ -16,12 +34,16 @@ const MyProjectsPage = () => {
         </Link>
       </Flex>
       <Flex mt='4' direction='column'>
-        <MyProjectCard
-          title='Sample project'
-          category='Design'
-          freelancersCount={999}
-          status='published'
-        ></MyProjectCard>
+        {myProjects.map((project, index) => (
+          <MyProjectCard
+            id={project.id}
+            bannerUrl={project.bannerUrl}
+            title={project.title}
+            category={project.category}
+            freelancersCount={0}
+            status={project.status}
+          />
+        ))}
       </Flex>
     </Flex>
   );

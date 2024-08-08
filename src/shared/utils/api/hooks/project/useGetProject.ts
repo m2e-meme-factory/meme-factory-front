@@ -1,14 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { getProject } from '../../requests/project/project-requests';
 
-export const useGetProject = (projectId: string) => {
+export const useGetProject = (projectId?: string) => {
   const query = useQuery({
     queryKey: ['getProject', projectId],
     queryFn: () => {
-      return getProject({ params: projectId });
+      if (projectId) {
+        return getProject({ params: projectId });
+      }
+      return Promise.reject('ProjectId invalid');
     },
     select: (data) => data,
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   });
 
-  return { ...query};
+  return { ...query };
 };

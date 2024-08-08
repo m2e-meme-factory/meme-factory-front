@@ -1,8 +1,8 @@
 import { Flex, Heading, Text } from '@radix-ui/themes';
-import { task } from '../../../../shared/consts/task-example';
 import styled from 'styled-components';
 import { DollarOutlined, TagsOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { FC } from 'react';
+import { Project } from 'api';
 
 const TaskContentHeading = styled(Heading)`
   color: black;
@@ -13,18 +13,22 @@ const TaskContentText = styled(Text)`
   weight: ${(props) => props.weight || 'regular'};
 `;
 
-const ProjectCardContent = () => {
+interface ProjectCardContentProps {
+  project: Project;
+}
+
+const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
   return (
     <Flex direction='column' m='4'>
-      <Heading>{task.title}</Heading>
+      <Heading>{project.title}</Heading>
       <Text mb='3' color='yellow' weight='medium'>
-        {task.category}
+        {project.category}
       </Text>
       <Flex mb='3'>
         <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
         <Text weight='medium'>
           Tags:{' '}
-          {task.tags.map((tag, index) => (
+          {project.tags.map((tag, index) => (
             <span key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
               {tag}
             </span>

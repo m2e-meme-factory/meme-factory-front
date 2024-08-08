@@ -1,6 +1,7 @@
 .ql-editor {
     width: 90vw;
     box-sizing: border-box;
+    min-height: 19vh;
 }
 .ql-toolbar.ql-snow {
     background-color: #fecf0a;

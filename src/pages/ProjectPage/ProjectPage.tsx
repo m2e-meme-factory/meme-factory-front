@@ -1,5 +1,5 @@
-import React from 'react';
-import { Avatar, Badge, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Badge, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import {
   DollarOutlined,
   PushpinOutlined,
@@ -13,39 +13,77 @@ import AttachmentCard from './components/AttachmentCard/AttachmentCard';
 import SubtaskCard from './components/SubtaskCard/SubtaskCard';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
-import { useParams } from 'react-router-dom';
-
-const IMAGE_URL =
-  'https://cdna.artstation.com/p/assets/images/images/012/308/904/large/divya-jain-firewatch-dhj.jpg?1534140299';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
+import Loading from '../../shared/components/Loading';
+import { setProject } from '../../shared/utils/redux/project/projectSlice';
+import { Project } from 'api';
 
 const ProjectPage = () => {
-  const id = useParams().toString();
-  const {data} = useGetProject(id);
-  const task = data?.data;
+  const [isUserCreator, setIsUserCreator] = useState(false);
+  const dispatch = useDispatch();
+
+  const { id } = useParams();
+  const { data, isLoading, error } = useGetProject(id);
+  const [currentProject, setCurrentProject] = useState<Project>();
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentProject && user) {
+      setIsUserCreator(currentProject.authorId == user.id);
+    }
+  }, [currentProject, user]);
+
+  useEffect(() => {
+    if (currentProject) {
+      dispatch(setProject(currentProject));
+    }
+  }, [currentProject]);
+
+  useEffect(() => {
+    if (data) {
+      setCurrentProject(data.data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const handleEditClick = () => {
+    navigate('edit');
+  };
 
   return (
     <Flex direction='column'>
       <Flex className={styles.bannerContainer}>
-        <img src={IMAGE_URL} alt='banner' className={styles.bannerImage} />
+        <img src={currentProject?.bannerUrl} alt='banner' className={styles.bannerImage} />
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Heading weight='medium'>{task?.title}</Heading>
+          <Flex align='center' justify='between'>
+            <Heading weight='medium'>{currentProject?.title}</Heading>
+            {isUserCreator && <Button onClick={handleEditClick}>Edit project</Button>}
+          </Flex>
           <Text color='yellow' weight='medium' mb='5'>
-            Category: {task?.category}
+            Category: {currentProject?.category}
           </Text>
           <Flex mb='5'>
-            <TaskDescriptionDisplay description={ task?.description ? task?.description : '' } />
+            <TaskDescriptionDisplay description={currentProject?.description || ''} />
           </Flex>
           <Flex align='center' direction='row' mb='2'>
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
             <Text weight='medium' size='5'>
               Tags:{' '}
-              {task?.tags && task?.tags.map((tag, index) => (
-                <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                  {tag}
-                </Badge>
-              ))}
+              {currentProject?.tags &&
+                currentProject?.tags.map((tag, index) => (
+                  <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
+                    {tag}
+                  </Badge>
+                ))}
             </Text>
           </Flex>
           <Flex mb='5'>
@@ -77,14 +115,16 @@ const ProjectPage = () => {
                 Subtasks
               </Text>
             </Flex>
-            {task?.tasks && task?.tasks.map((subtask, index) => (
-              <SubtaskCard
-                id={subtask.id}
-                description={subtask.description}
-                price={subtask.price}
-                title={subtask.title}
-              />
-            ))}
+            {currentProject?.tasks &&
+              currentProject?.tasks.map((subtask, index) => (
+                <SubtaskCard
+                  key={index}
+                  id={subtask.task.id}
+                  description={subtask.task.description}
+                  price={subtask.task.price}
+                  title={subtask.task.title}
+                />
+              ))}
           </Flex>
           <Flex direction='column'>
             <Flex align='center' mb='2'>
@@ -93,9 +133,9 @@ const ProjectPage = () => {
                 Attachments
               </Text>
             </Flex>
-            {task?.attachedFiles &&
-              task?.attachedFiles.map((file, index) => (
-                <AttachmentCard name={file} url={'/'} />
+            {currentProject?.files &&
+              currentProject?.files.map((file, index) => (
+                <AttachmentCard key={index} name={file} url={'/'} />
               ))}
           </Flex>
         </Flex>

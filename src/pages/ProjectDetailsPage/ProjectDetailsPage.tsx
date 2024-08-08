@@ -6,10 +6,11 @@ import {
   MagnifyingGlassIcon,
   Pencil1Icon,
 } from '@radix-ui/react-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ProjectDetailsPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   return (
     <Flex m='4' direction='column'>
@@ -37,11 +38,11 @@ const ProjectDetailsPage = () => {
       <Card mt='5'>
         <Heading mb='3'>Actions</Heading>
         <Flex align='center' justify='between'>
-          <Button m='1' size='3'>
+          <Button m='1' size='3' onClick={() => navigate(`/projects/${id}`)}>
             <MagnifyingGlassIcon />
             View Project Page
           </Button>
-          <Button m='1' size='3'>
+          <Button m='1' size='3' onClick={() => navigate(`/projects/${id}/edit`)}>
             <Pencil1Icon />
             Edit Project
           </Button>

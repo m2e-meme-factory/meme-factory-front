@@ -32,7 +32,7 @@ export default function ProfilePage() {
   const { data: userRes, isLoading: userLoading } = useGetUserData(userId);
   const { data: refData, isLoading: refLoading } = useGetRefData(userId);
 
-  if (userLoading || refLoading) {
+  if (userLoading && refLoading) {
     return (
       <Flex className={styles.LoadingContainer} align='center' justify='center'>
         <Spinner size='3' />
@@ -117,7 +117,7 @@ export default function ProfilePage() {
               <CopyableTextField
                 size={'2'}
                 fieldSize='3'
-                value={`https://t.me/m2e_meme_factory_bot?start=ref_${refUUID}`}
+                value={refData?.data.refLink}
               />
               <DataList.Root mt='4'>
                 <DataList.Item align='center'>

@@ -3,7 +3,7 @@ import { login } from '../requests/auth/login';
 
 export const useLogin = (initDataString?: string) => {
   const query = useQuery({
-    queryKey: ['login', initDataString],
+    queryKey: ['login'],
     queryFn: () => {
      if (initDataString) {
        return login({ params: { initData: { initData: initDataString } } });

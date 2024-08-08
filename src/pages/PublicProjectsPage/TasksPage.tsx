@@ -8,11 +8,14 @@ import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
-import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
-import { Project } from '../../@types/api';
+import {
+  CUSTOM_SELECT_STYLES_MULTI,
+  CUSTOM_SELECT_STYLES_SINGLE,
+} from '../../styles/customSelectStyles';
+import { Project } from 'api';
 
 const TasksPage = () => {
-  const {data, isLoading, error, refetch } = useGetPublicProjects();
+  const { data, isLoading, error } = useGetPublicProjects();
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
@@ -26,7 +29,7 @@ const TasksPage = () => {
   }, [data]);
 
   if (isLoading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {

@@ -28,22 +28,20 @@ export const TelegramProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const value = useMemo(() => {
     return webApp
       ? {
-        webApp,
-        unsafeData: webApp.initDataUnsafe as {
-          query_id: string;
-          user: ITelegramUser;
-          auth_date: string;
-          hash: string;
-        },
-        user: webApp.initDataUnsafe?.user,
-      }
+          webApp,
+          unsafeData: webApp.initDataUnsafe as {
+            query_id: string;
+            user: ITelegramUser;
+            auth_date: string;
+            hash: string;
+          },
+          user: webApp.initDataUnsafe?.user,
+        }
       : {};
   }, [webApp]);
 
   return (
-    <TelegramContext.Provider value={value}>
-      {webApp ? children : null}
-    </TelegramContext.Provider>
+    <TelegramContext.Provider value={value}>{webApp ? children : null}</TelegramContext.Provider>
   );
 };
 

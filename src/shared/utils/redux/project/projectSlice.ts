@@ -1,7 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { Project } from '../../../../@types/api';
-
+import { Project } from 'api';
 
 export interface ProjectSlice {
   project?: Project;
@@ -18,7 +17,7 @@ export const projectSlice = createSlice({
     setProject: (state: ProjectSlice, action: PayloadAction<Project>) => {
       state.project = action.payload;
     },
-  }
+  },
 });
 
 export const { setProject } = projectSlice.actions;

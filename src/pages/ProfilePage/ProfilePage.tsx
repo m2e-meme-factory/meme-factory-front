@@ -32,11 +32,11 @@ export default function ProfilePage() {
   const { data: userRes, isLoading: userLoading } = useGetUserData(userId);
   const { data: refData, isLoading: refLoading } = useGetRefData(userId);
 
-   if (userLoading || refLoading) {
-     return (
-       <Flex className={styles.LoadingContainer} align='center' justify='center'>
-         <Spinner size='3' />
-       </Flex>
+  if (userLoading || refLoading) {
+    return (
+      <Flex className={styles.LoadingContainer} align='center' justify='center'>
+        <Spinner size='3' />
+      </Flex>
     );
   }
 

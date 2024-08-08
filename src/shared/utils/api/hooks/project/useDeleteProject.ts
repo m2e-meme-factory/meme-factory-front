@@ -9,6 +9,6 @@ export const useDeleteProject = () => {
     mutationFn: (config: OnlyIdProjectConfig) => deleteProject(config),
     onSuccess: () => {
       navigate('/projects');
-    }
+    },
   });
-}
+};

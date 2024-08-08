@@ -52,8 +52,8 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.EDIT,
-        element: <ProtectedRoute element={<EditProjectPage/>} />,
-      }
+        element: <ProtectedRoute element={<EditProjectPage />} />,
+      },
     ],
   },
 ]);

@@ -16,5 +16,5 @@ export const useGetProject = (projectId?: string) => {
     refetchOnWindowFocus: 'always',
   });
 
-  return { ...query};
+  return { ...query };
 };

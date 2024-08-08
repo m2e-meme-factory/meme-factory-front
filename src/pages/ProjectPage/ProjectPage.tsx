@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
-import { Project } from '../../@types/api';
+import { Project } from 'api';
 
 const ProjectPage = () => {
   const [isUserCreator, setIsUserCreator] = useState(false);
@@ -55,7 +55,7 @@ const ProjectPage = () => {
 
   const handleEditClick = () => {
     navigate('edit');
-  }
+  };
 
   return (
     <Flex direction='column'>
@@ -78,11 +78,12 @@ const ProjectPage = () => {
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
             <Text weight='medium' size='5'>
               Tags:{' '}
-              {currentProject?.tags && currentProject?.tags.map((tag, index) => (
-                <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                  {tag}
-                </Badge>
-              ))}
+              {currentProject?.tags &&
+                currentProject?.tags.map((tag, index) => (
+                  <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
+                    {tag}
+                  </Badge>
+                ))}
             </Text>
           </Flex>
           <Flex mb='5'>
@@ -114,15 +115,16 @@ const ProjectPage = () => {
                 Subtasks
               </Text>
             </Flex>
-            {currentProject?.tasks && currentProject?.tasks.map((subtask, index) => (
-              <SubtaskCard
-                key={index}
-                id={subtask.task.id}
-                description={subtask.task.description}
-                price={subtask.task.price}
-                title={subtask.task.title}
-              />
-            ))}
+            {currentProject?.tasks &&
+              currentProject?.tasks.map((subtask, index) => (
+                <SubtaskCard
+                  key={index}
+                  id={subtask.task.id}
+                  description={subtask.task.description}
+                  price={subtask.task.price}
+                  title={subtask.task.title}
+                />
+              ))}
           </Flex>
           <Flex direction='column'>
             <Flex align='center' mb='2'>
@@ -131,9 +133,10 @@ const ProjectPage = () => {
                 Attachments
               </Text>
             </Flex>
-            {currentProject?.files && currentProject?.files.map((file, index) => (
-              <AttachmentCard key={index} name={file} url={'/'} />
-            ))}
+            {currentProject?.files &&
+              currentProject?.files.map((file, index) => (
+                <AttachmentCard key={index} name={file} url={'/'} />
+              ))}
           </Flex>
         </Flex>
       </Flex>

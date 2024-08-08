@@ -14,20 +14,27 @@ import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import { CreateProjectDTO, SubtaskInfo } from '../../@types/api';
 import { FormError, Option, Price } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskSection/CreateSubstaskSection';
 import { useUpdateProject } from '../../shared/utils/api/hooks/project/useUpdateProject';
 import ProjectStatusSelect from './components/ProjectStatusSelect';
+import { CreateProjectDTO, SubtaskInfo } from 'api';
+
+enum ProjectStatus {
+  DRAFT = 'draft',
+  MODERATION = 'moderation',
+  PUBLISHED = 'published',
+  NOT_ACCEPTED = 'not_accepted',
+  CLOSED = 'closed',
+}
 
 const EditProjectPage = () => {
   const animatedComponents = makeAnimated();
   const user = useSelector((state: RootState) => state.user.user);
   const project = useSelector((state: RootState) => state.project.project);
-  const updateProjectMutation = useUpdateProject();
-  const subtasksPrepared = project ? project.tasks.map((task) => (task.task)) : [];
+  const subtasksPrepared = project ? project.tasks.map((task) => task.task) : [];
 
   const navigate = useNavigate();
   const [title, setTitle] = useState(project?.title);
@@ -35,19 +42,29 @@ const EditProjectPage = () => {
   const [tags, setTags] = useState<string[]>(project ? project.tags : []);
   const [category, setCategory] = useState<string | null>(project ? project.category : null);
   const [priceMode, setPriceMode] = useState<'single' | 'range'>('single');
-  const [price, setPrice] = useState<Price>(project ? {single: project.price, min: project.price, max: project.price} : {});
+  const [price, setPrice] = useState<Price>(
+    project ? { single: project.price, min: project.price, max: project.price } : {}
+  );
   const [subtasks, setSubtasks] = useState<SubtaskInfo[]>(subtasksPrepared);
   const [singleFile, setSingleFile] = useState<File | null>(null);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
+  const [projectStatus, setProjectStatus] = useState<ProjectStatus>(
+    project ? project.status : ProjectStatus.DRAFT
+  );
   const [attachedFiles, setAttachedFiles] = useState<string[]>(project ? project.files : []);
-  const [attachedBanner, setAttachedBanner] = useState<string | null>(project ? project.bannerUrl : null);
+  const [attachedBanner, setAttachedBanner] = useState<string | null>(
+    project ? project.bannerUrl : null
+  );
 
-  const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
+  const updateProjectMutation = useUpdateProject(project?.id);
+
+  const capitalizeFirstLetter = (string: string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
 
   const tagsOptionsSelected = project?.tags.map((tag) => ({
     value: tag,
-    label: capitalizeFirstLetter(tag)
+    label: capitalizeFirstLetter(tag),
   }));
 
   const categoryOptionSelected = {
@@ -159,7 +176,6 @@ const EditProjectPage = () => {
       const fileNamesFromMultipleFiles = multipleFiles.map((file) => file.name);
       const combinedFileNames = [...fileNamesFromMultipleFiles, ...attachedFiles];
 
-
       const projectData: CreateProjectDTO = {
         authorId: user?.id,
         title: title ? title : '',
@@ -171,13 +187,12 @@ const EditProjectPage = () => {
           const { id, ...rest } = subtask;
           return rest;
         }),
-        bannerUrl: singleFile ? singleFile.name : (attachedBanner ? attachedBanner : null),
-        files: combinedFileNames
+        bannerUrl: singleFile ? singleFile.name : attachedBanner ? attachedBanner : null,
+        files: combinedFileNames,
       };
 
       if (project && projectData) {
-        updateProjectMutation.mutate({params: {projectId: project.id, project: projectData}});
-        navigate(`/projects/${project.id}`);
+        updateProjectMutation.mutate({ params: { projectId: project.id, project: projectData } });
       }
     } else {
       setFormErrors(errors);
@@ -228,11 +243,9 @@ const EditProjectPage = () => {
             </Flex>
           </Card>
         )}
-        {!attachedBanner && (
-          <input type="file" onChange={handleSingleFileChange} />
-        )}
+        {!attachedBanner && <input type='file' onChange={handleSingleFileChange} />}
 
-        <Text weight="medium" mt="3">
+        <Text weight='medium' mt='3'>
           Files
         </Text>
         <Flex>
@@ -242,7 +255,11 @@ const EditProjectPage = () => {
                 <li key={index}>
                   <Flex align='center' justify='between'>
                     <Text>{file}</Text>
-                    <IconButton onClick={ () => setAttachedFiles((prevState) => prevState.filter((files) => file !== file))}>
+                    <IconButton
+                      onClick={() =>
+                        setAttachedFiles((prevState) => prevState.filter((files) => file !== file))
+                      }
+                    >
                       <TrashIcon></TrashIcon>
                     </IconButton>
                   </Flex>
@@ -356,11 +373,11 @@ const EditProjectPage = () => {
 
         <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
-        <Button style={{marginTop: '20px', marginBottom: '20px'}} onClick={handleEditProject}>
+        <Button style={{ marginTop: '20px', marginBottom: '20px' }} onClick={handleEditProject}>
           Edit Project
         </Button>
 
-        {project && <ProjectStatusSelect projectId={project.id}/>}
+        {project && <ProjectStatusSelect projectId={project.id} projectStatus={projectStatus} />}
       </Flex>
     </Flex>
   );

@@ -6,8 +6,8 @@ import projectReducer from './project/projectSlice';
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    project: projectReducer
-  }
+    project: projectReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -9,5 +9,5 @@ export const ROUTES = {
   PROFILE_SETTINGS: '/profile/settings',
   PROJECT_DETAILS: '/projects/:id/details',
   LOGS: '/projects/:id/logs/:freelancer-id',
-  EDIT: '/projects/:id/edit'
+  EDIT: '/projects/:id/edit',
 };

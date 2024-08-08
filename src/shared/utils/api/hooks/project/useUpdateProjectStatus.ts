@@ -3,16 +3,16 @@ import {
   updateProjectStatus,
   UpdateProjectStatusConfig,
 } from '../../requests/project/project-requests';
-import { ProjectStatus } from '../../../../../@types/api';
 import { useNavigate } from 'react-router-dom';
+import { ProjectStatus } from 'api';
 
-export const useUpdateProjectStatus = (projectId: string, status: ProjectStatus) => {
+export const useUpdateProjectStatus = (projectId: string) => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (config: UpdateProjectStatusConfig) => updateProjectStatus({params : {id: projectId, payload: {status: status}}}),
+    mutationFn: (config: UpdateProjectStatusConfig) => updateProjectStatus(config),
     onSuccess: () => {
-      navigate(`/projects/${projectId}`)
-    }
-  })
-}
+      navigate(`/projects/${projectId}`);
+    },
+  });
+};

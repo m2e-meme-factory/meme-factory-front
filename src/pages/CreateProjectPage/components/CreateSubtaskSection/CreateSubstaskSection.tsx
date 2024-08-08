@@ -2,7 +2,7 @@ import { Flex, Heading, IconButton, Separator } from '@radix-ui/themes';
 import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import CreatedSubtask from '../Subtask/CreatedSubtask';
-import { SubtaskInfo } from '../../../../@types/api';
+import { SubtaskInfo } from 'api';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';

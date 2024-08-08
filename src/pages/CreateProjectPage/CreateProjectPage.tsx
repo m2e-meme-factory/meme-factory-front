@@ -8,23 +8,24 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, PlusIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import CreateSubtaskSection from './components/CreateSubtaskSection/CreateSubstaskSection';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import { CreateProjectDTO, SubtaskInfo } from '../../@types/api';
+import { CreateProjectDTO, SubtaskInfo } from 'api';
 import { FormError, Option, Price } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
+import { ToastContainer } from 'react-toastify';
+import { set } from 'zod';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
   const user = useSelector((state: RootState) => state.user.user);
-  const createProjectMutation = useCreateProject();
 
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
@@ -37,6 +38,9 @@ const CreateProjectPage = () => {
   const [singleFile, setSingleFile] = useState<File | null>(null);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
+  const [createLoading, setCreateLoading] = useState<boolean>(false);
+
+  const createProjectMutation = useCreateProject(setCreateLoading);
 
   const handleSingleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -138,6 +142,7 @@ const CreateProjectPage = () => {
     const errors = validateForm();
 
     if (errors.length === 0) {
+      setCreateLoading(true);
       let projectPrice = priceMode === 'range' ? price.min : price.single;
 
       const projectData: CreateProjectDTO = {
@@ -157,12 +162,10 @@ const CreateProjectPage = () => {
 
       console.log('Project Data:', projectData);
       createProjectMutation.mutate({ params: projectData });
-      navigate('/projects')
     } else {
       setFormErrors(errors);
     }
   };
-
 
   return (
     <Flex m='4' direction='column'>
@@ -306,9 +309,11 @@ const CreateProjectPage = () => {
 
         <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
-        <Button style={{ marginTop: 10 }} onClick={handleCreateProject}>
+        <Button style={{ marginTop: 10 }} onClick={handleCreateProject} loading={createLoading}>
           Create Project
         </Button>
+
+        <ToastContainer />
       </Flex>
     </Flex>
   );

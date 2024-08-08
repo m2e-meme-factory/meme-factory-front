@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { User } from '../../../../@types/api';
+import { User } from 'api';
 
 export interface UserSlice {
   user?: User;
@@ -17,8 +17,8 @@ export const userSlice = createSlice({
     setUser: (state: UserSlice, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
-  }
+  },
 });
 
-export const {setUser } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

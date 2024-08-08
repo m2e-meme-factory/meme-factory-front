@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../utils/redux/user/userSlice';
 
 interface ProtectedRouteProps {
-  element: React.ReactElement
+  element: React.ReactElement;
 }
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
@@ -18,7 +18,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
 
   if (isLoading) {
     return (
-      <Flex style={{height: '100vh'}} align='center' justify='center'>
+      <Flex style={{ height: '100vh' }} align='center' justify='center'>
         <Spinner size='3' />
       </Flex>
     );
@@ -30,7 +30,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
   }
 
   if (error) {
-    return <Navigate to="/projects" state={{ from: location }} />;
+    return <Navigate to='/projects' state={{ from: location }} />;
   }
 
   return element;

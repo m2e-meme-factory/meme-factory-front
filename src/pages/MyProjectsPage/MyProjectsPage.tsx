@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Flex, Heading, IconButton } from '@radix-ui/themes';
-import { Link, useNavigate } from 'react-router-dom';
+import { Button, Flex, Heading } from '@radix-ui/themes';
+import { Link } from 'react-router-dom';
 import MyProjectCard from './components/MyProjectCard/MyProjectCard';
-import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
-import { Project } from '../../@types/api';
 import Loading from '../../shared/components/Loading';
+import { useGetMyProjects } from '../../shared/utils/api/hooks/project/useGetMyProjects';
+import { Project } from 'api';
 
 const MyProjectsPage = () => {
-  const {data, isLoading} = useGetPublicProjects();
-  const user = useSelector((state: RootState) => state.user.user);
+  const currentUser = useSelector((state: RootState) => state.user.user);
+  const { data: projects, isLoading } = useGetMyProjects(currentUser?.id);
   const [myProjects, setMyProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    if (data) {
-      setMyProjects(data.data.filter((project) => project.authorId === user?.id));
+    if (projects) {
+      setMyProjects(projects.data);
     }
-  }, [data]);
+  }, [projects]);
 
   if (isLoading) {
-    return (
-      <Loading/>
-    )
+    return <Loading />;
   }
 
   return (
@@ -38,11 +36,12 @@ const MyProjectsPage = () => {
       <Flex mt='4' direction='column'>
         {myProjects.map((project, index) => (
           <MyProjectCard
+            id={project.id}
             bannerUrl={project.bannerUrl}
             title={project.title}
             category={project.category}
             freelancersCount={0}
-            status='published'
+            status={project.status}
           />
         ))}
       </Flex>

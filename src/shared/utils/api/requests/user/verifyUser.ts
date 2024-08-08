@@ -1,10 +1,5 @@
-import {
-  RequestConfig,
-  VerifyUserData,
-  VerifyUserRequestData,
-  VerifyUserResponse,
-} from '../../../../../@types/api';
 import api from '../../api';
+import { RequestConfig, VerifyUserRequestData, VerifyUserResponse } from 'api';
 
 export type VerifyUserConfig = RequestConfig<VerifyUserRequestData>;
 

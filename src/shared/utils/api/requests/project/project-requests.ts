@@ -1,10 +1,12 @@
+import api from '../../api';
+import { AxiosResponse } from 'axios';
 import {
   CreateProjectDTO,
   Project,
-  RequestConfig, UpdateProjectPayload, UpdateStatusPayload,
-} from '../../../../../@types/api';
-import api from '../../api';
-import { AxiosResponse } from 'axios';
+  RequestConfig,
+  UpdateProjectPayload,
+  UpdateStatusPayload,
+} from 'api';
 
 export type CreateProjectConfig = RequestConfig<CreateProjectDTO>;
 export type GetPublicProjectsConfig = RequestConfig;
@@ -16,7 +18,9 @@ export const createProject = (config: CreateProjectConfig): Promise<AxiosRespons
   return api.post('/projects', config.params, config?.config);
 };
 
-export const getPublicProjects = (config: GetPublicProjectsConfig): Promise<AxiosResponse<Project[]>> => {
+export const getPublicProjects = (
+  config: GetPublicProjectsConfig
+): Promise<AxiosResponse<Project[]>> => {
   return api.get('/projects', config?.config);
 };
 
@@ -34,8 +38,10 @@ export const deleteProject = (config: OnlyIdProjectConfig): Promise<AxiosRespons
 
 export const getMyProjects = (config: OnlyIdProjectConfig): Promise<AxiosResponse<Project[]>> => {
   return api.get(`/projects/by-user/${config.params}`, config?.config);
-}
+};
 
-export const updateProjectStatus = (config: UpdateProjectStatusConfig): Promise<AxiosResponse<Project>> => {
-  return api.put(`/projects/${config.params.id}/status`, config.params.payload, config?.config)
-}
+export const updateProjectStatus = (
+  config: UpdateProjectStatusConfig
+): Promise<AxiosResponse<Project>> => {
+  return api.put(`/projects/${config.params.id}/status`, config.params.payload, config?.config);
+};

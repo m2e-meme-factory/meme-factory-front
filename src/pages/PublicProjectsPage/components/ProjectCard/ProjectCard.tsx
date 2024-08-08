@@ -3,8 +3,8 @@ import CardBanner from '../CardBanner/CardBanner';
 import ProjectCardContent from '../ProjectCardContent/ProjectCardContent';
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Project } from '../../../../@types/api';
 import { useNavigate } from 'react-router-dom';
+import { Project } from 'api';
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -17,14 +17,14 @@ interface ProjectCardProps {
   project: Project;
 }
 
-const ProjectCard: FC<ProjectCardProps> = ({project}) => {
+const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
   const navigate = useNavigate();
 
   return (
     <StyledCard onClick={() => navigate(`/projects/${project.id}`)}>
       <Flex direction='column'>
         <CardBanner bannerUrl={project.bannerUrl} />
-        <ProjectCardContent project={project}/>
+        <ProjectCardContent project={project} />
       </Flex>
     </StyledCard>
   );

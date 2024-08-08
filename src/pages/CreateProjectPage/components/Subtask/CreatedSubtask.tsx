@@ -3,7 +3,7 @@ import { RocketOutlined } from '@ant-design/icons';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import { TrashIcon } from '@radix-ui/react-icons';
 import styles from './CreatedSubtask.module.css';
-import { SubtaskInfo } from '../../../../@types/api';
+import { SubtaskInfo } from 'api';
 
 interface SubtaskCardProps {
   id: string;

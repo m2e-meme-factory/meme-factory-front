@@ -2,7 +2,7 @@ import { Flex, Heading, Text } from '@radix-ui/themes';
 import styled from 'styled-components';
 import { DollarOutlined, TagsOutlined } from '@ant-design/icons';
 import React, { FC } from 'react';
-import { Project } from '../../../../@types/api';
+import { Project } from 'api';
 
 const TaskContentHeading = styled(Heading)`
   color: black;
@@ -17,7 +17,7 @@ interface ProjectCardContentProps {
   project: Project;
 }
 
-const ProjectCardContent: FC<ProjectCardContentProps> = ({project}) => {
+const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
   return (
     <Flex direction='column' m='4'>
       <Heading>{project.title}</Heading>

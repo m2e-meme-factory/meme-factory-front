@@ -11,6 +11,6 @@ export const useUpdateProject = (id?: string) => {
       if (id) {
         navigate(`/projects/${id}`);
       }
-    }
+    },
   });
 };

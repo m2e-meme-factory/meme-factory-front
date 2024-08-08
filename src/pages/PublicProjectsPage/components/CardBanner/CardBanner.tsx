@@ -9,10 +9,10 @@ interface CardBannerProps {
   bannerUrl?: string;
 }
 
-const CardBanner: FC<CardBannerProps> = ({bannerUrl}) => {
+const CardBanner: FC<CardBannerProps> = ({ bannerUrl }) => {
   return (
     <Flex className={styles.bannerContainer}>
-      <img src={bannerUrl ? bannerUrl : FALLBACK_IMAGE} className={styles.bannerImage}  alt={' '}/>
+      <img src={bannerUrl ? bannerUrl : FALLBACK_IMAGE} className={styles.bannerImage} alt={' '} />
     </Flex>
   );
 };

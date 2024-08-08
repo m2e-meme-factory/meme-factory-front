@@ -6,8 +6,9 @@ export const useGetMyProjects = (userId?: string) => {
     queryKey: ['getMyProjects', userId],
     queryFn: () => {
       if (userId) {
-        return getMyProjects({params: userId});
+        return getMyProjects({ params: userId });
       }
+      return Promise.reject('userId invalid');
     },
     select: (data) => data,
     staleTime: 0,

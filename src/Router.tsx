@@ -1,17 +1,17 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { ROUTES } from './shared/consts/routes';
 import BasePageWrapper from './shared/components/BasePageWrapper';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
-import ProjectPage from './pages/ProjectPage/ProjectPage';
-import TasksPage from './pages/PublicProjectsPage/TasksPage';
 import About from './pages/AboutPage/About';
-import VerifyForm from './pages/VerifyPage/VerifyForm';
-import MyProjectsPage from './pages/MyProjectsPage/MyProjectsPage';
 import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
-import React from 'react';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
 import FreelancerLogsPage from './pages/FreelancerLogsPage/FreelancerLogsPage';
+import { ROUTES } from './shared/consts/routes';
+import React from 'react';
+import ProtectedRoute from './shared/components/ProtectedRoute';
+import TasksPage from './pages/PublicProjectsPage/TasksPage';
+import ProjectPage from './pages/ProjectPage/ProjectPage';
+import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 
 export const router = createBrowserRouter([
   {
@@ -20,11 +20,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.PROFILE,
-        element: <ProfilePage />,
+        element: <ProtectedRoute element={<ProfilePage />} />,
       },
       {
         path: ROUTES.PROJECT_PAGE,
-        element: <ProjectPage />,
+        element: <ProtectedRoute element={<ProjectPage />} />,
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
@@ -35,24 +35,24 @@ export const router = createBrowserRouter([
         element: <About />,
       },
       {
-        path: ROUTES.VERIFY,
-        element: <VerifyForm />,
-      },
-      {
         path: ROUTES.CREATE_PROJECT,
-        element: <CreateProjectPage />,
+        element: <ProtectedRoute element={<CreateProjectPage />} />,
       },
       {
         path: ROUTES.PROFILE_SETTINGS,
-        element: <ProfileSettingsPage />,
+        element: <ProtectedRoute element={<ProfileSettingsPage />} />,
       },
       {
         path: ROUTES.PROJECT_DETAILS,
-        element: <ProjectDetailsPage />,
+        element: <ProtectedRoute element={<ProjectDetailsPage />} />,
       },
       {
         path: ROUTES.LOGS,
-        element: <FreelancerLogsPage />,
+        element: <ProtectedRoute element={<FreelancerLogsPage />} />,
+      },
+      {
+        path: ROUTES.EDIT,
+        element: <ProtectedRoute element={<EditProjectPage />} />,
       },
     ],
   },

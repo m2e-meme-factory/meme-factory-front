@@ -13,40 +13,38 @@ import {
   Box,
   Tabs,
 } from '@radix-ui/themes';
-import { useTelegram } from '../../shared/hooks/useTelegram';
 import CopyableCode from '../../shared/components/CopyableCode';
 import CopyableTextField from '../../shared/components/CopyableTextField';
-import { useGetRefData } from '../../shared/utils/api/hooks/useGetRefData';
-import { useGetUserData } from '../../shared/utils/api/hooks/useGetUserData';
+import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
+import { useGetUserData } from '../../shared/utils/api/hooks/user/useGetUserData';
 import { ChevronRightIcon, GearIcon } from '@radix-ui/react-icons';
 import styles from './ProfilePage.module.css';
 import { Link } from 'react-router-dom';
 import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
 
 export default function ProfilePage() {
-  const { user, webApp } = useTelegram();
-  const tg = webApp;
+  const user = useSelector((state: RootState) => state.user.user);
+  const userId = user?.telegramId?.toString();
 
-  const userId = user?.id?.toString();
+  const { data: userRes, isLoading: userLoading } = useGetUserData(userId);
+  const { data: refData, isLoading: refLoading } = useGetRefData(userId);
 
-  const { data: userRes, isLoading: userLoading } = useGetUserData('', userId);
-  const refId = userRes?.data?.user?.refId?.toString();
-  const { data: refData, isLoading: refLoading } = useGetRefData('', refId);
-
-  // if (userLoading || refLoading) {
-  //   return (
-  //     <Flex className={styles.LoadingContainer} align='center' justify='center'>
-  //       <Spinner size='3' />
-  //     </Flex>
-  //   );
-  // }
+  if (userLoading || refLoading) {
+    return (
+      <Flex className={styles.LoadingContainer} align='center' justify='center'>
+        <Spinner size='3' />
+      </Flex>
+    );
+  }
 
   const type = 'platform';
 
-  const userData = userRes?.data?.user;
-  const refCount = refData?.data?.count || '0';
-  const refUUID = userData?.ref_uuid || '';
+  const userData = userRes?.data;
+  const refCount = refData?.data?.count;
+  const refUUID = userData?.refCode;
 
   return (
     <Tabs.Root defaultValue='account'>
@@ -85,10 +83,6 @@ export default function ProfilePage() {
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
-                  <DataList.Label minWidth='88px'>Name</DataList.Label>
-                  <DataList.Value>{`${user?.last_name} ${user?.first_name}`}</DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
                   <DataList.Label minWidth='88px'>Nickname</DataList.Label>
                   <DataList.Value>
                     <CopyableCode value={`${user?.username}`} />
@@ -96,7 +90,7 @@ export default function ProfilePage() {
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>Creator</DataList.Value>
+                  <DataList.Value>{user?.role}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Grid>

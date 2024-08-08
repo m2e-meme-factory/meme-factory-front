@@ -1,17 +1,36 @@
 import { Text, Flex, Heading, Button } from '@radix-ui/themes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
-import { CUSTOM_SELECT_STYLES } from '../../styles/customSelectStyles';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
+import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
+import Loading from '../../shared/components/Loading';
+import {
+  CUSTOM_SELECT_STYLES_MULTI,
+  CUSTOM_SELECT_STYLES_SINGLE,
+} from '../../styles/customSelectStyles';
+import { Project } from 'api';
 
 const TasksPage = () => {
+  const { data, isLoading, error } = useGetPublicProjects();
+
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
   const animatedComponents = makeAnimated();
+
+  useEffect(() => {
+    if (data) {
+      setProjects(data.data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
@@ -46,7 +65,7 @@ const TasksPage = () => {
             closeMenuOnSelect={false}
             components={animatedComponents}
             options={CATEGORIES}
-            styles={CUSTOM_SELECT_STYLES}
+            styles={CUSTOM_SELECT_STYLES_SINGLE}
             isMulti={false}
           />
         </Flex>
@@ -61,7 +80,7 @@ const TasksPage = () => {
             components={animatedComponents}
             isMulti
             options={TAGS}
-            styles={CUSTOM_SELECT_STYLES}
+            styles={CUSTOM_SELECT_STYLES_MULTI}
           />
         </Flex>
         <Button mt='3' onClick={handleFindButtonClick}>
@@ -69,7 +88,9 @@ const TasksPage = () => {
         </Button>
       </Flex>
       <Flex m='4' direction='column'>
-        <ProjectCard />
+        {projects.map((project, index) => (
+          <ProjectCard key={index} project={project} />
+        ))}
       </Flex>
     </>
   );

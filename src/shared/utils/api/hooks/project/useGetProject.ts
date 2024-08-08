@@ -11,6 +11,9 @@ export const useGetProject = (projectId?: string) => {
       return Promise.reject('ProjectId invalid');
     },
     select: (data) => data,
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   });
 
   return { ...query};

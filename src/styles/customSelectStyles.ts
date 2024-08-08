@@ -52,7 +52,7 @@ export const CUSTOM_SELECT_STYLES_MULTI: StylesConfig<any, true> = {
   }),
 };
 
-export const CUSTOM_SELECT_STYLES_SINGLE: StylesConfig<any, true> = {
+export const CUSTOM_SELECT_STYLES_SINGLE: StylesConfig<any, false> = {
   control: (provided, state) => ({
     ...provided,
     'width': '91vw',

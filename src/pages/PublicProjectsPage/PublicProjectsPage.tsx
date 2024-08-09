@@ -13,9 +13,12 @@ import {
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
 import { Project } from 'api';
+import { useTelegram } from '../../shared/hooks/useTelegram';
+import { login, LoginConfig } from '../../shared/utils/api/requests/auth/login';
 
-const TasksPage = () => {
-  const { data, isLoading, error } = useGetPublicProjects();
+const PublicProjectsPage = () => {
+  const { data, isLoading, error, refetch } = useGetPublicProjects();
+  const {webApp} = useTelegram();
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
@@ -27,6 +30,30 @@ const TasksPage = () => {
       setProjects(data.data);
     }
   }, [data]);
+
+  useEffect(() => {
+    const handleErrors = async () => {
+      if (error) {
+        if (webApp) {
+          const loginConfig: LoginConfig = {
+            params: { initData: { initData: webApp.initData } },
+          };
+          try {
+            const response = await login(loginConfig);
+            const newToken = response.data.token;
+            localStorage.setItem('token', newToken);
+
+            const {data: refetchedProjects} = await refetch();
+            setProjects(refetchedProjects?.data || []);
+          } catch (loginError) {
+            console.error('Login failed:', loginError);
+          }
+        }
+      }
+    }
+
+    handleErrors();
+  }, [error, webApp, refetch]);
 
   if (isLoading) {
     return <Loading />;
@@ -96,4 +123,4 @@ const TasksPage = () => {
   );
 };
 
-export default TasksPage;
+export default PublicProjectsPage;

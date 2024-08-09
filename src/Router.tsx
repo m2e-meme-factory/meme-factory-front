@@ -9,7 +9,7 @@ import FreelancerLogsPage from './pages/FreelancerLogsPage/FreelancerLogsPage';
 import { ROUTES } from './shared/consts/routes';
 import React from 'react';
 import ProtectedRoute from './shared/components/ProtectedRoute';
-import TasksPage from './pages/PublicProjectsPage/TasksPage';
+import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPage';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
 import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 
@@ -28,11 +28,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <TasksPage />,
+        element: <ProtectedRoute element={<PublicProjectsPage />} />,
       },
       {
         path: ROUTES.ABOUT,
-        element: <About />,
+        element: <ProtectedRoute element={<About/>} />,
       },
       {
         path: ROUTES.CREATE_PROJECT,

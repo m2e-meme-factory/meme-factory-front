@@ -19,14 +19,17 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { Project } from 'api';
+import { useTelegram } from '../../shared/hooks/useTelegram';
+import { login, LoginConfig } from '../../shared/utils/api/requests/auth/login';
 
 const ProjectPage = () => {
   const [isUserCreator, setIsUserCreator] = useState(false);
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  const { data, isLoading, error } = useGetProject(id);
-  const [currentProject, setCurrentProject] = useState<Project>();
+  const { data, isLoading, error, refetch: refetchProject } = useGetProject(id);
+  const {webApp} = useTelegram();
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const user = useSelector((state: RootState) => state.user.user);
 
   const navigate = useNavigate();
@@ -48,6 +51,28 @@ const ProjectPage = () => {
       setCurrentProject(data.data);
     }
   }, [data]);
+
+  useEffect(() => {
+    const handleErrors = async () => {
+      if (error) {
+        if (webApp) {
+          const loginConfig: LoginConfig = {
+            params: { initData: { initData: webApp.initData } },
+          };
+          try {
+            const response = await login(loginConfig);
+            const newToken = response.data.token;
+            localStorage.setItem('token', newToken);
+
+            const {data: refetchedProject} = await refetchProject();
+            setCurrentProject(refetchedProject?.data || null);
+          } catch (loginError) {
+            console.error('Login failed:', loginError);
+          }
+        }
+      }
+    }
+  }, [webApp, error, refetchProject])
 
   if (isLoading) {
     return <Loading />;

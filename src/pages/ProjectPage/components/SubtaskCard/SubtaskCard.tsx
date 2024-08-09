@@ -52,7 +52,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
         <Dialog.Overlay className='DialogOverlay' />
         <Dialog.Content className='DialogContent'>
           <Dialog.Title className='DialogTitle Accent'>
-            <span>Subtask:</span> {title}
+            <span>Subtask: {title}</span>
           </Dialog.Title>
           {isFormVisible ? (
             <>

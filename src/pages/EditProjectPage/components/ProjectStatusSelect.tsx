@@ -28,10 +28,9 @@ const ProjectStatusSelect: FC<ProjectStatusSelect> = ({ projectId, projectStatus
 
   return (
     <Flex direction='column'>
-      <Heading>Change project status:</Heading>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button style={{ padding: '20px', marginTop: '10px' }}>Send on moderation</Button>
+          <Button mt='2' style={{ padding: '20px' }}>Send on moderation</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth='450px'>
           <AlertDialog.Title>Send on moderation</AlertDialog.Title>
@@ -56,12 +55,12 @@ const ProjectStatusSelect: FC<ProjectStatusSelect> = ({ projectId, projectStatus
 
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color='red' style={{ padding: '20px', marginTop: '10px' }}>Delete project</Button>
+          <Button color='red' mt='2' style={{ padding: '20px' }}>Delete project</Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth='450px'>
-          <AlertDialog.Title>Delete project</AlertDialog.Title>
+          <AlertDialog.Title>Close project</AlertDialog.Title>
           <AlertDialog.Description size='2'>
-            Are you sure? Status 'deleted' deletes the project. This action is permanent and cannot
+            Are you sure? This action is permanent and cannot
             be undone.
           </AlertDialog.Description>
 

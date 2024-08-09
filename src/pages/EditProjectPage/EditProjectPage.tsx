@@ -373,8 +373,8 @@ const EditProjectPage = () => {
 
         <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
-        <Button style={{ marginTop: '20px', marginBottom: '20px' }} onClick={handleEditProject}>
-          Edit Project
+        <Button style={{ padding: '20px'}} mt='4' mb='4' onClick={handleEditProject}>
+          Save Project
         </Button>
 
         {project && <ProjectStatusSelect projectId={project.id} projectStatus={projectStatus} />}

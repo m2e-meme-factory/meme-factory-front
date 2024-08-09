@@ -43,7 +43,8 @@ const PublicProjectsPage = () => {
   };
 
   const handleFindButtonClick = () => {
-    setFilteredProjects(projects.filter((project) =>  project.tags.filter((t) => tags.includes(t)).length >= 0 && (category ? category == project.category : true)));
+    setFilteredProjects(projects.filter((project) =>
+      tags.filter((t) => project.tags.includes(t)).length >= 0 && (category ? category == project.category : true)));
     console.log('handleFindButtonClick', tags, category);
   };
 

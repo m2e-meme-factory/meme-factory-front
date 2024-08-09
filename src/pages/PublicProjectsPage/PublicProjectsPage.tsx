@@ -17,12 +17,14 @@ const PublicProjectsPage = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
 
   const animatedComponents = makeAnimated();
 
   useEffect(() => {
     if (data) {
       setProjects(data.data);
+      setFilteredProjects(data.data);
     }
   }, [data]);
 
@@ -41,6 +43,7 @@ const PublicProjectsPage = () => {
   };
 
   const handleFindButtonClick = () => {
+    setFilteredProjects(projects.filter((project) =>  project.tags.filter((t) => tags.includes(t)) && (category == project.category)));
     console.log('handleFindButtonClick', tags, category);
   };
 
@@ -84,7 +87,7 @@ const PublicProjectsPage = () => {
         </Button>
       </Flex>
       <Flex m='4' direction='column'>
-        {projects.map((project, index) => (
+        {filteredProjects.map((project, index) => (
           <ProjectCard key={index} project={project} />
         ))}
       </Flex>

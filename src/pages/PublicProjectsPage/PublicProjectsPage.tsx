@@ -8,18 +8,16 @@ import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
-import {
-  CUSTOM_SELECT_STYLES_MULTI,
-  CUSTOM_SELECT_STYLES_SINGLE,
-} from '../../styles/customSelectStyles';
+import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
 import { Project } from 'api';
 
-const TasksPage = () => {
-  const { data, isLoading, error } = useGetPublicProjects();
+const PublicProjectsPage = () => {
+  const { data, isLoading } = useGetPublicProjects();
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+
   const animatedComponents = makeAnimated();
 
   useEffect(() => {
@@ -34,13 +32,11 @@ const TasksPage = () => {
 
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
-    console.log('handleTagsChange:', tags);
     setTags(tags);
   };
 
   const handleCategoryChange = (selectedCategory: SingleValue<Option>) => {
     const category = selectedCategory ? selectedCategory.value : null;
-    console.log('handleTagsChange:', category);
     setCategory(category);
   };
 
@@ -96,4 +92,4 @@ const TasksPage = () => {
   );
 };
 
-export default TasksPage;
+export default PublicProjectsPage;

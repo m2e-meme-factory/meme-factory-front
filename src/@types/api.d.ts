@@ -44,7 +44,7 @@ declare module 'api' {
 
   enum Role {
     CREATOR = 'creator',
-    ADVISER = 'adviser',
+    ADVERTISER = 'advertiser',
   }
 
   interface LogDetails {
@@ -195,8 +195,13 @@ declare module 'api' {
     authorId: string | undefined;
   }
 
+  export interface RefDataResponse {
+    refLink: string;
+    count: number;
+  }
+
   export type VerifyUserResponse = AxiosResponse<any>;
   export type GetUserDataResponse = AxiosResponse<UserWithRef>;
-  export type GetRefDataResponse = AxiosResponse<any>;
+  export type GetRefDataResponse = AxiosResponse<RefDataResponse>;
   export type LoginResponse = AxiosResponse<LoginResponseData>;
 }

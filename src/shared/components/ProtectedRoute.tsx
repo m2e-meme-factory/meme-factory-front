@@ -26,6 +26,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
 
   if (data) {
     dispatch(setUser(data.data.user));
+    localStorage.setItem('initData', webApp?.initData || '');
     localStorage.setItem('token', data.data.token);
   }
 

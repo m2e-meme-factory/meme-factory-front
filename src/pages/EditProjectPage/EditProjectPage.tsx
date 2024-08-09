@@ -236,7 +236,17 @@ const EditProjectPage = () => {
         {attachedBanner && (
           <Card mb='3'>
             <Flex align='center' justify='between'>
-              <Text>{attachedBanner}</Text>
+              <Text  wrap="pretty"
+                     style={{
+                       maxWidth: '70vw',
+                       wordWrap: 'break-word',
+                       overflowWrap: 'break-word',
+                       whiteSpace: 'normal',
+                       overflow: 'hidden',
+                       textOverflow: 'ellipsis',
+                     }}>
+                {attachedBanner.substring(55)}
+              </Text>
               <IconButton ml='3' onClick={() => setAttachedBanner(null)}>
                 <TrashIcon></TrashIcon>
               </IconButton>
@@ -248,27 +258,43 @@ const EditProjectPage = () => {
         <Text weight='medium' mt='3'>
           Files
         </Text>
-        <Flex>
+        <Flex direction="column" style={{ maxWidth: '100%', overflow: 'hidden' }}>
           {attachedFiles && (
-            <ul>
+            <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
               {attachedFiles.map((file, index) => (
-                <li key={index}>
-                  <Flex align='center' justify='between'>
-                    <Text>{file}</Text>
-                    <IconButton
-                      onClick={() =>
-                        setAttachedFiles((prevState) => prevState.filter((files) => file !== file))
-                      }
-                    >
-                      <TrashIcon></TrashIcon>
-                    </IconButton>
-                  </Flex>
-                </li>
+                <Card mb='3'>
+                  <li key={index}>
+                    <Flex align="center" justify="between" style={{ maxWidth: '100%' }}>
+                      <Text
+                        wrap="pretty"
+                        style={{
+                          maxWidth: '70vw',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          whiteSpace: 'normal',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {file}
+                      </Text>
+                      <IconButton
+                        onClick={() =>
+                          setAttachedFiles((prevState) => prevState.filter((_, i) => i !== index))
+                        }
+                        ml="3"
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    </Flex>
+                  </li>
+                </Card>
               ))}
             </ul>
           )}
         </Flex>
-        <input type='file' multiple onChange={handleMultipleFilesChange} />
+
+        <input type="file" multiple onChange={handleMultipleFilesChange} />
         {multipleFiles.length > 0 && (
           <ul>
             {multipleFiles.map((file, index) => (
@@ -279,13 +305,13 @@ const EditProjectPage = () => {
           </ul>
         )}
 
-        <Text weight='medium' mt='3' mb='1'>
+        <Text weight="medium" mt="3" mb="1">
           Tags
         </Text>
         <Select
           defaultValue={tagsOptionsSelected}
           onChange={handleTagsChange}
-          placeholder='Select tags'
+          placeholder="Select tags"
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
@@ -293,7 +319,7 @@ const EditProjectPage = () => {
           styles={CUSTOM_SELECT_STYLES_MULTI}
         />
 
-        <Text weight='medium' mt='3' mb='1'>
+        <Text weight="medium" mt="3" mb="1">
           Category
         </Text>
         <Select

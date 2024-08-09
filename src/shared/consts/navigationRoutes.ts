@@ -1,6 +1,6 @@
 import About from '../../pages/AboutPage/About';
 import ProfilePage from '../../pages/ProfilePage/ProfilePage';
-import TasksPage from '../../pages/PublicProjectsPage/TasksPage';
+import PublicProjectsPage from '../../pages/PublicProjectsPage/PublicProjectsPage';
 
 export const navigationRoutes = [
   {

@@ -7,11 +7,13 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { useGetMyProjects } from '../../shared/utils/api/hooks/project/useGetMyProjects';
 import { Project } from 'api';
+import { useTelegram } from '../../shared/hooks/useTelegram';
 
 const MyProjectsPage = () => {
   const currentUser = useSelector((state: RootState) => state.user.user);
-  const { data: projects, isLoading } = useGetMyProjects(currentUser?.id);
+  const { data: projects, isLoading, error, refetch } = useGetMyProjects(currentUser?.id);
   const [myProjects, setMyProjects] = useState<Project[]>([]);
+  const { webApp } = useTelegram();
 
   useEffect(() => {
     if (projects) {
@@ -35,7 +37,7 @@ const MyProjectsPage = () => {
       </Flex>
       <Flex mt='4' direction='column'>
         {myProjects.map((project, index) => (
-          <MyProjectCard
+          <MyProjectCard key={index}
             id={project.id}
             bannerUrl={project.bannerUrl}
             title={project.title}

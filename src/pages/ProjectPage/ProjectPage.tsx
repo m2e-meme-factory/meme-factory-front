@@ -19,14 +19,17 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { Project } from 'api';
+import { useTelegram } from '../../shared/hooks/useTelegram';
+import fallbackImg from '../../shared/imgs/fallback_img.jpg'
 
 const ProjectPage = () => {
   const [isUserCreator, setIsUserCreator] = useState(false);
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  const { data, isLoading, error } = useGetProject(id);
-  const [currentProject, setCurrentProject] = useState<Project>();
+  const { data, isLoading, error, refetch: refetchProject } = useGetProject(id);
+  const {webApp} = useTelegram();
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const user = useSelector((state: RootState) => state.user.user);
 
   const navigate = useNavigate();
@@ -57,10 +60,12 @@ const ProjectPage = () => {
     navigate('edit');
   };
 
+  const bannerLink = currentProject?.bannerUrl ? `https://api.meme-factory.site${currentProject?.bannerUrl}` : fallbackImg;
+
   return (
     <Flex direction='column'>
       <Flex className={styles.bannerContainer}>
-        <img src={currentProject?.bannerUrl} alt='banner' className={styles.bannerImage} />
+        <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>

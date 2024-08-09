@@ -9,26 +9,26 @@ import FreelancerLogsPage from './pages/FreelancerLogsPage/FreelancerLogsPage';
 import { ROUTES } from './shared/consts/routes';
 import React from 'react';
 import ProtectedRoute from './shared/components/ProtectedRoute';
-import TasksPage from './pages/PublicProjectsPage/TasksPage';
+import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPage';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
 import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
-    element: <BasePageWrapper />,
+    element: <ProtectedRoute element={<BasePageWrapper />} />,
     children: [
       {
         path: ROUTES.PROFILE,
-        element: <ProtectedRoute element={<ProfilePage />} />,
+        element: <ProfilePage />,
       },
       {
         path: ROUTES.PROJECT_PAGE,
-        element: <ProtectedRoute element={<ProjectPage />} />,
+        element: <ProjectPage />,
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <TasksPage />,
+        element: <PublicProjectsPage />,
       },
       {
         path: ROUTES.ABOUT,
@@ -36,23 +36,23 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.CREATE_PROJECT,
-        element: <ProtectedRoute element={<CreateProjectPage />} />,
+        element: <CreateProjectPage />,
       },
       {
         path: ROUTES.PROFILE_SETTINGS,
-        element: <ProtectedRoute element={<ProfileSettingsPage />} />,
+        element: <ProfileSettingsPage />,
       },
       {
         path: ROUTES.PROJECT_DETAILS,
-        element: <ProtectedRoute element={<ProjectDetailsPage />} />,
+        element: <ProjectDetailsPage />,
       },
       {
         path: ROUTES.LOGS,
-        element: <ProtectedRoute element={<FreelancerLogsPage />} />,
+        element: <FreelancerLogsPage />,
       },
       {
         path: ROUTES.EDIT,
-        element: <ProtectedRoute element={<EditProjectPage />} />,
+        element: <EditProjectPage />,
       },
     ],
   },

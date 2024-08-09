@@ -8,21 +8,16 @@ import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
-import {
-  CUSTOM_SELECT_STYLES_MULTI,
-  CUSTOM_SELECT_STYLES_SINGLE,
-} from '../../styles/customSelectStyles';
+import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
 import { Project } from 'api';
-import { useTelegram } from '../../shared/hooks/useTelegram';
-import { login, LoginConfig } from '../../shared/utils/api/requests/auth/login';
 
 const PublicProjectsPage = () => {
-  const { data, isLoading, error, refetch } = useGetPublicProjects();
-  const {webApp} = useTelegram();
+  const { data, isLoading } = useGetPublicProjects();
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+
   const animatedComponents = makeAnimated();
 
   useEffect(() => {
@@ -31,43 +26,17 @@ const PublicProjectsPage = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    const handleErrors = async () => {
-      if (error) {
-        if (webApp) {
-          const loginConfig: LoginConfig = {
-            params: { initData: { initData: webApp.initData } },
-          };
-          try {
-            const response = await login(loginConfig);
-            const newToken = response.data.token;
-            localStorage.setItem('token', newToken);
-
-            const {data: refetchedProjects} = await refetch();
-            setProjects(refetchedProjects?.data || []);
-          } catch (loginError) {
-            console.error('Login failed:', loginError);
-          }
-        }
-      }
-    }
-
-    handleErrors();
-  }, [error, webApp, refetch]);
-
   if (isLoading) {
     return <Loading />;
   }
 
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
-    console.log('handleTagsChange:', tags);
     setTags(tags);
   };
 
   const handleCategoryChange = (selectedCategory: SingleValue<Option>) => {
     const category = selectedCategory ? selectedCategory.value : null;
-    console.log('handleTagsChange:', category);
     setCategory(category);
   };
 

@@ -5,28 +5,16 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
   },
 });
 
-api.interceptors.request.use(
-  (config) => {
-    console.log(`Запрос: ${config.method?.toUpperCase()} ${config.url}`, config);
-    return config;
-  },
-  (error) => {
-    console.error('Ошибка запроса:', error);
-    return Promise.reject(error);
-  }
-);
-
 api.interceptors.response.use(
   (response) => {
-    console.log(`Ответ: ${response.status} ${response.statusText}`, response);
+    console.log(`Response: ${response.status} ${response.statusText}`, response);
     return response;
   },
   (error) => {
-    console.error('Ошибка:', error);
+    console.error('Response Error:', error);
     return Promise.reject(error);
   }
 );

@@ -16,43 +16,43 @@ import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
-    element: <BasePageWrapper />,
+    element: <ProtectedRoute element={<BasePageWrapper />} />,
     children: [
       {
         path: ROUTES.PROFILE,
-        element: <ProtectedRoute element={<ProfilePage />} />,
+        element: <ProfilePage />,
       },
       {
         path: ROUTES.PROJECT_PAGE,
-        element: <ProtectedRoute element={<ProjectPage />} />,
+        element: <ProjectPage />,
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <ProtectedRoute element={<PublicProjectsPage />} />,
+        element: <PublicProjectsPage />,
       },
       {
         path: ROUTES.ABOUT,
-        element: <ProtectedRoute element={<About/>} />,
+        element: <About />,
       },
       {
         path: ROUTES.CREATE_PROJECT,
-        element: <ProtectedRoute element={<CreateProjectPage />} />,
+        element: <CreateProjectPage />,
       },
       {
         path: ROUTES.PROFILE_SETTINGS,
-        element: <ProtectedRoute element={<ProfileSettingsPage />} />,
+        element: <ProfileSettingsPage />,
       },
       {
         path: ROUTES.PROJECT_DETAILS,
-        element: <ProtectedRoute element={<ProjectDetailsPage />} />,
+        element: <ProjectDetailsPage />,
       },
       {
         path: ROUTES.LOGS,
-        element: <ProtectedRoute element={<FreelancerLogsPage />} />,
+        element: <FreelancerLogsPage />,
       },
       {
         path: ROUTES.EDIT,
-        element: <ProtectedRoute element={<EditProjectPage />} />,
+        element: <EditProjectPage />,
       },
     ],
   },

@@ -22,7 +22,6 @@ import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
-import { login, LoginConfig } from '../../shared/utils/api/requests/auth/login';
 import { useTelegram } from '../../shared/hooks/useTelegram';
 import { useEffect, useState } from 'react';
 import { Role } from '../../shared/consts/userRoles';
@@ -47,31 +46,6 @@ export default function ProfilePage() {
       setRefData(data.data);
     }
   }, [data]);
-
-  useEffect(() => {
-    const handleErrors = async () => {
-      if (refDataError) {
-        if (webApp) {
-          const loginConfig: LoginConfig = {
-            params: { initData: { initData: webApp.initData } },
-          };
-          try {
-            const response = await login(loginConfig);
-            const newToken = response.data.token;
-            localStorage.setItem('token', newToken);
-
-            const { data } = await refetchRefData();
-            setRefData(data?.data || null);
-
-          } catch (loginError) {
-            console.error('Login failed:', loginError);
-          }
-        }
-      }
-    };
-
-    handleErrors();
-  }, [refDataError, webApp, refetchRefData]);
 
   if (refLoading) {
     return (

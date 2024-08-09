@@ -37,7 +37,7 @@ const MyProjectsPage = () => {
       </Flex>
       <Flex mt='4' direction='column'>
         {myProjects.map((project, index) => (
-          <MyProjectCard
+          <MyProjectCard key={index}
             id={project.id}
             bannerUrl={project.bannerUrl}
             title={project.title}

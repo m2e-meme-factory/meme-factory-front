@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
 import { ToastContainer } from 'react-toastify';
-import { set } from 'zod';
+import { uploadBanner } from '../../shared/utils/api/requests/files/uploadBanner';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -35,7 +35,7 @@ const CreateProjectPage = () => {
   const [priceMode, setPriceMode] = useState<'single' | 'range'>('single');
   const [price, setPrice] = useState<Price>({});
   const [subtasks, setSubtasks] = useState<SubtaskInfo[]>([]);
-  const [singleFile, setSingleFile] = useState<File | null>(null);
+  const [singleFile, setSingleFile] = useState<File[]>([]);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
   const [createLoading, setCreateLoading] = useState<boolean>(false);
@@ -43,8 +43,8 @@ const CreateProjectPage = () => {
   const createProjectMutation = useCreateProject(setCreateLoading);
 
   const handleSingleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSingleFile(file);
+    const files = Array.from(event.target.files || []);
+    setSingleFile(files);
   };
 
   const handleMultipleFilesChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -138,34 +138,49 @@ const CreateProjectPage = () => {
     return errors;
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     const errors = validateForm();
 
     if (errors.length === 0) {
       setCreateLoading(true);
-      let projectPrice = priceMode === 'range' ? price.min : price.single;
 
-      const projectData: CreateProjectDTO = {
-        authorId: user?.id,
-        title,
-        description,
-        tags,
-        category,
-        price: projectPrice ? projectPrice : 0,
-        subtasks: subtasks.map((subtask) => {
-          const { id, ...rest } = subtask;
-          return rest;
-        }),
-        bannerUrl: singleFile ? singleFile.name : null,
-        files: multipleFiles.map((file) => file.name),
-      };
+      try {
+        let bannerUrl: string | null = null;
+        if (singleFile) {
+          console.log(singleFile);
+          const response = await uploadBanner(singleFile);
+          bannerUrl = response[0].url;
+        }
 
-      console.log('Project Data:', projectData);
-      createProjectMutation.mutate({ params: projectData });
+        const projectPrice = priceMode === 'range' ? price.min : price.single;
+
+        const projectData: CreateProjectDTO = {
+          authorId: user?.id,
+          title,
+          description,
+          tags,
+          category,
+          price: projectPrice ? projectPrice : 0,
+          subtasks: subtasks.map((subtask) => {
+            const { id, ...rest } = subtask;
+            return rest;
+          }),
+          bannerUrl,
+          files: multipleFiles.map((file) => file.name),
+        };
+
+        console.log('Project Data:', projectData);
+        createProjectMutation.mutate({ params: projectData });
+      } catch (error) {
+        console.error('Error creating project:', error);
+      } finally {
+        setCreateLoading(false);
+      }
     } else {
       setFormErrors(errors);
     }
   };
+
 
   return (
     <Flex m='4' direction='column'>

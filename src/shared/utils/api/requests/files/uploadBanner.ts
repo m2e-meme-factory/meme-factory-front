@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-export const uploadBanner = async (file: File[]): Promise<[{ name: string, url: string }]> => {
+export const uploadFiles = async (files: File[]): Promise<[{ name: string, url: string }]> => {
   const formData = new FormData();
-  formData.append('files', file[0]);
+  files.forEach(file => {
+    formData.append('files', file);
+  });
 
   const response = await axios.post<any>('https://api.meme-factory.site/files?folder=projects', formData, {
     headers: {

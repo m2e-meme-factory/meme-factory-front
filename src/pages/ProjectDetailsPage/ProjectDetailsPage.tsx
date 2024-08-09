@@ -1,5 +1,5 @@
 import { Button, Card, Flex, Table, Heading, IconButton, Text, ScrollArea } from '@radix-ui/themes';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ArrowLeftIcon,
   ChevronRightIcon,
@@ -7,10 +7,34 @@ import {
   Pencil1Icon,
 } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
+import { Project } from 'api';
+import { setProject } from '../../shared/utils/redux/project/projectSlice';
+import { useDispatch } from 'react-redux';
+import Loading from '../../shared/components/Loading';
 
 const ProjectDetailsPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { data, isLoading, error, refetch: refetchProject } = useGetProject(id);
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    if (currentProject) {
+      dispatch(setProject(currentProject));
+    }
+  }, [currentProject]);
+
+  useEffect(() => {
+    if (data) {
+      setCurrentProject(data.data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Flex m='4' direction='column'>

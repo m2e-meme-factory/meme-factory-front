@@ -1,6 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button, Flex, Text } from '@radix-ui/themes';
-import { task } from '../../../../shared/consts/task-example';
 import { shortenDescription } from '../../../../shared/utils/helpers/shortenDescription';
 import React, { FC, useState } from 'react';
 
@@ -24,7 +23,7 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
         <Flex direction='column'>
           <Text className='TextAccent'>Description:</Text>
           <Text className='Description'>
-            {isDescVisible ? task.description : shortenDescription(task.description)}
+            {isDescVisible ? description : shortenDescription(description)}
             <Button
               variant='ghost'
               onClick={handleToggleDescription}

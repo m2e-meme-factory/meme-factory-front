@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
 import { ToastContainer } from 'react-toastify';
-import { uploadBanner } from '../../shared/utils/api/requests/files/uploadBanner';
+import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -146,10 +146,15 @@ const CreateProjectPage = () => {
 
       try {
         let bannerUrl: string | null = null;
+        let files: string[] = [];
         if (singleFile) {
-          console.log(singleFile);
-          const response = await uploadBanner(singleFile);
+          const response = await uploadFiles(singleFile);
           bannerUrl = response[0].url;
+        }
+
+        if (multipleFiles) {
+          const response = await uploadFiles(multipleFiles);
+          response.map((file) => files.push(file.name));
         }
 
         const projectPrice = priceMode === 'range' ? price.min : price.single;
@@ -166,7 +171,7 @@ const CreateProjectPage = () => {
             return rest;
           }),
           bannerUrl,
-          files: multipleFiles.map((file) => file.name),
+          files: files,
         };
 
         console.log('Project Data:', projectData);
@@ -216,9 +221,10 @@ const CreateProjectPage = () => {
         <Text weight='medium' mt='3' mb='1'>
           Banner
         </Text>
-        <input type='file' onChange={handleSingleFileChange} />
+        <input type="file" accept=".jpg, .jpeg, .png, .gif, .bmp, .webp" onChange={handleSingleFileChange}/>
 
-        <Text weight='medium' mt='3' mb='1'>
+
+        <Text weight="medium" mt="3" mb="1">
           Files
         </Text>
         <input type='file' multiple onChange={handleMultipleFilesChange} />

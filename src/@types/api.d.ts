@@ -8,6 +8,13 @@ declare module 'api' {
     email: string;
   }
 
+  export interface GetPublicProjectsParams {
+    tags?: string[];
+    category?: string;
+    page: number;
+    limit: number;
+  }
+
   export interface SubtaskInfo {
     id: string;
     title: string;

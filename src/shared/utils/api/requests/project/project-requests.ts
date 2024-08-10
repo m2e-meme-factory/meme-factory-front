@@ -2,6 +2,7 @@ import api from '../../api';
 import { AxiosResponse } from 'axios';
 import {
   CreateProjectDTO,
+  PaginatedProjects,
   Project,
   RequestConfig,
   UpdateProjectPayload,
@@ -34,7 +35,7 @@ export const createProject = (config: CreateProjectConfig): Promise<AxiosRespons
 
 export const getPublicProjects = (
   config: GetPublicProjectsConfig
-): Promise<AxiosResponse<Project[]>> => {
+): Promise<AxiosResponse<PaginatedProjects>> => {
   const newConfig = addAuthorizationHeader(config.config);
   return api.get('/projects', newConfig);
 };

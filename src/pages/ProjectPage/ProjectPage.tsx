@@ -19,20 +19,21 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { Project } from 'api';
-import { useTelegram } from '../../shared/hooks/useTelegram';
 import fallbackImg from '../../shared/imgs/fallback_img.jpg'
+import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
 
 const ProjectPage = () => {
-  const [isUserCreator, setIsUserCreator] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { id } = useParams();
-  const { data, isLoading, error, refetch: refetchProject } = useGetProject(id);
-  const {webApp} = useTelegram();
-  const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const user = useSelector((state: RootState) => state.user.user);
+  const { data, isLoading} = useGetProject(id);
 
-  const navigate = useNavigate();
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [isUserCreator, setIsUserCreator] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
     if (currentProject && user) {
@@ -59,6 +60,21 @@ const ProjectPage = () => {
   const handleEditClick = () => {
     navigate('edit');
   };
+
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    if (currentProject && user) {
+      try {
+        await downloadFiles({params: {projectId: currentProject.id, telegramId: user.telegramId}});
+      }
+      catch (error) {
+        setDownloadError(true);
+      }
+      finally {
+        setIsDownloading(false);
+      }
+    }
+  }
 
   const bannerLink = currentProject?.bannerUrl ? `https://api.meme-factory.site${currentProject?.bannerUrl}` : fallbackImg;
 
@@ -132,15 +148,25 @@ const ProjectPage = () => {
               ))}
           </Flex>
           <Flex direction='column'>
-            <Flex align='center' mb='2'>
-              <PushpinOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Attachments
-              </Text>
+            <Flex mb='2' direction='column'>
+              <Flex align='center' justify='start'>
+                <PushpinOutlined style={{ color: 'yellow', marginRight: '8px' }} />
+                <Text weight='medium' size='5'>
+                  Attachments
+                </Text>
+                <Button ml='3' onClick={handleDownload} loading={isDownloading}>
+                  Download
+                </Button>
+              </Flex>
+              {downloadError ?
+                <Text color='red' mt='2' size='2'>Sorry, something went wrong. Try again later</Text>
+                :
+                <Text color='gray' mt='2' size='2'>Files will be sent to the MemeFactory bot chat</Text>
+              }
             </Flex>
             {currentProject?.files &&
               currentProject?.files.map((file, index) => (
-                <AttachmentCard key={index} name={file} url={'/'} />
+                <AttachmentCard key={index} name={file} />
               ))}
           </Flex>
         </Flex>

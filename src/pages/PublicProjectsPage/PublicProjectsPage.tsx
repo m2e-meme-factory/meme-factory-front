@@ -23,8 +23,8 @@ const PublicProjectsPage = () => {
 
   useEffect(() => {
     if (data) {
-      setProjects(data.data);
-      setFilteredProjects(data.data);
+      setProjects(data.data.projects);
+      setFilteredProjects(data.data.projects);
     }
   }, [data]);
 

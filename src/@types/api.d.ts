@@ -163,6 +163,11 @@ declare module 'api' {
     price: number;
   }
 
+  export interface PaginatedProjects {
+    projects: Project[];
+    total: number;
+  }
+
   export interface Project {
     id: string;
     title: string;

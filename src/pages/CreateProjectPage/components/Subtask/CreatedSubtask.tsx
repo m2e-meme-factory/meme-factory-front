@@ -10,11 +10,11 @@ interface SubtaskCardProps {
   id: string;
   title: string;
   price: number;
+  description: string;
   setSubtask: Dispatch<SetStateAction<SubtaskInfo[]>>;
-  subtasks: SubtaskInfo[];
 }
 
-const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) => {
+const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, description }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const handleDelete = () => {
@@ -88,7 +88,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) 
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <input className='Input' type='text' required />
+                    <input className='Input' defaultValue={title} type='text' required />
                   </Form.Control>
                 </Form.Field>
 
@@ -106,7 +106,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) 
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <textarea className='Textarea' required />
+                    <textarea className='Textarea' defaultValue={description} required />
                   </Form.Control>
                 </Form.Field>
 
@@ -127,7 +127,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask }) 
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <input className='Input' type='number' required />
+                    <input className='Input' type='number' defaultValue={price} required />
                   </Form.Control>
                 </Form.Field>
 

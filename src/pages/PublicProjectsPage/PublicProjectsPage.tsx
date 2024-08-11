@@ -1,5 +1,5 @@
 import { Text, Flex, Heading, Button } from '@radix-ui/themes';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
@@ -10,42 +10,69 @@ import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGe
 import Loading from '../../shared/components/Loading';
 import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
 import { Project } from 'api';
+import { useInView } from 'react-intersection-observer';
+import styled from 'styled-components';
+
+const BlockObserver = styled.div`
+    height: 40px;
+    background-color: black;
+`
 
 const PublicProjectsPage = () => {
-  const { data, isLoading } = useGetPublicProjects();
+  const [tempTags, setTempTags] = useState<string[]>([]);
+  const [tempCategory, setTempCategory] = useState<string | null>(null);
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const DISPLAY_LIMIT = 10;
+
+  const previousTags = useRef<string[]>(tags);
+  const previousCategory = useRef<string | null>(category);
 
   const animatedComponents = makeAnimated();
 
+  const { data, isLoading } = useGetPublicProjects({tags: tags, category: category ? category : '', page: currentPage, limit: DISPLAY_LIMIT});
+
+  const {ref, inView} = useInView({
+    threshold: 1.0,
+  });
+
   useEffect(() => {
     if (data) {
-      setProjects(data.data.projects);
-      setFilteredProjects(data.data.projects);
-    }
-  }, [data]);
+      if (previousTags.current !== tags || previousCategory.current !== category) {
+        setProjects(data.data.projects);
+      } else {
+        setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
+      }
 
-  if (isLoading) {
-    return <Loading />;
-  }
+      previousTags.current = tags;
+      previousCategory.current = category;
+    }
+  }, [data, tags, category]);
+
+  useEffect(() => {
+    if (inView) {
+      setCurrentPage((prev) => prev + 1)
+    }
+  }, [inView]);
 
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
-    setTags(tags);
+    setTempTags(tags);
   };
 
   const handleCategoryChange = (selectedCategory: SingleValue<Option>) => {
     const category = selectedCategory ? selectedCategory.value : null;
-    setCategory(category);
+    setTempCategory(category);
   };
 
   const handleFindButtonClick = () => {
-    setFilteredProjects(projects.filter((project) =>
-      tags.filter((t) => project.tags.includes(t)).length >= 0 && (category ? category == project.category : true)));
-    console.log('handleFindButtonClick', tags, category);
+    setTags(tempTags);
+    setCategory(tempCategory);
+    setCurrentPage(1);
   };
 
   return (
@@ -88,10 +115,12 @@ const PublicProjectsPage = () => {
         </Button>
       </Flex>
       <Flex m='4' direction='column'>
-        {filteredProjects.map((project, index) => (
+        {projects.map((project, index) => (
           <ProjectCard key={index} project={project} />
         ))}
       </Flex>
+      {isLoading && <Loading/>}
+      {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
     </>
   );
 };

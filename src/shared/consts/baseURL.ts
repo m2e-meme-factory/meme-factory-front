@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://api.meme-factory.site';
+export const BASE_URL = 'https://api.digital-boost.site';

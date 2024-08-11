@@ -143,7 +143,7 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
               setSubtask={setSubtasks}
               title={subtask.title}
               price={subtask.price}
-              subtasks={subtasks}
+              description={subtask.description}
             />
           ))}
       </Flex>

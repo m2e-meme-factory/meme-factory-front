@@ -1,7 +1,7 @@
 import api from '../../api';
 import { AxiosResponse } from 'axios';
 import {
-  CreateProjectDTO,
+  CreateProjectDTO, GetPublicProjectsParams,
   PaginatedProjects,
   Project,
   RequestConfig,
@@ -10,7 +10,7 @@ import {
 } from 'api';
 
 export type CreateProjectConfig = RequestConfig<CreateProjectDTO>;
-export type GetPublicProjectsConfig = RequestConfig;
+export type GetPublicProjectsConfig = RequestConfig<GetPublicProjectsParams>;
 export type OnlyIdProjectConfig = RequestConfig<string>;
 export type UpdateProjectConfig = RequestConfig<UpdateProjectPayload>;
 export type UpdateProjectStatusConfig = RequestConfig<UpdateStatusPayload>;
@@ -37,7 +37,18 @@ export const getPublicProjects = (
   config: GetPublicProjectsConfig
 ): Promise<AxiosResponse<PaginatedProjects>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.get('/projects', newConfig);
+  const { tags = [], category, page, limit } = config.params;
+
+  const params = new URLSearchParams();
+
+  if (tags.length) {
+    tags.forEach(tag => params.append('tags', tag));
+  }
+  if (category) params.append('category', category);
+  if (page) params.append('page', String(page));
+  if (limit) params.append('limit', String(limit));
+
+  return api.get(`/projects?${params.toString()}`, newConfig);
 };
 
 export const getProject = (config: OnlyIdProjectConfig): Promise<AxiosResponse<Project>> => {

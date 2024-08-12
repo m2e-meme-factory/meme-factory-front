@@ -1,17 +1,9 @@
-export const processFileName = (name: string): { fileName: string, fileExtension: string } => {
-  if (name.length <= 37) {
-    throw new Error('File name is too short to remove the prefix');
-  }
+export const processFileName = (name: string): { fileName: string; fileExtension: string } => {
+  const nameToProcess = name.length <= 37 ? name : name.substring(37);
+  const lastDotIndex = nameToProcess.lastIndexOf('.');
 
-  const filenameWithoutUUID = name.substring(37);
-  const lastDotIndex = filenameWithoutUUID.lastIndexOf('.');
-
-  if (lastDotIndex === -1) {
-    throw new Error('Invalid file extension format');
-  }
-
-  const fileName = filenameWithoutUUID.substring(0, lastDotIndex);
-  const fileExtension = filenameWithoutUUID.substring(lastDotIndex + 1);
+  const fileName = lastDotIndex !== -1 ? nameToProcess.substring(0, lastDotIndex) : nameToProcess;
+  const fileExtension = lastDotIndex !== -1 ? nameToProcess.substring(lastDotIndex + 1) : 'unknown';
 
   return { fileName, fileExtension };
 };

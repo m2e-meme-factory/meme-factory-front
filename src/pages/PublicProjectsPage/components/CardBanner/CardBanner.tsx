@@ -10,7 +10,11 @@ interface CardBannerProps {
 const CardBanner: FC<CardBannerProps> = ({ bannerUrl }) => {
   return (
     <Flex className={styles.bannerContainer}>
-      <img src={bannerUrl ? `https://api.meme-factory.site${bannerUrl}` : fallbackImg} className={styles.bannerImage} alt={' '} />
+      <img
+        src={bannerUrl ? `https://api.meme-factory.site${bannerUrl}` : fallbackImg}
+        className={styles.bannerImage}
+        alt={' '}
+      />
     </Flex>
   );
 };

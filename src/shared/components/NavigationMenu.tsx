@@ -8,9 +8,9 @@ const NavigationMenu = () => {
 
   return (
     <Box style={{ position: 'fixed', bottom: '0', width: '100%' }}>
-      <Flex asChild width="100%" justify='center'>
-        <Card style={{background: '#121212'}}>
-          <Flex gap='3' align='center' justify="center">
+      <Flex asChild width='100%' justify='center'>
+        <Card style={{ background: '#121212' }}>
+          <Flex gap='3' align='center' justify='center'>
             {navigationRoutes.map((route, key) => (
               <React.Fragment key={key}>
                 <Link to={route.path}>

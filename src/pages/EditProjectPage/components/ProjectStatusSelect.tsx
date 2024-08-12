@@ -19,18 +19,24 @@ const ProjectStatusSelect: FC<ProjectStatusSelect> = ({ projectId, projectStatus
   const updateProjectStatus = useUpdateProjectStatus(projectId);
 
   const handleSendOnModeration = () => {
-    updateProjectStatus.mutate({ params: { id: projectId, payload: { status: ProjectStatus.MODERATION } } });
-  }
+    updateProjectStatus.mutate({
+      params: { id: projectId, payload: { status: ProjectStatus.MODERATION } },
+    });
+  };
 
   const handleProjectDelete = () => {
-    updateProjectStatus.mutate({ params: { id: projectId, payload: { status: ProjectStatus.CLOSED } } });
-  }
+    updateProjectStatus.mutate({
+      params: { id: projectId, payload: { status: ProjectStatus.CLOSED } },
+    });
+  };
 
   return (
     <Flex direction='column'>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button mt='2' style={{ padding: '20px' }}>Send on moderation</Button>
+          <Button mt='2' style={{ padding: '20px' }}>
+            Send on moderation
+          </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth='450px'>
           <AlertDialog.Title>Send on moderation</AlertDialog.Title>
@@ -55,13 +61,14 @@ const ProjectStatusSelect: FC<ProjectStatusSelect> = ({ projectId, projectStatus
 
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color='red' mt='2' style={{ padding: '20px' }}>Delete project</Button>
+          <Button color='red' mt='2' style={{ padding: '20px' }}>
+            Delete project
+          </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content maxWidth='450px'>
           <AlertDialog.Title>Close project</AlertDialog.Title>
           <AlertDialog.Description size='2'>
-            Are you sure? This action is permanent and cannot
-            be undone.
+            Are you sure? This action is permanent and cannot be undone.
           </AlertDialog.Description>
 
           <Flex gap='3' mt='4' justify='end'>

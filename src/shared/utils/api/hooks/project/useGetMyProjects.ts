@@ -37,7 +37,7 @@ export const useGetMyProjects = (userId?: string) => {
     },
     select: (data) => data,
     staleTime: 0,
-    retry: false
+    retry: false,
   });
 
   return { ...query };

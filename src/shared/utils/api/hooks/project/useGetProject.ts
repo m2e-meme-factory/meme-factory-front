@@ -37,7 +37,7 @@ export const useGetProject = (projectId?: string) => {
     },
     select: (data) => data,
     retry: false,
-    refetchOnWindowFocus: 'always'
+    refetchOnWindowFocus: 'always',
   });
 
   return { ...query };

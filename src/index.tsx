@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import '@radix-ui/themes/styles.css';
 import './index.css';
 import ProviderWrapper from './ProviderWrapper';
+import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -12,6 +13,7 @@ root.render(
     <ProviderWrapper>
       <App />
     </ProviderWrapper>
+    <Toaster position='top-center' reverseOrder={false} />
   </React.StrictMode>
 );
 

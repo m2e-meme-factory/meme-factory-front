@@ -21,7 +21,7 @@ export const useDeleteProject = () => {
     onError: async (error: any) => {
       if (error?.response?.status === 401 && webApp) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } }
+          params: { initData: { initData: webApp.initData } },
         };
 
         try {

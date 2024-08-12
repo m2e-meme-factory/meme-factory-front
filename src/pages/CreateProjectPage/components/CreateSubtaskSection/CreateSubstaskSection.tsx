@@ -57,7 +57,6 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
             <Dialog.Content className='DialogContent'>
               <Dialog.Title className='DialogTitle Accent'>Create Subtask</Dialog.Title>
               <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-
                 <Form.Field className='FormField' name='title'>
                   <div
                     style={{

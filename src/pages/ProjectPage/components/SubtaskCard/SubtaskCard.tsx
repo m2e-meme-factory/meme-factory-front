@@ -34,7 +34,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
   return (
     <Dialog.Root open={isModalVisible}>
       <Dialog.Trigger asChild>
-        <Card className='SubtaskCard' onClick={handleDialogOpen}>
+        <Card className='SubtaskCard' mb='3' onClick={handleDialogOpen}>
           <Flex>
             <RocketOutlined style={{ color: 'yellow', marginRight: '15px' }} />
             <Flex direction='column'>

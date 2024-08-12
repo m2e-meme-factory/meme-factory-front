@@ -42,15 +42,15 @@ export default function ProfilePage() {
   } = useGetRefData(userId);
 
   useEffect(() => {
-    if(data) {
+    if (data) {
       setRefData(data.data);
     }
   }, [data]);
 
   if (refLoading) {
     return (
-      <Flex className={styles.LoadingContainer} align="center" justify="center">
-        <Spinner size="3" />
+      <Flex className={styles.LoadingContainer} align='center' justify='center'>
+        <Spinner size='3' />
       </Flex>
     );
   }
@@ -58,59 +58,59 @@ export default function ProfilePage() {
   const refCount = refData?.count;
 
   return (
-    <Tabs.Root defaultValue="account">
-      <Tabs.List justify="center" highContrast>
-        <Tabs.Trigger value="account">Account</Tabs.Trigger>
-        <Tabs.Trigger value="transactions">Transactions</Tabs.Trigger>
-        {userRole === Role.ADVERTISER && <Tabs.Trigger value="dashboard">Dashboard</Tabs.Trigger>}
-        {userRole === Role.ADVERTISER && <Tabs.Trigger value="my-projects">Projects</Tabs.Trigger>}
+    <Tabs.Root defaultValue='account'>
+      <Tabs.List justify='center' highContrast>
+        <Tabs.Trigger value='account'>Account</Tabs.Trigger>
+        <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
+        {userRole === Role.ADVERTISER && <Tabs.Trigger value='dashboard'>Dashboard</Tabs.Trigger>}
+        {userRole === Role.ADVERTISER && <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>}
       </Tabs.List>
 
-      <Box pt="3">
-        <Tabs.Content value="account">
-          <Card m="4">
-            <Grid gap="4">
-              <Flex align="center">
-                <Heading mr="3">Profile</Heading>
-                <Link to="/profile/settings">
-                  <IconButton variant="soft">
+      <Box pt='3'>
+        <Tabs.Content value='account'>
+          <Card m='4'>
+            <Grid gap='4'>
+              <Flex align='center'>
+                <Heading mr='3'>Profile</Heading>
+                <Link to='/profile/settings'>
+                  <IconButton variant='soft'>
                     <GearIcon />
                   </IconButton>
                 </Link>
               </Flex>
               <DataList.Root>
-                <DataList.Item align="center">
-                  <DataList.Label minWidth="88px">Status</DataList.Label>
+                <DataList.Item align='center'>
+                  <DataList.Label minWidth='88px'>Status</DataList.Label>
                   <DataList.Value>
-                    <Badge color="jade" variant="soft" radius="full">
+                    <Badge color='jade' variant='soft' radius='full'>
                       Authorized
                     </Badge>
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
-                  <DataList.Label minWidth="88px">ID</DataList.Label>
+                  <DataList.Label minWidth='88px'>ID</DataList.Label>
                   <DataList.Value>
                     <CopyableCode value={userId || ''} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
-                  <DataList.Label minWidth="88px">Nickname</DataList.Label>
+                  <DataList.Label minWidth='88px'>Nickname</DataList.Label>
                   <DataList.Value>
                     <CopyableCode value={`${user?.username}`} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
-                  <DataList.Label minWidth="88px">Type</DataList.Label>
+                  <DataList.Label minWidth='88px'>Type</DataList.Label>
                   <DataList.Value>{user?.role}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Grid>
           </Card>
 
-          <Card m="4">
-            <Flex justify="between" align="center">
-              <Flex direction="column">
-                <Text mb="2" color="gray">
+          <Card m='4'>
+            <Flex justify='between' align='center'>
+              <Flex direction='column'>
+                <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
                 <Heading>$26 412.03</Heading>
@@ -121,23 +121,19 @@ export default function ProfilePage() {
             </Flex>
           </Card>
 
-          <Card m="4">
-            <Grid gap="4">
+          <Card m='4'>
+            <Grid gap='4'>
               <Heading>Referas</Heading>
-              <Text color="gray">Your Ref link:</Text>
-              <CopyableTextField
-                size={'2'}
-                fieldSize="3"
-                value={refData?.refLink || ' '}
-              />
-              <DataList.Root mt="4">
-                <DataList.Item align="center">
+              <Text color='gray'>Your Ref link:</Text>
+              <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} />
+              <DataList.Root mt='4'>
+                <DataList.Item align='center'>
                   <DataList.Item>
-                    <DataList.Label minWidth="88px">Total Count</DataList.Label>
+                    <DataList.Label minWidth='88px'>Total Count</DataList.Label>
                     <DataList.Value>{refCount}</DataList.Value>
                   </DataList.Item>
                   <DataList.Item>
-                    <DataList.Label minWidth="88px">Total profit</DataList.Label>
+                    <DataList.Label minWidth='88px'>Total profit</DataList.Label>
                     <DataList.Value>0 M2E</DataList.Value>
                   </DataList.Item>
                 </DataList.Item>
@@ -146,22 +142,22 @@ export default function ProfilePage() {
           </Card>
         </Tabs.Content>
 
-        <Tabs.Content value="dashboard">
-          <Card m="4">
-            <Flex justify="between">
+        <Tabs.Content value='dashboard'>
+          <Card m='4'>
+            <Flex justify='between'>
               <Heading>Dashboard</Heading>
-              <Link to="/create-project">
+              <Link to='/create-project'>
                 <Button>Create Project</Button>
               </Link>
             </Flex>
           </Card>
         </Tabs.Content>
 
-        <Tabs.Content value="my-projects">
+        <Tabs.Content value='my-projects'>
           <MyProjectsPage />
         </Tabs.Content>
 
-        <Tabs.Content value="transactions">
+        <Tabs.Content value='transactions'>
           <TransactionsHistoryPage />
         </Tabs.Content>
       </Box>

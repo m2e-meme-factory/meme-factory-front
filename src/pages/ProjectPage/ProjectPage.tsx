@@ -19,7 +19,7 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { Project } from 'api';
-import fallbackImg from '../../shared/imgs/fallback_img.jpg'
+import fallbackImg from '../../shared/imgs/fallback_img.jpg';
 import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
 
 const ProjectPage = () => {
@@ -27,7 +27,7 @@ const ProjectPage = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const { data, isLoading} = useGetProject(id);
+  const { data, isLoading } = useGetProject(id);
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [isUserCreator, setIsUserCreator] = useState(false);
@@ -65,18 +65,20 @@ const ProjectPage = () => {
     setIsDownloading(true);
     if (currentProject && user) {
       try {
-        await downloadFiles({params: {projectId: currentProject.id, telegramId: user.telegramId}});
-      }
-      catch (error) {
+        await downloadFiles({
+          params: { projectId: currentProject.id, telegramId: user.telegramId },
+        });
+      } catch (error) {
         setDownloadError(true);
-      }
-      finally {
+      } finally {
         setIsDownloading(false);
       }
     }
-  }
+  };
 
-  const bannerLink = currentProject?.bannerUrl ? `https://api.meme-factory.site${currentProject?.bannerUrl}` : fallbackImg;
+  const bannerLink = currentProject?.bannerUrl
+    ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
+    : fallbackImg;
 
   return (
     <Flex direction='column'>
@@ -158,11 +160,15 @@ const ProjectPage = () => {
                   Download
                 </Button>
               </Flex>
-              {downloadError ?
-                <Text color='red' mt='2' size='2'>Sorry, something went wrong. Try again later</Text>
-                :
-                <Text color='gray' mt='2' size='2'>Files will be sent to the MemeFactory bot chat</Text>
-              }
+              {downloadError ? (
+                <Text color='red' mt='2' size='2'>
+                  Sorry, something went wrong. Try again later
+                </Text>
+              ) : (
+                <Text color='gray' mt='2' size='2'>
+                  Files will be sent to the MemeFactory bot chat
+                </Text>
+              )}
             </Flex>
             {currentProject?.files &&
               currentProject?.files.map((file, index) => (

@@ -8,15 +8,18 @@ import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
-import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
+import {
+  CUSTOM_SELECT_STYLES_MULTI,
+  CUSTOM_SELECT_STYLES_SINGLE,
+} from '../../styles/customSelectStyles';
 import { Project } from 'api';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 
 const BlockObserver = styled.div`
-    height: 40px;
-    background-color: black;
-`
+  height: 40px;
+  background-color: black;
+`;
 
 const PublicProjectsPage = () => {
   const [tempTags, setTempTags] = useState<string[]>([]);
@@ -26,6 +29,7 @@ const PublicProjectsPage = () => {
   const [category, setCategory] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isEnd, setIsEnd] = useState(false);
 
   const DISPLAY_LIMIT = 10;
 
@@ -34,28 +38,38 @@ const PublicProjectsPage = () => {
 
   const animatedComponents = makeAnimated();
 
-  const { data, isLoading } = useGetPublicProjects({tags: tags, category: category ? category : '', page: currentPage, limit: DISPLAY_LIMIT});
+  const { data, isLoading } = useGetPublicProjects({
+    tags: tags,
+    category: category ? category : '',
+    page: currentPage,
+    limit: DISPLAY_LIMIT,
+  });
 
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     threshold: 1.0,
   });
 
   useEffect(() => {
     if (data) {
-      if (previousTags.current !== tags || previousCategory.current !== category) {
-        setProjects(data.data.projects);
-      } else {
-        setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
-      }
+      if (data.data.projects.length > 0) {
+        if (previousTags.current !== tags || previousCategory.current !== category) {
+          setProjects(data.data.projects);
+        } else {
+          setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
+        }
 
-      previousTags.current = tags;
-      previousCategory.current = category;
+        previousTags.current = tags;
+        previousCategory.current = category;
+        setIsEnd(false);
+      } else {
+        setIsEnd(true);
+      }
     }
   }, [data, tags, category]);
 
   useEffect(() => {
-    if (inView) {
-      setCurrentPage((prev) => prev + 1)
+    if (inView && !isEnd) {
+      setCurrentPage((prev) => prev + 1);
     }
   }, [inView]);
 
@@ -119,7 +133,7 @@ const PublicProjectsPage = () => {
           <ProjectCard key={index} project={project} />
         ))}
       </Flex>
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
     </>
   );

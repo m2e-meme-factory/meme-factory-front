@@ -1,4 +1,4 @@
-import { Text, Button, Flex, Heading, IconButton, Separator, TextField } from '@radix-ui/themes';
+import { Text, Button, Flex, Heading, IconButton, AlertDialog, TextField } from '@radix-ui/themes';
 import './CreateProjectPage.module.css';
 import React, { ChangeEvent, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
@@ -20,8 +20,8 @@ import { FormError, Option, Price } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
-import { ToastContainer } from 'react-toastify';
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
+import toast from 'react-hot-toast';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -147,13 +147,42 @@ const CreateProjectPage = () => {
       try {
         let bannerUrl: string | null = null;
         let files: string[] = [];
-        if (singleFile) {
-          const response = await uploadFiles(singleFile);
+        if (singleFile && singleFile.length > 0) {
+          const response = await toast.promise(
+            uploadFiles(singleFile),
+            {
+              success: 'Banner uploaded successfully',
+              error: 'Error occurred while uploading banner',
+              loading: 'Uploading banner',
+            },
+            {
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
+
           bannerUrl = response[0].url;
         }
 
-        if (multipleFiles) {
-          const response = await uploadFiles(multipleFiles);
+        if (multipleFiles && multipleFiles.length > 0) {
+          const response = await toast.promise(
+            uploadFiles(multipleFiles),
+            {
+              success: 'Files uploaded successfully',
+              error: 'Error occurred while uploading files',
+              loading: 'Uploading files',
+            },
+            {
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
           response.map((file) => files.push(file.name));
         }
 
@@ -186,13 +215,36 @@ const CreateProjectPage = () => {
     }
   };
 
-
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton size='2' onClick={() => navigate(-1)} mr='3'>
-          <ArrowLeftIcon />
-        </IconButton>
+        <AlertDialog.Root>
+          <AlertDialog.Trigger>
+            <IconButton size='2' mr='3'>
+              <ArrowLeftIcon />
+            </IconButton>
+          </AlertDialog.Trigger>
+          <AlertDialog.Content maxWidth='450px'>
+            <AlertDialog.Title>Exit project editor</AlertDialog.Title>
+            <AlertDialog.Description size='2'>
+              Are you sure you want to leave? Unsaved changes will be lost.
+            </AlertDialog.Description>
+
+            <Flex gap='3' mt='4' justify='end'>
+              <AlertDialog.Cancel>
+                <Button variant='soft' color='gray'>
+                  Cancel
+                </Button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action>
+                <Button onClick={() => navigate(-1)} variant='solid' color='red'>
+                  Leave
+                </Button>
+              </AlertDialog.Action>
+            </Flex>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
+
         <Heading>Create Project</Heading>
       </Flex>
       <Flex direction='column'>
@@ -221,10 +273,13 @@ const CreateProjectPage = () => {
         <Text weight='medium' mt='3' mb='1'>
           Banner
         </Text>
-        <input type="file" accept=".jpg, .jpeg, .png, .gif, .bmp, .webp" onChange={handleSingleFileChange}/>
+        <input
+          type='file'
+          accept='.jpg, .jpeg, .png, .gif, .bmp, .webp'
+          onChange={handleSingleFileChange}
+        />
 
-
-        <Text weight="medium" mt="3" mb="1">
+        <Text weight='medium' mt='3' mb='1'>
           Files
         </Text>
         <input type='file' multiple onChange={handleMultipleFilesChange} />
@@ -333,8 +388,6 @@ const CreateProjectPage = () => {
         <Button style={{ marginTop: 10 }} onClick={handleCreateProject} loading={createLoading}>
           Create Project
         </Button>
-
-        <ToastContainer />
       </Flex>
     </Flex>
   );

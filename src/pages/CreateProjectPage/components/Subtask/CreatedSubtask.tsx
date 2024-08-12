@@ -32,16 +32,14 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
       price: parseFloat(formData.get('price') as string),
     };
 
-    console.log(updatedSubtask)
+    console.log(updatedSubtask);
 
-    setSubtask(prevSubtasks =>
-      prevSubtasks.map(subtask =>
-        subtask.id === updatedSubtask.id ? updatedSubtask : subtask
-      )
+    setSubtask((prevSubtasks) =>
+      prevSubtasks.map((subtask) => (subtask.id === updatedSubtask.id ? updatedSubtask : subtask))
     );
 
     setModalOpen(false);
-  }
+  };
 
   return (
     <Card className={styles.CreatedSubtask}>
@@ -58,7 +56,6 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
           </Flex>
         </Flex>
         <Flex>
-
           <Dialog.Root open={modalOpen}>
             <Dialog.Trigger>
               <IconButton mr='2' onClick={() => setModalOpen(true)}>
@@ -66,14 +63,13 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
               </IconButton>
             </Dialog.Trigger>
 
-            <Dialog.Content maxWidth="450px">
+            <Dialog.Content maxWidth='450px'>
               <Dialog.Title>Edit subtask</Dialog.Title>
-              <Dialog.Description size="2" mb="4">
+              <Dialog.Description size='2' mb='4'>
                 Make changes to subtask
               </Dialog.Description>
 
               <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-
                 <Form.Field className='FormField' name='title'>
                   <div
                     style={{
@@ -136,9 +132,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
                     Save changes
                   </button>
                 </Form.Submit>
-
               </Form.Root>
-
             </Dialog.Content>
           </Dialog.Root>
 

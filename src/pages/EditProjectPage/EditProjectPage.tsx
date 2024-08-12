@@ -1,4 +1,13 @@
-import { Text, Button, Flex, Heading, IconButton, TextField, Card } from '@radix-ui/themes';
+import {
+  Text,
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  TextField,
+  Card,
+  AlertDialog,
+} from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
 import React, { ChangeEvent, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
@@ -21,6 +30,8 @@ import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskS
 import { useUpdateProject } from '../../shared/utils/api/hooks/project/useUpdateProject';
 import ProjectStatusSelect from './components/ProjectStatusSelect';
 import { CreateProjectDTO, SubtaskInfo } from 'api';
+import toast from 'react-hot-toast';
+import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 
 enum ProjectStatus {
   DRAFT = 'draft',
@@ -46,7 +57,7 @@ const EditProjectPage = () => {
     project ? { single: project.price, min: project.price, max: project.price } : {}
   );
   const [subtasks, setSubtasks] = useState<SubtaskInfo[]>(subtasksPrepared);
-  const [singleFile, setSingleFile] = useState<File | null>(null);
+  const [singleFile, setSingleFile] = useState<File[]>([]);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
   const [projectStatus, setProjectStatus] = useState<ProjectStatus>(
@@ -56,6 +67,7 @@ const EditProjectPage = () => {
   const [attachedBanner, setAttachedBanner] = useState<string | null>(
     project ? project.bannerUrl : null
   );
+  const [isProjectSaving, setIsProjectSaving] = useState(false);
 
   const updateProjectMutation = useUpdateProject(project?.id);
 
@@ -73,8 +85,8 @@ const EditProjectPage = () => {
   };
 
   const handleSingleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSingleFile(file);
+    const files = Array.from(event.target.files || []);
+    setSingleFile(files);
   };
 
   const handleMultipleFilesChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -168,13 +180,57 @@ const EditProjectPage = () => {
     return errors;
   };
 
-  const handleEditProject = () => {
+  const handleEditProject = async () => {
+    setIsProjectSaving(true);
     const errors = validateForm();
 
     if (errors.length === 0) {
       let projectPrice = priceMode === 'range' ? price.min : price.single;
-      const fileNamesFromMultipleFiles = multipleFiles.map((file) => file.name);
-      const combinedFileNames = [...fileNamesFromMultipleFiles, ...attachedFiles];
+      let bannerUrl = attachedBanner;
+      let files: string[] = [];
+
+      if (singleFile && singleFile.length > 0) {
+        const response = await toast.promise(
+          uploadFiles(singleFile),
+          {
+            success: 'Banner uploaded successfully',
+            error: 'Error occurred while uploading banner',
+            loading: 'Uploading banner',
+          },
+          {
+            style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+            },
+          }
+        );
+        bannerUrl = response[0].url;
+      }
+
+      if (multipleFiles && multipleFiles.length > 0) {
+        const response = await toast.promise(
+          uploadFiles(multipleFiles),
+          {
+            success: 'Files uploaded successfully',
+            error: 'Error occurred while uploading files',
+            loading: 'Uploading files',
+          },
+          {
+            style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+            },
+          }
+        );
+
+        if (Array.isArray(response)) {
+          console.log(response);
+          const fileNames = response.map((file) => file.name);
+          files = [...attachedFiles, ...fileNames];
+        }
+      }
 
       const projectData: CreateProjectDTO = {
         authorId: user?.id,
@@ -187,24 +243,50 @@ const EditProjectPage = () => {
           const { id, ...rest } = subtask;
           return rest;
         }),
-        bannerUrl: singleFile ? singleFile.name : attachedBanner ? attachedBanner : null,
-        files: combinedFileNames,
+        bannerUrl: bannerUrl ? bannerUrl : attachedBanner,
+        files: files,
       };
 
       if (project && projectData) {
         updateProjectMutation.mutate({ params: { projectId: project.id, project: projectData } });
+        setIsProjectSaving(false);
       }
     } else {
       setFormErrors(errors);
+      setIsProjectSaving(false);
     }
   };
 
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton size='2' onClick={() => navigate(-1)} mr='3'>
-          <ArrowLeftIcon />
-        </IconButton>
+        <AlertDialog.Root>
+          <AlertDialog.Trigger>
+            <IconButton size='2' mr='3'>
+              <ArrowLeftIcon />
+            </IconButton>
+          </AlertDialog.Trigger>
+          <AlertDialog.Content maxWidth='450px'>
+            <AlertDialog.Title>Exit project editor</AlertDialog.Title>
+            <AlertDialog.Description size='2'>
+              Are you sure you want to leave? Unsaved changes will be lost.
+            </AlertDialog.Description>
+
+            <Flex gap='3' mt='4' justify='end'>
+              <AlertDialog.Cancel>
+                <Button variant='soft' color='gray'>
+                  Cancel
+                </Button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action>
+                <Button onClick={() => navigate(-1)} variant='solid' color='red'>
+                  Leave
+                </Button>
+              </AlertDialog.Action>
+            </Flex>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
+
         <Heading>Edit Project</Heading>
       </Flex>
       <Flex direction='column'>
@@ -236,15 +318,17 @@ const EditProjectPage = () => {
         {attachedBanner && (
           <Card mb='3'>
             <Flex align='center' justify='between'>
-              <Text  wrap="pretty"
-                     style={{
-                       maxWidth: '70vw',
-                       wordWrap: 'break-word',
-                       overflowWrap: 'break-word',
-                       whiteSpace: 'normal',
-                       overflow: 'hidden',
-                       textOverflow: 'ellipsis',
-                     }}>
+              <Text
+                wrap='pretty'
+                style={{
+                  maxWidth: '70vw',
+                  wordWrap: 'break-word',
+                  overflowWrap: 'break-word',
+                  whiteSpace: 'normal',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
                 {attachedBanner.substring(55)}
               </Text>
               <IconButton ml='3' onClick={() => setAttachedBanner(null)}>
@@ -258,15 +342,15 @@ const EditProjectPage = () => {
         <Text weight='medium' mt='3'>
           Files
         </Text>
-        <Flex direction="column" style={{ maxWidth: '100%', overflow: 'hidden' }}>
+        <Flex direction='column' style={{ maxWidth: '100%', overflow: 'hidden' }}>
           {attachedFiles && (
             <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
               {attachedFiles.map((file, index) => (
                 <Card mb='3'>
                   <li key={index}>
-                    <Flex align="center" justify="between" style={{ maxWidth: '100%' }}>
+                    <Flex align='center' justify='between' style={{ maxWidth: '100%' }}>
                       <Text
-                        wrap="pretty"
+                        wrap='pretty'
                         style={{
                           maxWidth: '70vw',
                           wordWrap: 'break-word',
@@ -276,13 +360,13 @@ const EditProjectPage = () => {
                           textOverflow: 'ellipsis',
                         }}
                       >
-                        {file}
+                        {file.substring(37)}
                       </Text>
                       <IconButton
                         onClick={() =>
                           setAttachedFiles((prevState) => prevState.filter((_, i) => i !== index))
                         }
-                        ml="3"
+                        ml='3'
                       >
                         <TrashIcon />
                       </IconButton>
@@ -294,7 +378,7 @@ const EditProjectPage = () => {
           )}
         </Flex>
 
-        <input type="file" multiple onChange={handleMultipleFilesChange} />
+        <input type='file' multiple onChange={handleMultipleFilesChange} />
         {multipleFiles.length > 0 && (
           <ul>
             {multipleFiles.map((file, index) => (
@@ -305,13 +389,13 @@ const EditProjectPage = () => {
           </ul>
         )}
 
-        <Text weight="medium" mt="3" mb="1">
+        <Text weight='medium' mt='3' mb='1'>
           Tags
         </Text>
         <Select
           defaultValue={tagsOptionsSelected}
           onChange={handleTagsChange}
-          placeholder="Select tags"
+          placeholder='Select tags'
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
@@ -319,7 +403,7 @@ const EditProjectPage = () => {
           styles={CUSTOM_SELECT_STYLES_MULTI}
         />
 
-        <Text weight="medium" mt="3" mb="1">
+        <Text weight='medium' mt='3' mb='1'>
           Category
         </Text>
         <Select
@@ -399,7 +483,13 @@ const EditProjectPage = () => {
 
         <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
-        <Button style={{ padding: '20px'}} mt='4' mb='4' onClick={handleEditProject}>
+        <Button
+          style={{ padding: '20px' }}
+          loading={isProjectSaving}
+          mt='4'
+          mb='4'
+          onClick={handleEditProject}
+        >
           Save Project
         </Button>
 

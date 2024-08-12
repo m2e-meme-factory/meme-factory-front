@@ -15,15 +15,19 @@ const AttachmentCard: FC<AttachmentCardProps> = ({ name }) => {
       <Flex>
         <FileOutlined style={{ color: 'yellow', marginRight: '15px' }} />
         <Flex direction='column'>
-          <Text size='5' weight='medium'  wrap="pretty"
-                style={{
-                  maxWidth: '70vw',
-                  wordWrap: 'break-word',
-                  overflowWrap: 'break-word',
-                  whiteSpace: 'normal',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}>
+          <Text
+            size='5'
+            weight='medium'
+            wrap='pretty'
+            style={{
+              maxWidth: '70vw',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
             {fileName}
           </Text>
           <Text size='3' color='gray'>

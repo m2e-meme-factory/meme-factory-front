@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { useState } from 'react';
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  showToastWithPromise,
+} from '../../../helpers/notify';
+import toast from 'react-hot-toast';
 
 export const useUpdateProject = (id?: string) => {
   const navigate = useNavigate();
@@ -14,6 +20,7 @@ export const useUpdateProject = (id?: string) => {
     mutationFn: (config: UpdateProjectConfig) => updateProject(config),
     onSuccess: () => {
       if (id) {
+        showSuccessMessage('Project created successfully');
         navigate(`/projects/${id}`);
       }
     },
@@ -23,21 +30,42 @@ export const useUpdateProject = (id?: string) => {
     onError: async (error: any) => {
       if (error?.response?.status === 401 && webApp) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } }
+          params: { initData: { initData: webApp.initData } },
         };
 
         try {
-          const response = await login(loginConfig);
+          const response = await toast.promise(
+            login(loginConfig),
+            {
+              success: 'Logged in successfully',
+              error: 'Failed to sign in',
+              loading: 'Logging in',
+            },
+            {
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
           const newToken = response.data.token;
           localStorage.setItem('token', newToken);
 
           if (savedVariables) {
-            await updateProject(savedVariables);
+            await showToastWithPromise({
+              success: 'Project created successfully',
+              error: 'Error while creating project',
+              process: 'Creating a project',
+              callback: () => updateProject(savedVariables),
+            });
             navigate(`/projects/${id}`);
           }
         } catch (loginError) {
-          console.error('Login failed:', loginError);
+          showErrorMessage('Failed to create project due to authorization issue!');
         }
+      } else {
+        showErrorMessage('Something went wrong!');
       }
     },
   });

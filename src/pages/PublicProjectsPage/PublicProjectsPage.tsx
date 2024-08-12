@@ -26,6 +26,7 @@ const PublicProjectsPage = () => {
   const [category, setCategory] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isEnd, setIsEnd] = useState(false);
 
   const DISPLAY_LIMIT = 10;
 
@@ -42,19 +43,25 @@ const PublicProjectsPage = () => {
 
   useEffect(() => {
     if (data) {
-      if (previousTags.current !== tags || previousCategory.current !== category) {
-        setProjects(data.data.projects);
-      } else {
-        setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
-      }
+      if (data.data.projects.length > 0) {
+        if (previousTags.current !== tags || previousCategory.current !== category) {
+          setProjects(data.data.projects);
+        } else {
+          setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
+        }
 
-      previousTags.current = tags;
-      previousCategory.current = category;
+        previousTags.current = tags;
+        previousCategory.current = category;
+        setIsEnd(false);
+      }
+      else {
+        setIsEnd(true);
+      }
     }
   }, [data, tags, category]);
 
   useEffect(() => {
-    if (inView) {
+    if (inView && !isEnd) {
       setCurrentPage((prev) => prev + 1)
     }
   }, [inView]);

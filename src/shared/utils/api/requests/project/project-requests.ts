@@ -1,7 +1,8 @@
 import api from '../../api';
 import { AxiosResponse } from 'axios';
 import {
-  CreateProjectDTO, GetPublicProjectsParams,
+  CreateProjectDTO,
+  GetPublicProjectsParams,
   PaginatedProjects,
   Project,
   RequestConfig,
@@ -42,7 +43,7 @@ export const getPublicProjects = (
   const params = new URLSearchParams();
 
   if (tags.length) {
-    tags.forEach(tag => params.append('tags', tag));
+    tags.forEach((tag) => params.append('tags', tag));
   }
   if (category) params.append('category', category);
   if (page) params.append('page', String(page));

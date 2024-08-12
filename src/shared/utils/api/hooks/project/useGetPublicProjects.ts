@@ -12,7 +12,7 @@ export const useGetPublicProjects = (params: GetPublicProjectsParams) => {
     queryKey: ['getPublicProjects', params.page, params.category, params.tags],
     queryFn: async () => {
       try {
-        return await getPublicProjects({params: params});
+        return await getPublicProjects({ params: params });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401) {
           if (webApp) {
@@ -24,7 +24,7 @@ export const useGetPublicProjects = (params: GetPublicProjectsParams) => {
               const newToken = response.data.token;
               localStorage.setItem('token', newToken);
 
-              return await getPublicProjects({params: params});
+              return await getPublicProjects({ params: params });
             } catch (loginError) {
               throw new Error('Login failed');
             }

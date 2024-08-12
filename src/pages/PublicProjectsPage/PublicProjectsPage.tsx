@@ -8,15 +8,18 @@ import makeAnimated from 'react-select/animated';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
 import Loading from '../../shared/components/Loading';
-import { CUSTOM_SELECT_STYLES_MULTI, CUSTOM_SELECT_STYLES_SINGLE } from '../../styles/customSelectStyles';
+import {
+  CUSTOM_SELECT_STYLES_MULTI,
+  CUSTOM_SELECT_STYLES_SINGLE,
+} from '../../styles/customSelectStyles';
 import { Project } from 'api';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 
 const BlockObserver = styled.div`
-    height: 40px;
-    background-color: black;
-`
+  height: 40px;
+  background-color: black;
+`;
 
 const PublicProjectsPage = () => {
   const [tempTags, setTempTags] = useState<string[]>([]);
@@ -35,9 +38,14 @@ const PublicProjectsPage = () => {
 
   const animatedComponents = makeAnimated();
 
-  const { data, isLoading } = useGetPublicProjects({tags: tags, category: category ? category : '', page: currentPage, limit: DISPLAY_LIMIT});
+  const { data, isLoading } = useGetPublicProjects({
+    tags: tags,
+    category: category ? category : '',
+    page: currentPage,
+    limit: DISPLAY_LIMIT,
+  });
 
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     threshold: 1.0,
   });
 
@@ -53,8 +61,7 @@ const PublicProjectsPage = () => {
         previousTags.current = tags;
         previousCategory.current = category;
         setIsEnd(false);
-      }
-      else {
+      } else {
         setIsEnd(true);
       }
     }
@@ -62,7 +69,7 @@ const PublicProjectsPage = () => {
 
   useEffect(() => {
     if (inView && !isEnd) {
-      setCurrentPage((prev) => prev + 1)
+      setCurrentPage((prev) => prev + 1);
     }
   }, [inView]);
 
@@ -126,7 +133,7 @@ const PublicProjectsPage = () => {
           <ProjectCard key={index} project={project} />
         ))}
       </Flex>
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
     </>
   );

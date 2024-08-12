@@ -1,4 +1,4 @@
-export const processFileName = (name: string): { fileName: string, fileExtension: string } => {
+export const processFileName = (name: string): { fileName: string; fileExtension: string } => {
   const nameToProcess = name.length <= 37 ? name : name.substring(37);
   const lastDotIndex = nameToProcess.lastIndexOf('.');
 

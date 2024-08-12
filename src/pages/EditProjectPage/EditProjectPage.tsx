@@ -1,4 +1,4 @@
-import { Text, Button, Flex, Heading, IconButton, TextField, Card } from '@radix-ui/themes';
+import { Text, Button, Flex, Heading, IconButton, TextField, Card, AlertDialog } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
 import React, { ChangeEvent, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
@@ -56,6 +56,7 @@ const EditProjectPage = () => {
   const [attachedBanner, setAttachedBanner] = useState<string | null>(
     project ? project.bannerUrl : null
   );
+  const [isProjectSaving, setIsProjectSaving] = useState(false);
 
   const updateProjectMutation = useUpdateProject(project?.id);
 
@@ -169,6 +170,7 @@ const EditProjectPage = () => {
   };
 
   const handleEditProject = () => {
+    setIsProjectSaving(true);
     const errors = validateForm();
 
     if (errors.length === 0) {
@@ -193,18 +195,45 @@ const EditProjectPage = () => {
 
       if (project && projectData) {
         updateProjectMutation.mutate({ params: { projectId: project.id, project: projectData } });
+        setIsProjectSaving(false);
       }
     } else {
       setFormErrors(errors);
+      setIsProjectSaving(false);
     }
   };
 
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton size='2' onClick={() => navigate(-1)} mr='3'>
-          <ArrowLeftIcon />
-        </IconButton>
+
+        <AlertDialog.Root>
+          <AlertDialog.Trigger>
+            <IconButton size='2' mr='3'>
+              <ArrowLeftIcon />
+            </IconButton>
+          </AlertDialog.Trigger>
+          <AlertDialog.Content maxWidth="450px">
+            <AlertDialog.Title>Exit project editor</AlertDialog.Title>
+            <AlertDialog.Description size="2">
+              Are you sure you want to leave? Unsaved changes will be lost.
+            </AlertDialog.Description>
+
+            <Flex gap="3" mt="4" justify="end">
+              <AlertDialog.Cancel>
+                <Button variant="soft" color="gray">
+                  Cancel
+                </Button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action>
+                <Button onClick={() => navigate(-1)} variant="solid" color="red">
+                  Leave
+                </Button>
+              </AlertDialog.Action>
+            </Flex>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
+
         <Heading>Edit Project</Heading>
       </Flex>
       <Flex direction='column'>
@@ -399,7 +428,7 @@ const EditProjectPage = () => {
 
         <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
-        <Button style={{ padding: '20px'}} mt='4' mb='4' onClick={handleEditProject}>
+        <Button style={{ padding: '20px'}} loading={isProjectSaving} mt='4' mb='4' onClick={handleEditProject}>
           Save Project
         </Button>
 

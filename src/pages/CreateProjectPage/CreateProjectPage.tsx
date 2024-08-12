@@ -1,4 +1,4 @@
-import { Text, Button, Flex, Heading, IconButton, Separator, TextField } from '@radix-ui/themes';
+import { Text, Button, Flex, Heading, IconButton, AlertDialog, TextField } from '@radix-ui/themes';
 import './CreateProjectPage.module.css';
 import React, { ChangeEvent, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
@@ -190,9 +190,34 @@ const CreateProjectPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton size='2' onClick={() => navigate(-1)} mr='3'>
-          <ArrowLeftIcon />
-        </IconButton>
+
+        <AlertDialog.Root>
+          <AlertDialog.Trigger>
+            <IconButton size='2' mr='3'>
+              <ArrowLeftIcon />
+            </IconButton>
+          </AlertDialog.Trigger>
+          <AlertDialog.Content maxWidth="450px">
+            <AlertDialog.Title>Exit project editor</AlertDialog.Title>
+            <AlertDialog.Description size="2">
+              Are you sure you want to leave? Unsaved changes will be lost.
+            </AlertDialog.Description>
+
+            <Flex gap="3" mt="4" justify="end">
+              <AlertDialog.Cancel>
+                <Button variant="soft" color="gray">
+                  Cancel
+                </Button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action>
+                <Button onClick={() => navigate(-1)} variant="solid" color="red">
+                  Leave
+                </Button>
+              </AlertDialog.Action>
+            </Flex>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
+
         <Heading>Create Project</Heading>
       </Flex>
       <Flex direction='column'>

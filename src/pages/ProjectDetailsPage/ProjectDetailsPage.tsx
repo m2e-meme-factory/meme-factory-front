@@ -12,6 +12,8 @@ import { Project } from 'api';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { useDispatch } from 'react-redux';
 import Loading from '../../shared/components/Loading';
+import FreelancersStats from './components/FreelancersStats';
+import FreelancersChats from './components/FreelancersChats';
 
 const ProjectDetailsPage = () => {
   const dispatch = useDispatch();
@@ -60,13 +62,13 @@ const ProjectDetailsPage = () => {
       </Card>
 
       <Card mt='5'>
-        <Heading mb='3'>Actions</Heading>
         <Flex align='center' justify='between'>
-          <Button m='1' size='3' onClick={() => navigate(`/projects/${id}`)}>
+          <Heading>Actions:</Heading>
+          <Button size='3' onClick={() => navigate(`/projects/${id}`)}>
             <MagnifyingGlassIcon />
             View Project Page
           </Button>
-          <Button m='1' size='3' onClick={() => navigate(`/projects/${id}/edit`)}>
+          <Button size='3' onClick={() => navigate(`/projects/${id}/edit`)}>
             <Pencil1Icon />
             Edit Project
           </Button>
@@ -74,27 +76,10 @@ const ProjectDetailsPage = () => {
       </Card>
 
       <Heading mt='5'>Freelancers</Heading>
-      <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Tasks done</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Income</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
+      <FreelancersChats />
 
-          <Table.Body>
-            <Table.Row>
-              <Table.RowHeaderCell onClick={() => navigate('/about')}>
-                Danilo Sousa
-              </Table.RowHeaderCell>
-              <Table.Cell>1</Table.Cell>
-              <Table.Cell>$20000</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table.Root>
-      </ScrollArea>
+      <Heading mt='5'>Freelancers stats</Heading>
+      <FreelancersStats />
     </Flex>
   );
 };

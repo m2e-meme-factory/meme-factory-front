@@ -5,7 +5,7 @@ import About from './pages/AboutPage/About';
 import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
-import FreelancerLogsPage from './pages/FreelancerLogsPage/FreelancerLogsPage';
+import ProjectLogsPage from './pages/ProjectLogsPage/ProjectLogsPage';
 import { ROUTES } from './shared/consts/routes';
 import React from 'react';
 import ProtectedRoute from './shared/components/ProtectedRoute';
@@ -47,13 +47,13 @@ export const router = createBrowserRouter([
         element: <ProjectDetailsPage />,
       },
       {
-        path: ROUTES.LOGS,
-        element: <FreelancerLogsPage />,
-      },
-      {
         path: ROUTES.EDIT,
         element: <EditProjectPage />,
       },
     ],
+  },
+  {
+    path: ROUTES.LOGS,
+    element: <ProtectedRoute element={<ProjectLogsPage />} />,
   },
 ]);

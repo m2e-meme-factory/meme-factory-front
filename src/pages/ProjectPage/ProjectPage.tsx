@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Badge, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Heading,
+  Text,
+  Dialog,
+  TextArea,
+} from '@radix-ui/themes';
 import {
   DollarOutlined,
   PushpinOutlined,
@@ -30,14 +40,15 @@ const ProjectPage = () => {
   const { data, isLoading } = useGetProject(id);
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [isUserCreator, setIsUserCreator] = useState(false);
+  const [isUserAdvertiser, setIsUserAdvertiser] = useState(false);
+  const [isUserGuest, setIsUserGuest] = useState(!isUserAdvertiser);
   const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
     if (currentProject && user) {
-      setIsUserCreator(currentProject.authorId == user.id);
+      setIsUserAdvertiser(currentProject.authorId == user.id);
     }
   }, [currentProject, user]);
 
@@ -89,7 +100,40 @@ const ProjectPage = () => {
         <Flex m='4' direction='column'>
           <Flex align='center' justify='between'>
             <Heading weight='medium'>{currentProject?.title}</Heading>
-            {isUserCreator && <Button onClick={handleEditClick}>Edit project</Button>}
+            {isUserAdvertiser && <Button onClick={handleEditClick}>Edit project</Button>}
+
+            {isUserGuest && (
+              <Dialog.Root>
+                <Dialog.Trigger>
+                  <Button>Apply</Button>
+                </Dialog.Trigger>
+
+                <Dialog.Content maxWidth='450px'>
+                  <Dialog.Title>Apply for the project</Dialog.Title>
+                  <Dialog.Description size='2' mb='4'>
+                    Tell us about yourself
+                  </Dialog.Description>
+
+                  <Flex direction='column'>
+                    <TextArea
+                      size='2'
+                      placeholder='I have one million subscribers on my Youtube channel'
+                    />
+                  </Flex>
+
+                  <Flex gap='3' mt='4' justify='end'>
+                    <Dialog.Close>
+                      <Button variant='soft' color='gray'>
+                        Cancel
+                      </Button>
+                    </Dialog.Close>
+                    <Dialog.Close>
+                      <Button>Apply</Button>
+                    </Dialog.Close>
+                  </Flex>
+                </Dialog.Content>
+              </Dialog.Root>
+            )}
           </Flex>
           <Text color='yellow' weight='medium' mb='5'>
             Category: {currentProject?.category}

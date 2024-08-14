@@ -20,6 +20,12 @@ declare module 'api' {
     limit: number;
   }
 
+  export interface GetMyProjectsParams {
+    userId: string;
+    page: number;
+    limit: number;
+  }
+
   export interface SubtaskInfo {
     id: string;
     title: string;

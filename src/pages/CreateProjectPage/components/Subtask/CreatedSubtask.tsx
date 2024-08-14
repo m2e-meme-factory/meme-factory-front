@@ -3,7 +3,7 @@ import { RocketOutlined } from '@ant-design/icons';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import styles from './CreatedSubtask.module.css';
-import { SubtaskInfo } from 'api';
+import { TaskInfo } from 'api';
 import * as Form from '@radix-ui/react-form';
 
 interface SubtaskCardProps {
@@ -11,7 +11,7 @@ interface SubtaskCardProps {
   title: string;
   price: number;
   description: string;
-  setSubtask: Dispatch<SetStateAction<SubtaskInfo[]>>;
+  setSubtask: Dispatch<SetStateAction<TaskInfo[]>>;
 }
 
 const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, description }) => {
@@ -25,7 +25,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const updatedSubtask: SubtaskInfo = {
+    const updatedSubtask: TaskInfo = {
       id: id,
       title: formData.get('title') as string,
       description: formData.get('description') as string,

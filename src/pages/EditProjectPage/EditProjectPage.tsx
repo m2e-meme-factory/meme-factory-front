@@ -29,7 +29,7 @@ import { RootState } from '../../shared/utils/redux/store';
 import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskSection/CreateSubstaskSection';
 import { useUpdateProject } from '../../shared/utils/api/hooks/project/useUpdateProject';
 import ProjectStatusSelect from './components/ProjectStatusSelect';
-import { CreateProjectDTO, SubtaskInfo } from 'api';
+import { CreateProjectDTO, TaskInfo } from 'api';
 import toast from 'react-hot-toast';
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 
@@ -56,7 +56,7 @@ const EditProjectPage = () => {
   const [price, setPrice] = useState<Price>(
     project ? { single: project.price, min: project.price, max: project.price } : {}
   );
-  const [subtasks, setSubtasks] = useState<SubtaskInfo[]>(subtasksPrepared);
+  const [subtasks, setSubtasks] = useState<TaskInfo[]>(subtasksPrepared);
   const [singleFile, setSingleFile] = useState<File[]>([]);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);

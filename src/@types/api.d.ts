@@ -26,17 +26,27 @@ declare module 'api' {
     limit: number;
   }
 
-  export interface SubtaskInfo {
+  export interface TaskInfo {
     id: string;
     title: string;
     description: string;
     price: number;
   }
 
-  export interface Subtask {
+  export interface Task {
     projectId: string;
-    task: SubtaskInfo;
+    task: TaskInfo;
     taskId: string;
+  }
+
+  export interface ProjectProgress {
+    id: number;
+    userId: number;
+    projectId: number;
+    status: 'pending' | 'approved' | 'rejected';
+    createdAt: Date;
+    updatedAt?: Date;
+    events: Event[];
   }
 
   export interface VerifyUserRequestData {
@@ -65,22 +75,22 @@ declare module 'api' {
     ADVERTISER = 'advertiser',
   }
 
-  interface LogDetails {
+  interface EventDetails {
     transactionId?: number;
-    message?: string;
     amount?: number;
-    subtaskId?: number;
+    taskId?: number;
   }
 
-  interface LogEntry {
+  interface Event {
     id: number;
+    projectProgress: string;
     projectId: number;
     userId: number;
     role: Role;
     eventType: EventType;
     description?: string;
     createdAt: Date;
-    details: LogDetails;
+    details?: EventDetails;
   }
 
   export interface UpdateProjectPayload {
@@ -164,6 +174,26 @@ declare module 'api' {
     createdAt: Date;
   }
 
+  export interface GetProgressByProjectIdParams {
+    projectId: string;
+  }
+
+  export interface ApplyForProjectParams {
+    projectId: string;
+  }
+
+  export interface GetEventsByProjectIdParams {
+    progressId: string;
+  }
+
+  export interface AcceptApplicationForProjectParams {
+    progressId: string;
+  }
+
+  export interface RejectApplicationForProjectParams {
+    progressId: string;
+  }
+
   export interface UserWithRef {
     id: number;
     telegramId: string;
@@ -195,7 +225,7 @@ declare module 'api' {
     category: string;
     tags: string[];
     price: number;
-    tasks: Subtask[];
+    tasks: Task[];
     authorId: string;
     creationDate: Date;
     status: ProjectStatus;

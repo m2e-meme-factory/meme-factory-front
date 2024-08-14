@@ -15,7 +15,7 @@ import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import { CreateProjectDTO, SubtaskInfo } from 'api';
+import { CreateProjectDTO, TaskInfo } from 'api';
 import { FormError, Option, Price } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
@@ -34,7 +34,7 @@ const CreateProjectPage = () => {
   const [category, setCategory] = useState<string | null>(null);
   const [priceMode, setPriceMode] = useState<'single' | 'range'>('single');
   const [price, setPrice] = useState<Price>({});
-  const [subtasks, setSubtasks] = useState<SubtaskInfo[]>([]);
+  const [subtasks, setSubtasks] = useState<TaskInfo[]>([]);
   const [singleFile, setSingleFile] = useState<File[]>([]);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);

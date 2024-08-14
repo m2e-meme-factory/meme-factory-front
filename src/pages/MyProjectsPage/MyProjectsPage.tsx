@@ -19,14 +19,50 @@ import { Option } from '../../@types/app';
 import { Role } from '../../shared/consts/userRoles';
 import makeAnimated from 'react-select/animated';
 import { ROLES_OPTIONS } from '../../shared/consts/rolesOptions';
+import { useInView } from 'react-intersection-observer';
+import styled from 'styled-components';
+
+const BlockObserver = styled.div`
+  height: 40px;
+  background-color: black;
+`;
 
 const MyProjectsPage = () => {
   const currentUser = useSelector((state: RootState) => state.user.user);
-  const { data: projects, isLoading } = useGetMyProjects(currentUser?.id);
   const [myProjects, setMyProjects] = useState<Project[]>([]);
   const [userRole, setUserRole] = useState<Role | null>(Role.CREATOR);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isEnd, setIsEnd] = useState(false);
+
+  const DISPLAY_LIMIT = 10;
+  const { data: paginatedProjects, isLoading } = useGetMyProjects({
+    userId: currentUser?.id || '',
+    page: currentPage,
+    limit: DISPLAY_LIMIT,
+  });
 
   const animatedComponents = makeAnimated();
+
+  const { ref, inView } = useInView({
+    threshold: 1.0,
+  });
+
+  useEffect(() => {
+    if (paginatedProjects) {
+      if (paginatedProjects.data.projects.length > 0) {
+        setMyProjects((prevProjects) => [...prevProjects, ...paginatedProjects.data.projects]);
+        setIsEnd(false);
+      } else {
+        setIsEnd(true);
+      }
+    }
+  }, [paginatedProjects]);
+
+  useEffect(() => {
+    if (inView && !isEnd) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  }, [inView]);
 
   const handleRoleChange = (selectedRole: SingleValue<Option>) => {
     const role = selectedRole ? selectedRole.value : null;
@@ -38,62 +74,34 @@ const MyProjectsPage = () => {
     }
   };
 
-  const handleFindButtonClick = () => {
-    //todo
-  };
-
-  useEffect(() => {
-    if (projects) {
-      setMyProjects(projects.data);
-    }
-  }, [projects]);
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
-    <Flex m='4' direction='column'>
-      <Flex align='center'>
-        <Heading mr='3'>My projects</Heading>
-        <Link to='/create-project'>
-          <Button style={{ width: '100%' }} size='3'>
-            Create project
-          </Button>
-        </Link>
-      </Flex>
-      <Flex justify='between' direction='column'>
-        <Flex direction='column' mb='3'>
-          <Text mb='2' weight='medium'>
-            Filter by role:
-          </Text>
-          <Select
-            onChange={handleRoleChange}
-            placeholder='Select role'
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            options={ROLES_OPTIONS}
-            styles={CUSTOM_SELECT_STYLES_SINGLE}
-            isMulti={false}
-            isClearable={true}
-          />
+    <>
+      <Flex m='4' direction='column'>
+        <Flex align='center'>
+          <Heading mr='3'>My projects</Heading>
+          <Link to='/create-project'>
+            <Button style={{ width: '100%' }} size='3'>
+              Create project
+            </Button>
+          </Link>
         </Flex>
-        <Button onClick={handleFindButtonClick}>Find</Button>
+        <Flex mt='4' direction='column'>
+          {myProjects.map((project, index) => (
+            <MyProjectCard
+              key={index}
+              id={project.id}
+              bannerUrl={project.bannerUrl}
+              title={project.title}
+              category={project.category}
+              freelancersCount={0}
+              status={project.status}
+            />
+          ))}
+        </Flex>
       </Flex>
-      <Flex mt='4' direction='column'>
-        {myProjects.map((project, index) => (
-          <MyProjectCard
-            key={index}
-            id={project.id}
-            bannerUrl={project.bannerUrl}
-            title={project.title}
-            category={project.category}
-            freelancersCount={0}
-            status={project.status}
-          />
-        ))}
-      </Flex>
-    </Flex>
+      {isLoading && <Loading />}
+      {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
+    </>
   );
 };
 

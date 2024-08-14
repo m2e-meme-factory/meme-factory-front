@@ -2,6 +2,7 @@ import api from '../../api';
 import { AxiosResponse } from 'axios';
 import {
   CreateProjectDTO,
+  GetMyProjectsParams,
   GetPublicProjectsParams,
   PaginatedProjects,
   Project,
@@ -15,6 +16,7 @@ export type GetPublicProjectsConfig = RequestConfig<GetPublicProjectsParams>;
 export type OnlyIdProjectConfig = RequestConfig<string>;
 export type UpdateProjectConfig = RequestConfig<UpdateProjectPayload>;
 export type UpdateProjectStatusConfig = RequestConfig<UpdateStatusPayload>;
+export type GetMyProjectsConfig = RequestConfig<GetMyProjectsParams>;
 
 const addAuthorizationHeader = (config: any) => {
   const token = localStorage.getItem('token');
@@ -67,9 +69,17 @@ export const deleteProject = (config: OnlyIdProjectConfig): Promise<AxiosRespons
   return api.delete(`/projects/${config.params}`, newConfig);
 };
 
-export const getMyProjects = (config: OnlyIdProjectConfig): Promise<AxiosResponse<Project[]>> => {
+export const getMyProjects = (
+  config: GetMyProjectsConfig
+): Promise<AxiosResponse<PaginatedProjects>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.get(`/projects/by-user/${config.params}`, newConfig);
+
+  const { page, limit } = config.params;
+  const params = new URLSearchParams();
+  if (page) params.append('page', String(page));
+  if (limit) params.append('limit', String(limit));
+
+  return api.get(`/projects/by-user/${config.params.userId}?${params.toString()}`, newConfig);
 };
 
 export const updateProjectStatus = (

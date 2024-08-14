@@ -3,19 +3,21 @@ import { getMyProjects } from '../../requests/project/project-requests';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { useTelegram } from '../../../../hooks/useTelegram';
+import { GetMyProjectsParams } from 'api';
 
-export const useGetMyProjects = (userId?: string) => {
+export const useGetMyProjects = (params: GetMyProjectsParams) => {
   const { webApp } = useTelegram();
+  const { userId, page, limit } = params;
 
   const query = useQuery({
-    queryKey: ['getMyProjects', userId],
+    queryKey: ['getMyProjects', userId, page, limit],
     queryFn: async () => {
       if (!userId) {
         return Promise.reject('userId invalid');
       }
 
       try {
-        return await getMyProjects({ params: userId });
+        return await getMyProjects({ params: { userId: userId, page: page, limit: limit } });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401 && webApp) {
           const loginConfig: LoginConfig = {
@@ -27,7 +29,7 @@ export const useGetMyProjects = (userId?: string) => {
             const newToken = response.data.token;
             localStorage.setItem('token', newToken);
 
-            return await getMyProjects({ params: userId });
+            return await getMyProjects({ params: { userId: userId, page: page, limit: limit } });
           } catch (loginError) {
             throw new Error('Login failed');
           }

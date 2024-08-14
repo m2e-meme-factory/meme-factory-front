@@ -35,11 +35,14 @@ const MyProjectsPage = () => {
   const [isEnd, setIsEnd] = useState(false);
 
   const DISPLAY_LIMIT = 10;
-  const { data: paginatedProjects, isLoading } = useGetMyProjects({
-    userId: currentUser?.id || '',
-    page: currentPage,
-    limit: DISPLAY_LIMIT,
-  });
+  const { data: paginatedProjects, isLoading } = useGetMyProjects(
+    {
+      userId: currentUser?.id || '',
+      page: currentPage,
+      limit: DISPLAY_LIMIT,
+    },
+    currentUser?.role
+  );
 
   const animatedComponents = makeAnimated();
 

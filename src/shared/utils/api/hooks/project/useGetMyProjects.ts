@@ -4,8 +4,9 @@ import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { GetMyProjectsParams } from 'api';
+import { Role } from '../../../../consts/userRoles';
 
-export const useGetMyProjects = (params: GetMyProjectsParams) => {
+export const useGetMyProjects = (params: GetMyProjectsParams, role?: Role) => {
   const { webApp } = useTelegram();
   const { userId, page, limit } = params;
 
@@ -17,6 +18,7 @@ export const useGetMyProjects = (params: GetMyProjectsParams) => {
       }
 
       try {
+        //todo: choose appropriate request for user role
         return await getMyProjects({ params: { userId: userId, page: page, limit: limit } });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401 && webApp) {

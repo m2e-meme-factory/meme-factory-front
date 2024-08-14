@@ -7,7 +7,7 @@ const FreelancersStats = () => {
   const { id } = useParams();
 
   return (
-    <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
+    <ScrollArea type='always' scrollbars='vertical' style={{ height: 'fit-content' }}>
       <Table.Root>
         <Table.Header>
           <Table.Row>
@@ -18,8 +18,13 @@ const FreelancersStats = () => {
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.RowHeaderCell>Danilo Sousa</Table.RowHeaderCell>
+          <Table.Row onClick={() => navigate('/projects/1/logs/1')}>
+            <Table.Cell>Danilo Sousa</Table.Cell>
+            <Table.Cell>1</Table.Cell>
+            <Table.Cell>$20000</Table.Cell>
+          </Table.Row>
+          <Table.Row onClick={() => navigate('/projects/1/logs/1')}>
+            <Table.Cell>Danilo Sousa</Table.Cell>
             <Table.Cell>1</Table.Cell>
             <Table.Cell>$20000</Table.Cell>
           </Table.Row>

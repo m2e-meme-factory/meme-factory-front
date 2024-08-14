@@ -13,7 +13,7 @@ import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { useDispatch } from 'react-redux';
 import Loading from '../../shared/components/Loading';
 import FreelancersStats from './components/FreelancersStats';
-import FreelancersChats from './components/FreelancersChats';
+import PendingApplications from './components/PendingApplications';
 
 const ProjectDetailsPage = () => {
   const dispatch = useDispatch();
@@ -75,10 +75,10 @@ const ProjectDetailsPage = () => {
         </Flex>
       </Card>
 
-      <Heading mt='5'>Freelancers</Heading>
-      <FreelancersChats />
+      <Heading mt='5'>Pending applications</Heading>
+      <PendingApplications />
 
-      <Heading mt='5'>Freelancers stats</Heading>
+      <Heading mt='5'>Active freelancers</Heading>
       <FreelancersStats />
     </Flex>
   );

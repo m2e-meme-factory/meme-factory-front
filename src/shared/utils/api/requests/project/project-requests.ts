@@ -112,7 +112,7 @@ export const applyForProject = (
   config: ApplyForProjectConfig
 ): Promise<AxiosResponse<ProjectProgress>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.post(`/projects/${config.params.projectId}/apply`, newConfig);
+  return api.post(`/projects/${config.params.projectId}/apply`, '', newConfig);
 };
 
 export const getEventsByProgressId = (
@@ -124,10 +124,10 @@ export const getEventsByProgressId = (
 
 export const acceptApplicationForProject = (config: AcceptApplicationForProjectConfig) => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.post(`/projects/progress/${config.params.progressId}/accept`, newConfig);
+  return api.post(`/projects/progress/${config.params.progressId}/accept`, null, newConfig);
 };
 
 export const rejectApplicationForProject = (config: RejectApplicationForProjectConfig) => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.post(`/projects/progress/${config.params.progressId}/reject`, newConfig);
+  return api.post(`/projects/progress/${config.params.progressId}/reject`, null, newConfig);
 };

@@ -1,34 +1,35 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../../../hooks/useTelegram';
+import {
+  rejectApplicationForProject,
+  RejectApplicationForProjectConfig,
+} from '../../requests/project/project-requests';
 import { useMutation } from '@tanstack/react-query';
-import { applyForProject, ApplyForProjectConfig } from '../../requests/project/project-requests';
 import {
   showErrorMessage,
   showSuccessMessage,
   showToastWithPromise,
 } from '../../../helpers/notify';
-import { ROUTES } from '../../../../consts/routes';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 
-export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<boolean>>) => {
-  const navigate = useNavigate();
+const useApproveApplication = (setRejectLoading: Dispatch<SetStateAction<boolean>>) => {
   const { webApp } = useTelegram();
-  const [savedVariables, setSavedVariables] = useState<ApplyForProjectConfig | null>(null);
+  const [savedVariables, setSavedVariables] = useState<RejectApplicationForProjectConfig | null>(
+    null
+  );
 
   return useMutation({
-    mutationFn: (config: ApplyForProjectConfig) => applyForProject(config),
+    mutationFn: (config: RejectApplicationForProjectConfig) => rejectApplicationForProject(config),
     onSuccess: () => {
-      setApplyLoading(false);
-      showSuccessMessage('Application submitted successfully');
-      navigate(ROUTES.MY_PROJECTS);
+      setRejectLoading(false);
+      showSuccessMessage('Application approved successfully');
     },
     onMutate: (variables) => {
       setSavedVariables(variables);
     },
     onError: async (error: any) => {
-      setApplyLoading(false);
+      setRejectLoading(false);
       if (error?.response?.status === 401 && webApp) {
         const loginConfig: LoginConfig = {
           params: { initData: { initData: webApp.initData } },
@@ -55,15 +56,14 @@ export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<bool
 
           if (savedVariables) {
             await showToastWithPromise({
-              success: 'Application submitted successfully',
-              error: 'Error while submitting application',
-              process: 'Submitting an application',
-              callback: () => applyForProject(savedVariables),
+              success: 'Application rejected successfully',
+              error: 'Error while rejecting application',
+              process: 'Rejecting an application',
+              callback: () => rejectApplicationForProject(savedVariables),
             });
-            navigate(ROUTES.MY_PROJECTS);
           }
         } catch (loginError) {
-          showErrorMessage('Failed to submit application due to authorization issue!');
+          showErrorMessage('Failed to reject application due to authorization issue!');
         }
       } else {
         showErrorMessage('Something went wrong!');

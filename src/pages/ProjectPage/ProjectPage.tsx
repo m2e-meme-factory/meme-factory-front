@@ -28,27 +28,52 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
-import { Project } from 'api';
-import fallbackImg from '../../shared/imgs/fallback_img.jpg';
+import { Project, ProjectProgress } from 'api';
 import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
+import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
+import { useGetProjectProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
+import { FALLBACK_BANNER_URL } from '../../shared/consts/fallbackBanner';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
+
+export type UserRoleInProject = 'advertiser' | 'member' | 'guest' | 'awaiting';
 
 const ProjectPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { id } = useParams();
-  const { data, isLoading } = useGetProject(id);
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [isUserAdvertiser, setIsUserAdvertiser] = useState(false);
-  const [isUserGuest, setIsUserGuest] = useState(!isUserAdvertiser);
+  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guest');
   const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isApplyLoading, setIsApplyLoading] = useState(false);
+  const [currentUserProgress, setCurrentUserProgress] = useState<ProjectProgress | null>();
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [applicationMessage, setApplicationMessage] = useState<string>('');
+
   const user = useSelector((state: RootState) => state.user.user);
+
+  const { data, isLoading } = useGetProject(id);
+  const { data: progressesResponse, isLoading: isProjectProgressLoading } = useGetProjectProgress({ projectId: id ? id : '' });
+  const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
+
+  useEffect(() => {
+    if (progressesResponse && currentUserRole !== 'advertiser') {
+      //todo: заменить на запрос
+      const progressFiltered = progressesResponse.data.filter((project) => project.id.toString() === id);
+      const progress = progressFiltered.length > 0 ? progressFiltered[0] : null;
+      const status = progress?.status;
+      const role = status === 'approved' ? 'member' : (status !== 'pending' ?  'guest' : 'awaiting');
+      setCurrentUserProgress(progress);
+      setCurrentUserRole(role);
+    }
+  }, [progressesResponse]);
 
   useEffect(() => {
     if (currentProject && user) {
-      setIsUserAdvertiser(currentProject.authorId == user.id);
+      if (currentProject.authorId == user.id) {
+        setCurrentUserRole('advertiser');
+      }
     }
   }, [currentProject, user]);
 
@@ -64,7 +89,7 @@ const ProjectPage = () => {
     }
   }, [data]);
 
-  if (isLoading) {
+  if (isLoading || isProjectProgressLoading) {
     return <Loading />;
   }
 
@@ -87,6 +112,35 @@ const ProjectPage = () => {
     }
   };
 
+  const handleApplyClick = () => {
+    setIsApplyLoading(true);
+    if (currentProject && user) {
+      if (applicationMessage.trim() === '') {
+        setErrorMessage('Application message cannot be empty or just whitespace.');
+        setIsApplyLoading(false);
+        return;
+      }
+      setErrorMessage('');
+
+      applyMutation({
+        params: {
+          projectId: currentProject.id,
+          //todo: message: applicationMessage,
+        },
+      })
+
+      if (applyResponse?.status === 201) {
+        setCurrentUserRole('awaiting');
+      } else {
+        showErrorMessage('Error occurred while creating an application. Please try again!');
+      }
+    }
+  };
+
+  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setApplicationMessage(event.target.value);
+  };
+
   const bannerLink = currentProject?.bannerUrl
     ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
     : FALLBACK_BANNER_URL;
@@ -100,25 +154,32 @@ const ProjectPage = () => {
         <Flex m='4' direction='column'>
           <Flex align='center' justify='between'>
             <Heading weight='medium'>{currentProject?.title}</Heading>
-            {isUserAdvertiser && <Button onClick={handleEditClick}>Edit project</Button>}
+            {currentUserRole === 'advertiser' && (
+              <Button onClick={handleEditClick}>Edit project</Button>
+            )}
 
-            {isUserGuest && (
+            {currentUserRole === 'guest' && (
               <Dialog.Root>
                 <Dialog.Trigger>
-                  <Button>Apply</Button>
+                  <Button loading={isApplyLoading}>Apply</Button>
                 </Dialog.Trigger>
 
                 <Dialog.Content maxWidth='450px'>
                   <Dialog.Title>Apply for the project</Dialog.Title>
-                  <Dialog.Description size='2' mb='4'>
-                    Tell us about yourself
-                  </Dialog.Description>
 
                   <Flex direction='column'>
                     <TextArea
+                      style={{height: '20vh'}}
                       size='2'
                       placeholder='I have one million subscribers on my Youtube channel'
+                      value={applicationMessage}
+                      onChange={handleTextAreaChange}
                     />
+                    {errorMessage && (
+                      <Text color='red' mt='2'>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </Flex>
 
                   <Flex gap='3' mt='4' justify='end'>
@@ -127,9 +188,7 @@ const ProjectPage = () => {
                         Cancel
                       </Button>
                     </Dialog.Close>
-                    <Dialog.Close>
-                      <Button>Apply</Button>
-                    </Dialog.Close>
+                    <Button onClick={handleApplyClick}>Apply</Button>
                   </Flex>
                 </Dialog.Content>
               </Dialog.Root>
@@ -190,6 +249,7 @@ const ProjectPage = () => {
                   description={subtask.task.description}
                   price={subtask.task.price}
                   title={subtask.task.title}
+                  userRole={currentUserRole}
                 />
               ))}
           </Flex>

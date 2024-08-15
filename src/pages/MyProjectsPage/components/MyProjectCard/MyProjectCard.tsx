@@ -34,7 +34,7 @@ const MyProjectCard: FC<MyProjectCardProps> = ({
   return (
     <StyledCard onClick={() => navigate(`/projects/${id}/details`)}>
       <Flex direction='column'>
-        <CardBanner bannerUrl={bannerUrl ? bannerUrl : ''} />
+        <CardBanner bannerUrl={bannerUrl} />
         <Flex direction='column' m='4'>
           <Heading>{title}</Heading>
           <Text mb='3' color='yellow' weight='medium'>

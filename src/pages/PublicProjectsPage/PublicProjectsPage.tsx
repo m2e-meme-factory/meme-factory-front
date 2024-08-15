@@ -17,11 +17,13 @@ import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 
 const BlockObserver = styled.div`
-  height: 40px;
-  background-color: black;
+    height: 40px;
+    background-color: black;
 `;
 
 const PublicProjectsPage = () => {
+  const loadedPages = useRef(new Set<number>());
+
   const [tempTags, setTempTags] = useState<string[]>([]);
   const [tempCategory, setTempCategory] = useState<string | null>(null);
 
@@ -31,7 +33,7 @@ const PublicProjectsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isEnd, setIsEnd] = useState(false);
 
-  const DISPLAY_LIMIT = 10;
+  const DISPLAY_LIMIT = 2;
 
   const previousTags = useRef<string[]>(tags);
   const previousCategory = useRef<string | null>(category);
@@ -50,14 +52,15 @@ const PublicProjectsPage = () => {
   });
 
   useEffect(() => {
-    if (data) {
+    if (data && !loadedPages.current.has(currentPage)) { // Используем loadedPages.current
       if (data.data.projects.length > 0) {
-        if (previousTags.current !== tags || previousCategory.current !== category) {
+        if (JSON.stringify(previousTags.current) !== JSON.stringify(tags)|| previousCategory.current !== category) {
           setProjects(data.data.projects);
         } else {
           setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
         }
 
+        loadedPages.current.add(currentPage);
         previousTags.current = tags;
         previousCategory.current = category;
         setIsEnd(false);
@@ -87,6 +90,7 @@ const PublicProjectsPage = () => {
     setTags(tempTags);
     setCategory(tempCategory);
     setCurrentPage(1);
+    loadedPages.current.clear();
   };
 
   return (

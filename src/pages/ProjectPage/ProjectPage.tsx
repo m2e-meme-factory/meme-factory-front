@@ -89,7 +89,7 @@ const ProjectPage = () => {
 
   const bannerLink = currentProject?.bannerUrl
     ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
-    : fallbackImg;
+    : FALLBACK_BANNER_URL;
 
   return (
     <Flex direction='column'>

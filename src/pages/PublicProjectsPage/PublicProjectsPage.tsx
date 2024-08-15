@@ -17,8 +17,8 @@ import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 
 const BlockObserver = styled.div`
-    height: 40px;
-    background-color: black;
+  height: 40px;
+  background-color: black;
 `;
 
 const PublicProjectsPage = () => {
@@ -52,9 +52,13 @@ const PublicProjectsPage = () => {
   });
 
   useEffect(() => {
-    if (data && !loadedPages.current.has(currentPage)) { // Используем loadedPages.current
+    if (data && !loadedPages.current.has(currentPage)) {
+      // Используем loadedPages.current
       if (data.data.projects.length > 0) {
-        if (JSON.stringify(previousTags.current) !== JSON.stringify(tags)|| previousCategory.current !== category) {
+        if (
+          JSON.stringify(previousTags.current) !== JSON.stringify(tags) ||
+          previousCategory.current !== category
+        ) {
           setProjects(data.data.projects);
         } else {
           setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);

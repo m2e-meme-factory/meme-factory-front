@@ -54,16 +54,20 @@ const ProjectPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
 
   const { data, isLoading } = useGetProject(id);
-  const { data: progressesResponse, isLoading: isProjectProgressLoading } = useGetProjectProgress({ projectId: id ? id : '' });
+  const { data: progressesResponse, isLoading: isProjectProgressLoading } = useGetProjectProgress({
+    projectId: id ? id : '',
+  });
   const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
 
   useEffect(() => {
     if (progressesResponse && currentUserRole !== 'advertiser') {
       //todo: заменить на запрос
-      const progressFiltered = progressesResponse.data.filter((project) => project.id.toString() === id);
+      const progressFiltered = progressesResponse.data.filter(
+        (project) => project.id.toString() === id
+      );
       const progress = progressFiltered.length > 0 ? progressFiltered[0] : null;
       const status = progress?.status;
-      const role = status === 'approved' ? 'member' : (status !== 'pending' ?  'guest' : 'awaiting');
+      const role = status === 'approved' ? 'member' : status !== 'pending' ? 'guest' : 'awaiting';
       setCurrentUserProgress(progress);
       setCurrentUserRole(role);
     }
@@ -127,7 +131,7 @@ const ProjectPage = () => {
           projectId: currentProject.id,
           //todo: message: applicationMessage,
         },
-      })
+      });
 
       if (applyResponse?.status === 201) {
         setCurrentUserRole('awaiting');
@@ -169,7 +173,7 @@ const ProjectPage = () => {
 
                   <Flex direction='column'>
                     <TextArea
-                      style={{height: '20vh'}}
+                      style={{ height: '20vh' }}
                       size='2'
                       placeholder='I have one million subscribers on my Youtube channel'
                       value={applicationMessage}

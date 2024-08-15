@@ -65,8 +65,8 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
           ) : (
             <>
               <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
-              {userRole !== 'advertiser' && (
-                userRole !== 'member' ? (
+              {userRole !== 'advertiser' &&
+                (userRole !== 'member' ? (
                   <Tooltip content='Join the project to apply for the tasks'>
                     <button className={proposeBtnClassname} onClick={handleSendProposalClick}>
                       <Text>Send Proposal</Text>
@@ -76,8 +76,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
                   <button className={proposeBtnClassname} onClick={handleSendProposalClick}>
                     <Text>Send Proposal</Text>
                   </button>
-                )
-              )}
+                ))}
             </>
           )}
           <Dialog.Close asChild>

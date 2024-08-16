@@ -8,6 +8,7 @@ import {
   GetMyProjectsParams,
   GetProgressByProjectIdParams,
   GetPublicProjectsParams,
+  GetUserProgressesParams,
   PaginatedProjects,
   Project,
   ProjectProgress,
@@ -29,6 +30,7 @@ export type ApplyForProjectConfig = RequestConfig<ApplyForProjectParams>;
 export type GetEventsByProjectIdConfig = RequestConfig<GetEventsByProjectIdParams>;
 export type AcceptApplicationForProjectConfig = RequestConfig<AcceptApplicationForProjectParams>;
 export type RejectApplicationForProjectConfig = RequestConfig<RejectApplicationForProjectParams>;
+export type GetUserProgressesConfig = RequestConfig<GetUserProgressesParams>;
 
 const addAuthorizationHeader = (config: any) => {
   const token = localStorage.getItem('token');
@@ -130,4 +132,9 @@ export const acceptApplicationForProject = (config: AcceptApplicationForProjectC
 export const rejectApplicationForProject = (config: RejectApplicationForProjectConfig) => {
   const newConfig = addAuthorizationHeader(config.config);
   return api.post(`/projects/progress/${config.params.progressId}/reject`, null, newConfig);
+};
+
+export const getUserProgresses = (config: GetUserProgressesConfig) => {
+  const newConfig = addAuthorizationHeader(config.config);
+  return api.get(`/projects/progress/by-creator/${config.params.userId}`, newConfig);
 };

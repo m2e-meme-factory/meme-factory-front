@@ -63,7 +63,7 @@ export default function ProfilePage() {
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
         {userRole === Role.ADVERTISER && <Tabs.Trigger value='dashboard'>Dashboard</Tabs.Trigger>}
-        {userRole === Role.ADVERTISER && <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>}
+        <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>

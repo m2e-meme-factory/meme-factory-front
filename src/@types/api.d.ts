@@ -47,6 +47,7 @@ declare module 'api' {
     createdAt: Date;
     updatedAt?: Date;
     events: Event[];
+    project: Project;
   }
 
   export interface VerifyUserRequestData {
@@ -192,6 +193,10 @@ declare module 'api' {
 
   export interface RejectApplicationForProjectParams {
     progressId: string;
+  }
+
+  export interface GetUserProgressesParams {
+    userId: string;
   }
 
   export interface UserWithRef {

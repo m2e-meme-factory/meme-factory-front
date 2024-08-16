@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Project, User } from 'api';
 import { useGetMyProjects } from '../../../shared/utils/api/hooks/project/useGetMyProjects';
 import makeAnimated from 'react-select/animated';
@@ -19,6 +19,8 @@ interface AdvertisersProjectsProps {
 }
 
 const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({user}) => {
+  const loadedPages = useRef(new Set<number>());
+
   const [myProjects, setMyProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isEnd, setIsEnd] = useState(false);
@@ -37,10 +39,11 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({user}) => {
   });
 
   useEffect(() => {
-    if (projectsResponse) {
+    if (projectsResponse && !loadedPages.current.has(currentPage)) {
       if (projectsResponse.data.projects.length > 0) {
         setMyProjects((prevProjects) => [...prevProjects, ...projectsResponse.data.projects]);
         setIsEnd(false);
+        loadedPages.current.add(currentPage);
       } else {
         setIsEnd(true);
       }

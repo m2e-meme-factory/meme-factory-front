@@ -33,7 +33,7 @@ const PublicProjectsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isEnd, setIsEnd] = useState(false);
 
-  const DISPLAY_LIMIT = 2;
+  const DISPLAY_LIMIT = 10;
 
   const previousTags = useRef<string[]>(tags);
   const previousCategory = useRef<string | null>(category);
@@ -53,7 +53,6 @@ const PublicProjectsPage = () => {
 
   useEffect(() => {
     if (data && !loadedPages.current.has(currentPage)) {
-      // Используем loadedPages.current
       if (data.data.projects.length > 0) {
         if (
           JSON.stringify(previousTags.current) !== JSON.stringify(tags) ||
@@ -116,6 +115,7 @@ const PublicProjectsPage = () => {
             options={CATEGORIES}
             styles={CUSTOM_SELECT_STYLES_SINGLE}
             isMulti={false}
+            isClearable={true}
           />
         </Flex>
         <Flex direction='column'>
@@ -130,6 +130,7 @@ const PublicProjectsPage = () => {
             isMulti
             options={TAGS}
             styles={CUSTOM_SELECT_STYLES_MULTI}
+            isClearable={true}
           />
         </Flex>
         <Button mt='3' onClick={handleFindButtonClick}>

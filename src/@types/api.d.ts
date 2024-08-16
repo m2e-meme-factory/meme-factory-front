@@ -199,6 +199,11 @@ declare module 'api' {
     userId: string;
   }
 
+  export interface GetProjectFreelancersParams {
+    projectId: string;
+    status: 'accepted' | 'pending' | 'rejected';
+  }
+
   export interface UserWithRef {
     id: number;
     telegramId: string;

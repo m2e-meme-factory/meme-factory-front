@@ -5,7 +5,7 @@ import makeAnimated from 'react-select/animated';
 import { Button, Flex, Heading, Text } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import MyProjectCard from './MyProjectCard/MyProjectCard';
-import { CUSTOM_SELECT_STYLES_MULTI} from '../../../styles/customSelectStyles';
+import { CUSTOM_SELECT_STYLES_MULTI } from '../../../styles/customSelectStyles';
 import Select, { MultiValue } from 'react-select';
 import { PROJECT_STATUSES } from '../../../shared/consts/project-statuses';
 import { Option } from '../../../@types/app';
@@ -15,7 +15,7 @@ interface CreatorsProjectsProps {
   user: User;
 }
 
-const CreatorsProjects: FC<CreatorsProjectsProps> = ({user}) => {
+const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
   const [myProjects, setMyProjects] = useState<Project[]>([]);
   const [selectedProjectStatuses, setSelectedProjectStatuses] = useState<string[]>([]);
   const [selectedApplicationStatuses, setSelectedApplicationStatuses] = useState<string[]>([]);
@@ -27,15 +27,23 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({user}) => {
 
   const handleProjectStatusChange = (selectedStatus: MultiValue<Option>) => {
     if (selectedStatus.length > 0) {
-      setSelectedProjectStatuses(selectedStatus.map((status) => {return status.value}));
+      setSelectedProjectStatuses(
+        selectedStatus.map((status) => {
+          return status.value;
+        })
+      );
     } else {
-      setSelectedProjectStatuses([])
+      setSelectedProjectStatuses([]);
     }
   };
 
   const handleApplicationStatusChange = (selectedStatus: MultiValue<Option>) => {
     if (selectedStatus.length > 0) {
-      setSelectedApplicationStatuses(selectedStatus.map((status) => {return status.value}));
+      setSelectedApplicationStatuses(
+        selectedStatus.map((status) => {
+          return status.value;
+        })
+      );
     } else {
       setSelectedApplicationStatuses([]);
     }
@@ -45,9 +53,13 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({user}) => {
     if (projectsResponse) {
       let projects = projectsResponse.data
         .filter((progress) => {
-          console.log(selectedApplicationStatuses)
-          const isProjectStatusMatch = selectedProjectStatuses.length === 0 || selectedProjectStatuses.includes(progress.project.status);
-          const isApplicationStatusMatch = selectedApplicationStatuses.length === 0 || selectedApplicationStatuses.includes(progress.status);
+          console.log(selectedApplicationStatuses);
+          const isProjectStatusMatch =
+            selectedProjectStatuses.length === 0 ||
+            selectedProjectStatuses.includes(progress.project.status);
+          const isApplicationStatusMatch =
+            selectedApplicationStatuses.length === 0 ||
+            selectedApplicationStatuses.includes(progress.status);
 
           return isProjectStatusMatch && isApplicationStatusMatch;
         })
@@ -57,7 +69,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({user}) => {
       console.log(projects);
     }
   }, [projectsResponse, selectedProjectStatuses, selectedApplicationStatuses]);
-  
+
   console.log(projectsResponse);
 
   return (
@@ -65,7 +77,9 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({user}) => {
       <Flex m='4' direction='column'>
         <Heading>My projects</Heading>
         <Flex mt='1' direction='column'>
-          <Text mt='1' mb='1' weight='medium'>Project status:</Text>
+          <Text mt='1' mb='1' weight='medium'>
+            Project status:
+          </Text>
           <Select
             onChange={handleProjectStatusChange}
             placeholder='Select project status'
@@ -77,7 +91,9 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({user}) => {
             isClearable={true}
           />
 
-          <Text mt='3' mb='1' weight='medium'>Application status:</Text>
+          <Text mt='3' mb='1' weight='medium'>
+            Application status:
+          </Text>
           <Select
             onChange={handleApplicationStatusChange}
             placeholder='Select application status'

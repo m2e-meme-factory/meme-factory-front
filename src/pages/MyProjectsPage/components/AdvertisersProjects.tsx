@@ -18,7 +18,7 @@ interface AdvertisersProjectsProps {
   user: User;
 }
 
-const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({user}) => {
+const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
   const loadedPages = useRef(new Set<number>());
 
   const [myProjects, setMyProjects] = useState<Project[]>([]);

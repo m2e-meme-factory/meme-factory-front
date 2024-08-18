@@ -31,11 +31,17 @@ import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { Project, ProjectProgress } from 'api';
 import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
 import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
-import { useGetProjectProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
+import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
 import { FALLBACK_BANNER_URL } from '../../shared/consts/fallbackBanner';
 import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import { Role } from '../../shared/consts/userRoles';
 
-export type UserRoleInProject = 'advertiser' | 'member' | 'guest' | 'awaiting';
+export type UserRoleInProject =
+  | 'projectOwner'
+  | 'guestAdvertiser'
+  | 'guestCreator'
+  | 'projectMember'
+  | 'unconfirmedMember';
 
 const ProjectPage = () => {
   const dispatch = useDispatch();
@@ -43,43 +49,50 @@ const ProjectPage = () => {
   const { id } = useParams();
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guest');
+  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
   const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isApplyLoading, setIsApplyLoading] = useState(false);
-  const [currentUserProgress, setCurrentUserProgress] = useState<ProjectProgress | null>();
+  const [currentUserProgress, setCurrentUserProgress] = useState<ProjectProgress>();
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [applicationMessage, setApplicationMessage] = useState<string>('');
 
   const user = useSelector((state: RootState) => state.user.user);
 
-  const { data, isLoading } = useGetProject(id);
-  const { data: progressesResponse, isLoading: isProjectProgressLoading } = useGetProjectProgress({
-    projectId: id ? id : '',
+  const { data: projectInfoResponse, isLoading } = useGetProject(id);
+  const { data: progressesResponse, isLoading: isProjectProgressLoading } = useGetProgress({
+    projectId: id ?? '',
+    userId: user?.id,
   });
   const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
 
   useEffect(() => {
-    if (progressesResponse && currentUserRole !== 'advertiser') {
-      //todo: заменить на запрос
-      const progressFiltered = progressesResponse.data.filter(
-        (project) => project.id.toString() === id
-      );
-      const progress = progressFiltered.length > 0 ? progressFiltered[0] : null;
-      const status = progress?.status;
-      const role = status === 'approved' ? 'member' : status !== 'pending' ? 'guest' : 'awaiting';
-      setCurrentUserProgress(progress);
-      setCurrentUserRole(role);
-    }
-  }, [progressesResponse]);
-
-  useEffect(() => {
-    if (currentProject && user) {
-      if (currentProject.authorId == user.id) {
-        setCurrentUserRole('advertiser');
+    if (user && currentProject && progressesResponse) {
+      if (user.role === Role.ADVERTISER) {
+        if (currentProject.authorId === user.id) {
+          setCurrentUserRole('projectOwner');
+        } else {
+          setCurrentUserRole('guestAdvertiser');
+        }
+      } else {
+        if (currentUserProgress) {
+          if (currentUserProgress.status === 'accepted') {
+            setCurrentUserRole('projectMember');
+          } else if (currentUserProgress.status === 'pending') {
+            setCurrentUserRole('unconfirmedMember');
+          } else {
+            setCurrentUserRole('guestCreator');
+          }
+        }
       }
     }
-  }, [currentProject, user]);
+  }, [currentUserProgress, currentProject, user]);
+
+  useEffect(() => {
+    if (progressesResponse && progressesResponse?.data.length === 1) {
+      setCurrentUserProgress(progressesResponse.data[0]);
+    }
+  }, [progressesResponse]);
 
   useEffect(() => {
     if (currentProject) {
@@ -88,10 +101,10 @@ const ProjectPage = () => {
   }, [currentProject]);
 
   useEffect(() => {
-    if (data) {
-      setCurrentProject(data.data);
+    if (projectInfoResponse) {
+      setCurrentProject(projectInfoResponse.data);
     }
-  }, [data]);
+  }, [projectInfoResponse]);
 
   if (isLoading || isProjectProgressLoading) {
     return <Loading />;
@@ -129,12 +142,12 @@ const ProjectPage = () => {
       applyMutation({
         params: {
           projectId: currentProject.id,
-          //todo: message: applicationMessage,
+          message: applicationMessage,
         },
       });
 
       if (applyResponse?.status === 201) {
-        setCurrentUserRole('awaiting');
+        setCurrentUserRole('unconfirmedMember');
       } else {
         showErrorMessage('Error occurred while creating an application. Please try again!');
       }
@@ -158,11 +171,11 @@ const ProjectPage = () => {
         <Flex m='4' direction='column'>
           <Flex align='center' justify='between'>
             <Heading weight='medium'>{currentProject?.title}</Heading>
-            {currentUserRole === 'advertiser' && (
+            {currentUserRole === 'projectOwner' && (
               <Button onClick={handleEditClick}>Edit project</Button>
             )}
 
-            {currentUserRole === 'guest' && (
+            {currentUserRole === 'guestCreator' && (
               <Dialog.Root>
                 <Dialog.Trigger>
                   <Button loading={isApplyLoading}>Apply</Button>

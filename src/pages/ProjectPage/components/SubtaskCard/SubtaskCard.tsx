@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Text, Tooltip } from '@radix-ui/themes';
+import { Card, Flex, Text, Tooltip } from '@radix-ui/themes';
 import React, { FC, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -7,6 +7,8 @@ import { RocketOutlined } from '@ant-design/icons';
 import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 import { UserRoleInProject } from '../../ProjectPage';
+import { useCreateEvent } from '../../../../shared/utils/api/hooks/event/useCreateEvent';
+import { CreateEventDto } from 'api';
 
 interface TaskCardProps {
   id: string;
@@ -19,10 +21,15 @@ interface TaskCardProps {
 const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRole }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [eventCreated, setEventCreated] = useState(false);
 
-  const proposeBtnClassname = userRole !== 'member' ? 'ProposalButtonDisabled' : 'ProposalButton';
+  const proposeBtnClassname =
+    userRole !== 'guestCreator' ? 'ProposalButtonDisabled' : 'ProposalButton';
+  const createEventMutation = useCreateEvent(setEventCreated);
 
   const handleSendProposalClick = () => {
+    let submitTaskEvent: CreateEventDto;
+
     setIsFormVisible(!isFormVisible);
   };
 
@@ -65,8 +72,10 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
           ) : (
             <>
               <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
-              {userRole !== 'advertiser' &&
-                (userRole !== 'member' ? (
+              {userRole !== 'projectOwner' &&
+                userRole !== 'guestAdvertiser' &&
+                userRole !== 'unconfirmedMember' &&
+                (userRole !== 'guestCreator' ? (
                   <Tooltip content='Join the project to apply for the tasks'>
                     <button className={proposeBtnClassname} onClick={handleSendProposalClick}>
                       <Text>Send Proposal</Text>

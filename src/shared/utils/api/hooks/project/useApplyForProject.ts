@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { useMutation } from '@tanstack/react-query';
 import { applyForProject, ApplyForProjectConfig } from '../../requests/project/project-requests';
@@ -8,12 +7,10 @@ import {
   showSuccessMessage,
   showToastWithPromise,
 } from '../../../helpers/notify';
-import { ROUTES } from '../../../../consts/routes';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 
 export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<boolean>>) => {
-  const navigate = useNavigate();
   const { webApp } = useTelegram();
   const [savedVariables, setSavedVariables] = useState<ApplyForProjectConfig | null>(null);
 
@@ -22,7 +19,6 @@ export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<bool
     onSuccess: () => {
       setApplyLoading(false);
       showSuccessMessage('Application submitted successfully');
-      navigate(ROUTES.MY_PROJECTS);
     },
     onMutate: (variables) => {
       setSavedVariables(variables);
@@ -60,7 +56,6 @@ export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<bool
               process: 'Submitting an application',
               callback: () => applyForProject(savedVariables),
             });
-            navigate(ROUTES.MY_PROJECTS);
           }
         } catch (loginError) {
           showErrorMessage('Failed to submit application due to authorization issue!');

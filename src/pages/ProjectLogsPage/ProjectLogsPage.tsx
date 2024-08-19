@@ -1,22 +1,83 @@
-import {
-  Avatar,
-  Box,
-  Callout,
-  Card,
-  Flex,
-  Heading,
-  IconButton,
-  Text,
-  TextArea,
-} from '@radix-ui/themes';
-import React from 'react';
-import { ArrowLeftIcon, InfoCircledIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { useNavigate } from 'react-router-dom';
+import { Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CreateEventDto, Event, ProjectProgress } from 'api';
+import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
+import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
+import { useCreateEvent } from '../../shared/utils/api/hooks/event/useCreateEvent';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const { projectId, userId } = useParams();
+  const { data, isLoading, refetch } = useGetProgress({
+    projectId: projectId ?? '',
+    userId: userId ?? '',
+  });
+
+  const [newEventCreated, setNewEventCreated] = useState(false);
+  const createEventMutation = useCreateEvent(setNewEventCreated);
+
+  const [userProgress, setUserProgress] = useState<ProjectProgress>();
+  const [message, setMessage] = useState<string>('');
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setUserProgress(data.data[0]);
+      setEvents(data.data[0].events);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const refetchEvents = async () => {
+      const response = await refetch();
+      if (response.data?.data[0]) {
+        setUserProgress(response.data?.data[0]);
+        setEvents(response.data?.data[0].events);
+        setNewEventCreated(false);
+      }
+    };
+
+    if (newEventCreated) {
+      refetchEvents();
+    }
+  }, [newEventCreated, refetch]);
+
+  const handleMessageSend = () => {
+    let newEvent: CreateEventDto;
+    if (userProgress && user) {
+      newEvent = {
+        projectId: userProgress.projectId,
+        userId: userProgress.userId,
+        role: user?.role,
+        eventType: EventType.USER_MESSAGE,
+        progressProjectId: userProgress?.id,
+        message: message,
+      };
+      createEventMutation.mutate({ params: newEvent });
+    } else {
+      showErrorMessage('Something went wrong!');
+    }
+    setMessage('');
+    setNewEventCreated(false);
+  };
+
+  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(event.target.value);
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -35,55 +96,18 @@ const ProjectLogsPage = () => {
         </IconButton>
         <Heading ml='3'>Name Surname</Heading>
       </Flex>
-      <Flex m='4' direction='column'>
-        <LogMessage
-          type='success'
-          message='Маленькое сообщение'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='failure'
-          message='Сообщение чуть-чуть побольше'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='info'
-          message='Вот это уже достойное сообщение, такое можно и прочитать'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='message'
-          message='Капец какое большое сообщение, зачем такие большие сообщения писать, пока дочитаешь состаришься блин'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='success'
-          message='Маленькое сообщение'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='failure'
-          message='Сообщение чуть-чуть побольше'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='info'
-          message='Вот это уже достойное сообщение, такое можно и прочитать'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='message'
-          message='Капец какое большое сообщение, зачем такие большие сообщения писать, пока дочитаешь состаришься блин'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
+      <Flex m='4' direction='column' style={{ height: '73vh' }}>
+        <ScrollArea scrollbars='vertical'>
+          {events.length > 0 &&
+            events.map((event) => (
+              <LogMessage
+                currentUserRole={user?.role ?? Role.CREATOR}
+                event={event}
+                messageType={getEventType(event.eventType)}
+                setNewEventCreated={setNewEventCreated}
+              />
+            ))}
+        </ScrollArea>
       </Flex>
       <Flex
         align='center'
@@ -96,8 +120,13 @@ const ProjectLogsPage = () => {
         }}
       >
         <Flex width='100%' justify='between' align='center'>
-          <TextArea placeholder='Send a message…' style={{ width: '80vw', height: '8vh' }} />
-          <IconButton size='4'>
+          <TextArea
+            placeholder='Send a message…'
+            onChange={handleMessageChange}
+            value={message}
+            style={{ width: '80vw', height: '8vh' }}
+          />
+          <IconButton size='4' onClick={handleMessageSend}>
             <PaperPlaneIcon />
           </IconButton>
         </Flex>

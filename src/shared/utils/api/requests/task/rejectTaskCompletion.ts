@@ -3,14 +3,14 @@ import { AxiosResponse } from 'axios';
 import api from '../../api';
 import { addAuthorizationHeader } from '../project/project-requests';
 
-export type ApproveTaskCompletionConfig = RequestConfig<TaskCompletionParams>;
-export const approveTaskCompletion = (
-  config: ApproveTaskCompletionConfig
+export type RejectTaskCompletionConfig = RequestConfig<TaskCompletionParams>;
+export const rejectTaskCompletion = (
+  config: RejectTaskCompletionConfig
 ): Promise<AxiosResponse<Event>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  const message = `Task ${config.params.taskId} completion was approved by project host. Project host message: ${config.params.message}`;
+  const message = `Task ${config.params.taskId} completion was rejected by project host. Project host message: ${config.params.message}`;
   return api.post(
-    `/tasks/${config.params.taskId}/approve-completion`,
+    `/tasks/${config.params.taskId}/reject-completion`,
     { message: message, creatorId: config.params.creatorId },
     newConfig
   );

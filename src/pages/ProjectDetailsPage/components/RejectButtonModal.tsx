@@ -1,7 +1,7 @@
-import { Button, Dialog, Flex, IconButton, ScrollArea, Text, TextArea } from '@radix-ui/themes';
+import { Button, Dialog, Flex, IconButton, TextArea } from '@radix-ui/themes';
 import React, { FC, useState } from 'react';
-import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
-import { useAcceptApplication } from '../../../shared/utils/api/hooks/project/useApproveApplication';
+import { Cross2Icon } from '@radix-ui/react-icons';
+import { useRejectApplication } from '../../../shared/utils/api/hooks/project/useRejectApplication';
 
 interface RejectButtonModal {
   progressId: string | undefined;
@@ -11,7 +11,7 @@ const RejectButtonModal: FC<RejectButtonModal> = ({ progressId }) => {
   const [rejectLoading, setRejectLoading] = useState(false);
   const [rejectMessage, setRejectMessage] = useState('');
 
-  const mutationReject = useAcceptApplication(setRejectLoading);
+  const mutationReject = useRejectApplication(setRejectLoading);
 
   const handleAccept = () => {
     setRejectLoading(true);

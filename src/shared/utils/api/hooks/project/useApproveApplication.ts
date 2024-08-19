@@ -24,6 +24,7 @@ export const useAcceptApplication = (setApproveLoading: Dispatch<SetStateAction<
     onSuccess: () => {
       setApproveLoading(false);
       showSuccessMessage('Application approved successfully');
+      window.location.reload();
     },
     onMutate: (variables) => {
       setSavedVariables(variables);

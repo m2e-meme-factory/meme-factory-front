@@ -1,13 +1,20 @@
 import { Button, Dialog, Flex, TextArea } from '@radix-ui/themes';
 import React, { Dispatch, FC, useState } from 'react';
 import { useApproveTaskCompletion } from '../../../shared/utils/api/hooks/task/useApproveTaskCompletion';
+import { useRejectApplication } from '../../../shared/utils/api/hooks/project/useRejectApplication';
+import { useRejectTaskCompletion } from '../../../shared/utils/api/hooks/task/useRejectTaskCompletion';
 
 interface RejectApproveSectionProps {
   taskId?: number;
   setNewEventCreated: Dispatch<React.SetStateAction<boolean>>;
+  userId: number;
 }
 
-const RejectApproveSection: FC<RejectApproveSectionProps> = ({ taskId, setNewEventCreated }) => {
+const RejectApproveSection: FC<RejectApproveSectionProps> = ({
+  taskId,
+  setNewEventCreated,
+  userId,
+}) => {
   const [approveMessage, setApproveMessage] = useState('');
   const [taskApproved, setTaskApproved] = useState(false);
 
@@ -15,6 +22,7 @@ const RejectApproveSection: FC<RejectApproveSectionProps> = ({ taskId, setNewEve
   const [taskRejected, setTaskRejected] = useState(false);
 
   const approveMutation = useApproveTaskCompletion(setNewEventCreated, setTaskApproved);
+  const rejectMutation = useRejectTaskCompletion(setNewEventCreated, setTaskRejected);
 
   const handleApproveTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setApproveMessage(event.target.value);
@@ -22,16 +30,22 @@ const RejectApproveSection: FC<RejectApproveSectionProps> = ({ taskId, setNewEve
 
   const handleApprove = () => {
     if (approveMessage && taskId) {
-      approveMutation.mutate({ params: { taskId: taskId, message: approveMessage } });
+      approveMutation.mutate({
+        params: { taskId: taskId, message: approveMessage, creatorId: userId },
+      });
+    }
+  };
+
+  const handleReject = () => {
+    if (rejectMessage && taskId) {
+      rejectMutation.mutate({
+        params: { taskId: taskId, message: approveMessage, creatorId: userId },
+      });
     }
   };
 
   const handleRejectTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setRejectMessage(event.target.value);
-  };
-
-  const handleReject = () => {
-    //todo: handle reject request
   };
 
   return (

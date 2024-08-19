@@ -253,7 +253,7 @@ declare module 'api' {
     message: string;
   }
 
-  interface ApproveTaskCompletionParams {
+  interface TaskCompletionParams {
     taskId: number;
     message: string;
     creatorId: number;

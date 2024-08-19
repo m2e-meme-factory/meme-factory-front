@@ -24,6 +24,7 @@ export const useRejectApplication = (setRejectLoading: Dispatch<SetStateAction<b
     onSuccess: () => {
       setRejectLoading(false);
       showSuccessMessage('Application rejected successfully');
+      window.location.reload();
     },
     onMutate: (variables) => {
       setSavedVariables(variables);

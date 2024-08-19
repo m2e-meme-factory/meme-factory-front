@@ -1,4 +1,4 @@
-import { ScrollArea, Table } from '@radix-ui/themes';
+import { Button, ScrollArea, Table } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetProjectFreelancers } from '../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
@@ -26,23 +26,27 @@ const FreelancersStats = () => {
           <Table.Row>
             <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Telegram Id</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Is Verified</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>History</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           {activeFreelancers.length > 0 &&
             activeFreelancers.map((responseItem) => (
-              <Table.Row
-                onClick={() => {
-                  navigate(
-                    `/projects/${responseItem.progress.projectId}/logs/${responseItem.user.id}`
-                  );
-                }}
-              >
-                <Table.Cell>{responseItem.user.username}</Table.Cell>
+              <Table.Row>
+                <Table.Cell>{responseItem.user.username ?? '—'}</Table.Cell>
                 <Table.Cell>{responseItem.user.telegramId}</Table.Cell>
-                <Table.Cell>{responseItem.user.isVerified}</Table.Cell>
+                <Table.Cell>
+                  <Button
+                    onClick={() =>
+                      navigate(
+                        `/projects/${responseItem.progress.projectId}/logs/${responseItem.user.id}`
+                      )
+                    }
+                  >
+                    Show history
+                  </Button>
+                </Table.Cell>
               </Table.Row>
             ))}
         </Table.Body>

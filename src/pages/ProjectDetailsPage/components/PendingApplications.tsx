@@ -34,13 +34,17 @@ const PendingApplications = () => {
           {
             //todo: add messages
             pendingApplications &&
-              pendingApplications.map((app) => (
-                <PendingApplicationsRow
-                  progressId={app.progress.id.toString()}
-                  name={app.user.username ?? 'user'}
-                  message={'to be added'}
-                ></PendingApplicationsRow>
-              ))
+              pendingApplications.map((app) => {
+                console.log(app);
+                //const message = app.progress.events[0].message;
+                return (
+                  <PendingApplicationsRow
+                    progressId={app.progress.id.toString()}
+                    name={app.user.username ?? 'user'}
+                    message={'message'}
+                  />
+                );
+              })
           }
         </Table.Body>
       </Table.Root>

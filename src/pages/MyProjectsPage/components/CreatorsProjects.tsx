@@ -2,8 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Project, User } from 'api';
 import { useGetUserProgresses } from '../../../shared/utils/api/hooks/project/useGetUserProgresses';
 import makeAnimated from 'react-select/animated';
-import { Button, Flex, Heading, Text } from '@radix-ui/themes';
-import { Link } from 'react-router-dom';
+import { Flex, Heading, Text } from '@radix-ui/themes';
 import MyProjectCard from './MyProjectCard/MyProjectCard';
 import { CUSTOM_SELECT_STYLES_MULTI } from '../../../styles/customSelectStyles';
 import Select, { MultiValue } from 'react-select';
@@ -21,7 +20,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
   const [selectedApplicationStatuses, setSelectedApplicationStatuses] = useState<string[]>([]);
   const animatedComponents = makeAnimated();
 
-  const { data: projectsResponse, isLoading } = useGetUserProgresses({
+  const { data: response, isLoading } = useGetUserProgresses({
     userId: user?.id || '',
   });
 
@@ -50,16 +49,15 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
   };
 
   useEffect(() => {
-    if (projectsResponse) {
-      let projects = projectsResponse.data
-        .filter((progress) => {
-          console.log(selectedApplicationStatuses);
+    if (response) {
+      let projects = response.data
+        .filter((progressWithProject) => {
           const isProjectStatusMatch =
             selectedProjectStatuses.length === 0 ||
-            selectedProjectStatuses.includes(progress.project.status);
+            selectedProjectStatuses.includes(progressWithProject.project.status);
           const isApplicationStatusMatch =
             selectedApplicationStatuses.length === 0 ||
-            selectedApplicationStatuses.includes(progress.status);
+            selectedApplicationStatuses.includes(progressWithProject.progress.status);
 
           return isProjectStatusMatch && isApplicationStatusMatch;
         })
@@ -68,9 +66,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
       setMyProjects(projects);
       console.log(projects);
     }
-  }, [projectsResponse, selectedProjectStatuses, selectedApplicationStatuses]);
-
-  console.log(projectsResponse);
+  }, [response, selectedProjectStatuses, selectedApplicationStatuses]);
 
   return (
     <>

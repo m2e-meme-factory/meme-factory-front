@@ -62,7 +62,6 @@ export default function ProfilePage() {
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        {userRole === Role.ADVERTISER && <Tabs.Trigger value='dashboard'>Dashboard</Tabs.Trigger>}
         <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>
       </Tabs.List>
 
@@ -139,17 +138,6 @@ export default function ProfilePage() {
                 </DataList.Item>
               </DataList.Root>
             </Grid>
-          </Card>
-        </Tabs.Content>
-
-        <Tabs.Content value='dashboard'>
-          <Card m='4'>
-            <Flex justify='between'>
-              <Heading>Dashboard</Heading>
-              <Link to='/create-project'>
-                <Button>Create Project</Button>
-              </Link>
-            </Flex>
           </Card>
         </Tabs.Content>
 

@@ -303,6 +303,7 @@ const CreateProjectPage = () => {
           components={animatedComponents}
           isMulti
           options={TAGS}
+          isSearchable={false}
           styles={CUSTOM_SELECT_STYLES_MULTI}
         />
 
@@ -316,6 +317,7 @@ const CreateProjectPage = () => {
           components={animatedComponents}
           options={CATEGORIES}
           styles={CUSTOM_SELECT_STYLES_SINGLE}
+          isSearchable={false}
           isMulti={false}
         />
         {formErrors.find((error) => error.field === 'category') && (

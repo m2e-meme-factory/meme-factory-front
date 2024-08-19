@@ -399,6 +399,7 @@ const EditProjectPage = () => {
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
+          isSearchable={false}
           options={TAGS}
           styles={CUSTOM_SELECT_STYLES_MULTI}
         />
@@ -414,6 +415,7 @@ const EditProjectPage = () => {
           components={animatedComponents}
           options={CATEGORIES}
           styles={CUSTOM_SELECT_STYLES_SINGLE}
+          isSearchable={false}
           isMulti={false}
         />
         {formErrors.find((error) => error.field === 'category') && (

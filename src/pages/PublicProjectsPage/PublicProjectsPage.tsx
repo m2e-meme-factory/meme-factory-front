@@ -115,6 +115,7 @@ const PublicProjectsPage = () => {
             options={CATEGORIES}
             styles={CUSTOM_SELECT_STYLES_SINGLE}
             isMulti={false}
+            isSearchable={false}
             isClearable={true}
           />
         </Flex>
@@ -130,6 +131,7 @@ const PublicProjectsPage = () => {
             isMulti
             options={TAGS}
             styles={CUSTOM_SELECT_STYLES_MULTI}
+            isSearchable={false}
             isClearable={true}
           />
         </Flex>

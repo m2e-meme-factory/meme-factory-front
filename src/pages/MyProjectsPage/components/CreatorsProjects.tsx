@@ -77,6 +77,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
             Project status:
           </Text>
           <Select
+            isSearchable={false}
             onChange={handleProjectStatusChange}
             placeholder='Select project status'
             closeMenuOnSelect={false}
@@ -91,6 +92,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
             Application status:
           </Text>
           <Select
+            isSearchable={false}
             onChange={handleApplicationStatusChange}
             placeholder='Select application status'
             closeMenuOnSelect={false}

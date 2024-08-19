@@ -4,6 +4,9 @@ import CardBanner from '../../../PublicProjectsPage/components/CardBanner/CardBa
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ProjectStatus } from 'api';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../shared/utils/redux/store';
+import { Role } from '../../../../shared/consts/userRoles';
 
 interface MyProjectCardProps {
   id: string;
@@ -30,9 +33,19 @@ const MyProjectCard: FC<MyProjectCardProps> = ({
   status,
 }) => {
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user.user);
+  const handleClick = () => {
+    if (user) {
+      if (user.role === Role.ADVERTISER) {
+        navigate(`/projects/${id}/details`);
+      } else {
+        navigate(`/projects/${id}/logs/${user.id}`);
+      }
+    }
+  };
 
   return (
-    <StyledCard onClick={() => navigate(`/projects/${id}/details`)}>
+    <StyledCard onClick={handleClick}>
       <Flex direction='column'>
         <CardBanner bannerUrl={bannerUrl} />
         <Flex direction='column' m='4'>

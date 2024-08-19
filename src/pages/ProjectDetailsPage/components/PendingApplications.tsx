@@ -1,11 +1,25 @@
-import { Flex, IconButton, ScrollArea, Table, Dialog, Button, Text } from '@radix-ui/themes';
-import React from 'react';
-import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
-
-const LONG_MESSAGE =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consequat nisi id ex rhoncus, venenatis dignissim nisl egestas. Suspendisse eget magna sodales, tincidunt risus id, varius sem. Integer lorem mauris, pretium vitae nisl et, pharetra placerat tellus. Suspendisse vel lectus gravida, tincidunt sem ut, vulputate mauris. Suspendisse pellentesque justo non erat rutrum, vitae placerat tortor ultricies. In sit amet rhoncus turpis. Suspendisse vestibulum urna et condimentum mollis. Nullam fringilla, tortor nec sodales volutpat, massa ipsum porttitor nisl, ut tristique enim purus ut elit. Proin sollicitudin augue velit, vitae lobortis eros sodales id.';
+import { ScrollArea, Table } from '@radix-ui/themes';
+import React, { useEffect, useState } from 'react';
+import { useGetProjectFreelancers } from '../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
+import { useParams } from 'react-router-dom';
+import { FreelancersResponse, ProjectProgress } from 'api';
+import PendingApplicationsRow from './PendingApplicationsRow';
 
 const PendingApplications = () => {
+  const { id } = useParams();
+  const { data: pendingFreelancers, isLoading: isPFreelancersLoading } = useGetProjectFreelancers(
+    id ? id : '',
+    'pending'
+  );
+
+  const [pendingApplications, setPendingApplications] = useState<FreelancersResponse[]>();
+
+  useEffect(() => {
+    if (pendingFreelancers?.data) {
+      setPendingApplications(pendingFreelancers.data);
+    }
+  }, [pendingFreelancers]);
+
   return (
     <ScrollArea type='always' scrollbars='vertical' style={{ height: 'fit-content' }}>
       <Table.Root>
@@ -16,52 +30,18 @@ const PendingApplications = () => {
             <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
-
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Flex mt='2'>
-                <Text>Danilo Sousa</Text>
-              </Flex>
-            </Table.Cell>
-            <Table.Cell>
-              <Dialog.Root>
-                <Dialog.Trigger>
-                  <Button mt='2' variant='ghost'>
-                    Read message
-                  </Button>
-                </Dialog.Trigger>
-
-                <Dialog.Content maxWidth='450px'>
-                  <Dialog.Title>Application message</Dialog.Title>
-
-                  <Flex direction='column' gap='3'>
-                    <ScrollArea type='always' scrollbars='vertical'>
-                      <Text>{LONG_MESSAGE}</Text>
-                    </ScrollArea>
-                  </Flex>
-
-                  <Flex gap='3' mt='4' justify='end'>
-                    <Dialog.Close>
-                      <Button variant='soft' color='yellow'>
-                        Close
-                      </Button>
-                    </Dialog.Close>
-                  </Flex>
-                </Dialog.Content>
-              </Dialog.Root>
-            </Table.Cell>
-            <Table.Cell>
-              <Flex>
-                <IconButton mb='2'>
-                  <CheckIcon />
-                </IconButton>
-                <IconButton mb='2' ml='2'>
-                  <Cross2Icon />
-                </IconButton>
-              </Flex>
-            </Table.Cell>
-          </Table.Row>
+          {
+            //todo: add messages
+            pendingApplications &&
+              pendingApplications.map((app) => (
+                <PendingApplicationsRow
+                  progressId={app.progress.id.toString()}
+                  name={app.user.username ?? 'user'}
+                  message={'to be added'}
+                ></PendingApplicationsRow>
+              ))
+          }
         </Table.Body>
       </Table.Root>
     </ScrollArea>

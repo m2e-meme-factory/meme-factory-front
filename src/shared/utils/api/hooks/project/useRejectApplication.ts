@@ -13,7 +13,7 @@ import {
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 
-const useApproveApplication = (setRejectLoading: Dispatch<SetStateAction<boolean>>) => {
+export const useRejectApplication = (setRejectLoading: Dispatch<SetStateAction<boolean>>) => {
   const { webApp } = useTelegram();
   const [savedVariables, setSavedVariables] = useState<RejectApplicationForProjectConfig | null>(
     null

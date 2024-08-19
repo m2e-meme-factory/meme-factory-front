@@ -14,12 +14,13 @@ import { useDispatch } from 'react-redux';
 import Loading from '../../shared/components/Loading';
 import FreelancersStats from './components/FreelancersStats';
 import PendingApplications from './components/PendingApplications';
+import { useGetProjectFreelancers } from '../../shared/utils/api/hooks/project/useGetProjectFreelancers';
 
 const ProjectDetailsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data, isLoading, error, refetch: refetchProject } = useGetProject(id);
+  const { data, isLoading } = useGetProject(id);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
   useEffect(() => {

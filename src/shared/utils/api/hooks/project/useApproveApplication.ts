@@ -3,7 +3,6 @@ import { useTelegram } from '../../../../hooks/useTelegram';
 import {
   acceptApplicationForProject,
   AcceptApplicationForProjectConfig,
-  applyForProject,
 } from '../../requests/project/project-requests';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -14,7 +13,7 @@ import {
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 
-const useApproveApplication = (setApproveLoading: Dispatch<SetStateAction<boolean>>) => {
+export const useAcceptApplication = (setApproveLoading: Dispatch<SetStateAction<boolean>>) => {
   const { webApp } = useTelegram();
   const [savedVariables, setSavedVariables] = useState<AcceptApplicationForProjectConfig | null>(
     null

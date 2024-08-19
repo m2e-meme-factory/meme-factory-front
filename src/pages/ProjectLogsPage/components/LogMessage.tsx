@@ -21,6 +21,8 @@ interface MessageProps {
   messageType: 'success' | 'failure' | 'info' | 'message';
   setNewEventCreated: Dispatch<SetStateAction<boolean>>;
   currentUserRole: Role;
+  creatorName: string;
+  advertiserName: string;
 }
 
 const LogMessage: FC<MessageProps> = ({
@@ -28,16 +30,18 @@ const LogMessage: FC<MessageProps> = ({
   messageType,
   setNewEventCreated,
   currentUserRole,
+  creatorName,
+  advertiserName,
 }) => {
   const color = getColorByType(messageType);
-  const side = event.role === Role.CREATOR ? 'left' : 'right';
+  const side = event.role === currentUserRole ? 'right' : 'left';
 
   return (
     <Flex justify={side === 'left' ? 'start' : 'end'} width='100%'>
       <MessageContainer color={color} side={side}>
         <Flex direction='column'>
           <Text align={side} size='1' color='gray'>
-            Name Surname
+            {event.role === 'creator' ? creatorName : advertiserName}
           </Text>
           <Text align={side}>Event description: {event.description}</Text>
           {event.message && <Text align={side}>User message: {event.message}</Text>}
@@ -45,6 +49,7 @@ const LogMessage: FC<MessageProps> = ({
             <RejectApproveSection
               taskId={event.details?.taskId}
               setNewEventCreated={setNewEventCreated}
+              userId={event.userId}
             />
           )}
         </Flex>

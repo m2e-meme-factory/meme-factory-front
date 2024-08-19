@@ -58,6 +58,7 @@ declare module 'api' {
     createdAt: Date;
     updatedAt?: Date;
     events: Event[];
+    user: User;
   }
 
   export interface VerifyUserRequestData {
@@ -255,6 +256,7 @@ declare module 'api' {
   interface ApproveTaskCompletionParams {
     taskId: number;
     message: string;
+    creatorId: number;
   }
 
   export interface Project {

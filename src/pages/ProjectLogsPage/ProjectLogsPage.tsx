@@ -2,7 +2,7 @@ import { Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/theme
 import React, { useEffect, useState } from 'react';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CreateEventDto, Event, ProjectProgress } from 'api';
+import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
 import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
 import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
@@ -12,6 +12,7 @@ import { RootState } from '../../shared/utils/redux/store';
 import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
+import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
@@ -22,13 +23,21 @@ const ProjectLogsPage = () => {
     projectId: projectId ?? '',
     userId: userId ?? '',
   });
+  const { data: projectResponse, isLoading: isProjecetLoading } = useGetProject(projectId);
 
   const [newEventCreated, setNewEventCreated] = useState(false);
   const createEventMutation = useCreateEvent(setNewEventCreated);
 
+  const [currentProject, setCurrentProject] = useState<Project>();
   const [userProgress, setUserProgress] = useState<ProjectProgress>();
   const [message, setMessage] = useState<string>('');
   const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    if (projectResponse) {
+      setCurrentProject(projectResponse.data);
+    }
+  }, [projectResponse]);
 
   useEffect(() => {
     if (data) {
@@ -105,6 +114,12 @@ const ProjectLogsPage = () => {
                 event={event}
                 messageType={getEventType(event.eventType)}
                 setNewEventCreated={setNewEventCreated}
+                creatorName={
+                  userProgress?.user.username
+                    ? userProgress?.user.username
+                    : (`User ${userProgress?.user.telegramId}` ?? 'User')
+                }
+                advertiserName={currentProject ? currentProject.title : 'Project host'}
               />
             ))}
         </ScrollArea>

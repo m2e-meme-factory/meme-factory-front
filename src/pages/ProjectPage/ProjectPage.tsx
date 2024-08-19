@@ -49,7 +49,7 @@ const ProjectPage = () => {
   const { id } = useParams();
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
+  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('unconfirmedMember');
   const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isApplyLoading, setIsApplyLoading] = useState(false);
@@ -267,6 +267,7 @@ const ProjectPage = () => {
                   price={subtask.task.price}
                   title={subtask.task.title}
                   userRole={currentUserRole}
+                  progress={currentUserProgress}
                 />
               ))}
           </Flex>

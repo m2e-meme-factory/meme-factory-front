@@ -2,43 +2,43 @@ import React, { FC, useState } from 'react';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import './index.css';
+import { ProjectProgress } from '../../../../shared/consts/unresolved';
+import { showErrorMessage } from '../../../../shared/utils/helpers/notify';
+import { useApplyTaskCompletion } from '../../../../shared/utils/api/hooks/task/useApplyTaskCompletion';
 
 interface ModalSubtaskFormProps {
   closeDialog: () => void;
+  progress: ProjectProgress | undefined;
+  taskId: string;
 }
 
-interface ProposalFormFields {
-  hourPrice: number;
-  hoursEstimated: number;
-  coverLetter: string;
-}
-
-const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog }) => {
+const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, taskId }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [coverLetter, setCoverLetter] = useState<string>();
+  const applyTaskCompletionMutation = useApplyTaskCompletion();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
 
-    const hourPrice = parseFloat(formData.get('hour-price') as string);
-    const hoursEstimated = parseFloat(formData.get('hours-estimated') as string);
+    //todo: выяснить про hourPrice и hoursEstimated
+    // const hourPrice = parseFloat(formData.get('hour-price') as string);
+    // const hoursEstimated = parseFloat(formData.get('hours-estimated') as string);
     const coverLetter = formData.get('cover-letter') as string;
 
-    const data: ProposalFormFields = {
-      hourPrice: isNaN(hourPrice) ? 0 : hourPrice,
-      hoursEstimated: isNaN(hoursEstimated) ? 0 : hoursEstimated,
-      coverLetter: coverLetter ?? '',
-    };
-
-    console.log(data);
-
+    setCoverLetter(coverLetter);
     setIsDialogOpen(true);
   };
 
   const handleConfirm = () => {
-    setIsDialogOpen(false);
-    closeDialog();
+    if (coverLetter) {
+      applyTaskCompletionMutation.mutate({ params: { taskId: taskId, message: coverLetter } });
+      setIsDialogOpen(false);
+      closeDialog();
+    } else {
+      showErrorMessage('Something went wrong!');
+    }
   };
 
   const handleCancel = () => {

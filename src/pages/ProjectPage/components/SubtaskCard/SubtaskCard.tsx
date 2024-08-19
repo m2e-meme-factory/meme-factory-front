@@ -8,7 +8,7 @@ import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 import { UserRoleInProject } from '../../ProjectPage';
 import { useCreateEvent } from '../../../../shared/utils/api/hooks/event/useCreateEvent';
-import { CreateEventDto } from 'api';
+import { ProjectProgress } from '../../../../shared/consts/unresolved';
 
 interface TaskCardProps {
   id: string;
@@ -16,20 +16,19 @@ interface TaskCardProps {
   description: string;
   price: number;
   userRole: UserRoleInProject;
+  progress: ProjectProgress | undefined;
 }
 
-const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRole }) => {
+const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRole, progress }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [eventCreated, setEventCreated] = useState(false);
 
   const proposeBtnClassname =
-    userRole !== 'guestCreator' ? 'ProposalButtonDisabled' : 'ProposalButton';
+    userRole === 'guestCreator' ? 'ProposalButtonDisabled' : 'ProposalButton';
   const createEventMutation = useCreateEvent(setEventCreated);
 
   const handleSendProposalClick = () => {
-    let submitTaskEvent: CreateEventDto;
-
     setIsFormVisible(!isFormVisible);
   };
 
@@ -67,7 +66,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
           </Dialog.Title>
           {isFormVisible ? (
             <>
-              <ModalSubtaskForm closeDialog={handleDialogClose} />
+              <ModalSubtaskForm taskId={id} progress={progress} closeDialog={handleDialogClose} />
             </>
           ) : (
             <>
@@ -75,7 +74,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
               {userRole !== 'projectOwner' &&
                 userRole !== 'guestAdvertiser' &&
                 userRole !== 'unconfirmedMember' &&
-                (userRole !== 'guestCreator' ? (
+                (userRole === 'guestCreator' ? (
                   <Tooltip content='Join the project to apply for the tasks'>
                     <button className={proposeBtnClassname} onClick={handleSendProposalClick}>
                       <Text>Send Proposal</Text>

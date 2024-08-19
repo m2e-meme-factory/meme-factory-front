@@ -49,13 +49,12 @@ const ProjectPage = () => {
   const { id } = useParams();
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('unconfirmedMember');
+  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
   const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isApplyLoading, setIsApplyLoading] = useState(false);
-  const [currentUserProgress, setCurrentUserProgress] = useState<ProjectProgress>();
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [applicationMessage, setApplicationMessage] = useState<string>('');
+  const [progress, setProgress] = useState<ProjectProgress>();
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -67,44 +66,52 @@ const ProjectPage = () => {
   const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
 
   useEffect(() => {
-    if (user && currentProject && progressesResponse) {
-      if (user.role === Role.ADVERTISER) {
-        if (currentProject.authorId === user.id) {
-          setCurrentUserRole('projectOwner');
-        } else {
-          setCurrentUserRole('guestAdvertiser');
-        }
-      } else {
-        if (currentUserProgress) {
-          if (currentUserProgress.status === 'accepted') {
-            setCurrentUserRole('projectMember');
-          } else if (currentUserProgress.status === 'pending') {
-            setCurrentUserRole('unconfirmedMember');
-          } else {
-            setCurrentUserRole('guestCreator');
-          }
-        }
-      }
+    if (projectInfoResponse) {
+      setCurrentProject(projectInfoResponse.data);
+      dispatch(setProject(projectInfoResponse.data));
     }
-  }, [currentUserProgress, currentProject, user]);
+  }, [projectInfoResponse, dispatch]);
 
   useEffect(() => {
-    if (progressesResponse && progressesResponse?.data.length === 1) {
-      setCurrentUserProgress(progressesResponse.data[0]);
+    if (progressesResponse && progressesResponse.data.length === 1) {
+      const userProgress = progressesResponse.data[0];
+      setProgress(userProgress);
+      if (userProgress) {
+        setCurrentUserRoleFromProgress(userProgress.status);
+      }
     }
   }, [progressesResponse]);
 
   useEffect(() => {
-    if (currentProject) {
-      dispatch(setProject(currentProject));
+    if (user && currentProject) {
+      determineUserRole(user, currentProject);
     }
-  }, [currentProject]);
+  }, [user, currentProject]);
 
-  useEffect(() => {
-    if (projectInfoResponse) {
-      setCurrentProject(projectInfoResponse.data);
+  const determineUserRole = (user: RootState['user']['user'] | undefined, project: Project) => {
+    if (!user) return;
+
+    if (user.role === Role.ADVERTISER) {
+      setCurrentUserRole(user.id === project.authorId ? 'projectOwner' : 'guestAdvertiser');
+    } else {
+      if (currentUserRole !== 'projectOwner' && currentUserRole !== 'guestAdvertiser') {
+        if (currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') {
+          return; // Role is already set
+        }
+        setCurrentUserRole('guestCreator');
+      }
     }
-  }, [projectInfoResponse]);
+  };
+
+  const setCurrentUserRoleFromProgress = (status: string) => {
+    if (status === 'accepted') {
+      setCurrentUserRole('projectMember');
+    } else if (status === 'pending') {
+      setCurrentUserRole('unconfirmedMember');
+    } else {
+      setCurrentUserRole('guestCreator');
+    }
+  };
 
   if (isLoading || isProjectProgressLoading) {
     return <Loading />;
@@ -133,11 +140,10 @@ const ProjectPage = () => {
     setIsApplyLoading(true);
     if (currentProject && user) {
       if (applicationMessage.trim() === '') {
-        setErrorMessage('Application message cannot be empty or just whitespace.');
+        showErrorMessage('Application message cannot be empty or just whitespace.');
         setIsApplyLoading(false);
         return;
       }
-      setErrorMessage('');
 
       applyMutation({
         params: {
@@ -169,48 +175,45 @@ const ProjectPage = () => {
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Flex align='center' justify='between'>
-            <Heading weight='medium'>{currentProject?.title}</Heading>
-            {currentUserRole === 'projectOwner' && (
-              <Button onClick={handleEditClick}>Edit project</Button>
-            )}
+          <Heading weight='medium'>{currentProject?.title}</Heading>
+          {currentUserRole === 'projectOwner' && (
+            <Button onClick={handleEditClick} my='2'>
+              Edit project
+            </Button>
+          )}
 
-            {currentUserRole === 'guestCreator' && (
-              <Dialog.Root>
-                <Dialog.Trigger>
-                  <Button loading={isApplyLoading}>Apply</Button>
-                </Dialog.Trigger>
+          {currentUserRole === 'guestCreator' && (
+            <Dialog.Root>
+              <Dialog.Trigger>
+                <Button loading={isApplyLoading} my='2'>
+                  Apply to earn
+                </Button>
+              </Dialog.Trigger>
 
-                <Dialog.Content maxWidth='450px'>
-                  <Dialog.Title>Apply for the project</Dialog.Title>
+              <Dialog.Content maxWidth='450px'>
+                <Dialog.Title>Apply for the project</Dialog.Title>
 
-                  <Flex direction='column'>
-                    <TextArea
-                      style={{ height: '20vh' }}
-                      size='2'
-                      placeholder='I have one million subscribers on my Youtube channel'
-                      value={applicationMessage}
-                      onChange={handleTextAreaChange}
-                    />
-                    {errorMessage && (
-                      <Text color='red' mt='2'>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </Flex>
+                <Flex direction='column'>
+                  <TextArea
+                    style={{ height: '20vh' }}
+                    size='2'
+                    placeholder='I have one million subscribers on my Youtube channel'
+                    value={applicationMessage}
+                    onChange={handleTextAreaChange}
+                  />
+                </Flex>
 
-                  <Flex gap='3' mt='4' justify='end'>
-                    <Dialog.Close>
-                      <Button variant='soft' color='gray'>
-                        Cancel
-                      </Button>
-                    </Dialog.Close>
-                    <Button onClick={handleApplyClick}>Apply</Button>
-                  </Flex>
-                </Dialog.Content>
-              </Dialog.Root>
-            )}
-          </Flex>
+                <Flex gap='3' mt='4' justify='end'>
+                  <Dialog.Close>
+                    <Button variant='soft' color='gray'>
+                      Cancel
+                    </Button>
+                  </Dialog.Close>
+                  <Button onClick={handleApplyClick}>Apply</Button>
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
+          )}
           <Text color='yellow' weight='medium' mb='5'>
             Category: {currentProject?.category}
           </Text>
@@ -266,8 +269,8 @@ const ProjectPage = () => {
                   description={subtask.task.description}
                   price={subtask.task.price}
                   title={subtask.task.title}
-                  userRole={currentUserRole}
-                  progress={currentUserProgress}
+                  progress={progress}
+                  userRole={currentUserRole || 'guestCreator'}
                 />
               ))}
           </Flex>

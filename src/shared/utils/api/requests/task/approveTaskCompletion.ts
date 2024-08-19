@@ -10,7 +10,7 @@ export const approveTaskCompletion = (
   const newConfig = addAuthorizationHeader(config.config);
   return api.post(
     `/tasks/${config.params.taskId}/approve-completion`,
-    { message: config.params.message },
+    { message: config.params.message, creatorId: config.params.creatorId },
     newConfig
   );
 };

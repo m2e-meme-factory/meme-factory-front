@@ -23,7 +23,7 @@ export const useRejectApplication = (setRejectLoading: Dispatch<SetStateAction<b
     mutationFn: (config: RejectApplicationForProjectConfig) => rejectApplicationForProject(config),
     onSuccess: () => {
       setRejectLoading(false);
-      showSuccessMessage('Application approved successfully');
+      showSuccessMessage('Application rejected successfully');
     },
     onMutate: (variables) => {
       setSavedVariables(variables);

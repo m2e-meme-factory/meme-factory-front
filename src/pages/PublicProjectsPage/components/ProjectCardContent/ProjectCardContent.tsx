@@ -35,10 +35,6 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
           ))}
         </Text>
       </Flex>
-      <Flex>
-        <DollarOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-        <Text weight='medium'>Price: 1000$</Text>
-      </Flex>
     </Flex>
   );
 };

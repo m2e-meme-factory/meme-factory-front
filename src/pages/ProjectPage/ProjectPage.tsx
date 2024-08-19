@@ -232,12 +232,6 @@ const ProjectPage = () => {
                 ))}
             </Text>
           </Flex>
-          <Flex mb='5'>
-            <DollarOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-            <Text weight='medium' size='5'>
-              Price: 1000$
-            </Text>
-          </Flex>
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='2'>
               <TeamOutlined style={{ color: 'yellow', marginRight: '8px' }} />
@@ -247,8 +241,7 @@ const ProjectPage = () => {
             </Flex>
             <Card>
               <Flex align='center'>
-                <Avatar fallback={<img src={avatarFallback} alt='fallback' />} />
-                <Text weight='medium' size='6' ml='3'>
+                <Text weight='medium' size='6'>
                   Meme Factory
                 </Text>
               </Flex>

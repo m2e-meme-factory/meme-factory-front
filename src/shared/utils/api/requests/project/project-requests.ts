@@ -4,12 +4,15 @@ import {
   AcceptApplicationForProjectParams,
   ApplyForProjectParams,
   CreateProjectDTO,
+  FreelancersResponse,
   GetEventsByProjectIdParams,
   GetMyProjectsParams,
   GetProgressByProjectIdParams,
+  GetProjectFreelancersParams,
   GetPublicProjectsParams,
   GetUserProgressesParams,
   PaginatedProjects,
+  ProgressWithProjectResponse,
   Project,
   ProjectProgress,
   RejectApplicationForProjectParams,
@@ -17,7 +20,6 @@ import {
   UpdateProjectPayload,
   UpdateStatusPayload,
 } from 'api';
-import App from '../../../../../App';
 
 export type CreateProjectConfig = RequestConfig<CreateProjectDTO>;
 export type GetPublicProjectsConfig = RequestConfig<GetPublicProjectsParams>;
@@ -31,8 +33,9 @@ export type GetEventsByProjectIdConfig = RequestConfig<GetEventsByProjectIdParam
 export type AcceptApplicationForProjectConfig = RequestConfig<AcceptApplicationForProjectParams>;
 export type RejectApplicationForProjectConfig = RequestConfig<RejectApplicationForProjectParams>;
 export type GetUserProgressesConfig = RequestConfig<GetUserProgressesParams>;
+export type GetProjectFreelancersConfig = RequestConfig<GetProjectFreelancersParams>;
 
-const addAuthorizationHeader = (config: any) => {
+export const addAuthorizationHeader = (config: any) => {
   const token = localStorage.getItem('token');
 
   const newConfig = { ...config };
@@ -107,14 +110,22 @@ export const getProgressByProjectId = (
   config: GetProgressByProjectIdConfig
 ): Promise<AxiosResponse<ProjectProgress[]>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.get(`/projects/progress/by-project/${config.params.projectId}`, newConfig);
+  const optionalUser = config.params.userId ? `?creatorId=${config.params.userId}` : '';
+  return api.get(
+    `/projects/progress/by-project/${config.params.projectId}${optionalUser}`,
+    newConfig
+  );
 };
 
 export const applyForProject = (
   config: ApplyForProjectConfig
 ): Promise<AxiosResponse<ProjectProgress>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.post(`/projects/${config.params.projectId}/apply`, '', newConfig);
+  return api.post(
+    `/projects/${config.params.projectId}/apply`,
+    { message: config.params.message },
+    newConfig
+  );
 };
 
 export const getEventsByProgressId = (
@@ -126,15 +137,35 @@ export const getEventsByProgressId = (
 
 export const acceptApplicationForProject = (config: AcceptApplicationForProjectConfig) => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.post(`/projects/progress/${config.params.progressId}/accept`, null, newConfig);
+  return api.post(
+    `/projects/progress/${config.params.progressId}/accept`,
+    { message: config.params.message },
+    newConfig
+  );
 };
 
 export const rejectApplicationForProject = (config: RejectApplicationForProjectConfig) => {
   const newConfig = addAuthorizationHeader(config.config);
-  return api.post(`/projects/progress/${config.params.progressId}/reject`, null, newConfig);
+  return api.post(
+    `/projects/progress/${config.params.progressId}/reject`,
+    { message: config.params.message },
+    newConfig
+  );
 };
 
-export const getUserProgresses = (config: GetUserProgressesConfig) => {
+export const getUserProgresses = (
+  config: GetUserProgressesConfig
+): Promise<AxiosResponse<ProgressWithProjectResponse[]>> => {
   const newConfig = addAuthorizationHeader(config.config);
   return api.get(`/projects/progress/by-creator/${config.params.userId}`, newConfig);
+};
+
+export const getProjectFreelancers = (
+  config: GetProjectFreelancersConfig
+): Promise<AxiosResponse<FreelancersResponse[]>> => {
+  const newConfig = addAuthorizationHeader(config.config);
+  return api.get(
+    `/projects/${config.params.projectId}/freelancers?status=${config.params.status}`,
+    newConfig
+  );
 };

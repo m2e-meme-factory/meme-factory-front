@@ -8,6 +8,17 @@ declare module 'api' {
     email: string;
   }
 
+  export interface CreateEventDto {
+    projectId: number;
+    userId: number;
+    role: Role;
+    eventType: EventType;
+    description?: string;
+    details?: EventDetails;
+    progressProjectId?: number;
+    message?: string;
+  }
+
   export interface DownloadFilesParams {
     projectId: string;
     telegramId: string;
@@ -39,15 +50,14 @@ declare module 'api' {
     taskId: string;
   }
 
-  export interface ProjectProgress {
+  interface ProjectProgress {
     id: number;
     userId: number;
     projectId: number;
-    status: 'pending' | 'approved' | 'rejected';
+    status: 'pending' | 'accepted' | 'rejected';
     createdAt: Date;
     updatedAt?: Date;
     events: Event[];
-    project: Project;
   }
 
   export interface VerifyUserRequestData {
@@ -56,19 +66,15 @@ declare module 'api' {
   }
 
   enum EventType {
-    PROJECT_CREATED = 'PROJECT_CREATED',
-    PROJECT_UPDATED = 'PROJECT_UPDATED',
-    PROJECT_DELETED = 'PROJECT_DELETED',
     APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
     APPLICATION_APPROVED = 'APPLICATION_APPROVED',
     APPLICATION_REJECTED = 'APPLICATION_REJECTED',
+    TASK_SUBMIT = 'TASK_SUBMIT',
+    TASK_REJECTED = 'TASK_REJECTED',
     TASK_COMPLETED = 'TASK_COMPLETED',
-    TASK_UPDATED = 'TASK_UPDATED',
-    TRANSACTION_COMPLETED = 'TRANSACTION_COMPLETED',
     DISPUTE_OPENED = 'DISPUTE_OPENED',
     DISPUTE_RESOLVED = 'DISPUTE_RESOLVED',
     USER_MESSAGE = 'USER_MESSAGE',
-    RATING_GIVEN = 'RATING_GIVEN',
   }
 
   enum Role {
@@ -88,10 +94,21 @@ declare module 'api' {
     projectId: number;
     userId: number;
     role: Role;
+    message: string;
     eventType: EventType;
     description?: string;
     createdAt: Date;
     details?: EventDetails;
+  }
+
+  interface FreelancersResponse {
+    progress: ProjectProgress;
+    user: User;
+  }
+
+  interface ProgressWithProjectResponse {
+    progress: ProjectProgress;
+    project: Project;
   }
 
   export interface UpdateProjectPayload {
@@ -177,10 +194,12 @@ declare module 'api' {
 
   export interface GetProgressByProjectIdParams {
     projectId: string;
+    userId?: string;
   }
 
   export interface ApplyForProjectParams {
     projectId: string;
+    message: string;
   }
 
   export interface GetEventsByProjectIdParams {
@@ -189,10 +208,12 @@ declare module 'api' {
 
   export interface AcceptApplicationForProjectParams {
     progressId: string;
+    message: string;
   }
 
   export interface RejectApplicationForProjectParams {
     progressId: string;
+    message: string;
   }
 
   export interface GetUserProgressesParams {
@@ -224,6 +245,16 @@ declare module 'api' {
   export interface PaginatedProjects {
     projects: Project[];
     total: number;
+  }
+
+  interface ApplyTaskCompletionParams {
+    taskId: string;
+    message: string;
+  }
+
+  interface ApproveTaskCompletionParams {
+    taskId: number;
+    message: string;
   }
 
   export interface Project {

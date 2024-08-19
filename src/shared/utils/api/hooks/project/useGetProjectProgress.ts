@@ -5,11 +5,11 @@ import { AxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { login, LoginConfig } from '../../requests/auth/login';
 
-export const useGetProjectProgress = (params: GetProgressByProjectIdParams) => {
+export const useGetProgress = (params: GetProgressByProjectIdParams) => {
   const { webApp } = useTelegram();
 
   const query = useQuery({
-    queryKey: ['getProgressByProjectId', params.projectId],
+    queryKey: ['getProgress', params.projectId, params.userId],
     queryFn: async () => {
       try {
         return await getProgressByProjectId({ params: params });

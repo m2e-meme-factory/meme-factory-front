@@ -12,7 +12,7 @@ export const useGetUserProgresses = (params: GetUserProgressesParams) => {
   const query = useQuery({
     queryKey: ['getUserProgress', userId],
     queryFn: async () => {
-      console.log(userId)
+      console.log(userId);
       if (!userId) {
         return Promise.reject('userId invalid');
       }
@@ -20,7 +20,7 @@ export const useGetUserProgresses = (params: GetUserProgressesParams) => {
       try {
         return await getUserProgresses({ params: { userId: userId } });
       } catch (error) {
-        console.log(error, 'caught')
+        console.log(error, 'caught');
         if (error instanceof AxiosError && error.response?.status === 401 && webApp) {
           const loginConfig: LoginConfig = {
             params: { initData: { initData: webApp.initData } },
@@ -39,7 +39,7 @@ export const useGetUserProgresses = (params: GetUserProgressesParams) => {
         throw new Error('Something went wrong');
       }
     },
-    select: (data: AxiosResponse<ProjectProgress[]>) => data,
+    select: (data) => data,
     staleTime: 0,
     retry: false,
   });

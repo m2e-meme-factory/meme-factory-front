@@ -22,16 +22,12 @@ import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
-import { useTelegram } from '../../shared/hooks/useTelegram';
 import { useEffect, useState } from 'react';
-import { Role } from '../../shared/consts/userRoles';
 import { RefDataResponse } from 'api';
 
 export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.user.user);
   const userId = user?.telegramId?.toString();
-  const userRole = user ? user.role : Role.CREATOR;
-  const { webApp } = useTelegram();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
 
   const {
@@ -112,7 +108,7 @@ export default function ProfilePage() {
                 <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
-                <Heading>$26 412.03</Heading>
+                <Heading>${user?.balance ?? '0'}</Heading>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw

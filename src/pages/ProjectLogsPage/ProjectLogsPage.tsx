@@ -105,7 +105,7 @@ const ProjectLogsPage = () => {
           <ArrowLeftIcon></ArrowLeftIcon>
         </IconButton>
         <Heading ml='3'>{currentProject?.title}</Heading>
-        <Button onClick={() => navigate(`/project/${projectId}`)}>To project page</Button>
+        <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
       </Flex>
       <Flex m='4' direction='column' style={{ height: '73vh' }}>
         <ScrollArea scrollbars='vertical'>

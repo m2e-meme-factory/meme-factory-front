@@ -39,7 +39,7 @@ const RejectApproveSection: FC<RejectApproveSectionProps> = ({
   const handleReject = () => {
     if (rejectMessage && taskId) {
       rejectMutation.mutate({
-        params: { taskId: taskId, message: approveMessage, creatorId: userId },
+        params: { taskId: taskId, message: rejectMessage, creatorId: userId },
       });
     }
   };

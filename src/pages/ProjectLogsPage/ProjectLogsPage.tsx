@@ -1,5 +1,5 @@
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
-import React, { useEffect, useState } from 'react';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
@@ -34,6 +34,8 @@ const ProjectLogsPage = () => {
   const [message, setMessage] = useState<string>('');
   const [events, setEvents] = useState<Event[]>([]);
 
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (projectResponse) {
       setCurrentProject(projectResponse.data);
@@ -61,6 +63,12 @@ const ProjectLogsPage = () => {
       refetchEvents();
     }
   }, [newEventCreated, refetch]);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    }
+  }, [events]);
 
   const handleMessageSend = () => {
     let newEvent: CreateEventDto;
@@ -100,18 +108,22 @@ const ProjectLogsPage = () => {
           backgroundColor: '#121212',
           padding: '10px',
         }}
+        justify='between'
       >
-        <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
-          <ArrowLeftIcon></ArrowLeftIcon>
-        </IconButton>
-        <Heading ml='3'>{currentProject?.title}</Heading>
+        <Flex>
+          <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
+            <ArrowLeftIcon></ArrowLeftIcon>
+          </IconButton>
+          <Heading ml='3'>{currentProject?.title}</Heading>
+        </Flex>
         <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
       </Flex>
       <Flex m='4' direction='column' style={{ height: '73vh' }}>
-        <ScrollArea scrollbars='vertical'>
+        <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
           {events.length > 0 &&
             events.map((event) => (
               <LogMessage
+                key={event.id} // Не забудьте добавить ключ для списка
                 currentUserRole={user?.role ?? Role.CREATOR}
                 event={event}
                 messageType={getEventType(event.eventType)}

@@ -23,7 +23,8 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
         <Flex direction='column'>
           <Text className='TextAccent'>Description:</Text>
           <Text className='Description'>
-            {isDescVisible ? description : shortenDescription(description)}
+            {description.length < 100 && description}
+            {isDescVisible && description.length >= 100 ? description : shortenDescription(description)}
             <Button
               variant='ghost'
               onClick={handleToggleDescription}

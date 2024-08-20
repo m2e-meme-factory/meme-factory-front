@@ -40,6 +40,7 @@ export const useGetProjectFreelancers = (
     select: (data) => data,
     retry: false,
     refetchOnWindowFocus: 'always',
+    refetchInterval: 15000
   });
 
   return { ...query };

@@ -1,4 +1,4 @@
-import { Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
+import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
+import { ROUTES } from '../../shared/consts/routes';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const ProjectLogsPage = () => {
     projectId: projectId ?? '',
     userId: userId ?? '',
   });
-  const { data: projectResponse, isLoading: isProjecetLoading } = useGetProject(projectId);
+  const { data: projectResponse, isLoading: isProjectLoading } = useGetProject(projectId);
 
   const [newEventCreated, setNewEventCreated] = useState(false);
   const createEventMutation = useCreateEvent(setNewEventCreated);
@@ -100,10 +101,11 @@ const ProjectLogsPage = () => {
           padding: '10px',
         }}
       >
-        <IconButton onClick={() => navigate(-1)} size='3'>
+        <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
           <ArrowLeftIcon></ArrowLeftIcon>
         </IconButton>
-        <Heading ml='3'>Name Surname</Heading>
+        <Heading ml='3'>{currentProject?.title}</Heading>
+        <Button onClick={() => navigate(`/project/${projectId}`)}>To project page</Button>
       </Flex>
       <Flex m='4' direction='column' style={{ height: '73vh' }}>
         <ScrollArea scrollbars='vertical'>

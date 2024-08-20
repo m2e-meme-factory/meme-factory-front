@@ -43,8 +43,7 @@ const LogMessage: FC<MessageProps> = ({
           <Text align={side} size='1' color='gray'>
             {event.role === 'creator' ? creatorName : advertiserName}
           </Text>
-          <Text align={side}>Event description: {event.description}</Text>
-          {event.message && <Text align={side}>User message: {event.message}</Text>}
+          {event.message && <Text align={side}>{event.message}</Text>}
           {event.eventType === EventType.TASK_SUBMIT && currentUserRole === Role.ADVERTISER && (
             <RejectApproveSection
               taskId={event.details?.taskId}

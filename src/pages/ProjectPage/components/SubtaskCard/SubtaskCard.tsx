@@ -76,7 +76,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
                 userRole !== 'unconfirmedMember' &&
                 (userRole === 'guestCreator' ? (
                   <Tooltip content='Join the project to apply for the tasks'>
-                    <button className={proposeBtnClassname} onClick={handleSendProposalClick}>
+                    <button className={proposeBtnClassname} disabled={true} onClick={handleSendProposalClick}>
                       <Text>Send Proposal</Text>
                     </button>
                   </Tooltip>

@@ -48,34 +48,6 @@ const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, ta
   return (
     <>
       <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-        <Form.Field className='FormField' name='hour-price'>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Form.Label className='FormLabel'>Your Hourly Price</Form.Label>
-            <Form.Message className='FormMessage' match='valueMissing'>
-              Please provide a valid number
-            </Form.Message>
-            <Form.Message className='FormMessage' match='typeMismatch'>
-              Please provide a valid number
-            </Form.Message>
-          </div>
-          <Form.Control asChild>
-            <input className='Input' placeholder='0' type='number' required />
-          </Form.Control>
-        </Form.Field>
-        <Form.Field className='FormField' name='hours-estimated'>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Form.Label className='FormLabel'>Estimated Hours</Form.Label>
-            <Form.Message className='FormMessage' match='valueMissing'>
-              Please enter a valid amount of hours
-            </Form.Message>
-            <Form.Message className='FormMessage' match='typeMismatch'>
-              Please provide a valid number
-            </Form.Message>
-          </div>
-          <Form.Control asChild>
-            <input className='Input' placeholder='2' type='number' required />
-          </Form.Control>
-        </Form.Field>
         <Form.Field className='FormField' name='cover-letter'>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className='FormLabel'>Cover Letter</Form.Label>

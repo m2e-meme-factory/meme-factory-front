@@ -36,7 +36,8 @@ export const useGetProgress = (params: GetProgressByProjectIdParams) => {
     },
     select: (data) => data,
     retry: false,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: 'always',
+    refetchInterval: 5000,
   });
 
   return { ...query };

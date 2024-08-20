@@ -12,6 +12,7 @@ import ProtectedRoute from './shared/components/ProtectedRoute';
 import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPage';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
 import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage'; // Импорт компонента 404
 
 export const router = createBrowserRouter([
   {
@@ -50,10 +51,18 @@ export const router = createBrowserRouter([
         path: ROUTES.EDIT,
         element: <EditProjectPage />,
       },
+      {
+        path: '*', // Обработка всех неизвестных маршрутов
+        element: <NotFoundPage />, // Компонент страницы 404
+      },
     ],
   },
   {
     path: ROUTES.LOGS,
     element: <ProtectedRoute element={<ProjectLogsPage />} />,
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ]);

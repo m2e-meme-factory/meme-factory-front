@@ -8,6 +8,10 @@ declare module 'api' {
     email: string;
   }
 
+  export interface GetTxByUserParams {
+    userId: string;
+  }
+
   export interface CreateEventDto {
     projectId: number;
     userId: number;
@@ -191,6 +195,9 @@ declare module 'api' {
     isBaned: boolean;
     isVerified: boolean;
     createdAt: Date;
+    inviterRefCode?: string;
+    refCode?: string;
+    balance: string;
   }
 
   export interface GetProgressByProjectIdParams {

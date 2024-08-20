@@ -75,7 +75,6 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
               bannerUrl={project.bannerUrl}
               title={project.title}
               category={project.category}
-              freelancersCount={0}
               status={project.status}
             />
           ))}

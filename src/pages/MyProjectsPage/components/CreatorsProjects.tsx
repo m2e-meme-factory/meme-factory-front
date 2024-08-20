@@ -9,6 +9,7 @@ import Select, { MultiValue } from 'react-select';
 import { PROJECT_STATUSES } from '../../../shared/consts/project-statuses';
 import { Option } from '../../../@types/app';
 import { APPLICATION_STATUSES } from '../../../shared/consts/application-statuses';
+import MyProjectCardForCreator from './MyProjectCard/MyProjectCardForCreator';
 
 interface CreatorsProjectsProps {
   user: User;
@@ -105,14 +106,12 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
 
           <Flex direction='column' mt='3'>
             {myProjects.map((project, index) => (
-              <MyProjectCard
+              <MyProjectCardForCreator
                 key={index}
                 id={project.id}
                 bannerUrl={project.bannerUrl}
                 title={project.title}
                 category={project.category}
-                freelancersCount={0}
-                status={project.status}
               />
             ))}
           </Flex>

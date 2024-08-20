@@ -24,16 +24,10 @@ const StyledCard = styled(Card)`
   background-color: #121212;
 `;
 
-const MyProjectCard: FC<MyProjectCardProps> = ({
-  id,
-  title,
-  category,
-  bannerUrl,
-  status,
-}) => {
+const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl, status }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
-  const {data: freelancersResponse, isLoading} = useGetProjectFreelancers(id, 'accepted');
+  const { data: freelancersResponse, isLoading } = useGetProjectFreelancers(id, 'accepted');
   const [freelancers, setFreelancersCount] = useState(0);
 
   useEffect(() => {

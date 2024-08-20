@@ -110,7 +110,7 @@ const ProjectLogsPage = () => {
         }}
         justify='between'
       >
-        <Flex>
+        <Flex align='center'>
           <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
             <ArrowLeftIcon></ArrowLeftIcon>
           </IconButton>

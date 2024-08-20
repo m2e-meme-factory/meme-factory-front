@@ -24,7 +24,9 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
           <Text className='TextAccent'>Description:</Text>
           <Text className='Description'>
             {description.length < 100 && description}
-            {isDescVisible && description.length >= 100 ? description : shortenDescription(description)}
+            {isDescVisible && description.length >= 100
+              ? description
+              : shortenDescription(description)}
             <Button
               variant='ghost'
               onClick={handleToggleDescription}

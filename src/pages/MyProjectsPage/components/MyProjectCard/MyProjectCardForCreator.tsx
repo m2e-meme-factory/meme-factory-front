@@ -21,12 +21,7 @@ const StyledCard = styled(Card)`
   background-color: #121212;
 `;
 
-const MyProjectCardForCreator: FC<MyProjectCardProps> = ({
-                                                 id,
-                                                 title,
-                                                 category,
-                                                 bannerUrl,
-                                               }) => {
+const MyProjectCardForCreator: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
   const handleClick = () => {

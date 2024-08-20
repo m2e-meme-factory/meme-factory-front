@@ -20,22 +20,31 @@ import styles from './ProfilePage.module.css';
 import { Link } from 'react-router-dom';
 import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../shared/utils/redux/store';
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { RefDataResponse } from 'api';
+import { RefDataResponse, User } from 'api';
+import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
+import { setUser } from '../../shared/utils/redux/user/userSlice';
 
 export default function ProfilePage() {
-  const user = useSelector((state: RootState) => state.user.user);
-  const userId = user?.telegramId?.toString();
+  const dispatch = useDispatch();
+  const [userSt, setUserSt] = useState<User>();
+  const { data: userDataResponse, isLoading } = useAuthMe();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
+
+  useEffect(() => {
+    if (userDataResponse) {
+      setUserSt(userDataResponse.data);
+      dispatch(setUser(userDataResponse.data));
+    }
+  }, [userDataResponse]);
 
   const {
     data,
     isLoading: refLoading,
     error: refDataError,
     refetch: refetchRefData,
-  } = useGetRefData(userId);
+  } = useGetRefData(userSt?.telegramId);
 
   useEffect(() => {
     if (data) {
@@ -85,18 +94,18 @@ export default function ProfilePage() {
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>ID</DataList.Label>
                   <DataList.Value>
-                    <CopyableCode value={userId || ''} />
+                    <CopyableCode value={userSt?.id || ''} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Nickname</DataList.Label>
                   <DataList.Value>
-                    <CopyableCode value={`${user?.username}`} />
+                    <CopyableCode value={`${userSt?.username}`} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>{user?.role}</DataList.Value>
+                  <DataList.Value>{userSt?.role}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Grid>
@@ -108,7 +117,7 @@ export default function ProfilePage() {
                 <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
-                <Heading>${user?.balance ?? '0'}</Heading>
+                <Heading>${userSt?.balance ?? '0'}</Heading>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw

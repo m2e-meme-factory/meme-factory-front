@@ -45,9 +45,9 @@ const TransactionsHistoryPage = () => {
               {currentTransactions &&
                 currentTransactions.map((transaction) => (
                   <Table.Row>
-                    <Table.Cell>${transaction.id}</Table.Cell>
-                    <Table.Cell>User ${transaction.fromUserId}</Table.Cell>
-                    <Table.Cell>User ${transaction.toUserId}</Table.Cell>
+                    <Table.Cell>{transaction.id}</Table.Cell>
+                    <Table.Cell>User {transaction.fromUserId}</Table.Cell>
+                    <Table.Cell>User {transaction.toUserId}</Table.Cell>
                     <Table.Cell>{transaction.amount}</Table.Cell>
                     <Table.Cell>
                       <Button

@@ -53,7 +53,7 @@ const TransactionsHistoryPage = () => {
                       <Button
                         onClick={() =>
                           navigate(
-                            `/projects/${transaction.projectId}/history/${user?.role === Role.CREATOR ? transaction.toUserId : transaction.fromUserId}`
+                            `/projects/${transaction.projectId}/logs/${user?.role === Role.CREATOR ? transaction.toUserId : transaction.fromUserId}`
                           )
                         }
                       >

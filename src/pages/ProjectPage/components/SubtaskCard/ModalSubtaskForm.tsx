@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import './index.css';
-import { ProjectProgress } from '../../../../shared/consts/unresolved';
+import { ProjectProgress } from 'api';
 import { showErrorMessage } from '../../../../shared/utils/helpers/notify';
 import { useApplyTaskCompletion } from '../../../../shared/utils/api/hooks/task/useApplyTaskCompletion';
 
@@ -21,10 +21,6 @@ const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, ta
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
-    //todo: выяснить про hourPrice и hoursEstimated
-    // const hourPrice = parseFloat(formData.get('hour-price') as string);
-    // const hoursEstimated = parseFloat(formData.get('hours-estimated') as string);
     const coverLetter = formData.get('cover-letter') as string;
 
     setCoverLetter(coverLetter);

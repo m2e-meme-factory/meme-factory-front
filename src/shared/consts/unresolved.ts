@@ -10,4 +10,7 @@ export interface ProjectProgress {
   createdAt: Date;
   updatedAt?: Date;
   events: Event[];
+  appliedTasks: string[];
+  approvedTasks: string[];
+  rejectedTasks: string[];
 }

@@ -8,7 +8,7 @@ import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 import { UserRoleInProject } from '../../ProjectPage';
 import { useCreateEvent } from '../../../../shared/utils/api/hooks/event/useCreateEvent';
-import { ProjectProgress } from '../../../../shared/consts/unresolved';
+import { ProjectProgress } from 'api';
 
 interface TaskCardProps {
   id: string;
@@ -23,6 +23,9 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [eventCreated, setEventCreated] = useState(false);
+  const [isApplied, setApplied] = useState(false);
+  const [isApproved, setApproved] = useState(false);
+  const [isRejected, setRejected] = useState(false);
 
   const proposeBtnClassname =
     userRole === 'guestCreator' ? 'ProposalButtonDisabled' : 'ProposalButton';
@@ -73,7 +76,6 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
               <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
               {userRole !== 'projectOwner' &&
                 userRole !== 'guestAdvertiser' &&
-                userRole !== 'unconfirmedMember' &&
                 (userRole === 'guestCreator' ? (
                   <Tooltip content='Join the project to apply for the tasks'>
                     <button

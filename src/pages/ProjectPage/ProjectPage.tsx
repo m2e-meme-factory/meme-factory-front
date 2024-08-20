@@ -182,6 +182,12 @@ const ProjectPage = () => {
             </Button>
           )}
 
+          {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
+            <Button onClick={handleEditClick} disabled={true} my='2'>
+              Apply to earn
+            </Button>
+          )}
+
           {currentUserRole === 'guestCreator' && (
             <Dialog.Root>
               <Dialog.Trigger>

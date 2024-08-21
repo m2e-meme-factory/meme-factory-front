@@ -1,14 +1,13 @@
-import { Card, Flex, Text, Tooltip } from '@radix-ui/themes';
+import { Box, Card, Flex, Spinner, Text, Tooltip } from '@radix-ui/themes';
 import React, { FC, useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { CheckIcon, Cross1Icon, Cross2Icon } from '@radix-ui/react-icons';
-import './index.css';
 import { CheckOutlined, CloseOutlined, RocketOutlined } from '@ant-design/icons';
+import './index.css';
 import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 import { UserRoleInProject } from '../../ProjectPage';
 import { ProjectProgress } from 'api';
-import Loading from '../../../../shared/components/Loading';
+import { Cross1Icon } from '@radix-ui/react-icons';
 
 interface TaskCardProps {
   id: string;
@@ -36,7 +35,9 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
   }, [progress, id]);
 
   const proposeBtnClassname =
-    userRole === 'guestCreator' ? 'ProposalButtonDisabled' : 'ProposalButton';
+    userRole === 'guestCreator' || userRole === 'guestAdvertiser'
+      ? 'ProposalButton'
+      : 'ProposalButtonDisabled';
 
   const handleSendProposalClick = () => {
     setIsFormVisible(!isFormVisible);
@@ -51,8 +52,35 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
     setModalVisible(true);
   };
 
-  if (!progress) {
-    return <Loading/>;
+  if (
+    !progress &&
+    userRole !== 'guestAdvertiser' &&
+    userRole !== 'guestCreator' &&
+    userRole !== 'projectOwner'
+  ) {
+    return (
+      <Card className='SubtaskCard' mb='3' onClick={handleDialogOpen}>
+        <Flex justify='between' align='center'>
+          <Flex>
+            <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+            <Flex direction='column'>
+              <Box
+                mb='2'
+                width='180px'
+                height='2vh'
+                style={{ backgroundColor: 'gray', borderRadius: '4px' }}
+              />
+              <Box
+                width='64px'
+                height='2vh'
+                style={{ backgroundColor: 'gray', borderRadius: '4px' }}
+              />
+            </Flex>
+          </Flex>
+          <Spinner mr='3' />
+        </Flex>
+      </Card>
+    );
   }
 
   return (
@@ -83,32 +111,44 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
             <span>Subtask: {title}</span>
           </Dialog.Title>
           {isFormVisible ? (
-            <ModalSubtaskForm taskId={id} progress={progress} closeDialog={handleDialogClose} setIsApplied={setApplied} />
+            <ModalSubtaskForm
+              taskId={id}
+              progress={progress}
+              closeDialog={handleDialogClose}
+              setIsApplied={setApplied}
+            />
           ) : (
             <>
               <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
               {userRole !== 'projectOwner' &&
                 userRole !== 'guestAdvertiser' &&
-                (userRole === 'guestCreator' ? (
-                  <Tooltip content='Join the project to apply for the tasks'>
-                    <button
-                      className={proposeBtnClassname}
-                      disabled={true}
-                      onClick={handleSendProposalClick}
-                    >
-                      <Text>Send Proposal</Text>
-                    </button>
-                  </Tooltip>
-                ) : (
-                  <button className={(isApplied || isApproved) ? 'ProposalButtonDisabled' : 'ProposalButton'} disabled={isApplied || isApproved} onClick={handleSendProposalClick}>
+                userRole !== 'guestCreator' && (
+                  <button
+                    className={
+                      isApplied || isApproved ? 'ProposalButtonDisabled' : 'ProposalButton'
+                    }
+                    disabled={isApplied || isApproved}
+                    onClick={handleSendProposalClick}
+                  >
                     <Text>Send Proposal</Text>
                   </button>
-                ))}
+                )}
+              {(userRole === 'guestAdvertiser' || userRole === 'guestCreator') && (
+                <Tooltip content='Join the project to apply for the tasks'>
+                  <button
+                    className='ProposalButtonDisabled'
+                    disabled={true}
+                    onClick={handleSendProposalClick}
+                  >
+                    <Text>Send Proposal</Text>
+                  </button>
+                </Tooltip>
+              )}
             </>
           )}
           <Dialog.Close asChild>
             <button onClick={handleDialogClose} className='IconButton' aria-label='Close'>
-              <Cross2Icon />
+              <Cross1Icon />
             </button>
           </Dialog.Close>
         </Dialog.Content>

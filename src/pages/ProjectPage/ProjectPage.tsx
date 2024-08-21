@@ -96,7 +96,7 @@ const ProjectPage = () => {
     } else {
       if (currentUserRole !== 'projectOwner' && currentUserRole !== 'guestAdvertiser') {
         if (currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') {
-          return; // Role is already set
+          return;
         }
         setCurrentUserRole('guestCreator');
       }
@@ -155,7 +155,7 @@ const ProjectPage = () => {
       if (applyResponse?.status === 201) {
         setCurrentUserRole('unconfirmedMember');
       } else {
-        showErrorMessage('Error occurred while creating an application. Please try again!');
+        //showErrorMessage('Error occurred while creating an application. Please try again!');
       }
     }
   };

@@ -124,11 +124,7 @@ export const applyForProject = (
 ): Promise<AxiosResponse<ProjectProgress>> => {
   const newConfig = addAuthorizationHeader(config.config);
   const message = `Application sent. User message: ${config.params.message}`;
-  return api.post(
-    `/projects/${config.params.projectId}/apply`,
-    { message: config.params.message },
-    newConfig
-  );
+  return api.post(`/projects/${config.params.projectId}/apply`, { message: message }, newConfig);
 };
 
 export const getEventsByProgressId = (

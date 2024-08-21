@@ -17,9 +17,8 @@ import { ROUTES } from '../../shared/consts/routes';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.user);
   const location = useLocation();
-
+  const user = useSelector((state: RootState) => state.user.user);
   const { projectId, userId } = useParams();
   const { data, isLoading, refetch } = useGetProgress({
     projectId: projectId ?? '',
@@ -34,8 +33,11 @@ const ProjectLogsPage = () => {
   const [userProgress, setUserProgress] = useState<ProjectProgress>();
   const [message, setMessage] = useState<string>('');
   const [events, setEvents] = useState<Event[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  console.log(location);
 
   useEffect(() => {
     if (projectResponse) {
@@ -45,30 +47,35 @@ const ProjectLogsPage = () => {
 
   useEffect(() => {
     if (data) {
-      setUserProgress(data.data[0]);
-      if (data.data[0]?.events) {
-        setEvents(data.data[0].events);
+      const progress = data.data[0];
+      if (progress?.events?.length) {
+        setUserProgress(progress);
+        setEvents(progress.events);
       } else {
-        showErrorMessage('Error. No events found');
-        navigate(-1);
+        setError('Error. No events found');
       }
     }
   }, [data]);
 
   useEffect(() => {
-    const refetchEvents = async () => {
-      const response = await refetch();
-      if (response.data?.data[0]) {
-        setUserProgress(response.data?.data[0]);
-        setEvents(response.data?.data[0].events);
-        setNewEventCreated(false);
-      }
-    };
-
     if (newEventCreated) {
-      refetchEvents();
+      refetch().then((response) => {
+        const progress = response.data?.data[0];
+        if (progress) {
+          setUserProgress(progress);
+          setEvents(progress.events);
+          setNewEventCreated(false);
+        }
+      });
     }
   }, [newEventCreated, refetch]);
+
+  useEffect(() => {
+    if (error) {
+      showErrorMessage(error);
+      navigate(-1);
+    }
+  }, [error, navigate]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -77,29 +84,28 @@ const ProjectLogsPage = () => {
   }, [events]);
 
   const handleMessageSend = () => {
-    let newEvent: CreateEventDto;
     if (userProgress && user) {
-      newEvent = {
+      const newEvent: CreateEventDto = {
         projectId: userProgress.projectId,
         userId: userProgress.userId,
-        role: user?.role,
+        role: user.role,
         eventType: EventType.USER_MESSAGE,
-        progressProjectId: userProgress?.id,
-        message: message,
+        progressProjectId: userProgress.id,
+        message,
       };
       createEventMutation.mutate({ params: newEvent });
+      setMessage('');
+      setNewEventCreated(true);
     } else {
       showErrorMessage('Something went wrong!');
     }
-    setMessage('');
-    setNewEventCreated(false);
   };
 
   const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);
   };
 
-  if (isLoading) {
+  if (isLoading || isProjectLoading) {
     return <Loading />;
   }
 
@@ -118,7 +124,7 @@ const ProjectLogsPage = () => {
       >
         <Flex align='center'>
           <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
-            <ArrowLeftIcon></ArrowLeftIcon>
+            <ArrowLeftIcon />
           </IconButton>
           <Heading ml='3'>{currentProject?.title}</Heading>
         </Flex>
@@ -126,22 +132,22 @@ const ProjectLogsPage = () => {
       </Flex>
       <Flex m='4' direction='column' style={{ height: '73vh' }}>
         <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
-          {events.length > 0 &&
-            events.map((event) => (
-              <LogMessage
-                key={event.id} // Не забудьте добавить ключ для списка
-                currentUserRole={user?.role ?? Role.CREATOR}
-                event={event}
-                messageType={getEventType(event.eventType)}
-                setNewEventCreated={setNewEventCreated}
-                creatorName={
-                  userProgress?.user.username
-                    ? userProgress?.user.username
-                    : (`User ${userProgress?.user.telegramId}` ?? 'User')
-                }
-                advertiserName={currentProject ? currentProject.title : 'Project host'}
-              />
-            ))}
+          {events.map((event) => (
+            <LogMessage
+              key={event.id}
+              currentUserRole={user?.role ?? Role.CREATOR}
+              event={event}
+              messageType={getEventType(event.eventType)}
+              setNewEventCreated={setNewEventCreated}
+              creatorName={
+                userProgress?.user.username
+                  ? userProgress?.user.username
+                  : `User ${userProgress?.user.telegramId}`
+              }
+              advertiserName={currentProject ? currentProject.title : 'Project host'}
+              allEvents={events} // Передаем все события
+            />
+          ))}
         </ScrollArea>
       </Flex>
       <Flex

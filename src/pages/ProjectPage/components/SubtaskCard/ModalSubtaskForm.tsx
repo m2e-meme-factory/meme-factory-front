@@ -10,10 +10,15 @@ interface ModalSubtaskFormProps {
   closeDialog: () => void;
   progress: ProjectProgress | undefined;
   taskId: string;
-  setIsApplied: Dispatch<SetStateAction<boolean>>
+  setIsApplied: Dispatch<SetStateAction<boolean>>;
 }
 
-const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, taskId, setIsApplied }) => {
+const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({
+  closeDialog,
+  progress,
+  taskId,
+  setIsApplied,
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [coverLetter, setCoverLetter] = useState<string>();
   const applyTaskCompletionMutation = useApplyTaskCompletion();

@@ -14,14 +14,23 @@ import { useDispatch } from 'react-redux';
 import Loading from '../../shared/components/Loading';
 import FreelancersStats from './components/FreelancersStats';
 import PendingApplications from './components/PendingApplications';
-import { useGetProjectFreelancers } from '../../shared/utils/api/hooks/project/useGetProjectFreelancers';
+import { useGetTotalSpending } from '../../shared/utils/api/hooks/project/useGetTotalSpending';
 
 const ProjectDetailsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading } = useGetProject(id);
+  const { data: totalSpendingsResponse, isLoading: totalSpendingsLoading } =
+    useGetTotalSpending(id);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [totalSpendings, setTotalSpendings] = useState<number>();
+
+  useEffect(() => {
+    if (totalSpendingsResponse) {
+      setTotalSpendings(totalSpendingsResponse.data);
+    }
+  }, [totalSpendingsResponse]);
 
   useEffect(() => {
     if (currentProject) {
@@ -54,7 +63,7 @@ const ProjectDetailsPage = () => {
             <Text mb='2' color='gray'>
               Total spendings
             </Text>
-            <Heading>$26 412.03</Heading>
+            {totalSpendingsLoading ? <Loading /> : <Heading>${totalSpendings}</Heading>}
           </Flex>
           <Button>
             <ChevronRightIcon /> Transactions

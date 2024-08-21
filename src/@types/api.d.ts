@@ -233,6 +233,10 @@ declare module 'api' {
     status: 'accepted' | 'pending' | 'rejected';
   }
 
+  export interface GetTotalSpendingsParams {
+    projectId: string;
+  }
+
   export interface UserWithRef {
     id: number;
     telegramId: string;

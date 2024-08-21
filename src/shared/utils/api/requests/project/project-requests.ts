@@ -10,6 +10,7 @@ import {
   GetProgressByProjectIdParams,
   GetProjectFreelancersParams,
   GetPublicProjectsParams,
+  GetTotalSpendingsParams,
   GetUserProgressesParams,
   PaginatedProjects,
   ProgressWithProjectResponse,
@@ -34,6 +35,7 @@ export type AcceptApplicationForProjectConfig = RequestConfig<AcceptApplicationF
 export type RejectApplicationForProjectConfig = RequestConfig<RejectApplicationForProjectParams>;
 export type GetUserProgressesConfig = RequestConfig<GetUserProgressesParams>;
 export type GetProjectFreelancersConfig = RequestConfig<GetProjectFreelancersParams>;
+export type GetTotalSpendingsConfig = RequestConfig<GetTotalSpendingsParams>;
 
 export const addAuthorizationHeader = (config: any) => {
   const token = localStorage.getItem('token');
@@ -171,4 +173,11 @@ export const getProjectFreelancers = (
     `/projects/${config.params.projectId}/freelancers?status=${config.params.status}`,
     newConfig
   );
+};
+
+export const getTotalSpendings = (
+  config: GetTotalSpendingsConfig
+): Promise<AxiosResponse<number>> => {
+  const newConfig = addAuthorizationHeader(config.config);
+  return api.get(`/projects/${config.params.projectId}/cost`, newConfig);
 };

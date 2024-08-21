@@ -129,6 +129,8 @@ declare module 'api' {
     toUserId: number;
     amount: number;
     createdAt: Date;
+    toUser: User;
+    fromUser: User;
   }
 
   enum DisputeStatus {

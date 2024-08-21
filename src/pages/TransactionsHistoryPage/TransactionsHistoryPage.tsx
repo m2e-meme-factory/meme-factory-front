@@ -6,7 +6,6 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { Transaction } from 'api';
 import { useNavigate } from 'react-router-dom';
-import { Role } from '../../shared/consts/userRoles';
 
 const TransactionsHistoryPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -46,14 +45,18 @@ const TransactionsHistoryPage = () => {
                 currentTransactions.map((transaction) => (
                   <Table.Row>
                     <Table.Cell>{transaction.id}</Table.Cell>
-                    <Table.Cell>User {transaction.fromUserId}</Table.Cell>
-                    <Table.Cell>User {transaction.toUserId}</Table.Cell>
+                    <Table.Cell>
+                      {transaction.fromUser.username ?? '—'} ({transaction.fromUser.telegramId})
+                    </Table.Cell>
+                    <Table.Cell>
+                      {transaction.toUser.username ?? '—'} ({transaction.toUser.telegramId})
+                    </Table.Cell>
                     <Table.Cell>{transaction.amount}</Table.Cell>
                     <Table.Cell>
                       <Button
                         onClick={() =>
                           navigate(
-                            `/projects/${transaction.projectId}/logs/${user?.role === Role.CREATOR ? transaction.toUserId : transaction.fromUserId}`
+                            `/projects/${transaction.projectId}/logs/${user?.id === transaction.fromUserId.toString() ? transaction.toUserId : transaction.fromUserId}`
                           )
                         }
                       >

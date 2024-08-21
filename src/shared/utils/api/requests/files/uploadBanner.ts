@@ -7,7 +7,7 @@ export const uploadFiles = async (files: File[]): Promise<[{ name: string; url: 
   });
 
   const response = await axios.post<any>(
-    'https://api.digital-boost.site/files?folder=projects',
+    'https://api.meme-factory.site/files?folder=projects',
     formData,
     {
       headers: {

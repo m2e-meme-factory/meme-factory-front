@@ -20,26 +20,34 @@ import styles from './ProfilePage.module.css';
 import { Link } from 'react-router-dom';
 import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../shared/utils/redux/store';
-import { useTelegram } from '../../shared/hooks/useTelegram';
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Role } from '../../shared/consts/userRoles';
-import { RefDataResponse } from 'api';
+import { RefDataResponse, User } from 'api';
+import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
+import { setUser } from '../../shared/utils/redux/user/userSlice';
+import { useSearchParams } from 'react-router-dom';
 
 export default function ProfilePage() {
-  const user = useSelector((state: RootState) => state.user.user);
-  const userId = user?.telegramId?.toString();
-  const userRole = user ? user.role : Role.CREATOR;
-  const { webApp } = useTelegram();
+  const dispatch = useDispatch();
+  const [userSt, setUserSt] = useState<User>();
+  const { data: userDataResponse, isLoading } = useAuthMe();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') || 'account';
+
+  useEffect(() => {
+    if (userDataResponse) {
+      setUserSt(userDataResponse.data);
+      dispatch(setUser(userDataResponse.data));
+    }
+  }, [userDataResponse]);
 
   const {
     data,
     isLoading: refLoading,
     error: refDataError,
     refetch: refetchRefData,
-  } = useGetRefData(userId);
+  } = useGetRefData(userSt?.telegramId);
 
   useEffect(() => {
     if (data) {
@@ -58,12 +66,11 @@ export default function ProfilePage() {
   const refCount = refData?.count;
 
   return (
-    <Tabs.Root defaultValue='account'>
+    <Tabs.Root defaultValue={defaultTab}>
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        {userRole === Role.ADVERTISER && <Tabs.Trigger value='dashboard'>Dashboard</Tabs.Trigger>}
-        {userRole === Role.ADVERTISER && <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>}
+        <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>
@@ -90,18 +97,18 @@ export default function ProfilePage() {
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>ID</DataList.Label>
                   <DataList.Value>
-                    <CopyableCode value={userId || ''} />
+                    <CopyableCode value={userSt?.id || ''} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Nickname</DataList.Label>
                   <DataList.Value>
-                    <CopyableCode value={`${user?.username}`} />
+                    <CopyableCode value={`${userSt?.username}`} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>{user?.role}</DataList.Value>
+                  <DataList.Value>{userSt?.role}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Grid>
@@ -113,7 +120,7 @@ export default function ProfilePage() {
                 <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
-                <Heading>$26 412.03</Heading>
+                <Heading>${userSt?.balance ?? '0'}</Heading>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw
@@ -139,17 +146,6 @@ export default function ProfilePage() {
                 </DataList.Item>
               </DataList.Root>
             </Grid>
-          </Card>
-        </Tabs.Content>
-
-        <Tabs.Content value='dashboard'>
-          <Card m='4'>
-            <Flex justify='between'>
-              <Heading>Dashboard</Heading>
-              <Link to='/create-project'>
-                <Button>Create Project</Button>
-              </Link>
-            </Flex>
           </Card>
         </Tabs.Content>
 

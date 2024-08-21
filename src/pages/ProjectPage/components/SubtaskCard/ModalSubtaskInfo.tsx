@@ -23,14 +23,19 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
         <Flex direction='column'>
           <Text className='TextAccent'>Description:</Text>
           <Text className='Description'>
-            {isDescVisible ? description : shortenDescription(description)}
-            <Button
-              variant='ghost'
-              onClick={handleToggleDescription}
-              style={{ marginLeft: '8px', color: '#fecf0a' }}
-            >
-              {isDescVisible ? 'View Less' : 'View More'}
-            </Button>
+            {description.length < 100 && description}
+            {isDescVisible && description.length >= 100
+              ? description
+              : shortenDescription(description)}
+            {description.length >= 100 && (
+              <Button
+                variant='ghost'
+                onClick={handleToggleDescription}
+                style={{ marginLeft: '8px', color: '#fecf0a' }}
+              >
+                {isDescVisible ? 'View Less' : 'View More'}
+              </Button>
+            )}
           </Text>
           <Text className='Price'>
             <span className='TextAccent'>Price:</span> {price}$

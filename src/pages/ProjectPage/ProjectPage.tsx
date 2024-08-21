@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Badge, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Heading,
+  Text,
+  Dialog,
+  TextArea,
+} from '@radix-ui/themes';
 import {
   DollarOutlined,
   PushpinOutlined,
@@ -18,42 +28,92 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
-import { Project } from 'api';
-import fallbackImg from '../../shared/imgs/fallback_img.jpg';
+import { Project, ProjectProgress } from 'api';
 import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
+import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
+import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
+import { FALLBACK_BANNER_URL } from '../../shared/consts/fallbackBanner';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import { Role } from '../../shared/consts/userRoles';
+
+export type UserRoleInProject =
+  | 'projectOwner'
+  | 'guestAdvertiser'
+  | 'guestCreator'
+  | 'projectMember'
+  | 'unconfirmedMember';
 
 const ProjectPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { id } = useParams();
-  const { data, isLoading } = useGetProject(id);
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [isUserCreator, setIsUserCreator] = useState(false);
+  const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
   const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isApplyLoading, setIsApplyLoading] = useState(false);
+  const [applicationMessage, setApplicationMessage] = useState<string>('');
+  const [progress, setProgress] = useState<ProjectProgress>();
+
   const user = useSelector((state: RootState) => state.user.user);
 
-  useEffect(() => {
-    if (currentProject && user) {
-      setIsUserCreator(currentProject.authorId == user.id);
-    }
-  }, [currentProject, user]);
+  const { data: projectInfoResponse, isLoading } = useGetProject(id);
+  const { data: progressesResponse, isLoading: isProjectProgressLoading } = useGetProgress({
+    projectId: id ?? '',
+    userId: user?.id,
+  });
+  const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
 
   useEffect(() => {
-    if (currentProject) {
-      dispatch(setProject(currentProject));
+    if (projectInfoResponse) {
+      setCurrentProject(projectInfoResponse.data);
+      dispatch(setProject(projectInfoResponse.data));
     }
-  }, [currentProject]);
+  }, [projectInfoResponse, dispatch]);
 
   useEffect(() => {
-    if (data) {
-      setCurrentProject(data.data);
+    if (progressesResponse && progressesResponse.data.length === 1) {
+      const userProgress = progressesResponse.data[0];
+      setProgress(userProgress);
+      if (userProgress) {
+        setCurrentUserRoleFromProgress(userProgress.status);
+      }
     }
-  }, [data]);
+  }, [progressesResponse]);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (user && currentProject) {
+      determineUserRole(user, currentProject);
+    }
+  }, [user, currentProject]);
+
+  const determineUserRole = (user: RootState['user']['user'] | undefined, project: Project) => {
+    if (!user) return;
+
+    if (user.role === Role.ADVERTISER) {
+      setCurrentUserRole(user.id === project.authorId ? 'projectOwner' : 'guestAdvertiser');
+    } else {
+      if (currentUserRole !== 'projectOwner' && currentUserRole !== 'guestAdvertiser') {
+        if (currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') {
+          return;
+        }
+        setCurrentUserRole('guestCreator');
+      }
+    }
+  };
+
+  const setCurrentUserRoleFromProgress = (status: string) => {
+    if (status === 'accepted') {
+      setCurrentUserRole('projectMember');
+    } else if (status === 'pending') {
+      setCurrentUserRole('unconfirmedMember');
+    } else {
+      setCurrentUserRole('guestCreator');
+    }
+  };
+
+  if (isLoading || isProjectProgressLoading) {
     return <Loading />;
   }
 
@@ -76,9 +136,37 @@ const ProjectPage = () => {
     }
   };
 
+  const handleApplyClick = () => {
+    setIsApplyLoading(true);
+    if (currentProject && user) {
+      if (applicationMessage.trim() === '') {
+        showErrorMessage('Application message cannot be empty or just whitespace.');
+        setIsApplyLoading(false);
+        return;
+      }
+
+      applyMutation({
+        params: {
+          projectId: currentProject.id,
+          message: applicationMessage,
+        },
+      });
+
+      if (applyResponse?.status === 201) {
+        setCurrentUserRole('unconfirmedMember');
+      } else {
+        //showErrorMessage('Error occurred while creating an application. Please try again!');
+      }
+    }
+  };
+
+  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setApplicationMessage(event.target.value);
+  };
+
   const bannerLink = currentProject?.bannerUrl
     ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
-    : fallbackImg;
+    : FALLBACK_BANNER_URL;
 
   return (
     <Flex direction='column'>
@@ -87,10 +175,51 @@ const ProjectPage = () => {
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Flex align='center' justify='between'>
-            <Heading weight='medium'>{currentProject?.title}</Heading>
-            {isUserCreator && <Button onClick={handleEditClick}>Edit project</Button>}
-          </Flex>
+          <Heading weight='medium'>{currentProject?.title}</Heading>
+          {currentUserRole === 'projectOwner' && (
+            <Button onClick={handleEditClick} my='2'>
+              Edit project
+            </Button>
+          )}
+
+          {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
+            <Button onClick={handleEditClick} disabled={true} my='2'>
+              Apply to earn
+            </Button>
+          )}
+
+          {currentUserRole === 'guestCreator' && (
+            <Dialog.Root>
+              <Dialog.Trigger>
+                <Button loading={isApplyLoading} my='2'>
+                  Apply to earn
+                </Button>
+              </Dialog.Trigger>
+
+              <Dialog.Content maxWidth='450px'>
+                <Dialog.Title>Apply for the project</Dialog.Title>
+
+                <Flex direction='column'>
+                  <TextArea
+                    style={{ height: '20vh' }}
+                    size='2'
+                    placeholder='I have one million subscribers on my Youtube channel'
+                    value={applicationMessage}
+                    onChange={handleTextAreaChange}
+                  />
+                </Flex>
+
+                <Flex gap='3' mt='4' justify='end'>
+                  <Dialog.Close>
+                    <Button variant='soft' color='gray'>
+                      Cancel
+                    </Button>
+                  </Dialog.Close>
+                  <Button onClick={handleApplyClick}>Apply</Button>
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
+          )}
           <Text color='yellow' weight='medium' mb='5'>
             Category: {currentProject?.category}
           </Text>
@@ -109,12 +238,6 @@ const ProjectPage = () => {
                 ))}
             </Text>
           </Flex>
-          <Flex mb='5'>
-            <DollarOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-            <Text weight='medium' size='5'>
-              Price: 1000$
-            </Text>
-          </Flex>
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='2'>
               <TeamOutlined style={{ color: 'yellow', marginRight: '8px' }} />
@@ -124,8 +247,7 @@ const ProjectPage = () => {
             </Flex>
             <Card>
               <Flex align='center'>
-                <Avatar fallback={<img src={avatarFallback} alt='fallback' />} />
-                <Text weight='medium' size='6' ml='3'>
+                <Text weight='medium' size='6'>
                   Meme Factory
                 </Text>
               </Flex>
@@ -146,6 +268,8 @@ const ProjectPage = () => {
                   description={subtask.task.description}
                   price={subtask.task.price}
                   title={subtask.task.title}
+                  progress={progress}
+                  userRole={currentUserRole || 'guestCreator'}
                 />
               ))}
           </Flex>

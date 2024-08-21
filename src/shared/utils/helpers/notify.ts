@@ -48,8 +48,8 @@ export const showToastWithPromise = async ({
     callback(),
     {
       loading: process,
-      success: <b>{success}</b>,
-      error: <b>{error}</b>,
+      success: success,
+      error: error,
     },
     {
       style: {

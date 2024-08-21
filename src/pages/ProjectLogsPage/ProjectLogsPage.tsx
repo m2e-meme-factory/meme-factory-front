@@ -1,22 +1,113 @@
-import {
-  Avatar,
-  Box,
-  Callout,
-  Card,
-  Flex,
-  Heading,
-  IconButton,
-  Text,
-  TextArea,
-} from '@radix-ui/themes';
-import React from 'react';
-import { ArrowLeftIcon, InfoCircledIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
+import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
+import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
+import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
+import { useCreateEvent } from '../../shared/utils/api/hooks/event/useCreateEvent';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
+import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
+import { ROUTES } from '../../shared/consts/routes';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const user = useSelector((state: RootState) => state.user.user);
+  const { projectId, userId } = useParams();
+  const { data, isLoading, refetch } = useGetProgress({
+    projectId: projectId ?? '',
+    userId: userId ?? '',
+  });
+  const { data: projectResponse, isLoading: isProjectLoading } = useGetProject(projectId);
+
+  const [newEventCreated, setNewEventCreated] = useState(false);
+  const createEventMutation = useCreateEvent(setNewEventCreated);
+
+  const [currentProject, setCurrentProject] = useState<Project>();
+  const [userProgress, setUserProgress] = useState<ProjectProgress>();
+  const [message, setMessage] = useState<string>('');
+  const [events, setEvents] = useState<Event[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  console.log(location);
+
+  useEffect(() => {
+    if (projectResponse) {
+      setCurrentProject(projectResponse.data);
+    }
+  }, [projectResponse]);
+
+  useEffect(() => {
+    if (data) {
+      const progress = data.data[0];
+      if (progress?.events?.length) {
+        setUserProgress(progress);
+        setEvents(progress.events);
+      } else {
+        setError('Error. No events found');
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (newEventCreated) {
+      refetch().then((response) => {
+        const progress = response.data?.data[0];
+        if (progress) {
+          setUserProgress(progress);
+          setEvents(progress.events);
+          setNewEventCreated(false);
+        }
+      });
+    }
+  }, [newEventCreated, refetch]);
+
+  useEffect(() => {
+    if (error) {
+      showErrorMessage(error);
+      navigate(-1);
+    }
+  }, [error, navigate]);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    }
+  }, [events]);
+
+  const handleMessageSend = () => {
+    if (userProgress && user) {
+      const newEvent: CreateEventDto = {
+        projectId: userProgress.projectId,
+        userId: userProgress.userId,
+        role: user.role,
+        eventType: EventType.USER_MESSAGE,
+        progressProjectId: userProgress.id,
+        message,
+      };
+      createEventMutation.mutate({ params: newEvent });
+      setMessage('');
+      setNewEventCreated(true);
+    } else {
+      showErrorMessage('Something went wrong!');
+    }
+  };
+
+  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(event.target.value);
+  };
+
+  if (isLoading || isProjectLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -29,61 +120,35 @@ const ProjectLogsPage = () => {
           backgroundColor: '#121212',
           padding: '10px',
         }}
+        justify='between'
       >
-        <IconButton onClick={() => navigate(-1)} size='3'>
-          <ArrowLeftIcon></ArrowLeftIcon>
-        </IconButton>
-        <Heading ml='3'>Name Surname</Heading>
+        <Flex align='center'>
+          <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
+            <ArrowLeftIcon />
+          </IconButton>
+          <Heading ml='3'>{currentProject?.title}</Heading>
+        </Flex>
+        <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
       </Flex>
-      <Flex m='4' direction='column'>
-        <LogMessage
-          type='success'
-          message='Маленькое сообщение'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='failure'
-          message='Сообщение чуть-чуть побольше'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='info'
-          message='Вот это уже достойное сообщение, такое можно и прочитать'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='message'
-          message='Капец какое большое сообщение, зачем такие большие сообщения писать, пока дочитаешь состаришься блин'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='success'
-          message='Маленькое сообщение'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='failure'
-          message='Сообщение чуть-чуть побольше'
-          role={Role.CREATOR}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='info'
-          message='Вот это уже достойное сообщение, такое можно и прочитать'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
-        <LogMessage
-          type='message'
-          message='Капец какое большое сообщение, зачем такие большие сообщения писать, пока дочитаешь состаришься блин'
-          role={Role.ADVERTISER}
-          userId='1'
-        ></LogMessage>
+      <Flex m='4' direction='column' style={{ height: '73vh' }}>
+        <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
+          {events.map((event) => (
+            <LogMessage
+              key={event.id}
+              currentUserRole={user?.role ?? Role.CREATOR}
+              event={event}
+              messageType={getEventType(event.eventType)}
+              setNewEventCreated={setNewEventCreated}
+              creatorName={
+                userProgress?.user.username
+                  ? userProgress?.user.username
+                  : `User ${userProgress?.user.telegramId}`
+              }
+              advertiserName={currentProject ? currentProject.title : 'Project host'}
+              allEvents={events} // Передаем все события
+            />
+          ))}
+        </ScrollArea>
       </Flex>
       <Flex
         align='center'
@@ -96,8 +161,13 @@ const ProjectLogsPage = () => {
         }}
       >
         <Flex width='100%' justify='between' align='center'>
-          <TextArea placeholder='Send a message…' style={{ width: '80vw', height: '8vh' }} />
-          <IconButton size='4'>
+          <TextArea
+            placeholder='Send a message…'
+            onChange={handleMessageChange}
+            value={message}
+            style={{ width: '80vw', height: '8vh' }}
+          />
+          <IconButton size='4' onClick={handleMessageSend}>
             <PaperPlaneIcon />
           </IconButton>
         </Flex>

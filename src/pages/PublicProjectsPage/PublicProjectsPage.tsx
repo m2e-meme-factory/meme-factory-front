@@ -22,6 +22,8 @@ const BlockObserver = styled.div`
 `;
 
 const PublicProjectsPage = () => {
+  const loadedPages = useRef(new Set<number>());
+
   const [tempTags, setTempTags] = useState<string[]>([]);
   const [tempCategory, setTempCategory] = useState<string | null>(null);
 
@@ -50,14 +52,18 @@ const PublicProjectsPage = () => {
   });
 
   useEffect(() => {
-    if (data) {
+    if (data && !loadedPages.current.has(currentPage)) {
       if (data.data.projects.length > 0) {
-        if (previousTags.current !== tags || previousCategory.current !== category) {
+        if (
+          JSON.stringify(previousTags.current) !== JSON.stringify(tags) ||
+          previousCategory.current !== category
+        ) {
           setProjects(data.data.projects);
         } else {
           setProjects((prevProjects) => [...prevProjects, ...data.data.projects]);
         }
 
+        loadedPages.current.add(currentPage);
         previousTags.current = tags;
         previousCategory.current = category;
         setIsEnd(false);
@@ -87,6 +93,7 @@ const PublicProjectsPage = () => {
     setTags(tempTags);
     setCategory(tempCategory);
     setCurrentPage(1);
+    loadedPages.current.clear();
   };
 
   return (
@@ -108,6 +115,8 @@ const PublicProjectsPage = () => {
             options={CATEGORIES}
             styles={CUSTOM_SELECT_STYLES_SINGLE}
             isMulti={false}
+            isSearchable={false}
+            isClearable={true}
           />
         </Flex>
         <Flex direction='column'>
@@ -122,6 +131,8 @@ const PublicProjectsPage = () => {
             isMulti
             options={TAGS}
             styles={CUSTOM_SELECT_STYLES_MULTI}
+            isSearchable={false}
+            isClearable={true}
           />
         </Flex>
         <Button mt='3' onClick={handleFindButtonClick}>

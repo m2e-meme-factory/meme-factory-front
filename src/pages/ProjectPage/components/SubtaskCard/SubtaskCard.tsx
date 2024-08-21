@@ -1,22 +1,43 @@
-import { Button, Card, Flex, Text } from '@radix-ui/themes';
-import React, { FC, useState } from 'react';
+import { Box, Card, Flex, Spinner, Text, Tooltip } from '@radix-ui/themes';
+import React, { FC, useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { CheckOutlined, CloseOutlined, RocketOutlined } from '@ant-design/icons';
 import './index.css';
-import { RocketOutlined } from '@ant-design/icons';
 import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
+import { UserRoleInProject } from '../../ProjectPage';
+import { ProjectProgress } from 'api';
+import { Cross1Icon } from '@radix-ui/react-icons';
 
 interface TaskCardProps {
   id: string;
   title: string;
   description: string;
   price: number;
+  userRole: UserRoleInProject;
+  progress: ProjectProgress | undefined;
 }
 
-const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
+const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRole, progress }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isApplied, setApplied] = useState(false);
+  const [isApproved, setApproved] = useState(false);
+  const [isRejected, setRejected] = useState(false);
+
+  useEffect(() => {
+    if (progress) {
+      const taskId = Number.parseInt(id);
+      setApplied(progress.appliedTasks.includes(taskId));
+      setApproved(progress.approvedTasks.includes(taskId));
+      setRejected(progress.rejectedTasks.includes(taskId));
+    }
+  }, [progress, id]);
+
+  const proposeBtnClassname =
+    userRole === 'guestCreator' || userRole === 'guestAdvertiser'
+      ? 'ProposalButton'
+      : 'ProposalButtonDisabled';
 
   const handleSendProposalClick = () => {
     setIsFormVisible(!isFormVisible);
@@ -31,20 +52,55 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
     setModalVisible(true);
   };
 
+  if (
+    !progress &&
+    userRole !== 'guestAdvertiser' &&
+    userRole !== 'guestCreator' &&
+    userRole !== 'projectOwner'
+  ) {
+    return (
+      <Card className='SubtaskCard' mb='3' onClick={handleDialogOpen}>
+        <Flex justify='between' align='center'>
+          <Flex>
+            <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+            <Flex direction='column'>
+              <Box
+                mb='2'
+                width='180px'
+                height='2vh'
+                style={{ backgroundColor: 'gray', borderRadius: '4px' }}
+              />
+              <Box
+                width='64px'
+                height='2vh'
+                style={{ backgroundColor: 'gray', borderRadius: '4px' }}
+              />
+            </Flex>
+          </Flex>
+          <Spinner mr='3' />
+        </Flex>
+      </Card>
+    );
+  }
+
   return (
     <Dialog.Root open={isModalVisible}>
       <Dialog.Trigger asChild>
         <Card className='SubtaskCard' mb='3' onClick={handleDialogOpen}>
-          <Flex>
-            <RocketOutlined style={{ color: 'yellow', marginRight: '15px' }} />
-            <Flex direction='column'>
-              <Text size='5' weight='medium'>
-                {title}
-              </Text>
-              <Text weight='medium'>
-                <Text color='yellow'>Price:</Text> {price}$
-              </Text>
+          <Flex justify='between' align='center'>
+            <Flex>
+              <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+              <Flex direction='column'>
+                <Text size='5' weight='medium'>
+                  {title}
+                </Text>
+                <Text weight='medium'>
+                  <Text color='yellow'>Price:</Text> {price}$
+                </Text>
+              </Flex>
             </Flex>
+            {isApproved && <CheckOutlined style={{ color: 'green', marginRight: '15px' }} />}
+            {isRejected && <CloseOutlined style={{ color: 'red', marginRight: '15px' }} />}
           </Flex>
         </Card>
       </Dialog.Trigger>
@@ -55,20 +111,44 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price }) => {
             <span>Subtask: {title}</span>
           </Dialog.Title>
           {isFormVisible ? (
-            <>
-              <ModalSubtaskForm closeDialog={handleDialogClose} />
-            </>
+            <ModalSubtaskForm
+              taskId={id}
+              progress={progress}
+              closeDialog={handleDialogClose}
+              setIsApplied={setApplied}
+            />
           ) : (
             <>
               <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
-              <button className='ProposalButton' onClick={handleSendProposalClick}>
-                <Text>Send Proposal</Text>
-              </button>
+              {userRole !== 'projectOwner' &&
+                userRole !== 'guestAdvertiser' &&
+                userRole !== 'guestCreator' && (
+                  <button
+                    className={
+                      isApplied || isApproved ? 'ProposalButtonDisabled' : 'ProposalButton'
+                    }
+                    disabled={isApplied || isApproved}
+                    onClick={handleSendProposalClick}
+                  >
+                    <Text>Send Proposal</Text>
+                  </button>
+                )}
+              {(userRole === 'guestAdvertiser' || userRole === 'guestCreator') && (
+                <Tooltip content='Join the project to apply for the tasks'>
+                  <button
+                    className='ProposalButtonDisabled'
+                    disabled={true}
+                    onClick={handleSendProposalClick}
+                  >
+                    <Text>Send Proposal</Text>
+                  </button>
+                </Tooltip>
+              )}
             </>
           )}
           <Dialog.Close asChild>
             <button onClick={handleDialogClose} className='IconButton' aria-label='Close'>
-              <Cross2Icon />
+              <Cross1Icon />
             </button>
           </Dialog.Close>
         </Dialog.Content>

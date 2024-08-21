@@ -2,14 +2,14 @@ import { Flex, Heading, IconButton, Separator } from '@radix-ui/themes';
 import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import CreatedSubtask from '../Subtask/CreatedSubtask';
-import { SubtaskInfo } from 'api';
+import { TaskInfo } from 'api';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';
 
 interface CreateSubtaskSectionProps {
-  subtasks: SubtaskInfo[];
-  setSubtasks: Dispatch<SetStateAction<SubtaskInfo[]>>;
+  subtasks: TaskInfo[];
+  setSubtasks: Dispatch<SetStateAction<TaskInfo[]>>;
 }
 
 type FormData = {
@@ -34,7 +34,7 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
       price: parseFloat(formData.get('price') as string),
     };
 
-    setSubtasks((prevSubtasks) => [...prevSubtasks, data as SubtaskInfo]);
+    setSubtasks((prevSubtasks) => [...prevSubtasks, data as TaskInfo]);
     setModalOpen(false);
     console.log(data);
   };

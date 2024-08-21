@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { useState } from 'react';
+import { showSuccessMessage } from '../../../helpers/notify';
 
 export const useUpdateProjectStatus = (projectId: string) => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export const useUpdateProjectStatus = (projectId: string) => {
   return useMutation({
     mutationFn: (config: UpdateProjectStatusConfig) => updateProjectStatus(config),
     onSuccess: () => {
+      showSuccessMessage('Project status updated successfully');
       navigate(`/projects/${projectId}`);
     },
     onMutate: (variables) => {

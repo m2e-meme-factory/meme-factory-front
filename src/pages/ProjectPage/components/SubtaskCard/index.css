@@ -87,6 +87,17 @@ input {
     transition: border 0.3s ease;
 }
 
+.ProposalButtonDisabled {
+    border-radius: 8px;
+    background-color: gray;
+    padding: 10px;
+    color: black;
+    font-weight: 700;
+    width: 93%;
+    text-align: center;
+    transition: border 0.3s ease;
+}
+
 .ProposalButton:hover {
     border: 3px solid #fecf0a;
 }

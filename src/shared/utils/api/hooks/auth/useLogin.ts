@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { login } from '../requests/auth/login';
+import { login } from '../../requests/auth/login';
 
 export const useLogin = (initDataString?: string) => {
   const query = useQuery({

@@ -1,44 +1,47 @@
-import React, { FC, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import './index.css';
+import { ProjectProgress } from 'api';
+import { showErrorMessage } from '../../../../shared/utils/helpers/notify';
+import { useApplyTaskCompletion } from '../../../../shared/utils/api/hooks/task/useApplyTaskCompletion';
 
 interface ModalSubtaskFormProps {
   closeDialog: () => void;
+  progress: ProjectProgress | undefined;
+  taskId: string;
+  setIsApplied: Dispatch<SetStateAction<boolean>>;
 }
 
-interface ProposalFormFields {
-  hourPrice: number;
-  hoursEstimated: number;
-  coverLetter: string;
-}
-
-const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog }) => {
+const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({
+  closeDialog,
+  progress,
+  taskId,
+  setIsApplied,
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [coverLetter, setCoverLetter] = useState<string>();
+  const applyTaskCompletionMutation = useApplyTaskCompletion();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
-    const hourPrice = parseFloat(formData.get('hour-price') as string);
-    const hoursEstimated = parseFloat(formData.get('hours-estimated') as string);
     const coverLetter = formData.get('cover-letter') as string;
 
-    const data: ProposalFormFields = {
-      hourPrice: isNaN(hourPrice) ? 0 : hourPrice,
-      hoursEstimated: isNaN(hoursEstimated) ? 0 : hoursEstimated,
-      coverLetter: coverLetter ?? '',
-    };
-
-    console.log(data);
-
+    setIsApplied(true);
+    setCoverLetter(coverLetter);
     setIsDialogOpen(true);
   };
 
   const handleConfirm = () => {
-    setIsDialogOpen(false);
-    closeDialog();
+    if (coverLetter) {
+      applyTaskCompletionMutation.mutate({ params: { taskId: taskId, message: coverLetter } });
+      setIsDialogOpen(false);
+      closeDialog();
+    } else {
+      showErrorMessage('Something went wrong!');
+    }
   };
 
   const handleCancel = () => {
@@ -48,34 +51,6 @@ const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog }) => {
   return (
     <>
       <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-        <Form.Field className='FormField' name='hour-price'>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Form.Label className='FormLabel'>Your Hourly Price</Form.Label>
-            <Form.Message className='FormMessage' match='valueMissing'>
-              Please provide a valid number
-            </Form.Message>
-            <Form.Message className='FormMessage' match='typeMismatch'>
-              Please provide a valid number
-            </Form.Message>
-          </div>
-          <Form.Control asChild>
-            <input className='Input' placeholder='0' type='number' required />
-          </Form.Control>
-        </Form.Field>
-        <Form.Field className='FormField' name='hours-estimated'>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Form.Label className='FormLabel'>Estimated Hours</Form.Label>
-            <Form.Message className='FormMessage' match='valueMissing'>
-              Please enter a valid amount of hours
-            </Form.Message>
-            <Form.Message className='FormMessage' match='typeMismatch'>
-              Please provide a valid number
-            </Form.Message>
-          </div>
-          <Form.Control asChild>
-            <input className='Input' placeholder='2' type='number' required />
-          </Form.Control>
-        </Form.Field>
         <Form.Field className='FormField' name='cover-letter'>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className='FormLabel'>Cover Letter</Form.Label>

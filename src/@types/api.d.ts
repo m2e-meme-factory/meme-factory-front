@@ -8,6 +8,21 @@ declare module 'api' {
     email: string;
   }
 
+  export interface GetTxByUserParams {
+    userId: string;
+  }
+
+  export interface CreateEventDto {
+    projectId: number;
+    userId: number;
+    role: Role;
+    eventType: EventType;
+    description?: string;
+    details?: EventDetails;
+    progressProjectId?: number;
+    message?: string;
+  }
+
   export interface DownloadFilesParams {
     projectId: string;
     telegramId: string;
@@ -26,17 +41,31 @@ declare module 'api' {
     limit: number;
   }
 
-  export interface SubtaskInfo {
+  export interface TaskInfo {
     id: string;
     title: string;
     description: string;
     price: number;
   }
 
-  export interface Subtask {
+  export interface Task {
     projectId: string;
-    task: SubtaskInfo;
+    task: TaskInfo;
     taskId: string;
+  }
+
+  interface ProjectProgress {
+    id: number;
+    userId: number;
+    projectId: number;
+    status: 'pending' | 'accepted' | 'rejected';
+    createdAt: Date;
+    updatedAt?: Date;
+    events: Event[];
+    user: User;
+    appliedTasks: number[];
+    approvedTasks: number[];
+    rejectedTasks: number[];
   }
 
   export interface VerifyUserRequestData {
@@ -45,19 +74,15 @@ declare module 'api' {
   }
 
   enum EventType {
-    PROJECT_CREATED = 'PROJECT_CREATED',
-    PROJECT_UPDATED = 'PROJECT_UPDATED',
-    PROJECT_DELETED = 'PROJECT_DELETED',
     APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
     APPLICATION_APPROVED = 'APPLICATION_APPROVED',
     APPLICATION_REJECTED = 'APPLICATION_REJECTED',
+    TASK_SUBMIT = 'TASK_SUBMIT',
+    TASK_REJECTED = 'TASK_REJECTED',
     TASK_COMPLETED = 'TASK_COMPLETED',
-    TASK_UPDATED = 'TASK_UPDATED',
-    TRANSACTION_COMPLETED = 'TRANSACTION_COMPLETED',
     DISPUTE_OPENED = 'DISPUTE_OPENED',
     DISPUTE_RESOLVED = 'DISPUTE_RESOLVED',
     USER_MESSAGE = 'USER_MESSAGE',
-    RATING_GIVEN = 'RATING_GIVEN',
   }
 
   enum Role {
@@ -65,22 +90,33 @@ declare module 'api' {
     ADVERTISER = 'advertiser',
   }
 
-  interface LogDetails {
+  interface EventDetails {
     transactionId?: number;
-    message?: string;
     amount?: number;
-    subtaskId?: number;
+    taskId?: number;
   }
 
-  interface LogEntry {
+  interface Event {
     id: number;
+    projectProgress: string;
     projectId: number;
     userId: number;
     role: Role;
+    message: string;
     eventType: EventType;
     description?: string;
     createdAt: Date;
-    details: LogDetails;
+    details?: EventDetails;
+  }
+
+  interface FreelancersResponse {
+    progress: ProjectProgress;
+    user: User;
+  }
+
+  interface ProgressWithProjectResponse {
+    progress: ProjectProgress;
+    project: Project;
   }
 
   export interface UpdateProjectPayload {
@@ -96,6 +132,8 @@ declare module 'api' {
     toUserId: number;
     amount: number;
     createdAt: Date;
+    toUser: User;
+    fromUser: User;
   }
 
   enum DisputeStatus {
@@ -162,6 +200,46 @@ declare module 'api' {
     isBaned: boolean;
     isVerified: boolean;
     createdAt: Date;
+    inviterRefCode?: string;
+    refCode?: string;
+    balance: string;
+  }
+
+  export interface GetProgressByProjectIdParams {
+    projectId: string;
+    userId?: string;
+  }
+
+  export interface ApplyForProjectParams {
+    projectId: string;
+    message: string;
+  }
+
+  export interface GetEventsByProjectIdParams {
+    progressId: string;
+  }
+
+  export interface AcceptApplicationForProjectParams {
+    progressId: string;
+    message: string;
+  }
+
+  export interface RejectApplicationForProjectParams {
+    progressId: string;
+    message: string;
+  }
+
+  export interface GetUserProgressesParams {
+    userId: string;
+  }
+
+  export interface GetProjectFreelancersParams {
+    projectId: string;
+    status: 'accepted' | 'pending' | 'rejected';
+  }
+
+  export interface GetTotalSpendingsParams {
+    projectId: string;
   }
 
   export interface UserWithRef {
@@ -186,6 +264,17 @@ declare module 'api' {
     total: number;
   }
 
+  interface ApplyTaskCompletionParams {
+    taskId: string;
+    message: string;
+  }
+
+  interface TaskCompletionParams {
+    taskId: number;
+    message: string;
+    creatorId: number;
+  }
+
   export interface Project {
     id: string;
     title: string;
@@ -195,7 +284,7 @@ declare module 'api' {
     category: string;
     tags: string[];
     price: number;
-    tasks: Subtask[];
+    tasks: Task[];
     authorId: string;
     creationDate: Date;
     status: ProjectStatus;

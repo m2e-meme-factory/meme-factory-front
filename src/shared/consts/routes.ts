@@ -8,6 +8,6 @@ export const ROUTES = {
   CREATE_PROJECT: '/create-project',
   PROFILE_SETTINGS: '/profile/settings',
   PROJECT_DETAILS: '/projects/:id/details',
-  LOGS: '/projects/:id/logs/:freelancer-id',
+  LOGS: '/projects/:projectId/logs/:userId',
   EDIT: '/projects/:id/edit',
 };

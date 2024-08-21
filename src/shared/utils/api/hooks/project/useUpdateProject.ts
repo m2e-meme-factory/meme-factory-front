@@ -20,7 +20,7 @@ export const useUpdateProject = (id?: string) => {
     mutationFn: (config: UpdateProjectConfig) => updateProject(config),
     onSuccess: () => {
       if (id) {
-        showSuccessMessage('Project created successfully');
+        showSuccessMessage('Project updated successfully');
         navigate(`/projects/${id}`);
       }
     },
@@ -54,15 +54,15 @@ export const useUpdateProject = (id?: string) => {
 
           if (savedVariables) {
             await showToastWithPromise({
-              success: 'Project created successfully',
-              error: 'Error while creating project',
-              process: 'Creating a project',
+              success: 'Project updated successfully',
+              error: 'Error while updating project',
+              process: 'Updating a project',
               callback: () => updateProject(savedVariables),
             });
             navigate(`/projects/${id}`);
           }
         } catch (loginError) {
-          showErrorMessage('Failed to create project due to authorization issue!');
+          showErrorMessage('Failed to update project due to authorization issue!');
         }
       } else {
         showErrorMessage('Something went wrong!');

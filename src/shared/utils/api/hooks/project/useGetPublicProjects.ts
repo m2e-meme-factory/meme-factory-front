@@ -36,7 +36,7 @@ export const useGetPublicProjects = (params: GetPublicProjectsParams) => {
     },
     select: (data) => data,
     retry: false,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: 'always',
   });
 
   return { ...query };

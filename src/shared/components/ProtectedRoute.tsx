@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useTelegram } from '../hooks/useTelegram';
-import { useLogin } from '../utils/api/hooks/useLogin';
+import { useLogin } from '../utils/api/hooks/auth/useLogin';
 import { Flex, Spinner } from '@radix-ui/themes';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../utils/redux/user/userSlice';
@@ -26,7 +26,6 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
 
   if (data) {
     dispatch(setUser(data.data.user));
-    localStorage.setItem('initData', webApp?.initData || '');
     localStorage.setItem('token', data.data.token);
   }
 

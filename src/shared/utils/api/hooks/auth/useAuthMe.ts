@@ -12,7 +12,6 @@ export const useAuthMe = () => {
     queryKey: ['me'],
     queryFn: async () => {
       try {
-        showSuccessMessage('User data was successfully fetched');
         return await authMe();
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401) {

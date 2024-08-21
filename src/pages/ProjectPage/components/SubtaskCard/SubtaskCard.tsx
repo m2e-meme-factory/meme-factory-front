@@ -1,14 +1,14 @@
 import { Card, Flex, Text, Tooltip } from '@radix-ui/themes';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { CheckIcon, Cross1Icon, Cross2Icon } from '@radix-ui/react-icons';
 import './index.css';
-import { RocketOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, RocketOutlined } from '@ant-design/icons';
 import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
 import { UserRoleInProject } from '../../ProjectPage';
-import { useCreateEvent } from '../../../../shared/utils/api/hooks/event/useCreateEvent';
 import { ProjectProgress } from 'api';
+import Loading from '../../../../shared/components/Loading';
 
 interface TaskCardProps {
   id: string;
@@ -22,14 +22,21 @@ interface TaskCardProps {
 const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRole, progress }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [eventCreated, setEventCreated] = useState(false);
   const [isApplied, setApplied] = useState(false);
   const [isApproved, setApproved] = useState(false);
   const [isRejected, setRejected] = useState(false);
 
+  useEffect(() => {
+    if (progress) {
+      const taskId = Number.parseInt(id);
+      setApplied(progress.appliedTasks.includes(taskId));
+      setApproved(progress.approvedTasks.includes(taskId));
+      setRejected(progress.rejectedTasks.includes(taskId));
+    }
+  }, [progress, id]);
+
   const proposeBtnClassname =
     userRole === 'guestCreator' ? 'ProposalButtonDisabled' : 'ProposalButton';
-  const createEventMutation = useCreateEvent(setEventCreated);
 
   const handleSendProposalClick = () => {
     setIsFormVisible(!isFormVisible);
@@ -44,20 +51,28 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
     setModalVisible(true);
   };
 
+  if (!progress) {
+    return <Loading/>;
+  }
+
   return (
     <Dialog.Root open={isModalVisible}>
       <Dialog.Trigger asChild>
         <Card className='SubtaskCard' mb='3' onClick={handleDialogOpen}>
-          <Flex>
-            <RocketOutlined style={{ color: 'yellow', marginRight: '15px' }} />
-            <Flex direction='column'>
-              <Text size='5' weight='medium'>
-                {title}
-              </Text>
-              <Text weight='medium'>
-                <Text color='yellow'>Price:</Text> {price}$
-              </Text>
+          <Flex justify='between' align='center'>
+            <Flex>
+              <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+              <Flex direction='column'>
+                <Text size='5' weight='medium'>
+                  {title}
+                </Text>
+                <Text weight='medium'>
+                  <Text color='yellow'>Price:</Text> {price}$
+                </Text>
+              </Flex>
             </Flex>
+            {isApproved && <CheckOutlined style={{ color: 'green', marginRight: '15px' }} />}
+            {isRejected && <CloseOutlined style={{ color: 'red', marginRight: '15px' }} />}
           </Flex>
         </Card>
       </Dialog.Trigger>
@@ -68,9 +83,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
             <span>Subtask: {title}</span>
           </Dialog.Title>
           {isFormVisible ? (
-            <>
-              <ModalSubtaskForm taskId={id} progress={progress} closeDialog={handleDialogClose} />
-            </>
+            <ModalSubtaskForm taskId={id} progress={progress} closeDialog={handleDialogClose} setIsApplied={setApplied} />
           ) : (
             <>
               <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
@@ -87,7 +100,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
                     </button>
                   </Tooltip>
                 ) : (
-                  <button className={proposeBtnClassname} onClick={handleSendProposalClick}>
+                  <button className={(isApplied || isApproved) ? 'ProposalButtonDisabled' : 'ProposalButton'} disabled={isApplied || isApproved} onClick={handleSendProposalClick}>
                     <Text>Send Proposal</Text>
                   </button>
                 ))}

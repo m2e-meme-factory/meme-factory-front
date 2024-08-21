@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import * as Form from '@radix-ui/react-form';
 import * as Dialog from '@radix-ui/react-dialog';
 import './index.css';
@@ -10,9 +10,10 @@ interface ModalSubtaskFormProps {
   closeDialog: () => void;
   progress: ProjectProgress | undefined;
   taskId: string;
+  setIsApplied: Dispatch<SetStateAction<boolean>>
 }
 
-const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, taskId }) => {
+const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, taskId, setIsApplied }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [coverLetter, setCoverLetter] = useState<string>();
   const applyTaskCompletionMutation = useApplyTaskCompletion();
@@ -23,6 +24,7 @@ const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, progress, ta
     const formData = new FormData(event.currentTarget);
     const coverLetter = formData.get('cover-letter') as string;
 
+    setIsApplied(true);
     setCoverLetter(coverLetter);
     setIsDialogOpen(true);
   };

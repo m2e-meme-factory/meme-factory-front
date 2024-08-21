@@ -27,13 +27,13 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
             {isDescVisible && description.length >= 100
               ? description
               : shortenDescription(description)}
-            <Button
+            {description.length >= 100 && <Button
               variant='ghost'
               onClick={handleToggleDescription}
               style={{ marginLeft: '8px', color: '#fecf0a' }}
             >
               {isDescVisible ? 'View Less' : 'View More'}
-            </Button>
+            </Button>}
           </Text>
           <Text className='Price'>
             <span className='TextAccent'>Price:</span> {price}$

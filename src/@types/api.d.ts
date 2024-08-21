@@ -63,6 +63,9 @@ declare module 'api' {
     updatedAt?: Date;
     events: Event[];
     user: User;
+    appliedTasks: number[];
+    approvedTasks: number[];
+    rejectedTasks: number[];
   }
 
   export interface VerifyUserRequestData {

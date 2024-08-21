@@ -25,12 +25,15 @@ import { useEffect, useState } from 'react';
 import { RefDataResponse, User } from 'api';
 import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '../../shared/utils/redux/user/userSlice';
+import { useSearchParams } from 'react-router-dom';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const [userSt, setUserSt] = useState<User>();
   const { data: userDataResponse, isLoading } = useAuthMe();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') || 'account';
 
   useEffect(() => {
     if (userDataResponse) {
@@ -63,7 +66,7 @@ export default function ProfilePage() {
   const refCount = refData?.count;
 
   return (
-    <Tabs.Root defaultValue='account'>
+    <Tabs.Root defaultValue={defaultTab}>
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>

@@ -52,8 +52,8 @@ export const router = createBrowserRouter([
         element: <EditProjectPage />,
       },
       {
-        path: '*', // Обработка всех неизвестных маршрутов
-        element: <NotFoundPage />, // Компонент страницы 404
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },

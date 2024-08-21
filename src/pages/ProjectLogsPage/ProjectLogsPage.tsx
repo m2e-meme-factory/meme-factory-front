@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
 import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
@@ -18,6 +18,7 @@ import { ROUTES } from '../../shared/consts/routes';
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
+  const location = useLocation();
 
   const { projectId, userId } = useParams();
   const { data, isLoading, refetch } = useGetProgress({
@@ -45,7 +46,12 @@ const ProjectLogsPage = () => {
   useEffect(() => {
     if (data) {
       setUserProgress(data.data[0]);
-      setEvents(data.data[0].events);
+      if (data.data[0]?.events) {
+        setEvents(data.data[0].events);
+      } else {
+        showErrorMessage('Error. No events found');
+        navigate(-1);
+      }
     }
   }, [data]);
 

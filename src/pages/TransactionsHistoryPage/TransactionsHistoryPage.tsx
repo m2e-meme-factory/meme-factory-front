@@ -55,6 +55,7 @@ const TransactionsHistoryPage = () => {
                     <Table.Cell>{transaction.amount}</Table.Cell>
                     <Table.Cell>
                       <Button
+                        style={{ padding: '20px' }}
                         onClick={() =>
                           navigate(
                             `/projects/${transaction.projectId}/logs/${transaction.toUserId}`

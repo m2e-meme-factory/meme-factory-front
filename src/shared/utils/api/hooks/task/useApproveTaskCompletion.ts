@@ -5,7 +5,7 @@ import {
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import {
   showErrorMessage,
   showSuccessMessage,
@@ -13,6 +13,12 @@ import {
 } from '../../../helpers/notify';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
+
+interface Response {
+  statusCode: number;
+  message: string;
+  error: string;
+}
 
 export const useApproveTaskCompletion = (
   setTaskApproved: Dispatch<SetStateAction<boolean>>,
@@ -77,7 +83,12 @@ export const useApproveTaskCompletion = (
           showErrorMessage('Failed to approve the task completion due to authorization issue!');
         }
       } else {
-        showErrorMessage('Something went wrong!');
+        if (error && error.response && error.response.data) {
+          const data = error.response.data as Response;
+          showErrorMessage(data.message);
+        } else {
+          showErrorMessage('An unknown error occurred');
+        }
       }
     },
   });

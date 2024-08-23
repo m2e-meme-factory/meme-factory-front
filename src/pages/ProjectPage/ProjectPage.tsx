@@ -18,7 +18,6 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
-import avatarFallback from '../../shared/imgs/avatar-fallback.svg';
 import AttachmentCard from './components/AttachmentCard/AttachmentCard';
 import SubtaskCard from './components/SubtaskCard/SubtaskCard';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
@@ -32,7 +31,7 @@ import { Project, ProjectProgress } from 'api';
 import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
 import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
 import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
-import { FALLBACK_BANNER_URL } from '../../shared/consts/fallbackBanner';
+import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
 import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
@@ -56,6 +55,7 @@ const ProjectPage = () => {
   const [isApplyLoading, setIsApplyLoading] = useState(false);
   const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
+  const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -64,7 +64,11 @@ const ProjectPage = () => {
     projectId: id ?? '',
     userId: user?.id,
   });
-  const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
+  const { mutate: applyMutation, data: applyResponse } = useApplyForProject(
+    setIsApplyLoading,
+    setApplyBlocked,
+    setCurrentUserRole
+  );
 
   useEffect(() => {
     if (projectInfoResponse) {
@@ -152,12 +156,6 @@ const ProjectPage = () => {
           message: applicationMessage,
         },
       });
-
-      if (applyResponse?.status === 201) {
-        setCurrentUserRole('unconfirmedMember');
-      } else {
-        //showErrorMessage('Error occurred while creating an application. Please try again!');
-      }
     }
   };
 
@@ -167,7 +165,7 @@ const ProjectPage = () => {
 
   const bannerLink = currentProject?.bannerUrl
     ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
-    : FALLBACK_BANNER_URL;
+    : fallbackBanner;
 
   return (
     <Flex direction='column'>
@@ -192,7 +190,7 @@ const ProjectPage = () => {
           {currentUserRole === 'guestCreator' && (
             <Dialog.Root>
               <Dialog.Trigger>
-                <Button loading={isApplyLoading} my='2'>
+                <Button my='2' disabled={applyBlocked}>
                   Apply to earn
                 </Button>
               </Dialog.Trigger>
@@ -216,7 +214,11 @@ const ProjectPage = () => {
                       Cancel
                     </Button>
                   </Dialog.Close>
-                  <Button onClick={handleApplyClick}>Apply</Button>
+                  <Dialog.Close>
+                    <Button onClick={handleApplyClick} loading={isApplyLoading}>
+                      Apply
+                    </Button>
+                  </Dialog.Close>
                 </Flex>
               </Dialog.Content>
             </Dialog.Root>

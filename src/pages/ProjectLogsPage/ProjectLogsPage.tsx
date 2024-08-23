@@ -13,7 +13,6 @@ import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
-import { ROUTES } from '../../shared/consts/routes';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
 
 const ProjectLogsPage = () => {
@@ -121,7 +120,16 @@ const ProjectLogsPage = () => {
         justify='between'
       >
         <Flex align='center'>
-          <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
+          <IconButton
+            onClick={() => {
+              user
+                ? user.role === Role.CREATOR
+                  ? navigate('/profile?tab=myprojects')
+                  : navigate(`/projects/${projectId}/details`)
+                : navigate('/projects');
+            }}
+            size='3'
+          >
             <ArrowLeftIcon />
           </IconButton>
           <Heading ml='3'>{shortenString(currentProject?.title, 20)}</Heading>

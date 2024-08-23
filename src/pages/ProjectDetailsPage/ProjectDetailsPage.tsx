@@ -51,7 +51,7 @@ const ProjectDetailsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton mr='3' onClick={() => navigate('/profile?tab=my-projects')}>
+        <IconButton mr='3' onClick={() => navigate('/profile?tab=myprojects')}>
           <ArrowLeftIcon />
         </IconButton>
         <Heading>Project details</Heading>

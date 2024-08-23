@@ -50,8 +50,8 @@ const RejectButtonModal: FC<RejectButtonModal> = ({ progressId }) => {
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button loading={rejectLoading} onClick={handleAccept} variant='soft' color='yellow'>
-              Accept
+            <Button loading={rejectLoading} onClick={handleAccept} variant='soft' color='red'>
+              Reject
             </Button>
           </Dialog.Close>
         </Flex>

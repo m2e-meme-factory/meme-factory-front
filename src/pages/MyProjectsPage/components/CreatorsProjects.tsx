@@ -65,7 +65,6 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
         .map((progress) => progress.project);
 
       setMyProjects(projects);
-      console.log(projects);
     }
   }, [response, selectedProjectStatuses, selectedApplicationStatuses]);
 

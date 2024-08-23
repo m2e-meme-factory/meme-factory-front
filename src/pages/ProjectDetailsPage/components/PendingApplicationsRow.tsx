@@ -1,6 +1,5 @@
 import { Button, Flex, Table, Text } from '@radix-ui/themes';
 import React, { FC } from 'react';
-import ApplyMessageReadModal from './ApplyMessageReadModal';
 import ApplyButtonModal from './ApplyButtonModal';
 import RejectButtonModal from './RejectButtonModal';
 import { useNavigate } from 'react-router-dom';

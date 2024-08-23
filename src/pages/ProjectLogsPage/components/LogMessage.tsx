@@ -14,6 +14,8 @@ const MessageContainer = styled.div<{ color: string; side: 'left' | 'right' }>`
   max-width: 60%;
   margin: 8px 0;
   ${({ side }) => (side === 'left' ? 'margin-right: 20vw;' : 'margin-left: 20vw;')};
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 `;
 
 interface MessageProps {
@@ -59,13 +61,17 @@ const LogMessage: FC<MessageProps> = ({
   const shouldShowButtons = !hasTaskCompleted && isLastTaskSubmit;
 
   return (
-    <Flex justify={side === 'left' ? 'start' : 'end'} width='100%'>
+    <Flex justify={side === 'left' ? 'start' : 'end'} width='100%' maxWidth='100%'>
       <MessageContainer color={color} side={side}>
         <Flex direction='column'>
           <Text align={side} size='1' color='gray'>
             {event.role === 'creator' ? creatorName : advertiserName}
           </Text>
-          {event.message && <Text align={side}>{event.message}</Text>}
+          {event.message && (
+            <Text as='p' wrap='balance' align={side} style={{ wordBreak: 'break-word' }}>
+              {event.message}
+            </Text>
+          )}
           {event.eventType === EventType.TASK_SUBMIT &&
             currentUserRole === Role.ADVERTISER &&
             shouldShowButtons && (

@@ -27,7 +27,9 @@ const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
         </Flex>
       </Table.Cell>
       <Table.Cell>
-        <Button onClick={() => navigate(`/projects/${progress.projectId}/logs/${progress.userId}`)}>
+        <Button
+          onClick={() => navigate(`/projects/${progress.projectId}/logs/${progress.user.id}`)}
+        >
           Read message
         </Button>
       </Table.Cell>

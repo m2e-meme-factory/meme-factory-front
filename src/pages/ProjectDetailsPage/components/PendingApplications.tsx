@@ -31,19 +31,16 @@ const PendingApplications = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {
-            //todo: add messages
-            pendingApplications &&
-              pendingApplications.map((app) => {
-                return (
-                  <PendingApplicationsRow
-                    progressId={app.progress.id.toString()}
-                    progress={app.progress}
-                    name={app.user.username ?? 'user'}
-                  />
-                );
-              })
-          }
+          {pendingApplications &&
+            pendingApplications.map((app) => {
+              return (
+                <PendingApplicationsRow
+                  progressId={app.progress.id.toString()}
+                  progress={app.progress}
+                  name={app.user.username ?? 'user'}
+                />
+              );
+            })}
         </Table.Body>
       </Table.Root>
     </ScrollArea>

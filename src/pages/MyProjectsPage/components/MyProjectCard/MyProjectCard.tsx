@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../shared/utils/redux/store';
 import { Role } from '../../../../shared/consts/userRoles';
 import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
+import { number } from 'zod';
 
 interface MyProjectCardProps {
   id: string;
@@ -32,6 +33,7 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
 
   useEffect(() => {
     if (freelancersResponse) {
+      console.log(freelancersResponse.data.length);
       setFreelancersCount(freelancersResponse.data.length);
     }
   }, [freelancersResponse]);
@@ -61,9 +63,7 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
                 Freelancers count:
               </Text>
               <Text weight='medium' color='yellow' size='5'>
-                {freelancers ? (
-                  freelancers
-                ) : (
+                {typeof freelancers === 'number' ? freelancers : (
                   <Box
                     width='20px'
                     height='30px'

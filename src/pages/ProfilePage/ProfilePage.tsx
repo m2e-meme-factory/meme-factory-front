@@ -70,7 +70,7 @@ export default function ProfilePage() {
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        <Tabs.Trigger value='myprojects'>Projects</Tabs.Trigger>
+        <Tabs.Trigger value='myprojects'>My Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>

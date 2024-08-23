@@ -35,6 +35,7 @@ import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProje
 import { FALLBACK_BANNER_URL } from '../../shared/consts/fallbackBanner';
 import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
+import { shortenString } from '../../shared/utils/helpers/shortenString';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -248,7 +249,13 @@ const ProjectPage = () => {
             <Card>
               <Flex align='center'>
                 <Text weight='medium' size='6'>
-                  Meme Factory
+                  {shortenString(
+                    currentProject
+                      ? currentProject.author.username
+                        ? currentProject.author.username
+                        : `User ${currentProject.author.telegramId}`
+                      : 'Meme factory'
+                  )}
                 </Text>
               </Flex>
             </Card>

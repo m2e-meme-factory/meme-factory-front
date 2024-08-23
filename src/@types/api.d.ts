@@ -288,6 +288,7 @@ declare module 'api' {
     authorId: string;
     creationDate: Date;
     status: ProjectStatus;
+    author: User;
   }
 
   export interface UpdateStatusPayload {

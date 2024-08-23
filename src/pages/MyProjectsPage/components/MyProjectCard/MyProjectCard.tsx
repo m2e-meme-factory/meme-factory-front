@@ -63,7 +63,9 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
                 Freelancers count:
               </Text>
               <Text weight='medium' color='yellow' size='5'>
-                {typeof freelancers === 'number' ? freelancers : (
+                {typeof freelancers === 'number' ? (
+                  freelancers
+                ) : (
                   <Box
                     width='20px'
                     height='30px'

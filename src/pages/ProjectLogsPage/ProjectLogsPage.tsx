@@ -14,10 +14,10 @@ import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 import { ROUTES } from '../../shared/consts/routes';
+import { shortenString } from '../../shared/utils/helpers/shortenString';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const user = useSelector((state: RootState) => state.user.user);
   const { projectId, userId } = useParams();
   const { data, isLoading, refetch } = useGetProgress({
@@ -36,8 +36,6 @@ const ProjectLogsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-  console.log(location);
 
   useEffect(() => {
     if (projectResponse) {
@@ -126,7 +124,7 @@ const ProjectLogsPage = () => {
           <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
             <ArrowLeftIcon />
           </IconButton>
-          <Heading ml='3'>{currentProject?.title}</Heading>
+          <Heading ml='3'>{shortenString(currentProject?.title, 20)}</Heading>
         </Flex>
         <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
       </Flex>
@@ -144,8 +142,14 @@ const ProjectLogsPage = () => {
                   ? userProgress?.user.username
                   : `User ${userProgress?.user.telegramId}`
               }
-              advertiserName={currentProject ? currentProject.title : 'Project host'}
-              allEvents={events} // Передаем все события
+              advertiserName={shortenString(
+                currentProject
+                  ? currentProject.author.username
+                    ? currentProject.author.username
+                    : `User ${currentProject.author.telegramId}`
+                  : 'Project host'
+              )}
+              allEvents={events}
             />
           ))}
         </ScrollArea>

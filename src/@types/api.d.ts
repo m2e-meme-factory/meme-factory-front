@@ -1,5 +1,6 @@
 declare module 'api' {
   import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+  import { Role } from '../shared/consts/userRoles';
 
   export interface VerifyUserData {
     userId: string;
@@ -91,9 +92,9 @@ declare module 'api' {
     USER_MESSAGE = 'USER_MESSAGE',
   }
 
-  interface Event {
+  export interface Event {
     id: number;
-    projectProgress: string;
+    progressProjectId: string;
     projectId: number;
     userId: number;
     role: Role;

@@ -16,7 +16,7 @@ const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
   name,
   progressId,
   progress,
-  user
+  user,
 }) => {
   const navigate = useNavigate();
   return (
@@ -27,9 +27,7 @@ const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
         </Flex>
       </Table.Cell>
       <Table.Cell>
-        <Button
-          onClick={() => navigate(`/projects/${progress.projectId}/logs/${user.id}`)}
-        >
+        <Button onClick={() => navigate(`/projects/${progress.projectId}/logs/${user.id}`)}>
           Read message
         </Button>
       </Table.Cell>

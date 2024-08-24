@@ -83,7 +83,7 @@ const LogMessage: FC<MessageProps> = ({
           {event.eventType === EventType.APPLICATION_SUBMITTED &&
             currentUserRole === Role.ADVERTISER &&
             showApplicationButtons && (
-              <RejectAcceptApplicationSection progressId={event.projectProgress} />
+              <RejectAcceptApplicationSection progressId={event.progressProjectId} />
             )}
         </Flex>
       </MessageContainer>

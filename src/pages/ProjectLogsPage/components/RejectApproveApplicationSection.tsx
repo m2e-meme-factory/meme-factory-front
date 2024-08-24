@@ -1,6 +1,6 @@
 import { Button, Dialog, Flex, TextArea } from '@radix-ui/themes';
-import React, { Dispatch, FC, useState } from 'react';
-
+import React, { FC, useState } from 'react';
+import { Event } from 'api';
 import { useRejectApplication } from '../../../shared/utils/api/hooks/project/useRejectApplication';
 import { useAcceptApplication } from '../../../shared/utils/api/hooks/project/useApproveApplication';
 

@@ -3,11 +3,11 @@ import { Text, Card, Flex, Heading, Box } from '@radix-ui/themes';
 import CardBanner from '../../../PublicProjectsPage/components/CardBanner/CardBanner';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { ProjectStatus } from 'api';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../shared/utils/redux/store';
 import { Role } from '../../../../shared/consts/userRoles';
 import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
+import { ProjectStatus } from '../../../../shared/consts/project-statuses';
 
 interface MyProjectCardProps {
   id: string;

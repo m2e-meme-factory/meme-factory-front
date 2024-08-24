@@ -73,6 +73,12 @@ declare module 'api' {
     userData: VerifyUserData;
   }
 
+  interface EventDetails {
+    transactionId?: number;
+    amount?: number;
+    taskId?: number;
+  }
+
   enum EventType {
     APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
     APPLICATION_APPROVED = 'APPLICATION_APPROVED',
@@ -83,17 +89,6 @@ declare module 'api' {
     DISPUTE_OPENED = 'DISPUTE_OPENED',
     DISPUTE_RESOLVED = 'DISPUTE_RESOLVED',
     USER_MESSAGE = 'USER_MESSAGE',
-  }
-
-  enum Role {
-    CREATOR = 'creator',
-    ADVERTISER = 'advertiser',
-  }
-
-  interface EventDetails {
-    transactionId?: number;
-    amount?: number;
-    taskId?: number;
   }
 
   interface Event {
@@ -134,31 +129,6 @@ declare module 'api' {
     createdAt: Date;
     toUser: User;
     fromUser: User;
-  }
-
-  enum DisputeStatus {
-    OPEN = 'open',
-    RESOLVED = 'resolved',
-    CLOSED = 'closed',
-  }
-
-  enum ProjectStatus {
-    DRAFT = 'draft',
-    MODERATION = 'moderation',
-    PUBLISHED = 'published',
-    NOT_ACCEPTED = 'not_accepted',
-    CLOSED = 'closed',
-  }
-
-  interface Dispute {
-    id: string;
-    projectId: string;
-    initiatorId: string;
-    defendantId: string;
-    reason: string;
-    status: DisputeStatus;
-    creationDate: string;
-    resolutionDate?: string;
   }
 
   export interface GetUserDataParams {

@@ -1,6 +1,6 @@
 import { Option } from '../../@types/app';
 
-enum ProjectStatus {
+export enum ProjectStatus {
   DRAFT = 'draft',
   MODERATION = 'moderation',
   PUBLISHED = 'published',

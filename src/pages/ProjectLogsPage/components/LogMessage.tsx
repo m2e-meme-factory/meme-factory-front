@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { Flex, Text } from '@radix-ui/themes';
 import { Role } from '../../../shared/consts/userRoles';
 import { getColorByType } from '../../../shared/utils/helpers/getMessageColor';
-import { EventType } from '../../../shared/utils/helpers/getEventType';
-import RejectApproveSection from './RejectApproveSection';
+import RejectApproveTaskSection from './RejectApproveTaskSection';
 import { Event } from 'api';
+import RejectAcceptApplicationSection from './RejectApproveApplicationSection';
+import { EventType } from '../../../shared/utils/helpers/getEventType';
 
 const MessageContainer = styled.div<{ color: string; side: 'left' | 'right' }>`
   background-color: ${({ color }) => color};
@@ -51,6 +52,10 @@ const LogMessage: FC<MessageProps> = ({
     (e) => e.eventType === EventType.TASK_COMPLETED && e.details?.taskId === event.details?.taskId
   );
 
+  const applicationAccepted = allEvents.some((e) => e.eventType === EventType.APPLICATION_APPROVED);
+  const applicationRejected = allEvents.some((e) => e.eventType === EventType.APPLICATION_REJECTED);
+  const showApplicationButtons = !(applicationAccepted || applicationRejected);
+
   const shouldShowButtons = !hasTaskCompleted && isLastTaskSubmit;
 
   return (
@@ -68,12 +73,17 @@ const LogMessage: FC<MessageProps> = ({
           {event.eventType === EventType.TASK_SUBMIT &&
             currentUserRole === Role.ADVERTISER &&
             shouldShowButtons && (
-              <RejectApproveSection
+              <RejectApproveTaskSection
                 taskId={event.details?.taskId}
                 setNewEventCreated={setNewEventCreated}
                 userId={event.userId}
                 showButtons={!hasTaskCompleted}
               />
+            )}
+          {event.eventType === EventType.APPLICATION_SUBMITTED &&
+            currentUserRole === Role.ADVERTISER &&
+            showApplicationButtons && (
+              <RejectAcceptApplicationSection progressId={event.projectProgress} />
             )}
         </Flex>
       </MessageContainer>

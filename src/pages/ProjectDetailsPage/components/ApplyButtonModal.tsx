@@ -11,7 +11,7 @@ const ApplyButtonModal: FC<ApplyButtonModalProps> = ({ progressId }) => {
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [acceptMessage, setAcceptMessage] = useState('');
 
-  const mutationAccept = useAcceptApplication(setAcceptLoading);
+  const mutationAccept = useAcceptApplication(setAcceptLoading, false);
 
   const handleAccept = () => {
     setAcceptLoading(true);

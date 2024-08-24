@@ -10,7 +10,7 @@ interface RejectApproveSectionProps {
   showButtons: boolean;
 }
 
-const RejectApproveSection: FC<RejectApproveSectionProps> = ({
+const RejectApproveTaskSection: FC<RejectApproveSectionProps> = ({
   taskId,
   setNewEventCreated,
   userId,
@@ -127,4 +127,4 @@ const RejectApproveSection: FC<RejectApproveSectionProps> = ({
   );
 };
 
-export default RejectApproveSection;
+export default RejectApproveTaskSection;

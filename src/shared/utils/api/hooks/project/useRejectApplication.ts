@@ -13,7 +13,10 @@ import {
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 
-export const useRejectApplication = (setRejectLoading: Dispatch<SetStateAction<boolean>>) => {
+export const useRejectApplication = (
+  setRejectState: Dispatch<SetStateAction<boolean>>,
+  inChat: boolean
+) => {
   const { webApp } = useTelegram();
   const [savedVariables, setSavedVariables] = useState<RejectApplicationForProjectConfig | null>(
     null
@@ -22,15 +25,19 @@ export const useRejectApplication = (setRejectLoading: Dispatch<SetStateAction<b
   return useMutation({
     mutationFn: (config: RejectApplicationForProjectConfig) => rejectApplicationForProject(config),
     onSuccess: () => {
-      setRejectLoading(false);
-      showSuccessMessage('Application rejected successfully');
-      window.location.reload();
+      if (!inChat) {
+        setRejectState(false); //passed state is reject loading
+        showSuccessMessage('Application rejected successfully');
+        window.location.reload();
+      } else {
+        setRejectState(true); //passed state is whether the application rejected
+      }
     },
     onMutate: (variables) => {
       setSavedVariables(variables);
     },
     onError: async (error: any) => {
-      setRejectLoading(false);
+      setRejectState(false);
       if (error?.response?.status === 401 && webApp) {
         const loginConfig: LoginConfig = {
           params: { initData: { initData: webApp.initData } },

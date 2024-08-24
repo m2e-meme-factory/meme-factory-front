@@ -11,7 +11,7 @@ const RejectButtonModal: FC<RejectButtonModalProps> = ({ progressId }) => {
   const [rejectLoading, setRejectLoading] = useState(false);
   const [rejectMessage, setRejectMessage] = useState('');
 
-  const mutationReject = useRejectApplication(setRejectLoading);
+  const mutationReject = useRejectApplication(setRejectLoading, false);
 
   const handleAccept = () => {
     setRejectLoading(true);

@@ -1,17 +1,7 @@
 import { Flex, Heading, Text } from '@radix-ui/themes';
-import styled from 'styled-components';
 import { TagsOutlined } from '@ant-design/icons';
 import React, { FC } from 'react';
 import { ProjectData } from 'api';
-
-const TaskContentHeading = styled(Heading)`
-  color: black;
-`;
-
-const TaskContentText = styled(Text)`
-  color: ${(props) => props.color || 'black'};
-  weight: ${(props) => props.weight || 'regular'};
-`;
 
 interface ProjectCardContentProps {
   project: ProjectData;

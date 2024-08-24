@@ -51,13 +51,6 @@ const LogMessage: FC<MessageProps> = ({
     (e) => e.eventType === EventType.TASK_COMPLETED && e.details?.taskId === event.details?.taskId
   );
 
-  const isLastTaskSubmitApprovedOrRejected = allEvents.some(
-    (e) =>
-      (e.eventType === EventType.TASK_COMPLETED || e.eventType === EventType.TASK_REJECTED) &&
-      e.details?.taskId === event.details?.taskId &&
-      e.id === taskSubmitEvents[taskSubmitEvents.length - 1].id
-  );
-
   const shouldShowButtons = !hasTaskCompleted && isLastTaskSubmit;
 
   return (

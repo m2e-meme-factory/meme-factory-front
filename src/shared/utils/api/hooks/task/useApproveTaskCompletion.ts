@@ -5,7 +5,7 @@ import {
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import {
   showErrorMessage,
   showSuccessMessage,

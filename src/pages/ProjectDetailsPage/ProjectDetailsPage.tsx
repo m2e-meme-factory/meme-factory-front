@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Table, Heading, IconButton, Text, ScrollArea } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, IconButton, Text } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import {
   ArrowLeftIcon,

@@ -16,7 +16,7 @@ import {
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
 import { CreateProjectDTO, TaskInfo } from 'api';
-import { FormError, Option, Price } from '../../@types/app';
+import { FormError, Option } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';

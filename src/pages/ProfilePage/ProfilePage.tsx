@@ -30,7 +30,7 @@ import { useSearchParams } from 'react-router-dom';
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const [userSt, setUserSt] = useState<User>();
-  const { data: userDataResponse, isLoading } = useAuthMe();
+  const { data: userDataResponse } = useAuthMe();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'account';
@@ -45,8 +45,6 @@ export default function ProfilePage() {
   const {
     data,
     isLoading: refLoading,
-    error: refDataError,
-    refetch: refetchRefData,
   } = useGetRefData(userSt?.telegramId);
 
   useEffect(() => {

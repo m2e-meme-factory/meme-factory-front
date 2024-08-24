@@ -1,4 +1,4 @@
-import { Button, Flex, AlertDialog, Heading } from '@radix-ui/themes';
+import { Button, Flex, AlertDialog } from '@radix-ui/themes';
 import React, { FC } from 'react';
 import { useUpdateProjectStatus } from '../../../shared/utils/api/hooks/project/useUpdateProjectStatus';
 
@@ -10,12 +10,12 @@ enum ProjectStatus {
   CLOSED = 'closed',
 }
 
-interface ProjectStatusSelect {
+interface ProjectStatusSelectProps {
   projectId: string;
   projectStatus: ProjectStatus;
 }
 
-const ProjectStatusSelect: FC<ProjectStatusSelect> = ({ projectId, projectStatus }) => {
+const ProjectStatusSelect: FC<ProjectStatusSelectProps> = ({ projectId, projectStatus }) => {
   const updateProjectStatus = useUpdateProjectStatus(projectId);
 
   const handleSendOnModeration = () => {

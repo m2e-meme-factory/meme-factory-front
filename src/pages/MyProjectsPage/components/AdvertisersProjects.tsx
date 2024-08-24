@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Project, User } from 'api';
 import { useGetMyProjects } from '../../../shared/utils/api/hooks/project/useGetMyProjects';
-import makeAnimated from 'react-select/animated';
 import { useInView } from 'react-intersection-observer';
 import { Button, Flex, Heading } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
@@ -31,8 +30,6 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
     page: currentPage,
     limit: DISPLAY_LIMIT,
   });
-
-  const animatedComponents = makeAnimated();
 
   const { ref, inView } = useInView({
     threshold: 1.0,

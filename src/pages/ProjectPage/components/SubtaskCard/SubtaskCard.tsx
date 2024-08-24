@@ -34,11 +34,6 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
     }
   }, [progress, id]);
 
-  const proposeBtnClassname =
-    userRole === 'guestCreator' || userRole === 'guestAdvertiser'
-      ? 'ProposalButton'
-      : 'ProposalButtonDisabled';
-
   const handleSendProposalClick = () => {
     setIsFormVisible(!isFormVisible);
   };

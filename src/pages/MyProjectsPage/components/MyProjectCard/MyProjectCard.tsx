@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../shared/utils/redux/store';
 import { Role } from '../../../../shared/consts/userRoles';
 import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
-import { number } from 'zod';
 
 interface MyProjectCardProps {
   id: string;
@@ -28,7 +27,7 @@ const StyledCard = styled(Card)`
 const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl, status }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
-  const { data: freelancersResponse, isLoading } = useGetProjectFreelancers(id, 'accepted');
+  const { data: freelancersResponse } = useGetProjectFreelancers(id, 'accepted');
   const [freelancers, setFreelancersCount] = useState<number>();
 
   useEffect(() => {

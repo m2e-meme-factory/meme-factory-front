@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
 import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';

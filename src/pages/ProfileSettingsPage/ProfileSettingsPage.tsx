@@ -1,11 +1,10 @@
 import { Heading, Card, Flex, IconButton } from '@radix-ui/themes';
 import React from 'react';
 import styles from './../ProfilePage/ProfilePage.module.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 
 const ProfileSettingsPage = () => {
-  const navigate = useNavigate();
 
   return (
     <Flex m='4' direction='column'>

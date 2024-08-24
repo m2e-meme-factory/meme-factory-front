@@ -2,12 +2,12 @@ import { Button, ScrollArea, Table } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetProjectFreelancers } from '../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
-import { FreelancersResponse, ProjectProgress } from 'api';
+import { FreelancersResponse } from 'api';
 
 const FreelancersStats = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data: response, isLoading: isAFreelancersLoading } = useGetProjectFreelancers(
+  const { data: response } = useGetProjectFreelancers(
     id ? id : '',
     'accepted'
   );

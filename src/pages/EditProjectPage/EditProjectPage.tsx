@@ -17,13 +17,13 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, ButtonIcon, TrashIcon } from '@radix-ui/react-icons';
+import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import { FormError, Option, Price } from '../../@types/app';
+import { FormError, Option } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskSection/CreateSubstaskSection';

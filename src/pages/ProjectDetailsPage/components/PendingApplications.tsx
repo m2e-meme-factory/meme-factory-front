@@ -2,12 +2,12 @@ import { ScrollArea, Table } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import { useGetProjectFreelancers } from '../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
 import { useParams } from 'react-router-dom';
-import { FreelancersResponse, ProjectProgress } from 'api';
+import { FreelancersResponse } from 'api';
 import PendingApplicationsRow from './PendingApplicationsRow';
 
 const PendingApplications = () => {
   const { id } = useParams();
-  const { data: pendingFreelancers, isLoading: isPFreelancersLoading } = useGetProjectFreelancers(
+  const { data: pendingFreelancers } = useGetProjectFreelancers(
     id ? id : '',
     'pending'
   );

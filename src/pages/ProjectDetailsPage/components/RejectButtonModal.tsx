@@ -3,11 +3,11 @@ import React, { FC, useState } from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { useRejectApplication } from '../../../shared/utils/api/hooks/project/useRejectApplication';
 
-interface RejectButtonModal {
+interface RejectButtonModalProps {
   progressId: string | undefined;
 }
 
-const RejectButtonModal: FC<RejectButtonModal> = ({ progressId }) => {
+const RejectButtonModal: FC<RejectButtonModalProps> = ({ progressId }) => {
   const [rejectLoading, setRejectLoading] = useState(false);
   const [rejectMessage, setRejectMessage] = useState('');
 

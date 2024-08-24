@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Badge, Button, Card, Flex, Heading, Text, Dialog, TextArea } from '@radix-ui/themes';
 import {
+  DollarOutlined,
   PushpinOutlined,
   TagsOutlined,
   TeamOutlined,
@@ -45,6 +46,8 @@ const ProjectPage = () => {
   const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
+  const [minPrice, setMinPrice] = useState<number>();
+  const [maxPrice, setMaxPrice] = useState<number>();
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -62,6 +65,9 @@ const ProjectPage = () => {
   useEffect(() => {
     if (projectInfoResponse) {
       setCurrentProject(projectInfoResponse.data);
+      console.log(projectInfoResponse);
+      setMinPrice(parseInt(projectInfoResponse.data.minPrice ?? '0'));
+      setMaxPrice(parseInt(projectInfoResponse.data.maxPrice ?? '0'));
       dispatch(setProject(projectInfoResponse.data));
     }
   }, [projectInfoResponse, dispatch]);
@@ -251,6 +257,32 @@ const ProjectPage = () => {
               </Flex>
             </Card>
           </Flex>
+
+          <Flex direction='column' mb='5'>
+            <Flex align='center' mb='2'>
+              <DollarOutlined style={{ color: 'yellow', marginRight: '8px' }} />
+              <Text weight='medium' size='5'>
+                Price
+              </Text>
+            </Flex>
+            <Card mb='2'>
+              <Text weight='regular' size='6'>
+                Min:{' '}
+                <Text color='yellow' weight='medium'>
+                  {minPrice}
+                </Text>
+              </Text>
+            </Card>
+            <Card>
+              <Text weight='regular' size='6'>
+                Max:{' '}
+                <Text color='yellow' weight='medium'>
+                  {maxPrice}
+                </Text>
+              </Text>
+            </Card>
+          </Flex>
+
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='2'>
               <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />

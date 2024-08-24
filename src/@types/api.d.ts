@@ -291,8 +291,8 @@ declare module 'api' {
 
   export interface Project {
     project: ProjectData;
-    priceMax: number | null;
-    priceMin: number | null;
+    maxPrice: string | null;
+    minPrice: string | null;
   }
 
   export interface UpdateStatusPayload {

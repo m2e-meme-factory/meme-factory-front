@@ -79,10 +79,14 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
   }
 
   return (
-    <Card className='SubtaskCard' mb='3' onClick={handleDialogOpen}>
+    <Card className='SubtaskCard' mb='3'>
       <Flex align='center' justify='between'>
         <Flex>
-          <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+          {!isApproved && !isRejected && (
+            <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+          )}
+          {isApproved && <CheckOutlined style={{ color: 'green', marginRight: '15px' }} />}
+          {isRejected && <CloseOutlined style={{ color: 'red', marginRight: '15px' }} />}
           <Flex direction='column'>
             <Text size='5' weight='medium'>
               {title}
@@ -94,7 +98,7 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
         </Flex>
         <Dialog.Root open={isModalVisible}>
           <Dialog.Trigger asChild>
-            <IconButton>
+            <IconButton onClick={handleDialogOpen}>
               <ChevronRightIcon />
             </IconButton>
           </Dialog.Trigger>
@@ -148,8 +152,6 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
-        {isApproved && <CheckOutlined style={{ color: 'green', marginRight: '15px' }} />}
-        {isRejected && <CloseOutlined style={{ color: 'red', marginRight: '15px' }} />}
       </Flex>
     </Card>
   );

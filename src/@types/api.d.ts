@@ -111,7 +111,7 @@ declare module 'api' {
 
   interface ProgressWithProjectResponse {
     progress: ProjectProgress;
-    project: Project;
+    project: ProjectData;
   }
 
   export interface UpdateProjectPayload {

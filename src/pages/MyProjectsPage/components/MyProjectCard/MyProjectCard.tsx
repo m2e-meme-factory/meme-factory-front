@@ -32,7 +32,6 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
 
   useEffect(() => {
     if (freelancersResponse) {
-      console.log(freelancersResponse.data.length);
       setFreelancersCount(freelancersResponse.data.length);
     }
   }, [freelancersResponse]);

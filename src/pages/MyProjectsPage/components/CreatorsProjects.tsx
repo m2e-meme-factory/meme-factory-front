@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Project, User } from 'api';
+import { ProjectData, User } from 'api';
 import { useGetUserProgresses } from '../../../shared/utils/api/hooks/project/useGetUserProgresses';
 import makeAnimated from 'react-select/animated';
 import { Flex, Heading, Text } from '@radix-ui/themes';
@@ -15,7 +15,7 @@ interface CreatorsProjectsProps {
 }
 
 const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
-  const [myProjects, setMyProjects] = useState<Project[]>([]);
+  const [myProjects, setMyProjects] = useState<ProjectData[]>([]);
   const [selectedProjectStatuses, setSelectedProjectStatuses] = useState<string[]>([]);
   const [selectedApplicationStatuses, setSelectedApplicationStatuses] = useState<string[]>([]);
   const animatedComponents = makeAnimated();
@@ -54,7 +54,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
         .filter((progressWithProject) => {
           const isProjectStatusMatch =
             selectedProjectStatuses.length === 0 ||
-            selectedProjectStatuses.includes(progressWithProject.project.project.status);
+            selectedProjectStatuses.includes(progressWithProject.project.status);
           const isApplicationStatusMatch =
             selectedApplicationStatuses.length === 0 ||
             selectedApplicationStatuses.includes(progressWithProject.progress.status);
@@ -65,6 +65,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
 
       setMyProjects(projects);
     }
+    console.log(myProjects);
   }, [response, selectedProjectStatuses, selectedApplicationStatuses]);
 
   return (
@@ -106,10 +107,10 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
             {myProjects.map((project, index) => (
               <MyProjectCardForCreator
                 key={index}
-                id={project.project.id}
-                bannerUrl={project.project.bannerUrl}
-                title={project.project.title}
-                category={project.project.category}
+                id={project.id}
+                bannerUrl={project.bannerUrl}
+                title={project.title}
+                category={project.category}
               />
             ))}
           </Flex>

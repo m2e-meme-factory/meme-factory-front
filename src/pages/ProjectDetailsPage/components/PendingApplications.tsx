@@ -34,6 +34,7 @@ const PendingApplications = () => {
                 <PendingApplicationsRow
                   progressId={app.progress.id.toString()}
                   progress={app.progress}
+                  user={app.user}
                   name={app.user.username ?? 'user'}
                 />
               );

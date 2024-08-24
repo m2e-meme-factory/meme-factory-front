@@ -3,21 +3,22 @@ import React, { FC } from 'react';
 import ApplyButtonModal from './ApplyButtonModal';
 import RejectButtonModal from './RejectButtonModal';
 import { useNavigate } from 'react-router-dom';
-import { ProjectProgress } from 'api';
+import { ProjectProgress, User } from 'api';
 
 interface PendingApplicationsRowProps {
   progressId: string;
   name: string;
   progress: ProjectProgress;
+  user: User;
 }
 
 const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
   name,
   progressId,
   progress,
+  user
 }) => {
   const navigate = useNavigate();
-
   return (
     <Table.Row>
       <Table.Cell>
@@ -27,7 +28,7 @@ const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
       </Table.Cell>
       <Table.Cell>
         <Button
-          onClick={() => navigate(`/projects/${progress.projectId}/logs/${progress.user.id}`)}
+          onClick={() => navigate(`/projects/${progress.projectId}/logs/${user.id}`)}
         >
           Read message
         </Button>

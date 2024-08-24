@@ -42,10 +42,7 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
-  const {
-    data,
-    isLoading: refLoading,
-  } = useGetRefData(userSt?.telegramId);
+  const { data, isLoading: refLoading } = useGetRefData(userSt?.telegramId);
 
   useEffect(() => {
     if (data) {

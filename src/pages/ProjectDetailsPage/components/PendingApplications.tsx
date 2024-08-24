@@ -7,10 +7,7 @@ import PendingApplicationsRow from './PendingApplicationsRow';
 
 const PendingApplications = () => {
   const { id } = useParams();
-  const { data: pendingFreelancers } = useGetProjectFreelancers(
-    id ? id : '',
-    'pending'
-  );
+  const { data: pendingFreelancers } = useGetProjectFreelancers(id ? id : '', 'pending');
 
   const [pendingApplications, setPendingApplications] = useState<FreelancersResponse[]>();
 

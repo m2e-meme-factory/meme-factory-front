@@ -7,10 +7,7 @@ import { FreelancersResponse } from 'api';
 const FreelancersStats = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data: response } = useGetProjectFreelancers(
-    id ? id : '',
-    'accepted'
-  );
+  const { data: response } = useGetProjectFreelancers(id ? id : '', 'accepted');
   const [activeFreelancers, setActiveFreelancers] = useState<FreelancersResponse[]>([]);
 
   useEffect(() => {

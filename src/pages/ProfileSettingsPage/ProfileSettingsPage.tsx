@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 
 const ProfileSettingsPage = () => {
-
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>

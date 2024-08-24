@@ -55,7 +55,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
         .filter((progressWithProject) => {
           const isProjectStatusMatch =
             selectedProjectStatuses.length === 0 ||
-            selectedProjectStatuses.includes(progressWithProject.project.status);
+            selectedProjectStatuses.includes(progressWithProject.project.project.status);
           const isApplicationStatusMatch =
             selectedApplicationStatuses.length === 0 ||
             selectedApplicationStatuses.includes(progressWithProject.progress.status);
@@ -107,10 +107,10 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
             {myProjects.map((project, index) => (
               <MyProjectCardForCreator
                 key={index}
-                id={project.id}
-                bannerUrl={project.bannerUrl}
-                title={project.title}
-                category={project.category}
+                id={project.project.id}
+                bannerUrl={project.project.bannerUrl}
+                title={project.project.title}
+                category={project.project.category}
               />
             ))}
           </Flex>

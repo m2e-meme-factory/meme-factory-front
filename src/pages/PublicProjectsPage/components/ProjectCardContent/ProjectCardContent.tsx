@@ -1,8 +1,8 @@
 import { Flex, Heading, Text } from '@radix-ui/themes';
 import styled from 'styled-components';
-import { DollarOutlined, TagsOutlined } from '@ant-design/icons';
+import { TagsOutlined } from '@ant-design/icons';
 import React, { FC } from 'react';
-import { Project } from 'api';
+import { ProjectData } from 'api';
 
 const TaskContentHeading = styled(Heading)`
   color: black;
@@ -14,7 +14,7 @@ const TaskContentText = styled(Text)`
 `;
 
 interface ProjectCardContentProps {
-  project: Project;
+  project: ProjectData;
 }
 
 const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {

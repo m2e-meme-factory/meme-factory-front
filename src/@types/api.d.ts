@@ -275,7 +275,7 @@ declare module 'api' {
     creatorId: number;
   }
 
-  export interface Project {
+  export interface ProjectData {
     id: string;
     title: string;
     description: string;
@@ -283,12 +283,16 @@ declare module 'api' {
     files: string[];
     category: string;
     tags: string[];
-    price: number;
     tasks: Task[];
     authorId: string;
-    creationDate: Date;
     status: ProjectStatus;
     author: User;
+  }
+
+  export interface Project {
+    project: ProjectData;
+    priceMax: number | null;
+    priceMin: number | null;
   }
 
   export interface UpdateStatusPayload {
@@ -303,7 +307,6 @@ declare module 'api' {
     files: string[];
     category: string | null;
     tags: string[];
-    price: number;
     subtasks: CreateSubtaskDTO[];
     authorId: string | undefined;
   }

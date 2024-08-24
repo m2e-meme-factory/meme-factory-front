@@ -71,11 +71,11 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
           {myProjects.map((project, index) => (
             <MyProjectCard
               key={index}
-              id={project.id}
-              bannerUrl={project.bannerUrl}
-              title={project.title}
-              category={project.category}
-              status={project.status}
+              id={project.project.id}
+              bannerUrl={project.project.bannerUrl}
+              title={project.project.title}
+              category={project.project.category}
+              status={project.project.status}
             />
           ))}
         </Flex>

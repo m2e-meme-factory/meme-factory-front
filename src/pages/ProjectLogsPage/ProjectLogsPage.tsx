@@ -132,7 +132,7 @@ const ProjectLogsPage = () => {
           >
             <ArrowLeftIcon />
           </IconButton>
-          <Heading ml='3'>{shortenString(currentProject?.title, 20)}</Heading>
+          <Heading ml='3'>{shortenString(currentProject?.project.title, 20)}</Heading>
         </Flex>
         <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
       </Flex>
@@ -152,9 +152,9 @@ const ProjectLogsPage = () => {
               }
               advertiserName={shortenString(
                 currentProject
-                  ? currentProject.author.username
-                    ? currentProject.author.username
-                    : `User ${currentProject.author.telegramId}`
+                  ? currentProject.project.author.username
+                    ? currentProject.project.author.username
+                    : `User ${currentProject.project.author.telegramId}`
                   : 'Project host'
               )}
               allEvents={events}

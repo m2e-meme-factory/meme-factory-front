@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Badge, Button, Card, Flex, Heading, Text, Dialog, TextArea } from '@radix-ui/themes';
 import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Text,
-  Dialog,
-  TextArea,
-} from '@radix-ui/themes';
-import {
-  DollarOutlined,
   PushpinOutlined,
   TagsOutlined,
   TeamOutlined,
@@ -64,7 +53,7 @@ const ProjectPage = () => {
     projectId: id ?? '',
     userId: user?.id,
   });
-  const { mutate: applyMutation, data: applyResponse } = useApplyForProject(
+  const { mutate: applyMutation } = useApplyForProject(
     setIsApplyLoading,
     setApplyBlocked,
     setCurrentUserRole
@@ -97,7 +86,7 @@ const ProjectPage = () => {
     if (!user) return;
 
     if (user.role === Role.ADVERTISER) {
-      setCurrentUserRole(user.id === project.authorId ? 'projectOwner' : 'guestAdvertiser');
+      setCurrentUserRole(user.id === project.project.authorId ? 'projectOwner' : 'guestAdvertiser');
     } else {
       if (currentUserRole !== 'projectOwner' && currentUserRole !== 'guestAdvertiser') {
         if (currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') {
@@ -131,7 +120,7 @@ const ProjectPage = () => {
     if (currentProject && user) {
       try {
         await downloadFiles({
-          params: { projectId: currentProject.id, telegramId: user.telegramId },
+          params: { projectId: currentProject.project.id, telegramId: user.telegramId },
         });
       } catch (error) {
         setDownloadError(true);
@@ -152,7 +141,7 @@ const ProjectPage = () => {
 
       applyMutation({
         params: {
-          projectId: currentProject.id,
+          projectId: currentProject.project.id,
           message: applicationMessage,
         },
       });
@@ -163,8 +152,8 @@ const ProjectPage = () => {
     setApplicationMessage(event.target.value);
   };
 
-  const bannerLink = currentProject?.bannerUrl
-    ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
+  const bannerLink = currentProject?.project.bannerUrl
+    ? `https://api.meme-factory.site${currentProject?.project.bannerUrl}`
     : fallbackBanner;
 
   return (
@@ -174,7 +163,7 @@ const ProjectPage = () => {
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Heading weight='medium'>{currentProject?.title}</Heading>
+          <Heading weight='medium'>{currentProject?.project.title}</Heading>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
               Edit project
@@ -224,17 +213,17 @@ const ProjectPage = () => {
             </Dialog.Root>
           )}
           <Text color='yellow' weight='medium' mb='5'>
-            Category: {currentProject?.category}
+            Category: {currentProject?.project.category}
           </Text>
           <Flex mb='5'>
-            <TaskDescriptionDisplay description={currentProject?.description || ''} />
+            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
           </Flex>
           <Flex align='center' direction='row' mb='2'>
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
             <Text weight='medium' size='5'>
               Tags:{' '}
-              {currentProject?.tags &&
-                currentProject?.tags.map((tag, index) => (
+              {currentProject?.project.tags &&
+                currentProject?.project.tags.map((tag, index) => (
                   <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
                     {tag}
                   </Badge>
@@ -253,9 +242,9 @@ const ProjectPage = () => {
                 <Text weight='medium' size='6'>
                   {shortenString(
                     currentProject
-                      ? currentProject.author.username
-                        ? currentProject.author.username
-                        : `User ${currentProject.author.telegramId}`
+                      ? currentProject.project.author.username
+                        ? currentProject.project.author.username
+                        : `User ${currentProject.project.author.telegramId}`
                       : 'Meme factory'
                   )}
                 </Text>
@@ -269,8 +258,8 @@ const ProjectPage = () => {
                 Subtasks
               </Text>
             </Flex>
-            {currentProject?.tasks &&
-              currentProject?.tasks.map((subtask, index) => (
+            {currentProject?.project.tasks &&
+              currentProject?.project.tasks.map((subtask, index) => (
                 <SubtaskCard
                   key={index}
                   id={subtask.task.id}
@@ -303,8 +292,8 @@ const ProjectPage = () => {
                 </Text>
               )}
             </Flex>
-            {currentProject?.files &&
-              currentProject?.files.map((file, index) => (
+            {currentProject?.project.files &&
+              currentProject?.project.files.map((file, index) => (
                 <AttachmentCard key={index} name={file} />
               ))}
           </Flex>

@@ -45,43 +45,43 @@ const EditProjectPage = () => {
   const animatedComponents = makeAnimated();
   const user = useSelector((state: RootState) => state.user.user);
   const project = useSelector((state: RootState) => state.project.project);
-  const subtasksPrepared = project ? project.tasks.map((task) => task.task) : [];
+  const subtasksPrepared = project ? project.project.tasks.map((task) => task.task) : [];
 
   const navigate = useNavigate();
-  const [title, setTitle] = useState(project?.title);
-  const [description, setDescription] = useState(project?.description);
-  const [tags, setTags] = useState<string[]>(project ? project.tags : []);
-  const [category, setCategory] = useState<string | null>(project ? project.category : null);
-  const [priceMode, setPriceMode] = useState<'single' | 'range'>('single');
-  const [price, setPrice] = useState<Price>(
-    project ? { single: project.price, min: project.price, max: project.price } : {}
+  const [title, setTitle] = useState(project?.project.title);
+  const [description, setDescription] = useState(project?.project.description);
+  const [tags, setTags] = useState<string[]>(project ? project.project.tags : []);
+  const [category, setCategory] = useState<string | null>(
+    project ? project.project.category : null
   );
   const [subtasks, setSubtasks] = useState<TaskInfo[]>(subtasksPrepared);
   const [singleFile, setSingleFile] = useState<File[]>([]);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
   const [projectStatus, setProjectStatus] = useState<ProjectStatus>(
-    project ? project.status : ProjectStatus.DRAFT
+    project ? project.project.status : ProjectStatus.DRAFT
   );
-  const [attachedFiles, setAttachedFiles] = useState<string[]>(project ? project.files : []);
+  const [attachedFiles, setAttachedFiles] = useState<string[]>(
+    project ? project.project.files : []
+  );
   const [attachedBanner, setAttachedBanner] = useState<string | null>(
-    project ? project.bannerUrl : null
+    project ? project.project.bannerUrl : null
   );
   const [isProjectSaving, setIsProjectSaving] = useState(false);
 
-  const updateProjectMutation = useUpdateProject(project?.id);
+  const updateProjectMutation = useUpdateProject(project?.project.id);
 
   const capitalizeFirstLetter = (string: string) =>
     string.charAt(0).toUpperCase() + string.slice(1);
 
-  const tagsOptionsSelected = project?.tags.map((tag) => ({
+  const tagsOptionsSelected = project?.project.tags.map((tag) => ({
     value: tag,
     label: capitalizeFirstLetter(tag),
   }));
 
   const categoryOptionSelected = {
-    value: project?.category,
-    label: capitalizeFirstLetter(project?.category ? project?.category : ''),
+    value: project?.project.category,
+    label: capitalizeFirstLetter(project?.project.category ? project?.project.category : ''),
   };
 
   const handleSingleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -122,60 +122,12 @@ const EditProjectPage = () => {
     }
   };
 
-  const handlePriceModeChange = () => {
-    setPriceMode(priceMode === 'single' ? 'range' : 'single');
-    if (priceMode === 'single') {
-      setPrice({ single: price.single, min: undefined, max: undefined });
-    } else {
-      setPrice({ single: undefined, min: price.min, max: price.max });
-    }
-  };
-
-  const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    const numValue = parseInt(value, 10);
-
-    if (priceMode === 'single') {
-      setPrice({ single: isNaN(numValue) ? undefined : numValue, min: undefined, max: undefined });
-      if (value) {
-        setFormErrors((prevErrors) => prevErrors.filter((error) => error.field !== 'price'));
-      }
-    } else {
-      if (name === 'min') {
-        setPrice((prevPrice) => ({
-          single: undefined,
-          min: isNaN(numValue) ? undefined : numValue,
-          max: prevPrice.max,
-        }));
-        if (value) {
-          setFormErrors((prevErrors) => prevErrors.filter((error) => error.field !== 'min'));
-        }
-      } else if (name === 'max') {
-        setPrice((prevPrice) => ({
-          single: undefined,
-          min: prevPrice.min,
-          max: isNaN(numValue) ? undefined : numValue,
-        }));
-        if (value) {
-          setFormErrors((prevErrors) => prevErrors.filter((error) => error.field !== 'max'));
-        }
-      }
-    }
-  };
-
   const validateForm = (): FormError[] => {
     const errors: FormError[] = [];
 
     if (!title) errors.push({ field: 'title', message: 'Title is required' });
     if (!description) errors.push({ field: 'description', message: 'Description is required' });
     if (!category) errors.push({ field: 'category', message: 'Category is required' });
-
-    if (priceMode === 'single' && price.single === undefined) {
-      errors.push({ field: 'price', message: 'Price is required' });
-    } else if (priceMode === 'range') {
-      if (price.min === undefined) errors.push({ field: 'min', message: 'Min price is required' });
-      if (price.max === undefined) errors.push({ field: 'max', message: 'Max price is required' });
-    }
 
     return errors;
   };
@@ -185,7 +137,6 @@ const EditProjectPage = () => {
     const errors = validateForm();
 
     if (errors.length === 0) {
-      let projectPrice = priceMode === 'range' ? price.min : price.single;
       let bannerUrl = attachedBanner;
       let files: string[] = [...attachedFiles];
 
@@ -237,7 +188,6 @@ const EditProjectPage = () => {
         description: description ? description : '',
         tags,
         category,
-        price: projectPrice ? projectPrice : 0,
         subtasks: subtasks.map((subtask) => {
           const { id, ...rest } = subtask;
           return rest;
@@ -247,7 +197,9 @@ const EditProjectPage = () => {
       };
 
       if (project && projectData) {
-        updateProjectMutation.mutate({ params: { projectId: project.id, project: projectData } });
+        updateProjectMutation.mutate({
+          params: { projectId: project.project.id, project: projectData },
+        });
         setIsProjectSaving(false);
       }
     } else {
@@ -423,65 +375,6 @@ const EditProjectPage = () => {
           </Text>
         )}
 
-        {priceMode === 'single' ? (
-          <Flex direction='column'>
-            <Text weight='medium' mt='3' mb='1'>
-              Price
-            </Text>
-            <TextField.Root
-              onChange={handlePriceChange}
-              value={price.single ?? ''}
-              placeholder='Enter a price'
-            >
-              <TextField.Slot />
-            </TextField.Root>
-            {formErrors.find((error) => error.field === 'price') && (
-              <Text color='red' mt='1'>
-                {formErrors.find((error) => error.field === 'price')?.message}
-              </Text>
-            )}
-          </Flex>
-        ) : (
-          <>
-            <Flex direction='column' mt='3' mb='3'>
-              <Text weight='medium'>Min:</Text>
-              <TextField.Root
-                name='min'
-                onChange={handlePriceChange}
-                value={price.min ?? ''}
-                placeholder='Enter a min price'
-              >
-                <TextField.Slot />
-              </TextField.Root>
-              {formErrors.find((error) => error.field === 'min') && (
-                <Text color='red' mt='1'>
-                  {formErrors.find((error) => error.field === 'min')?.message}
-                </Text>
-              )}
-            </Flex>
-            <Flex direction='column'>
-              <Text weight='medium'>Max:</Text>
-              <TextField.Root
-                name='max'
-                onChange={handlePriceChange}
-                value={price.max ?? ''}
-                placeholder='Enter a max price'
-              >
-                <TextField.Slot />
-              </TextField.Root>
-              {formErrors.find((error) => error.field === 'max') && (
-                <Text color='red' mt='1'>
-                  {formErrors.find((error) => error.field === 'max')?.message}
-                </Text>
-              )}
-            </Flex>
-          </>
-        )}
-
-        <Button variant='surface' mt='3' mb='3' onClick={handlePriceModeChange}>
-          {priceMode === 'single' ? 'Set Min/Max Price' : 'Set Single Price'}
-        </Button>
-
         <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
         <Button
@@ -494,7 +387,9 @@ const EditProjectPage = () => {
           Save Project
         </Button>
 
-        {project && <ProjectStatusSelect projectId={project.id} projectStatus={projectStatus} />}
+        {project && (
+          <ProjectStatusSelect projectId={project.project.id} projectStatus={projectStatus} />
+        )}
       </Flex>
     </Flex>
   );

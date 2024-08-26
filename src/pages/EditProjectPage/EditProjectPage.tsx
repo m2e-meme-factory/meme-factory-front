@@ -26,12 +26,12 @@ import {
 import { FormError, Option } from '../../@types/app';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
-import CreateSubtaskSection from '../CreateProjectPage/components/CreateSubtaskSection/CreateSubstaskSection';
 import { useUpdateProject } from '../../shared/utils/api/hooks/project/useUpdateProject';
 import ProjectStatusSelect from './components/ProjectStatusSelect';
-import { CreateProjectDTO, TaskInfo } from 'api';
+import { UpdateProjectDTO, UpdateTaskDTO } from 'api';
 import toast from 'react-hot-toast';
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
+import EditSubtaskSection from './components/EditSubtaskSection';
 
 enum ProjectStatus {
   DRAFT = 'draft',
@@ -48,13 +48,14 @@ const EditProjectPage = () => {
   const subtasksPrepared = project ? project.project.tasks.map((task) => task.task) : [];
 
   const navigate = useNavigate();
+  const [subtasksToDelete, setSubtasksToDelete] = useState<string[]>([]);
   const [title, setTitle] = useState(project?.project.title);
   const [description, setDescription] = useState(project?.project.description);
   const [tags, setTags] = useState<string[]>(project ? project.project.tags : []);
   const [category, setCategory] = useState<string | null>(
     project ? project.project.category : null
   );
-  const [subtasks, setSubtasks] = useState<TaskInfo[]>(subtasksPrepared);
+  const [subtasks, setSubtasks] = useState<UpdateTaskDTO[]>(subtasksPrepared);
   const [singleFile, setSingleFile] = useState<File[]>([]);
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
@@ -182,7 +183,7 @@ const EditProjectPage = () => {
         }
       }
 
-      const projectData: CreateProjectDTO = {
+      const projectData: UpdateProjectDTO = {
         authorId: user?.id,
         title: title ? title : '',
         description: description ? description : '',
@@ -190,12 +191,17 @@ const EditProjectPage = () => {
         category,
         subtasks: subtasks.map((subtask) => {
           const { id, ...rest } = subtask;
-          return rest;
+          if (id?.length === 36) {
+            return rest;
+          }
+          return subtask;
         }),
+        deletedTasks: subtasksToDelete,
         bannerUrl: bannerUrl ? bannerUrl : attachedBanner,
         files: files,
       };
 
+      console.log(projectData);
       if (project && projectData) {
         updateProjectMutation.mutate({
           params: { projectId: project.project.id, project: projectData },
@@ -375,7 +381,11 @@ const EditProjectPage = () => {
           </Text>
         )}
 
-        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
+        <EditSubtaskSection
+          setSubtasks={setSubtasks}
+          subtasks={subtasks}
+          setTasksToDelete={setSubtasksToDelete}
+        />
 
         <Button
           style={{ padding: '20px' }}

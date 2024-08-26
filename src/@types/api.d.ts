@@ -117,7 +117,37 @@ declare module 'api' {
 
   export interface UpdateProjectPayload {
     projectId: string;
-    project: CreateProjectDTO;
+    project: UpdateProjectDTO;
+  }
+
+  export interface UpdateProjectDTO {
+    title: string;
+    description: string;
+    bannerUrl: string | null;
+    files: string[];
+    category: string | null;
+    tags: string[];
+    subtasks: UpdateTaskDTO[];
+    deletedTasks: string[];
+    authorId: string | undefined;
+  }
+
+  export interface UpdateTaskDTO {
+    id?: string;
+    title: string;
+    description: string;
+    price: number;
+  }
+
+  export interface CreateProjectDTO {
+    title: string;
+    description: string;
+    bannerUrl: string | null;
+    files: string[];
+    category: string | null;
+    tags: string[];
+    subtasks: CreateSubtaskDTO[];
+    authorId: string | undefined;
   }
 
   interface Transaction {
@@ -269,17 +299,6 @@ declare module 'api' {
   export interface UpdateStatusPayload {
     id: string;
     payload: { status: ProjectStatus };
-  }
-
-  export interface CreateProjectDTO {
-    title: string;
-    description: string;
-    bannerUrl: string | null;
-    files: string[];
-    category: string | null;
-    tags: string[];
-    subtasks: CreateSubtaskDTO[];
-    authorId: string | undefined;
   }
 
   export interface RefDataResponse {

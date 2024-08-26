@@ -8,6 +8,7 @@ import { RootState } from '../../../../shared/utils/redux/store';
 import { Role } from '../../../../shared/consts/userRoles';
 import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
 import { ProjectStatus } from '../../../../shared/consts/project-statuses';
+import { shortenString } from '../../../../shared/utils/helpers/shortenString';
 
 interface MyProjectCardProps {
   id: string;
@@ -51,7 +52,7 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
       <Flex direction='column'>
         <CardBanner bannerUrl={bannerUrl} />
         <Flex direction='column' m='4'>
-          <Heading>{title}</Heading>
+          <Heading>{shortenString(title, 40)}</Heading>
           <Text mb='3' color='yellow' weight='medium'>
             {category}
           </Text>

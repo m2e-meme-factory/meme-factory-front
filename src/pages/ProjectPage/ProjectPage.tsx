@@ -169,7 +169,7 @@ const ProjectPage = () => {
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Heading weight='medium'>{currentProject?.project.title}</Heading>
+          <Heading weight='medium'>{shortenString(currentProject?.project.title, 40)}</Heading>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
               Edit project

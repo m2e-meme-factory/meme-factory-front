@@ -78,6 +78,7 @@ declare module 'api' {
     transactionId?: number;
     amount?: number;
     taskId?: number;
+    approvedEventId?: number;
   }
 
   enum EventType {

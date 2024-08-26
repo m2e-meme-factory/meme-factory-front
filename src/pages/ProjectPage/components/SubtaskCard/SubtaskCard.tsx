@@ -21,14 +21,12 @@ interface TaskCardProps {
 const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRole, progress }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isApplied, setApplied] = useState(false);
   const [isApproved, setApproved] = useState(false);
   const [isRejected, setRejected] = useState(false);
 
   useEffect(() => {
     if (progress) {
       const taskId = Number.parseInt(id);
-      setApplied(progress.appliedTasks.includes(taskId));
       setApproved(progress.approvedTasks.includes(taskId));
       setRejected(progress.rejectedTasks.includes(taskId));
     }
@@ -109,25 +107,14 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
                 <span>Subtask: {title}</span>
               </Dialog.Title>
               {isFormVisible ? (
-                <ModalSubtaskForm
-                  taskId={id}
-                  progress={progress}
-                  closeDialog={handleDialogClose}
-                  setIsApplied={setApplied}
-                />
+                <ModalSubtaskForm taskId={id} closeDialog={handleDialogClose} />
               ) : (
                 <>
                   <ModalSubtaskInfo id={id} title={title} description={description} price={price} />
                   {userRole !== 'projectOwner' &&
                     userRole !== 'guestAdvertiser' &&
                     userRole !== 'guestCreator' && (
-                      <button
-                        className={
-                          isApplied || isApproved ? 'ProposalButtonDisabled' : 'ProposalButton'
-                        }
-                        disabled={isApplied || isApproved}
-                        onClick={handleSendProposalClick}
-                      >
+                      <button className='ProposalButton' onClick={handleSendProposalClick}>
                         <Text>Send Proposal</Text>
                       </button>
                     )}

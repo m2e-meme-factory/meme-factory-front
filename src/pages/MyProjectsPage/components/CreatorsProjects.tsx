@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Project, User } from 'api';
+import { ProjectData, User } from 'api';
 import { useGetUserProgresses } from '../../../shared/utils/api/hooks/project/useGetUserProgresses';
 import makeAnimated from 'react-select/animated';
 import { Flex, Heading, Text } from '@radix-ui/themes';
-import MyProjectCard from './MyProjectCard/MyProjectCard';
 import { CUSTOM_SELECT_STYLES_MULTI } from '../../../styles/customSelectStyles';
 import Select, { MultiValue } from 'react-select';
 import { PROJECT_STATUSES } from '../../../shared/consts/project-statuses';
@@ -16,12 +15,12 @@ interface CreatorsProjectsProps {
 }
 
 const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
-  const [myProjects, setMyProjects] = useState<Project[]>([]);
+  const [myProjects, setMyProjects] = useState<ProjectData[]>([]);
   const [selectedProjectStatuses, setSelectedProjectStatuses] = useState<string[]>([]);
   const [selectedApplicationStatuses, setSelectedApplicationStatuses] = useState<string[]>([]);
   const animatedComponents = makeAnimated();
 
-  const { data: response, isLoading } = useGetUserProgresses({
+  const { data: response } = useGetUserProgresses({
     userId: user?.id || '',
   });
 
@@ -65,8 +64,8 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user }) => {
         .map((progress) => progress.project);
 
       setMyProjects(projects);
-      console.log(projects);
     }
+    console.log(myProjects);
   }, [response, selectedProjectStatuses, selectedApplicationStatuses]);
 
   return (

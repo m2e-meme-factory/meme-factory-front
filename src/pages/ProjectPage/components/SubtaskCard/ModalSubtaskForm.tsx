@@ -8,17 +8,10 @@ import { useApplyTaskCompletion } from '../../../../shared/utils/api/hooks/task/
 
 interface ModalSubtaskFormProps {
   closeDialog: () => void;
-  progress: ProjectProgress | undefined;
   taskId: string;
-  setIsApplied: Dispatch<SetStateAction<boolean>>;
 }
 
-const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({
-  closeDialog,
-  progress,
-  taskId,
-  setIsApplied,
-}) => {
+const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({ closeDialog, taskId }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [coverLetter, setCoverLetter] = useState<string>();
   const applyTaskCompletionMutation = useApplyTaskCompletion();
@@ -29,7 +22,6 @@ const ModalSubtaskForm: FC<ModalSubtaskFormProps> = ({
     const formData = new FormData(event.currentTarget);
     const coverLetter = formData.get('cover-letter') as string;
 
-    setIsApplied(true);
     setCoverLetter(coverLetter);
     setIsDialogOpen(true);
   };

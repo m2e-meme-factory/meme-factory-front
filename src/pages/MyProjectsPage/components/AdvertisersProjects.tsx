@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Project, User } from 'api';
 import { useGetMyProjects } from '../../../shared/utils/api/hooks/project/useGetMyProjects';
-import makeAnimated from 'react-select/animated';
 import { useInView } from 'react-intersection-observer';
 import { Button, Flex, Heading } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
@@ -31,8 +30,6 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
     page: currentPage,
     limit: DISPLAY_LIMIT,
   });
-
-  const animatedComponents = makeAnimated();
 
   const { ref, inView } = useInView({
     threshold: 1.0,
@@ -71,11 +68,11 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
           {myProjects.map((project, index) => (
             <MyProjectCard
               key={index}
-              id={project.id}
-              bannerUrl={project.bannerUrl}
-              title={project.title}
-              category={project.category}
-              status={project.status}
+              id={project.project.id}
+              bannerUrl={project.project.bannerUrl}
+              title={project.project.title}
+              category={project.project.category}
+              status={project.project.status}
             />
           ))}
         </Flex>

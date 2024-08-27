@@ -11,7 +11,7 @@ export const approveTaskCompletion = (
   const message = `Task ${config.params.taskId} completion was approved by project host. Project host message: ${config.params.message}`;
   return api.post(
     `/tasks/${config.params.taskId}/approve-completion`,
-    { message: message, creatorId: config.params.creatorId },
+    { message: message, creatorId: config.params.creatorId, eventId: config.params.eventId },
     newConfig
   );
 };

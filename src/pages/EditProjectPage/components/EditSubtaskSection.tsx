@@ -1,74 +1,65 @@
-import { Card, Flex, IconButton, Text, Dialog } from '@radix-ui/themes';
-import { RocketOutlined } from '@ant-design/icons';
+import { Flex, Heading, IconButton, Separator } from '@radix-ui/themes';
+import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
-import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import styles from './CreatedSubtask.module.css';
-import { TaskInfo } from 'api';
+import { TaskInfo, UpdateTaskDTO } from 'api';
+import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
+import { v4 as uuidv4 } from 'uuid';
+import EditedSubtask from './EditedSubtask';
 
-interface SubtaskCardProps {
-  id: string;
-  title: string;
-  price: number;
-  description: string;
-  setSubtask: Dispatch<SetStateAction<TaskInfo[]>>;
+interface CreateSubtaskSectionProps {
+  subtasks: UpdateTaskDTO[];
+  setSubtasks: Dispatch<SetStateAction<UpdateTaskDTO[]>>;
+  setTasksToDelete: Dispatch<SetStateAction<string[]>>;
 }
 
-const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, description }) => {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+type FormData = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+};
 
-  const handleDelete = () => {
-    setSubtask((prevSubtasks) => prevSubtasks.filter((subtask) => subtask.id !== id));
-  };
+const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
+  subtasks,
+  setSubtasks,
+  setTasksToDelete,
+}) => {
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const updatedSubtask: TaskInfo = {
-      id: id,
+    const uuidString = uuidv4();
+    const data: FormData = {
+      id: uuidString,
       title: formData.get('title') as string,
       description: formData.get('description') as string,
       price: parseFloat(formData.get('price') as string),
     };
 
-    console.log(updatedSubtask);
-
-    setSubtask((prevSubtasks) =>
-      prevSubtasks.map((subtask) => (subtask.id === updatedSubtask.id ? updatedSubtask : subtask))
-    );
-
+    setSubtasks((prevSubtasks) => [...prevSubtasks, data as TaskInfo]);
     setModalOpen(false);
   };
 
   return (
-    <Card className={styles.CreatedSubtask}>
-      <Flex justify='between' align='center'>
-        <Flex>
-          <RocketOutlined style={{ color: 'yellow', marginRight: '15px' }} />
-          <Flex direction='column'>
-            <Text size='5' weight='medium'>
-              {title}
-            </Text>
-            <Text weight='medium'>
-              <Text color='yellow'>Price:</Text> {price}$
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex>
-          <Dialog.Root open={modalOpen}>
-            <Dialog.Trigger>
-              <IconButton mr='2' onClick={() => setModalOpen(true)}>
-                <Pencil1Icon></Pencil1Icon>
-              </IconButton>
-            </Dialog.Trigger>
+    <Flex mb='3' direction='column'>
+      <Flex align='center' mt='3'>
+        <Heading size='5' mr='3'>
+          Subtasks Creation
+        </Heading>
 
-            <Dialog.Content maxWidth='450px'>
-              <Dialog.Title>Edit subtask</Dialog.Title>
-              <Dialog.Description size='2' mb='4'>
-                Make changes to subtask
-              </Dialog.Description>
-
+        <Dialog.Root open={modalOpen}>
+          <Dialog.Trigger asChild>
+            <IconButton size='1' onClick={() => setModalOpen(true)}>
+              <PlusIcon />
+            </IconButton>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay className='DialogOverlay' />
+            <Dialog.Content className='DialogContent'>
+              <Dialog.Title className='DialogTitle Accent'>Create Subtask</Dialog.Title>
               <Form.Root className='FormRoot' onSubmit={handleSubmit}>
                 <Form.Field className='FormField' name='title'>
                   <div
@@ -84,7 +75,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <input className='Input' defaultValue={title} type='text' required />
+                    <input className='Input' type='text' required />
                   </Form.Control>
                 </Form.Field>
 
@@ -102,7 +93,7 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <textarea className='Textarea' defaultValue={description} required />
+                    <textarea className='Textarea' required />
                   </Form.Control>
                 </Form.Field>
 
@@ -123,26 +114,48 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <input className='Input' type='number' defaultValue={price} required />
+                    <input className='Input' type='number' required />
                   </Form.Control>
                 </Form.Field>
 
                 <Form.Submit asChild>
                   <button className='Button' style={{ marginTop: 10 }}>
-                    Save changes
+                    Create subtask
                   </button>
                 </Form.Submit>
               </Form.Root>
+              <Dialog.Close asChild>
+                <button
+                  className='IconButton'
+                  onClick={() => setModalOpen(false)}
+                  aria-label='Close'
+                >
+                  <Cross2Icon />
+                </button>
+              </Dialog.Close>
             </Dialog.Content>
-          </Dialog.Root>
-
-          <IconButton onClick={handleDelete}>
-            <TrashIcon></TrashIcon>
-          </IconButton>
-        </Flex>
+          </Dialog.Portal>
+        </Dialog.Root>
       </Flex>
-    </Card>
+      <Separator my='3' size='4' />
+      <Flex direction='column'>
+        {subtasks.length > 0 &&
+          subtasks.map(
+            (subtask, index) =>
+              subtask.id && (
+                <EditedSubtask
+                  setTasksToDelete={setTasksToDelete}
+                  id={subtask.id}
+                  setSubtask={setSubtasks}
+                  title={subtask.title}
+                  price={subtask.price}
+                  description={subtask.description}
+                />
+              )
+          )}
+      </Flex>
+    </Flex>
   );
 };
 
-export default CreatedSubtask;
+export default EditSubtaskSection;

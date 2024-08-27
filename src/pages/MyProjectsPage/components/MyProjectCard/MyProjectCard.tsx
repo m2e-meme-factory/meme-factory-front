@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Text, Card, Flex, Heading } from '@radix-ui/themes';
+import { Text, Card, Flex, Heading, Box } from '@radix-ui/themes';
 import CardBanner from '../../../PublicProjectsPage/components/CardBanner/CardBanner';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -28,13 +28,13 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
   const { data: freelancersResponse, isLoading } = useGetProjectFreelancers(id, 'accepted');
-  const [freelancers, setFreelancersCount] = useState(0);
+  const [freelancers, setFreelancersCount] = useState<number>();
 
   useEffect(() => {
     if (freelancersResponse) {
       setFreelancersCount(freelancersResponse.data.length);
     }
-  }, [freelancers]);
+  }, [freelancersResponse]);
 
   const handleClick = () => {
     if (user) {
@@ -61,7 +61,15 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
                 Freelancers count:
               </Text>
               <Text weight='medium' color='yellow' size='5'>
-                {freelancers}
+                {freelancers ? (
+                  freelancers
+                ) : (
+                  <Box
+                    width='20px'
+                    height='30px'
+                    style={{ backgroundColor: 'gray', borderRadius: '5px' }}
+                  ></Box>
+                )}
               </Text>
             </Flex>
           </Card>

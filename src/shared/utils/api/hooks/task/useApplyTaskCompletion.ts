@@ -4,7 +4,11 @@ import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
-import { showErrorMessage, showToastWithPromise } from '../../../helpers/notify';
+import {
+  showErrorMessage,
+  showSuccessMessage,
+  showToastWithPromise,
+} from '../../../helpers/notify';
 import {
   applyTaskCompletion,
   ApplyTaskCompletionConfig,
@@ -20,6 +24,7 @@ export const useApplyTaskCompletion = (setTaskApplied?: Dispatch<SetStateAction<
       if (setTaskApplied) {
         setTaskApplied(true);
       }
+      showSuccessMessage('Proposal was sent successfully');
     },
     onMutate: (variables) => {
       setSavedVariables(variables);

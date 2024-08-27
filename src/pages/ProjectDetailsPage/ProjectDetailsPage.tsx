@@ -73,12 +73,11 @@ const ProjectDetailsPage = () => {
 
       <Card mt='5'>
         <Flex align='center' justify='between'>
-          <Heading>Actions:</Heading>
-          <Button size='3' onClick={() => navigate(`/projects/${id}`)}>
+          <Button size='2' onClick={() => navigate(`/projects/${id}`)}>
             <MagnifyingGlassIcon />
             View Project Page
           </Button>
-          <Button size='3' onClick={() => navigate(`/projects/${id}/edit`)}>
+          <Button size='2' onClick={() => navigate(`/projects/${id}/edit`)}>
             <Pencil1Icon />
             Edit Project
           </Button>

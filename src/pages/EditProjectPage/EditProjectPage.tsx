@@ -187,7 +187,7 @@ const EditProjectPage = () => {
     if (errors.length === 0) {
       let projectPrice = priceMode === 'range' ? price.min : price.single;
       let bannerUrl = attachedBanner;
-      let files: string[] = [];
+      let files: string[] = [...attachedFiles];
 
       if (singleFile && singleFile.length > 0) {
         const response = await toast.promise(
@@ -226,9 +226,8 @@ const EditProjectPage = () => {
         );
 
         if (Array.isArray(response)) {
-          console.log(response);
           const fileNames = response.map((file) => file.name);
-          files = [...attachedFiles, ...fileNames];
+          files = [...files, ...fileNames];
         }
       }
 

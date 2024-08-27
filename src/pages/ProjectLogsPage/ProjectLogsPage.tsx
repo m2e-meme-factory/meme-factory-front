@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
 import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
@@ -13,11 +13,10 @@ import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
-import { ROUTES } from '../../shared/consts/routes';
+import { shortenString } from '../../shared/utils/helpers/shortenString';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const user = useSelector((state: RootState) => state.user.user);
   const { projectId, userId } = useParams();
   const { data, isLoading, refetch } = useGetProgress({
@@ -36,8 +35,6 @@ const ProjectLogsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-  console.log(location);
 
   useEffect(() => {
     if (projectResponse) {
@@ -123,10 +120,19 @@ const ProjectLogsPage = () => {
         justify='between'
       >
         <Flex align='center'>
-          <IconButton onClick={() => navigate(ROUTES.PROFILE)} size='3'>
+          <IconButton
+            onClick={() => {
+              user
+                ? user.role === Role.CREATOR
+                  ? navigate('/profile?tab=myprojects')
+                  : navigate(`/projects/${projectId}/details`)
+                : navigate('/projects');
+            }}
+            size='3'
+          >
             <ArrowLeftIcon />
           </IconButton>
-          <Heading ml='3'>{currentProject?.title}</Heading>
+          <Heading ml='3'>{shortenString(currentProject?.project.title, 20)}</Heading>
         </Flex>
         <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
       </Flex>
@@ -144,8 +150,14 @@ const ProjectLogsPage = () => {
                   ? userProgress?.user.username
                   : `User ${userProgress?.user.telegramId}`
               }
-              advertiserName={currentProject ? currentProject.title : 'Project host'}
-              allEvents={events} // Передаем все события
+              advertiserName={shortenString(
+                currentProject
+                  ? currentProject.project.author.username
+                    ? currentProject.project.author.username
+                    : `User ${currentProject.project.author.telegramId}`
+                  : 'Project host'
+              )}
+              allEvents={events}
             />
           ))}
         </ScrollArea>

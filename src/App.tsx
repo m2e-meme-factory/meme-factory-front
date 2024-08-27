@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import { TelegramProvider, useTelegram } from './shared/hooks/useTelegram';
 import { Theme } from '@radix-ui/themes';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './Router';

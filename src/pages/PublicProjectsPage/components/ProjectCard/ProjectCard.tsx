@@ -21,10 +21,10 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
   const navigate = useNavigate();
 
   return (
-    <StyledCard onClick={() => navigate(`/projects/${project.id}`)}>
+    <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
       <Flex direction='column'>
-        <CardBanner bannerUrl={project.bannerUrl} />
-        <ProjectCardContent project={project} />
+        <CardBanner bannerUrl={project.project.bannerUrl} />
+        <ProjectCardContent project={project.project} />
       </Flex>
     </StyledCard>
   );

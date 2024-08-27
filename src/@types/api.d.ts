@@ -1,5 +1,7 @@
 declare module 'api' {
   import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+  import { Role } from '../shared/consts/userRoles';
+  import { ProjectStatus } from '../shared/consts/project-statuses';
 
   export interface VerifyUserData {
     userId: string;
@@ -73,6 +75,14 @@ declare module 'api' {
     userData: VerifyUserData;
   }
 
+  interface EventDetails {
+    transactionId?: number;
+    amount?: number;
+    taskId?: number;
+    approvedEventId?: number;
+    eventId?: number;
+  }
+
   enum EventType {
     APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
     APPLICATION_APPROVED = 'APPLICATION_APPROVED',
@@ -85,20 +95,9 @@ declare module 'api' {
     USER_MESSAGE = 'USER_MESSAGE',
   }
 
-  enum Role {
-    CREATOR = 'creator',
-    ADVERTISER = 'advertiser',
-  }
-
-  interface EventDetails {
-    transactionId?: number;
-    amount?: number;
-    taskId?: number;
-  }
-
-  interface Event {
+  export interface Event {
     id: number;
-    projectProgress: string;
+    progressProjectId: string;
     projectId: number;
     userId: number;
     role: Role;
@@ -116,12 +115,42 @@ declare module 'api' {
 
   interface ProgressWithProjectResponse {
     progress: ProjectProgress;
-    project: Project;
+    project: ProjectData;
   }
 
   export interface UpdateProjectPayload {
     projectId: string;
-    project: CreateProjectDTO;
+    project: UpdateProjectDTO;
+  }
+
+  export interface UpdateProjectDTO {
+    title: string;
+    description: string;
+    bannerUrl: string | null;
+    files: string[];
+    category: string | null;
+    tags: string[];
+    subtasks: UpdateTaskDTO[];
+    deletedTasks: string[];
+    authorId: string | undefined;
+  }
+
+  export interface UpdateTaskDTO {
+    id?: string;
+    title: string;
+    description: string;
+    price: number;
+  }
+
+  export interface CreateProjectDTO {
+    title: string;
+    description: string;
+    bannerUrl: string | null;
+    files: string[];
+    category: string | null;
+    tags: string[];
+    subtasks: CreateSubtaskDTO[];
+    authorId: string | undefined;
   }
 
   interface Transaction {
@@ -134,31 +163,6 @@ declare module 'api' {
     createdAt: Date;
     toUser: User;
     fromUser: User;
-  }
-
-  enum DisputeStatus {
-    OPEN = 'open',
-    RESOLVED = 'resolved',
-    CLOSED = 'closed',
-  }
-
-  enum ProjectStatus {
-    DRAFT = 'draft',
-    MODERATION = 'moderation',
-    PUBLISHED = 'published',
-    NOT_ACCEPTED = 'not_accepted',
-    CLOSED = 'closed',
-  }
-
-  interface Dispute {
-    id: string;
-    projectId: string;
-    initiatorId: string;
-    defendantId: string;
-    reason: string;
-    status: DisputeStatus;
-    creationDate: string;
-    resolutionDate?: string;
   }
 
   export interface GetUserDataParams {
@@ -273,9 +277,10 @@ declare module 'api' {
     taskId: number;
     message: string;
     creatorId: number;
+    eventId: number;
   }
 
-  export interface Project {
+  export interface ProjectData {
     id: string;
     title: string;
     description: string;
@@ -283,28 +288,21 @@ declare module 'api' {
     files: string[];
     category: string;
     tags: string[];
-    price: number;
     tasks: Task[];
     authorId: string;
-    creationDate: Date;
     status: ProjectStatus;
+    author: User;
+  }
+
+  export interface Project {
+    project: ProjectData;
+    maxPrice: string | null;
+    minPrice: string | null;
   }
 
   export interface UpdateStatusPayload {
     id: string;
     payload: { status: ProjectStatus };
-  }
-
-  export interface CreateProjectDTO {
-    title: string;
-    description: string;
-    bannerUrl: string | null;
-    files: string[];
-    category: string | null;
-    tags: string[];
-    price: number;
-    subtasks: CreateSubtaskDTO[];
-    authorId: string | undefined;
   }
 
   export interface RefDataResponse {

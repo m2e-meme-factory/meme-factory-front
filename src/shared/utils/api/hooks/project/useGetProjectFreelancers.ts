@@ -1,4 +1,3 @@
-import { GetProjectFreelancersParams } from 'api';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { useQuery } from '@tanstack/react-query';
 import { getProjectFreelancers } from '../../requests/project/project-requests';

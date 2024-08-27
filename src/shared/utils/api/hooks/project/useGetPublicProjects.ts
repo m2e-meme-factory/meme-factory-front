@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getPublicProjects } from '../../requests/project/project-requests';
 import { AxiosError } from 'axios';
 import { useTelegram } from '../../../../hooks/useTelegram';

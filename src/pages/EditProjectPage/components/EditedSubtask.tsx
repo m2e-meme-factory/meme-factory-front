@@ -2,8 +2,8 @@ import { Card, Flex, IconButton, Text, Dialog } from '@radix-ui/themes';
 import { RocketOutlined } from '@ant-design/icons';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import styles from './CreatedSubtask.module.css';
-import { TaskInfo } from 'api';
+import styles from './EditedTask.module.css';
+import { TaskInfo, UpdateTaskDTO } from 'api';
 import * as Form from '@radix-ui/react-form';
 
 interface SubtaskCardProps {
@@ -11,14 +11,23 @@ interface SubtaskCardProps {
   title: string;
   price: number;
   description: string;
-  setSubtask: Dispatch<SetStateAction<TaskInfo[]>>;
+  setSubtask: Dispatch<SetStateAction<UpdateTaskDTO[]>>;
+  setTasksToDelete: Dispatch<SetStateAction<string[]>>;
 }
 
-const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, description }) => {
+const EditedSubtask: FC<SubtaskCardProps> = ({
+  setTasksToDelete,
+  title,
+  price,
+  id,
+  setSubtask,
+  description,
+}) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const handleDelete = () => {
     setSubtask((prevSubtasks) => prevSubtasks.filter((subtask) => subtask.id !== id));
+    setTasksToDelete((prevState) => [...prevState, id]);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,9 +40,6 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
       description: formData.get('description') as string,
       price: parseFloat(formData.get('price') as string),
     };
-
-    console.log(updatedSubtask);
-
     setSubtask((prevSubtasks) =>
       prevSubtasks.map((subtask) => (subtask.id === updatedSubtask.id ? updatedSubtask : subtask))
     );
@@ -145,4 +151,4 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
   );
 };
 
-export default CreatedSubtask;
+export default EditedSubtask;

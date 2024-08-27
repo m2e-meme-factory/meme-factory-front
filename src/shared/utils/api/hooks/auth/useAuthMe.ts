@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { authMe } from '../../requests/auth/me';
 import { useTelegram } from '../../../../hooks/useTelegram';
-import { showErrorMessage, showSuccessMessage } from '../../../helpers/notify';
+import { showErrorMessage } from '../../../helpers/notify';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 

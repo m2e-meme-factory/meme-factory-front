@@ -30,7 +30,7 @@ import { useSearchParams } from 'react-router-dom';
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const [userSt, setUserSt] = useState<User>();
-  const { data: userDataResponse, isLoading } = useAuthMe();
+  const { data: userDataResponse } = useAuthMe();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'account';
@@ -42,12 +42,7 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
-  const {
-    data,
-    isLoading: refLoading,
-    error: refDataError,
-    refetch: refetchRefData,
-  } = useGetRefData(userSt?.telegramId);
+  const { data, isLoading: refLoading } = useGetRefData(userSt?.telegramId);
 
   useEffect(() => {
     if (data) {
@@ -70,7 +65,7 @@ export default function ProfilePage() {
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>
+        <Tabs.Trigger value='myprojects'>My Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>
@@ -149,7 +144,7 @@ export default function ProfilePage() {
           </Card>
         </Tabs.Content>
 
-        <Tabs.Content value='my-projects'>
+        <Tabs.Content value='myprojects'>
           <MyProjectsPage />
         </Tabs.Content>
 

@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Table, Heading, IconButton, Text, ScrollArea } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, IconButton, Text } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import {
   ArrowLeftIcon,
@@ -51,7 +51,7 @@ const ProjectDetailsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton mr='3' onClick={() => navigate('/profile?tab=my-projects')}>
+        <IconButton mr='3' onClick={() => navigate('/profile?tab=myprojects')}>
           <ArrowLeftIcon />
         </IconButton>
         <Heading>Project details</Heading>

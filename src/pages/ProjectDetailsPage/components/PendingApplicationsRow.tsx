@@ -1,24 +1,24 @@
 import { Button, Flex, Table, Text } from '@radix-ui/themes';
 import React, { FC } from 'react';
-import ApplyMessageReadModal from './ApplyMessageReadModal';
 import ApplyButtonModal from './ApplyButtonModal';
 import RejectButtonModal from './RejectButtonModal';
 import { useNavigate } from 'react-router-dom';
-import { ProjectProgress } from 'api';
+import { ProjectProgress, User } from 'api';
 
 interface PendingApplicationsRowProps {
   progressId: string;
   name: string;
   progress: ProjectProgress;
+  user: User;
 }
 
 const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
   name,
   progressId,
   progress,
+  user,
 }) => {
   const navigate = useNavigate();
-
   return (
     <Table.Row>
       <Table.Cell>
@@ -27,7 +27,7 @@ const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
         </Flex>
       </Table.Cell>
       <Table.Cell>
-        <Button onClick={() => navigate(`/projects/${progress.projectId}/logs/${progress.userId}`)}>
+        <Button onClick={() => navigate(`/projects/${progress.projectId}/logs/${user.id}`)}>
           Read message
         </Button>
       </Table.Cell>

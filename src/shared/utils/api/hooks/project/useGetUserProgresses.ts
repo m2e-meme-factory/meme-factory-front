@@ -1,8 +1,8 @@
-import { GetUserProgressesParams, ProjectProgress } from 'api';
+import { GetUserProgressesParams } from 'api';
 import { useTelegram } from '../../../../hooks/useTelegram';
 import { useQuery } from '@tanstack/react-query';
 import { getUserProgresses } from '../../requests/project/project-requests';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 
 export const useGetUserProgresses = (params: GetUserProgressesParams) => {

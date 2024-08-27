@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../shared/utils/redux/store';
 import { Role } from '../../../../shared/consts/userRoles';
+import { shortenString } from '../../../../shared/utils/helpers/shortenString';
 
 interface MyProjectCardProps {
   id: string;
@@ -39,7 +40,7 @@ const MyProjectCardForCreator: FC<MyProjectCardProps> = ({ id, title, category, 
       <Flex direction='column'>
         <CardBanner bannerUrl={bannerUrl} />
         <Flex direction='column' m='4'>
-          <Heading>{title}</Heading>
+          <Heading>{shortenString(title, 40)}</Heading>
           <Text mb='3' color='yellow' weight='medium'>
             {category}
           </Text>

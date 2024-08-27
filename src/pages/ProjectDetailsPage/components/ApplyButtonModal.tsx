@@ -1,4 +1,4 @@
-import { Button, Dialog, Flex, IconButton, ScrollArea, Text, TextArea } from '@radix-ui/themes';
+import { Button, Dialog, Flex, IconButton, TextArea } from '@radix-ui/themes';
 import React, { FC, useState } from 'react';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useAcceptApplication } from '../../../shared/utils/api/hooks/project/useApproveApplication';
@@ -11,7 +11,7 @@ const ApplyButtonModal: FC<ApplyButtonModalProps> = ({ progressId }) => {
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [acceptMessage, setAcceptMessage] = useState('');
 
-  const mutationAccept = useAcceptApplication(setAcceptLoading);
+  const mutationAccept = useAcceptApplication(setAcceptLoading, false);
 
   const handleAccept = () => {
     setAcceptLoading(true);

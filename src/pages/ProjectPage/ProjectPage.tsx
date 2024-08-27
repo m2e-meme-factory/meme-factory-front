@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Text,
-  Dialog,
-  TextArea,
-} from '@radix-ui/themes';
+import { Badge, Button, Card, Flex, Heading, Text, Dialog, TextArea } from '@radix-ui/themes';
 import {
   DollarOutlined,
   PushpinOutlined,
@@ -18,7 +8,6 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
-import avatarFallback from '../../shared/imgs/avatar-fallback.svg';
 import AttachmentCard from './components/AttachmentCard/AttachmentCard';
 import SubtaskCard from './components/SubtaskCard/SubtaskCard';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
@@ -32,9 +21,10 @@ import { Project, ProjectProgress } from 'api';
 import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
 import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
 import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
-import { FALLBACK_BANNER_URL } from '../../shared/consts/fallbackBanner';
+import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
 import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
+import { shortenString } from '../../shared/utils/helpers/shortenString';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -55,6 +45,9 @@ const ProjectPage = () => {
   const [isApplyLoading, setIsApplyLoading] = useState(false);
   const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
+  const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
+  const [minPrice, setMinPrice] = useState<number>();
+  const [maxPrice, setMaxPrice] = useState<number>();
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -63,11 +56,18 @@ const ProjectPage = () => {
     projectId: id ?? '',
     userId: user?.id,
   });
-  const { mutate: applyMutation, data: applyResponse } = useApplyForProject(setIsApplyLoading);
+  const { mutate: applyMutation } = useApplyForProject(
+    setIsApplyLoading,
+    setApplyBlocked,
+    setCurrentUserRole
+  );
 
   useEffect(() => {
     if (projectInfoResponse) {
       setCurrentProject(projectInfoResponse.data);
+      console.log(projectInfoResponse);
+      setMinPrice(parseInt(projectInfoResponse.data.minPrice ?? '0'));
+      setMaxPrice(parseInt(projectInfoResponse.data.maxPrice ?? '0'));
       dispatch(setProject(projectInfoResponse.data));
     }
   }, [projectInfoResponse, dispatch]);
@@ -92,7 +92,7 @@ const ProjectPage = () => {
     if (!user) return;
 
     if (user.role === Role.ADVERTISER) {
-      setCurrentUserRole(user.id === project.authorId ? 'projectOwner' : 'guestAdvertiser');
+      setCurrentUserRole(user.id === project.project.authorId ? 'projectOwner' : 'guestAdvertiser');
     } else {
       if (currentUserRole !== 'projectOwner' && currentUserRole !== 'guestAdvertiser') {
         if (currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') {
@@ -126,7 +126,7 @@ const ProjectPage = () => {
     if (currentProject && user) {
       try {
         await downloadFiles({
-          params: { projectId: currentProject.id, telegramId: user.telegramId },
+          params: { projectId: currentProject.project.id, telegramId: user.telegramId },
         });
       } catch (error) {
         setDownloadError(true);
@@ -147,16 +147,10 @@ const ProjectPage = () => {
 
       applyMutation({
         params: {
-          projectId: currentProject.id,
+          projectId: currentProject.project.id,
           message: applicationMessage,
         },
       });
-
-      if (applyResponse?.status === 201) {
-        setCurrentUserRole('unconfirmedMember');
-      } else {
-        //showErrorMessage('Error occurred while creating an application. Please try again!');
-      }
     }
   };
 
@@ -164,9 +158,9 @@ const ProjectPage = () => {
     setApplicationMessage(event.target.value);
   };
 
-  const bannerLink = currentProject?.bannerUrl
-    ? `https://api.meme-factory.site${currentProject?.bannerUrl}`
-    : FALLBACK_BANNER_URL;
+  const bannerLink = currentProject?.project.bannerUrl
+    ? `https://api.meme-factory.site${currentProject?.project.bannerUrl}`
+    : fallbackBanner;
 
   return (
     <Flex direction='column'>
@@ -175,7 +169,7 @@ const ProjectPage = () => {
       </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Heading weight='medium'>{currentProject?.title}</Heading>
+          <Heading weight='medium'>{shortenString(currentProject?.project.title, 40)}</Heading>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
               Edit project
@@ -191,7 +185,7 @@ const ProjectPage = () => {
           {currentUserRole === 'guestCreator' && (
             <Dialog.Root>
               <Dialog.Trigger>
-                <Button loading={isApplyLoading} my='2'>
+                <Button my='2' disabled={applyBlocked}>
                   Apply to earn
                 </Button>
               </Dialog.Trigger>
@@ -215,23 +209,27 @@ const ProjectPage = () => {
                       Cancel
                     </Button>
                   </Dialog.Close>
-                  <Button onClick={handleApplyClick}>Apply</Button>
+                  <Dialog.Close>
+                    <Button onClick={handleApplyClick} loading={isApplyLoading}>
+                      Apply
+                    </Button>
+                  </Dialog.Close>
                 </Flex>
               </Dialog.Content>
             </Dialog.Root>
           )}
           <Text color='yellow' weight='medium' mb='5'>
-            Category: {currentProject?.category}
+            Category: {currentProject?.project.category}
           </Text>
           <Flex mb='5'>
-            <TaskDescriptionDisplay description={currentProject?.description || ''} />
+            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
           </Flex>
           <Flex align='center' direction='row' mb='2'>
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
             <Text weight='medium' size='5'>
               Tags:{' '}
-              {currentProject?.tags &&
-                currentProject?.tags.map((tag, index) => (
+              {currentProject?.project.tags &&
+                currentProject?.project.tags.map((tag, index) => (
                   <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
                     {tag}
                   </Badge>
@@ -248,11 +246,43 @@ const ProjectPage = () => {
             <Card>
               <Flex align='center'>
                 <Text weight='medium' size='6'>
-                  Meme Factory
+                  {shortenString(
+                    currentProject
+                      ? currentProject.project.author.username
+                        ? currentProject.project.author.username
+                        : `User ${currentProject.project.author.telegramId}`
+                      : 'Meme factory'
+                  )}
                 </Text>
               </Flex>
             </Card>
           </Flex>
+
+          <Flex direction='column' mb='5'>
+            <Flex align='center' mb='2'>
+              <DollarOutlined style={{ color: 'yellow', marginRight: '8px' }} />
+              <Text weight='medium' size='5'>
+                Price
+              </Text>
+            </Flex>
+            <Card mb='2'>
+              <Text weight='regular' size='6'>
+                Min:{' '}
+                <Text color='yellow' weight='medium'>
+                  {minPrice}
+                </Text>
+              </Text>
+            </Card>
+            <Card>
+              <Text weight='regular' size='6'>
+                Max:{' '}
+                <Text color='yellow' weight='medium'>
+                  {maxPrice}
+                </Text>
+              </Text>
+            </Card>
+          </Flex>
+
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='2'>
               <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />
@@ -260,8 +290,8 @@ const ProjectPage = () => {
                 Subtasks
               </Text>
             </Flex>
-            {currentProject?.tasks &&
-              currentProject?.tasks.map((subtask, index) => (
+            {currentProject?.project.tasks &&
+              currentProject?.project.tasks.map((subtask, index) => (
                 <SubtaskCard
                   key={index}
                   id={subtask.task.id}
@@ -294,8 +324,8 @@ const ProjectPage = () => {
                 </Text>
               )}
             </Flex>
-            {currentProject?.files &&
-              currentProject?.files.map((file, index) => (
+            {currentProject?.project.files &&
+              currentProject?.project.files.map((file, index) => (
                 <AttachmentCard key={index} name={file} />
               ))}
           </Flex>

@@ -9,8 +9,13 @@ import {
 } from '../../../helpers/notify';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
+import { UserRoleInProject } from '../../../../../pages/ProjectPage/ProjectPage';
 
-export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<boolean>>) => {
+export const useApplyForProject = (
+  setApplyLoading: Dispatch<SetStateAction<boolean>>,
+  setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+  setRole: Dispatch<SetStateAction<UserRoleInProject>>
+) => {
   const { webApp } = useTelegram();
   const [savedVariables, setSavedVariables] = useState<ApplyForProjectConfig | null>(null);
 
@@ -18,6 +23,8 @@ export const useApplyForProject = (setApplyLoading: Dispatch<SetStateAction<bool
     mutationFn: (config: ApplyForProjectConfig) => applyForProject(config),
     onSuccess: () => {
       setApplyLoading(false);
+      setButtonDisabled(true);
+      setRole('unconfirmedMember');
       showSuccessMessage('Application submitted successfully');
     },
     onMutate: (variables) => {

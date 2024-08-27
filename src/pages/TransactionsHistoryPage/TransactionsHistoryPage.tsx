@@ -6,7 +6,6 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { Transaction } from 'api';
 import { useNavigate } from 'react-router-dom';
-import { Role } from '../../shared/consts/userRoles';
 
 const TransactionsHistoryPage = () => {
   const user = useSelector((state: RootState) => state.user.user);

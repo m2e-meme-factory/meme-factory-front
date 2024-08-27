@@ -14,7 +14,7 @@ const RejectApproveTaskSection: FC<RejectApproveSectionProps> = ({
   taskId,
   setNewEventCreated,
   userId,
-  eventId
+  eventId,
 }) => {
   const [approveMessage, setApproveMessage] = useState('');
   const [taskApproved, setTaskApproved] = useState(false);

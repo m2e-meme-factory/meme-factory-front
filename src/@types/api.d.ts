@@ -163,6 +163,7 @@ declare module 'api' {
     createdAt: Date;
     toUser: User;
     fromUser: User;
+    type: 'DEPOSIT' | 'WITHDRAWAL' | 'SYSTEM' | 'PAYMENT';
   }
 
   export interface GetUserDataParams {

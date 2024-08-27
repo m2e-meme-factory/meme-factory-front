@@ -1,6 +1,7 @@
 declare module 'api' {
   import type { AxiosRequestConfig, AxiosResponse } from 'axios';
   import { Role } from '../shared/consts/userRoles';
+  import { ProjectStatus } from '../shared/consts/project-statuses';
 
   export interface VerifyUserData {
     userId: string;
@@ -79,6 +80,7 @@ declare module 'api' {
     amount?: number;
     taskId?: number;
     approvedEventId?: number;
+    eventId?: number;
   }
 
   enum EventType {
@@ -275,6 +277,7 @@ declare module 'api' {
     taskId: number;
     message: string;
     creatorId: number;
+    eventId: number;
   }
 
   export interface ProjectData {

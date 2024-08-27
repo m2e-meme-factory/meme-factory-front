@@ -41,22 +41,15 @@ const LogMessage: FC<MessageProps> = ({
   const color = getColorByType(messageType);
   const side = event.role === currentUserRole ? 'right' : 'left';
 
-  const taskSubmitEvents = allEvents.filter(
-    (e) => e.eventType === EventType.TASK_SUBMIT && e.details?.taskId === event.details?.taskId
-  );
-
-  const isLastTaskSubmit =
-    taskSubmitEvents.length > 0 && taskSubmitEvents[taskSubmitEvents.length - 1].id === event.id;
-
   const hasTaskCompleted = allEvents.some(
-    (e) => e.eventType === EventType.TASK_COMPLETED && e.details?.taskId === event.details?.taskId
+    (e) => e.eventType === EventType.TASK_COMPLETED && e.details?.eventId === event.id
   );
 
   const applicationAccepted = allEvents.some((e) => e.eventType === EventType.APPLICATION_APPROVED);
   const applicationRejected = allEvents.some((e) => e.eventType === EventType.APPLICATION_REJECTED);
   const showApplicationButtons = !(applicationAccepted || applicationRejected);
 
-  const shouldShowButtons = !hasTaskCompleted && isLastTaskSubmit;
+  const shouldShowButtons = !hasTaskCompleted;
 
   return (
     <Flex justify={side === 'left' ? 'start' : 'end'} width='100%' maxWidth='100%'>
@@ -77,7 +70,7 @@ const LogMessage: FC<MessageProps> = ({
                 taskId={event.details?.taskId}
                 setNewEventCreated={setNewEventCreated}
                 userId={event.userId}
-                showButtons={!hasTaskCompleted}
+                eventId={event.id}
               />
             )}
           {event.eventType === EventType.APPLICATION_SUBMITTED &&

@@ -1,7 +1,7 @@
 import { Box, Card, Flex, IconButton, Spinner, Text, Tooltip } from '@radix-ui/themes';
 import React, { FC, useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { CheckOutlined, CloseOutlined, RocketOutlined } from '@ant-design/icons';
+import { CheckOutlined, RocketOutlined } from '@ant-design/icons';
 import './index.css';
 import ModalSubtaskInfo from './ModalSubtaskInfo';
 import ModalSubtaskForm from './ModalSubtaskForm';
@@ -22,13 +22,11 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isApproved, setApproved] = useState(false);
-  const [isRejected, setRejected] = useState(false);
 
   useEffect(() => {
     if (progress) {
       const taskId = Number.parseInt(id);
       setApproved(progress.approvedTasks.includes(taskId));
-      setRejected(progress.rejectedTasks.includes(taskId));
     }
   }, [progress, id]);
 
@@ -80,11 +78,10 @@ const SubtaskCard: FC<TaskCardProps> = ({ id, title, description, price, userRol
     <Card className='SubtaskCard' mb='3'>
       <Flex align='center' justify='between'>
         <Flex>
-          {!isApproved && !isRejected && (
+          {!isApproved && (
             <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
           )}
           {isApproved && <CheckOutlined style={{ color: 'green', marginRight: '15px' }} />}
-          {isRejected && <CloseOutlined style={{ color: 'red', marginRight: '15px' }} />}
           <Flex direction='column'>
             <Text size='5' weight='medium'>
               {title}

@@ -260,31 +260,6 @@ const ProjectPage = () => {
 
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='2'>
-              <DollarOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Price
-              </Text>
-            </Flex>
-            <Card mb='2'>
-              <Text weight='regular' size='6'>
-                Min:{' '}
-                <Text color='yellow' weight='medium'>
-                  {minPrice}
-                </Text>
-              </Text>
-            </Card>
-            <Card>
-              <Text weight='regular' size='6'>
-                Max:{' '}
-                <Text color='yellow' weight='medium'>
-                  {maxPrice}
-                </Text>
-              </Text>
-            </Card>
-          </Flex>
-
-          <Flex direction='column' mb='5'>
-            <Flex align='center' mb='2'>
               <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />
               <Text weight='medium' size='5'>
                 Subtasks

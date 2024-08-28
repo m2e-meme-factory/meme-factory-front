@@ -138,10 +138,7 @@ const ProjectLogsPage = () => {
         justify='between'
       >
         <Flex align='center'>
-          <IconButton
-            onClick={handleBackClick}
-            size='3'
-          >
+          <IconButton onClick={handleBackClick} size='3'>
             <ArrowLeftIcon />
           </IconButton>
           <Heading ml='3'>{shortenString(currentProject?.project.title, 20)}</Heading>

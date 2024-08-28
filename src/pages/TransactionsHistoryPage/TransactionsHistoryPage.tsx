@@ -30,8 +30,8 @@ const TransactionsHistoryPage = () => {
     if (selectedTxTypes.length === 0) {
       setCurrentTransactions(transactions);
     } else {
-      const selectedTypes = selectedTxTypes.map(option => option.value);
-      const filteredTransactions = transactions.filter(transaction =>
+      const selectedTypes = selectedTxTypes.map((option) => option.value);
+      const filteredTransactions = transactions.filter((transaction) =>
         selectedTypes.includes(transaction.type)
       );
       setCurrentTransactions(filteredTransactions);
@@ -52,7 +52,9 @@ const TransactionsHistoryPage = () => {
         <Heading>Transactions history</Heading>
       </Flex>
       <Flex mt='2' mb='4' direction='column'>
-        <Heading size='2' mb='2'>Tx type</Heading>
+        <Heading size='2' mb='2'>
+          Tx type
+        </Heading>
         <Select
           isSearchable={false}
           onChange={handleApplicationStatusChange}
@@ -89,13 +91,13 @@ const TransactionsHistoryPage = () => {
                         : transaction.type === 'DEPOSIT'
                           ? ''
                           : (transaction.fromUser?.username ?? '—') +
-                          ` (${transaction.fromUser?.telegramId ?? '—'})`}
+                            ` (${transaction.fromUser?.telegramId ?? '—'})`}
                     </Table.Cell>
                     <Table.Cell>
                       {transaction.type === 'WITHDRAWAL'
                         ? ''
                         : (transaction.toUser?.username ?? '—') +
-                        ` (${transaction.toUser?.telegramId ?? '—'})`}
+                          ` (${transaction.toUser?.telegramId ?? '—'})`}
                     </Table.Cell>
                     <Table.Cell>{transaction.amount}</Table.Cell>
                     <Table.Cell>{transaction.type.toLowerCase()}</Table.Cell>

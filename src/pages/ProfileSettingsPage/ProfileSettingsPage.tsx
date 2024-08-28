@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './../ProfilePage/ProfilePage.module.css';
 import { Link } from 'react-router-dom';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { TonConnectButton } from '@tonconnect/ui-react';
 
 const ProfileSettingsPage = () => {
   return (
@@ -20,8 +21,10 @@ const ProfileSettingsPage = () => {
         <button className={styles.ConnectButton}>Connect Socials</button>
       </Card>
       <Card mt='5'>
-        <Heading>Wallet</Heading>
-        <button className={styles.ConnectButton}>Connect Wallet</button>
+        <Flex align='center' justify='between'>
+          <Heading mr='6'>Connect TON Wallet</Heading>
+          <TonConnectButton />
+        </Flex>
       </Card>
     </Flex>
   );

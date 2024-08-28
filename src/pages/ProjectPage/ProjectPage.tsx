@@ -25,6 +25,7 @@ import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
 import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
+import { BASE_URL } from '../../../../../meme-factory-front/src/shared/consts/baseURL';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -159,7 +160,7 @@ const ProjectPage = () => {
   };
 
   const bannerLink = currentProject?.project.bannerUrl
-    ? `https://api.meme-factory.site${currentProject?.project.bannerUrl}`
+    ? `${BASE_URL}${currentProject?.project.bannerUrl}`
     : fallbackBanner;
 
   return (

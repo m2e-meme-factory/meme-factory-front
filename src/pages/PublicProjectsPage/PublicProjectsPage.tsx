@@ -21,6 +21,7 @@ import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import SubtaskCard from '../ProjectPage/components/SubtaskCard/SubtaskCard';
 import { UserRoleInProject } from '../ProjectPage/ProjectPage';
 import AutotaskCard from './components/AutoTask/AutoTask';
+import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -157,17 +158,8 @@ const PublicProjectsPage = () => {
           Find
         </Button>
       </Flex>
-      <Flex m='4'>
-        {refsCount === 0 && !autoTaskDone && (
-          <AutotaskCard
-            setAutoTaskDone={setAutoTaskDone}
-            title='Points for friends!'
-            description={`Earn rewards by inviting your friends to join our app! Simply share your unique referral link with your friends, and when they sign up using your link, both of you will receive bonus points. It's easy and a great way to enjoy the app together while earning extra rewards. Start sharing and watch your points grow as your friends join the fun!`}
-            price={1337}
-          />
-        )}
-      </Flex>
       <Flex m='4' direction='column'>
+        <AutoTasksProjectCard />
         {projects.map((project, index) => (
           <ProjectCard key={index} project={project} />
         ))}

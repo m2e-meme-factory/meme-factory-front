@@ -10,4 +10,5 @@ export const ROUTES = {
   PROJECT_DETAILS: '/projects/:id/details',
   LOGS: '/projects/:projectId/logs/:userId',
   EDIT: '/projects/:id/edit',
+  AUTOTASKS: '/projects/autotasks',
 };

@@ -9081,6 +9081,11 @@ react-hot-toast@^2.4.1:
   dependencies:
     goober "^2.1.10"
 
+react-insta-stories@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-insta-stories/-/react-insta-stories-2.7.0.tgz#53532f4d552e18ad1417602a3121424b0771ccf1"
+  integrity sha512-pCPHzC323b9Ttvr8ByLrX/iH/ft/L3ThWGDJPKdvHnaWdR5dhFkonrQ0/KNiEIH5t539dNyFPevLJUOobkD2WQ==
+
 react-intersection-observer@^9.13.0:
   version "9.13.0"
   resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-9.13.0.tgz#ee10827954cf6ccc204d027f8400a6ddb8df163a"

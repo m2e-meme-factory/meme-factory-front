@@ -17,7 +17,9 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [isTutorialCompleted, setIsTutorialCompleted] = useState(localStorage.getItem('onboardCompleted') === 'true');
+  const [isTutorialCompleted, setIsTutorialCompleted] = useState(
+    localStorage.getItem('onboardCompleted') === 'true'
+  );
 
   useEffect(() => {
     if (data) {

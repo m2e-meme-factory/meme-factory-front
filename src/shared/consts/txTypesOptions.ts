@@ -15,4 +15,4 @@ export const TX_TYPE_OPTIONS = [
     label: 'Payment',
     value: 'PAYMENT',
   },
-]
+];

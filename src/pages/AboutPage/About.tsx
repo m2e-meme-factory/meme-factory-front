@@ -19,7 +19,9 @@ export default function About() {
               </DataList.Value>
             </DataList.Item>
           </DataList.Root>
-          <Text color='gray' size='2'>Access token:</Text>
+          <Text color='gray' size='2'>
+            Access token:
+          </Text>
           <CopyableTextField size={'2'} fieldSize='3' value={localStorage.getItem('token') ?? ''} />
         </Grid>
       </Card>

@@ -102,6 +102,24 @@ const ProjectLogsPage = () => {
     setMessage(event.target.value);
   };
 
+  const handleBackClick = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      if (user) {
+        if (user.role === Role.CREATOR) {
+          navigate('/profile?tab=myprojects');
+        } else if (projectId) {
+          navigate(`/projects/${projectId}/details`);
+        } else {
+          navigate('/projects');
+        }
+      } else {
+        navigate('/projects');
+      }
+    }
+  };
+
   if (isLoading || isProjectLoading) {
     return <Loading />;
   }
@@ -120,16 +138,7 @@ const ProjectLogsPage = () => {
         justify='between'
       >
         <Flex align='center'>
-          <IconButton
-            onClick={() => {
-              user
-                ? user.role === Role.CREATOR
-                  ? navigate('/profile?tab=myprojects')
-                  : navigate(`/projects/${projectId}/details`)
-                : navigate('/projects');
-            }}
-            size='3'
-          >
+          <IconButton onClick={handleBackClick} size='3'>
             <ArrowLeftIcon />
           </IconButton>
           <Heading ml='3'>{shortenString(currentProject?.project.title, 20)}</Heading>

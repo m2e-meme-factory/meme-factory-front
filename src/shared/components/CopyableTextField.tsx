@@ -46,17 +46,6 @@ const CopyableTextField = ({ value, fieldSize, ...props }: CopyableTextFieldProp
         </IconButton>
       </TextField.Slot>
     </TextField.Root>
-
-    // <Flex align="center" gap="2" justify={"between"}>
-    //   <IconButton
-    //     aria-label="Copy value"
-    //     variant="solid"
-    //     size={value}
-    //     onClick={handleCopy}
-    //   >
-    //     {icon === "copy" ? <CopyIcon /> : <CheckIcon />}
-    //   </IconButton>
-    // </Flex>
   );
 };
 

@@ -29,10 +29,16 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
   }, [data, dispatch]);
 
   useEffect(() => {
-    if (localStorage.getItem('onboardCompleted') === 'true') {
+    const onboardCompleted = localStorage.getItem('onboardCompleted') === 'true';
+    if (onboardCompleted && !isTutorialCompleted) {
       setIsTutorialCompleted(true);
     }
-  }, [isTutorialCompleted]);
+  }, []);
+
+  const handleTutorialComplete = () => {
+    localStorage.setItem('onboardCompleted', 'true');
+    setIsTutorialCompleted(true);
+  };
 
   if (isLoading) {
     return (
@@ -43,7 +49,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
   }
 
   if (!isTutorialCompleted) {
-    return <Tutorial onComplete={() => setIsTutorialCompleted(true)} />;
+    return <Tutorial onComplete={handleTutorialComplete} />;
   }
 
   if (error) {

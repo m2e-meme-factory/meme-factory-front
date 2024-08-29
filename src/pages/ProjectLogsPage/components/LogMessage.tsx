@@ -48,7 +48,8 @@ const LogMessage: FC<MessageProps> = ({
 
   const applicationAccepted = allEvents.some((e) => e.eventType === EventType.APPLICATION_APPROVED);
   const applicationRejected = allEvents.some((e) => e.eventType === EventType.APPLICATION_REJECTED);
-  const showApplicationButtons = !(applicationAccepted || applicationRejected) || isApplicationUnsubmitted(allEvents, event);
+  const showApplicationButtons =
+    !(applicationAccepted || applicationRejected) || isApplicationUnsubmitted(allEvents, event);
 
   const shouldShowButtons = !hasTaskCompleted;
 

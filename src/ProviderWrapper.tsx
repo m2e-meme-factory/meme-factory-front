@@ -6,7 +6,8 @@ import { store } from './shared/utils/redux/store';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 
 const queryClient = new QueryClient();
-const manifestUrl = 'https://api.meme-factory.site/uploads/files/3477b352-6cf7-4967-9b1f-fe96fc925753_tonconnect-manifest.json';
+const manifestUrl =
+  'https://api.meme-factory.site/uploads/files/3477b352-6cf7-4967-9b1f-fe96fc925753_tonconnect-manifest.json';
 
 const ProviderWrapper = ({ children }: { children: ReactNode }) => {
   return (

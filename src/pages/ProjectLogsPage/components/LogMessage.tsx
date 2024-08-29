@@ -7,6 +7,7 @@ import RejectApproveTaskSection from './RejectApproveTaskSection';
 import { Event } from 'api';
 import RejectAcceptApplicationSection from './RejectApproveApplicationSection';
 import { EventType } from '../../../shared/utils/helpers/getEventType';
+import { isApplicationUnsubmitted } from '../../../shared/utils/helpers/isApplicationUnsubmitted';
 
 const MessageContainer = styled.div<{ color: string; side: 'left' | 'right' }>`
   background-color: ${({ color }) => color};
@@ -47,7 +48,7 @@ const LogMessage: FC<MessageProps> = ({
 
   const applicationAccepted = allEvents.some((e) => e.eventType === EventType.APPLICATION_APPROVED);
   const applicationRejected = allEvents.some((e) => e.eventType === EventType.APPLICATION_REJECTED);
-  const showApplicationButtons = !(applicationAccepted || applicationRejected);
+  const showApplicationButtons = !(applicationAccepted || applicationRejected) || isApplicationUnsubmitted(allEvents, event);
 
   const shouldShowButtons = !hasTaskCompleted;
 

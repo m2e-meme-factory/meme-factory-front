@@ -48,12 +48,12 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
     );
   }
 
-  if (!isTutorialCompleted) {
+  if (!isTutorialCompleted && !error) {
     return <Tutorial onComplete={handleTutorialComplete} />;
   }
 
   if (error) {
-    return <Navigate to='/projects' state={{ from: location }} />;
+    return <Navigate to='/unauthorized' state={{ from: location }} />;
   }
 
   return element;

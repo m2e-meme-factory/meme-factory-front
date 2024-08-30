@@ -20,7 +20,7 @@ import { RootState } from '../../shared/utils/redux/store';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import SubtaskCard from '../ProjectPage/components/SubtaskCard/SubtaskCard';
 import { UserRoleInProject } from '../ProjectPage/ProjectPage';
-import AutotaskCard from './components/AutoTask/AutoTask';
+import AutotaskCard from '../AutotasksProject/components/Autotask/Autotask';
 import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
 
 const BlockObserver = styled.div`

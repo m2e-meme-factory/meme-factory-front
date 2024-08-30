@@ -210,6 +210,39 @@ declare module 'api' {
     balance: string;
   }
 
+  export interface AutotaskApplicationDTO {
+    id: number;
+    title: string;
+    description: string;
+    reward: number;
+    url?: string;
+    userId: number;
+    taskId: number;
+    createdAt: string;
+  }
+
+  export interface CreateAutotaskApplicationDTO {
+    title: string;
+    description: string;
+    reward: number;
+    url?: string;
+    userId: number;
+    taskId: number;
+  }
+
+  export interface GetAutotaskApplicationsParams {
+    userId?: number;
+  }
+
+  export interface GetAutoTaskApplicationByIdParams {
+    applicationId: number;
+  }
+
+  export interface ClaimRewardParams {
+    applicationId: number;
+    userId: number;
+  }
+
   export interface GetProgressByProjectIdParams {
     projectId: string;
     userId?: string;

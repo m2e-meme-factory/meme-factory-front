@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
 import styles from './../ProfilePage/ProfilePage.module.css';
+import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 
 const ProfileSettingsPage = () => {
   const [walletAddress, setWalletAddress] = useState<string>();
@@ -21,6 +22,17 @@ const ProfileSettingsPage = () => {
 
     return () => unsubscribe();
   }, [tonConnectUI]);
+
+  useEffect(() => {
+    const connect = async (wallet: string) => {
+      await connectWallet({ params: { tonWalletAddress: wallet } });
+    };
+
+    if (walletAddress) {
+      console.log(walletAddress);
+      connect(walletAddress);
+    }
+  }, [walletAddress]);
 
   return (
     <Flex m='4' direction='column'>

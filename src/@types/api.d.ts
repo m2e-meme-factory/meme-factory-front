@@ -197,6 +197,10 @@ declare module 'api' {
     ? { config?: ApiRequestConfig }
     : { params: Params; config?: ApiRequestConfig };
 
+  export interface ConnectWalletDTO {
+    tonWalletAddress: string;
+  }
+
   export interface User {
     id: string;
     telegramId: string;

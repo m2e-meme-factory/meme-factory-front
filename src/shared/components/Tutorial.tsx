@@ -1,6 +1,7 @@
+import React, { FC } from 'react';
 import Stories from 'react-insta-stories';
 import { Story } from 'react-insta-stories/dist/interfaces';
-import { FC } from 'react';
+import { Button } from '@radix-ui/themes';
 
 const stories: Story[] = [
   { url: 'https://www.zoopraha.cz/images/Aktualne/Pohledem_reditele/IMG_7554.jpg', duration: 6000 },
@@ -18,13 +19,27 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
   };
 
   return (
-    <Stories
-      stories={stories}
-      width='100vw'
-      height='100vh'
-      defaultInterval={1500}
-      onAllStoriesEnd={handleTutorialCompleted}
-    />
+    <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+      <Stories
+        stories={stories}
+        width='100vw'
+        height='100vh'
+        defaultInterval={1500}
+        onAllStoriesEnd={handleTutorialCompleted}
+      />
+      <Button
+        onClick={handleTutorialCompleted}
+        variant='ghost'
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          zIndex: '1001',
+        }}
+      >
+        Skip all
+      </Button>
+    </div>
   );
 };
 

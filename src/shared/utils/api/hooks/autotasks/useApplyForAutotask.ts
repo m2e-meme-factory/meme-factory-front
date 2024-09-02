@@ -28,9 +28,11 @@ export const useApplyForAutotask = (
       return await applyForAutotask(config);
     },
     onSuccess: (data) => {
+      const timeLeft = calculateTimeLeft(data.data.createdAt);
       showSuccessMessage('Application was sent successfully');
-      setTimeLeft(calculateTimeLeft(data.data.createdAt));
+      setTimeLeft(timeLeft);
       setApplicationInfo(data.data);
+      console.log('поменял значение таймера и апп инфо', timeLeft);
     },
     onMutate: (variables) => {
       setSavedVariables(variables);

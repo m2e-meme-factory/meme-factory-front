@@ -39,7 +39,7 @@ export const useGetAutotaskApplications = (params: GetAutotaskApplicationsParams
     select: (data) => data,
     retry: false,
     refetchOnWindowFocus: 'always',
-    refetchInterval: 15000,
+    refetchInterval: 130000,
   });
 
   return { ...query };

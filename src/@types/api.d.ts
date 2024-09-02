@@ -219,6 +219,7 @@ declare module 'api' {
     title: string;
     description: string;
     reward: number;
+    isConfirmed: boolean;
     url?: string;
     userId: number;
     taskId: number;

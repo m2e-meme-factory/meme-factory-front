@@ -6,7 +6,7 @@ import TaskDescriptionDisplay from '../ProjectPage/components/Description/Descri
 import { TagsOutlined, TeamOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import AutotaskCard from './components/Autotask/Autotask';
 import { Autotask, tasks } from './tasks';
-import { RefDataResponse } from 'api';
+import { AutotaskApplicationDTO, RefDataResponse } from 'api';
 import CopyableTextField from '../../shared/components/CopyableTextField';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import { useSelector } from 'react-redux';
@@ -18,7 +18,9 @@ const AutoTasksProject = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const [refData, setRefData] = useState<RefDataResponse>();
   const [autotasks, setAutotasks] = useState<Autotask[]>(tasks);
-  const [doneTasksIds, setDoneTasksIds] = useState<number[]>([]);
+  const [doneTasksIds, setDoneTasksIds] = useState<Set<number>>(new Set<number>());
+  const [claimedTasksIds, setClaimedTasksIds] = useState<Set<number>>(new Set<number>());
+  const [applications, setApplications] = useState<AutotaskApplicationDTO[]>([]);
 
   const { data: refDataResponse, isLoading: refLoading } = useGetRefData(user?.telegramId);
   const { data: autotaskApplicationsResponse, isLoading: applicationsLoading } =
@@ -27,13 +29,23 @@ const AutoTasksProject = () => {
   useEffect(() => {
     if (autotaskApplicationsResponse) {
       const applications = autotaskApplicationsResponse.data;
-      applications.map((application) => {
-        if (application.userId.toString() === user?.id) {
-          setDoneTasksIds((prevState) => [...prevState, application.taskId]);
+      setApplications(applications);
+      applications.forEach((application) => {
+        if (application.isConfirmed) {
+          setClaimedTasksIds((prevState) => {
+            const newSet = new Set(prevState);
+            newSet.add(application.taskId);
+            return newSet;
+          });
         }
+        setDoneTasksIds((prevState) => {
+          const newSet = new Set(prevState);
+          newSet.add(application.taskId);
+          return newSet;
+        });
       });
     }
-  }, [autotaskApplicationsResponse]);
+  }, [autotaskApplicationsResponse, user]);
 
   useEffect(() => {
     if (!refLoading && refDataResponse) {
@@ -116,19 +128,22 @@ const AutoTasksProject = () => {
                 <Spinner />
               </Flex>
             ) : (
-              autotasks
-                .filter((task) => !doneTasksIds.includes(task.id))
-                .map((task) => (
-                  <AutotaskCard
-                    key={task.id}
-                    id={task.id}
-                    title={task.title}
-                    description={task.description}
-                    price={task.reward}
-                    children={task.children}
-                    userId={parseInt(user?.id ?? '')}
-                  />
-                ))
+              autotasks.map((task) => (
+                <AutotaskCard
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  description={task.description}
+                  price={task.reward}
+                  children={task.children}
+                  userId={parseInt(user?.id ?? '')}
+                  done={doneTasksIds.has(task.id)}
+                  claimed={claimedTasksIds.has(task.id)}
+                  createdAt={
+                    applications.find((application) => task.id === application.taskId)?.createdAt
+                  }
+                />
+              ))
             )}
           </Flex>
         </Flex>

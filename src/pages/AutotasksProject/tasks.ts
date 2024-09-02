@@ -21,4 +21,52 @@ export const tasks: Autotask[] = [
     description: `Earn reward by visiting m2e.pro`,
     reward: 100,
   },
+  {
+    id: 3,
+    title: 'Visit our socials',
+    description: `vk.com/m2e`,
+    reward: 100,
+  },
+  {
+    id: 4,
+    title: 'Visit our socials 2',
+    description: `vk.com/m2e2`,
+    reward: 100,
+  },
+  {
+    id: 5,
+    title: 'Visit our socials 3',
+    description: `vk.com/m2e3`,
+    reward: 100,
+  },
+  {
+    id: 6,
+    title: 'Visit our socials 4',
+    description: `vk.com/m2e3`,
+    reward: 100,
+  },
+  {
+    id: 7,
+    title: 'Visit our socials 5',
+    description: `vk.com/m2e3`,
+    reward: 100,
+  },
+  {
+    id: 8,
+    title: 'Visit our socials 3',
+    description: `vk.com/m2e3`,
+    reward: 100,
+  },
+  {
+    id: 9,
+    title: 'Visit our socials 4',
+    description: `vk.com/m2e3`,
+    reward: 100,
+  },
+  {
+    id: 10,
+    title: 'Visit our socials 5',
+    description: `vk.com/m2e3`,
+    reward: 100,
+  },
 ];

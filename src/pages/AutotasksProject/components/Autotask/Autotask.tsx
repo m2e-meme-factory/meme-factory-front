@@ -1,35 +1,70 @@
 import { Card, Flex, Text, Dialog, IconButton } from '@radix-ui/themes';
 import React, { FC, ReactNode, useState, useEffect } from 'react';
-import { RocketOutlined } from '@ant-design/icons';
+import { CheckOutlined, RocketOutlined } from '@ant-design/icons';
 import { ChevronRightIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
 import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
 import { AutotaskApplicationDTO } from 'api';
+import { calculateTimeLeft } from '../../../../shared/utils/helpers/calculateTimeLeft';
 
 interface AutotaskProps {
   id: number;
   title: string;
   description: string;
   price: number;
+  createdAt?: string;
   children?: ReactNode;
   userId: number;
+  claimed: boolean;
+  done: boolean;
 }
 
-const AutotaskCard: FC<AutotaskProps> = ({ id, title, description, price, children, userId }) => {
+const AutotaskCard: FC<AutotaskProps> = ({
+  id,
+  title,
+  description,
+  price,
+  children,
+  userId,
+  done,
+  claimed,
+  createdAt,
+}) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isApplied, setApplied] = useState(false);
-  const [timerStarted, setTimerStarted] = useState(false);
+  const [isApplied, setApplied] = useState(done);
+  const [isRewardClaimed, setIsRewardClaimed] = useState(claimed);
+  const [isTimerStarted, setTimerStarted] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(claimed);
   const [timeLeft, setTimeLeft] = useState(0);
   const [applicationInfo, setApplicationInfo] = useState<AutotaskApplicationDTO>();
-  const [isRewardClaimed, setIsRewardClaimed] = useState(false);
 
   const mutation = useApplyForAutotask(setTimeLeft, setApplicationInfo);
   const claimReward = useClaimReward();
 
   useEffect(() => {
+    if (createdAt) {
+      const timeLeftCalculated = calculateTimeLeft(createdAt);
+      setTimeLeft(timeLeftCalculated);
+    }
+    setApplied(done);
+    setIsRewardClaimed(claimed);
+    setIsBlocked(claimed || isTimerStarted);
+  }, [isModalVisible, done, claimed, createdAt]);
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      setTimerStarted(true);
+      setIsBlocked(true);
+    } else {
+      setTimerStarted(false);
+      setIsBlocked(false);
+    }
+  }, [timeLeft]);
+
+  useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
-    if (timerStarted && timeLeft > 0) {
+    if (isBlocked && timeLeft > 0) {
       timer = setInterval(() => {
         setTimeLeft((prevTime) => {
           if (prevTime <= 1) {
@@ -46,7 +81,7 @@ const AutotaskCard: FC<AutotaskProps> = ({ id, title, description, price, childr
         clearInterval(timer);
       }
     };
-  }, [timerStarted, timeLeft]);
+  }, [isBlocked, timeLeft]);
 
   const handleDialogClose = () => {
     setModalVisible(false);
@@ -56,15 +91,17 @@ const AutotaskCard: FC<AutotaskProps> = ({ id, title, description, price, childr
     setModalVisible(true);
   };
 
-  const handleSendApplicationClick = () => {
-    if (!isApplied) {
-      setApplied(true);
-      mutation.mutate({ params: { title, description, reward: price, taskId: id, userId } });
-      setTimerStarted(true);
-    }
-    if (!isRewardClaimed && isApplied && applicationInfo && timeLeft === 0) {
-      claimReward.mutate({ params: { userId, applicationId: applicationInfo.id } });
+  const handleSendApplication = () => {
+    setApplied(true);
+    mutation.mutate({ params: { title, description, reward: price, taskId: id, userId } });
+    setTimeLeft(120);
+  };
+
+  const handleClaimReward = () => {
+    if (applicationInfo) {
       setIsRewardClaimed(true);
+      setIsBlocked(true);
+      claimReward.mutate({ params: { userId, applicationId: applicationInfo.id } });
     }
   };
 
@@ -75,10 +112,23 @@ const AutotaskCard: FC<AutotaskProps> = ({ id, title, description, price, childr
   };
 
   return (
-    <Card className='SubtaskCard' mb='3' style={{ width: '100%', border: '1px solid yellow' }}>
+    <Card
+      className='SubtaskCard'
+      mb='3'
+      style={
+        isApplied
+          ? { width: '100%', border: '2px solid green' }
+          : { width: '100%', border: '1px solid yellow' }
+      }
+    >
       <Flex align='center' justify='between'>
         <Flex>
-          <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+          {isRewardClaimed ? (
+            <CheckOutlined style={{ color: 'green', marginRight: '15px', fontSize: '24px' }} />
+          ) : (
+            <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
+          )}
+
           <Flex direction='column'>
             <Text size='5' weight='medium'>
               {title}
@@ -107,18 +157,19 @@ const AutotaskCard: FC<AutotaskProps> = ({ id, title, description, price, childr
 
             <button
               style={{ marginTop: '10px' }}
-              className={isApplied ? 'ProposalButtonDisabled' : 'ProposalButton'}
-              disabled={isApplied}
-              onClick={handleSendApplicationClick}
+              className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
+              disabled={isBlocked}
+              onClick={!isApplied ? handleSendApplication : handleClaimReward}
             >
               <Text>
-                {timerStarted && timeLeft > 0
+                {isTimerStarted && timeLeft > 0
                   ? `Time left: ${formatTime(timeLeft)}`
                   : isApplied
                     ? 'Claim Reward'
                     : 'Check!'}
               </Text>
             </button>
+
             <Dialog.Close>
               <button onClick={handleDialogClose} className='IconButton' aria-label='Close'>
                 <Cross1Icon />

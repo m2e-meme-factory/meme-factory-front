@@ -4,8 +4,10 @@ import { Story } from 'react-insta-stories/dist/interfaces';
 import { Button } from '@radix-ui/themes';
 
 const stories: Story[] = [
-  { url: 'https://www.zoopraha.cz/images/Aktualne/Pohledem_reditele/IMG_7554.jpg', duration: 6000 },
-  { url: 'https://www.torontozoo.com/img/1200/capybara.jpg', duration: 6000 },
+  {
+    url: 'https://api.meme-factory.site/uploads/tutorial/26ba574c-2c1b-4030-8711-c0b6e24f52d2_mmfctry.webp',
+    duration: 6000,
+  },
 ];
 
 interface TutorialProps {

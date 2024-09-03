@@ -12,7 +12,9 @@ import ProtectedRoute from './shared/components/ProtectedRoute';
 import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPage';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
 import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage'; // Импорт компонента 404
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import AutoTasksProject from './pages/AutotasksProject/AutoTasksProject';
+import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
 
 export const router = createBrowserRouter([
   {
@@ -55,11 +57,19 @@ export const router = createBrowserRouter([
         path: '*',
         element: <NotFoundPage />,
       },
+      {
+        path: ROUTES.AUTOTASKS,
+        element: <AutoTasksProject />,
+      },
     ],
   },
   {
     path: ROUTES.LOGS,
     element: <ProtectedRoute element={<ProjectLogsPage />} />,
+  },
+  {
+    path: ROUTES.UNAUTHORIZED,
+    element: <UnauthorizedPage />,
   },
   {
     path: '*',

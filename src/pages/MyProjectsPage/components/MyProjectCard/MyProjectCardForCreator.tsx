@@ -30,7 +30,7 @@ const MyProjectCardForCreator: FC<MyProjectCardProps> = ({ id, title, category, 
       if (user.role === Role.ADVERTISER) {
         navigate(`/projects/${id}/details`);
       } else {
-        navigate(`/projects/${id}/logs/${user.id}`);
+        navigate(`/projects/${id}/logs/${user.id}?fromTab=myprojects`);
       }
     }
   };

@@ -81,7 +81,8 @@ input {
     padding: 10px;
     color: black;
     font-weight: 700;
-    width: 93%;
+    width: 95%;
+    margin: 0 auto;
     text-align: center;
     border: 3px solid black;
     transition: border 0.3s ease;
@@ -93,7 +94,8 @@ input {
     padding: 10px;
     color: black;
     font-weight: 700;
-    width: 93%;
+    width: 95%;
+    margin: 0 auto;
     text-align: center;
     transition: border 0.3s ease;
 }

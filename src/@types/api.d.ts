@@ -197,6 +197,10 @@ declare module 'api' {
     ? { config?: ApiRequestConfig }
     : { params: Params; config?: ApiRequestConfig };
 
+  export interface ConnectWalletDTO {
+    tonWalletAddress: string;
+  }
+
   export interface User {
     id: string;
     telegramId: string;
@@ -208,6 +212,40 @@ declare module 'api' {
     inviterRefCode?: string;
     refCode?: string;
     balance: string;
+  }
+
+  export interface AutotaskApplicationDTO {
+    id: number;
+    title: string;
+    description: string;
+    reward: number;
+    isConfirmed: boolean;
+    url?: string;
+    userId: number;
+    taskId: number;
+    createdAt: string;
+  }
+
+  export interface CreateAutotaskApplicationDTO {
+    title: string;
+    description: string;
+    reward: number;
+    url?: string;
+    userId: number;
+    taskId: number;
+  }
+
+  export interface GetAutotaskApplicationsParams {
+    userId?: number;
+  }
+
+  export interface GetAutoTaskApplicationByIdParams {
+    applicationId: number;
+  }
+
+  export interface ClaimRewardParams {
+    applicationId: number;
+    userId: number;
   }
 
   export interface GetProgressByProjectIdParams {

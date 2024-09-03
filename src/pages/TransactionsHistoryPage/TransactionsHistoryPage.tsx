@@ -106,7 +106,7 @@ const TransactionsHistoryPage = () => {
                         style={{ padding: '20px' }}
                         onClick={() =>
                           navigate(
-                            `/projects/${transaction.projectId}/logs/${transaction.toUserId}`
+                            `/projects/${transaction.projectId}/logs/${transaction.toUserId}?fromTab=transactions`
                           )
                         }
                       >

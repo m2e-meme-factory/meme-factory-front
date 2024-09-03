@@ -103,20 +103,13 @@ const ProjectLogsPage = () => {
   };
 
   const handleBackClick = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
+    const searchParams = new URLSearchParams(window.location.search);
+    const fromTab = searchParams.get('fromTab');
+
+    if (fromTab) {
+      navigate(`/profile?tab=${fromTab}`);
     } else {
-      if (user) {
-        if (user.role === Role.CREATOR) {
-          navigate('/profile?tab=myprojects');
-        } else if (projectId) {
-          navigate(`/projects/${projectId}/details`);
-        } else {
-          navigate('/projects');
-        }
-      } else {
-        navigate('/projects');
-      }
+      navigate(-1);
     }
   };
 

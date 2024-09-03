@@ -1,11 +1,16 @@
-import { Card, Flex, Text, Dialog, IconButton } from '@radix-ui/themes';
-import React, { FC, ReactNode, useState, useEffect } from 'react';
+import { Card, Dialog, Flex, IconButton, Text } from '@radix-ui/themes';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { CheckOutlined, RocketOutlined } from '@ant-design/icons';
 import { ChevronRightIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
 import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
 import { AutotaskApplicationDTO } from 'api';
 import { calculateTimeLeft } from '../../../../shared/utils/helpers/calculateTimeLeft';
+import { showToastWithPromise } from '../../../../shared/utils/helpers/notify';
+import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotasks/getAutotaskApplications';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../shared/utils/redux/store';
+import { AxiosResponse } from 'axios';
 
 interface AutotaskProps {
   id: number;
@@ -30,6 +35,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   claimed,
   createdAt,
 }) => {
+  const user = useSelector((state: RootState) => state.user.user);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isApplied, setApplied] = useState(done);
   const [isRewardClaimed, setIsRewardClaimed] = useState(claimed);
@@ -97,8 +103,38 @@ const AutotaskCard: FC<AutotaskProps> = ({
     setTimeLeft(120);
   };
 
-  const handleClaimReward = () => {
-    if (applicationInfo) {
+  const fetchApplicationInfo = async (): Promise<
+    AxiosResponse<AutotaskApplicationDTO[]> | undefined
+  > => {
+    if (user) {
+      return await showToastWithPromise({
+        success: 'Application info fetched successfully',
+        process: 'Fetching application info',
+        error: 'Error while fetching application info',
+        callback: () => getAutotaskApplications({ params: { userId: parseInt(user.id) } }),
+      });
+    } else {
+      return undefined;
+    }
+  };
+
+  const handleClaimReward = async () => {
+    if (!applicationInfo && user) {
+      const applicationInfoResponse = await fetchApplicationInfo();
+
+      if (applicationInfoResponse && applicationInfoResponse.data.length > 0) {
+        console.log(applicationInfoResponse.data, 'ответ api');
+        setApplicationInfo(applicationInfoResponse.data[0]);
+
+        if (applicationInfoResponse.data[0]) {
+          setIsRewardClaimed(true);
+          setIsBlocked(true);
+          claimReward.mutate({
+            params: { userId, applicationId: applicationInfoResponse.data[0].id },
+          });
+        }
+      }
+    } else if (applicationInfo) {
       setIsRewardClaimed(true);
       setIsBlocked(true);
       claimReward.mutate({ params: { userId, applicationId: applicationInfo.id } });

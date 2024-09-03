@@ -44,7 +44,7 @@ export const showToastWithPromise = async ({
   process,
   callback,
 }: ToastPromiseParams) => {
-  await toast.promise(
+  return await toast.promise(
     callback(),
     {
       loading: process,

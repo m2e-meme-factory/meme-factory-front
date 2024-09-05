@@ -1,0 +1,55 @@
+.refLinkContainer {
+    display: flex;
+    flex-direction: column;
+    align-content: start;
+    width: 100%;
+}
+
+.title {
+    color: #fecf0a;
+    margin: 10px auto;
+}
+
+.inputContainer {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.refInput {
+    border: 1px solid #fecf0a;
+    border-radius: 10px;
+    padding: 10px;
+    margin-right: 5px;
+    flex: 1;
+}
+
+.refInput::selection {
+    background: rgba(254, 207, 10, 0.5);
+}
+
+.copyButton {
+    color: black;
+    background-color: #fecf0a;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+    width: 50px;
+}
+
+.copiedButton {
+    color: white;
+    background-color: #121212;
+    border: 1px solid #fecf0a;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+    width: 50px;
+}

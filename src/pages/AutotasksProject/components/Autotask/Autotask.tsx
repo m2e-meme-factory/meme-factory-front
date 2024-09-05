@@ -1,7 +1,7 @@
 import { Card, Flex, IconButton, Text } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { CheckOutlined, RocketOutlined } from '@ant-design/icons';
-import { ChevronRightIcon, Cross1Icon } from '@radix-ui/react-icons';
+import { CheckOutlined, RightOutlined, RocketOutlined } from '@ant-design/icons';
+import { CheckIcon, ChevronRightIcon, Cross1Icon } from '@radix-ui/react-icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
 import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
 import { AutotaskApplicationDTO } from 'api';
@@ -22,6 +22,7 @@ interface AutotaskProps {
   price: number;
   createdAt?: string;
   children?: ReactNode;
+  icon?: ReactNode;
   userId: number;
   claimed: boolean;
   done: boolean;
@@ -37,6 +38,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   done,
   claimed,
   createdAt,
+  icon,
 }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -46,6 +48,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const [isBlocked, setIsBlocked] = useState(claimed);
   const [timeLeft, setTimeLeft] = useState(0);
   const [applicationInfo, setApplicationInfo] = useState<AutotaskApplicationDTO>();
+  const [cardStyle, setCardStyle] = useState<React.CSSProperties>({});
 
   const mutation = useApplyForAutotask(setTimeLeft, setApplicationInfo);
   const claimReward = useClaimReward();
@@ -55,10 +58,23 @@ const AutotaskCard: FC<AutotaskProps> = ({
       const timeLeftCalculated = calculateTimeLeft(createdAt);
       setTimeLeft(timeLeftCalculated);
     }
-    setApplied(done);
-    setIsRewardClaimed(claimed);
+    if (!isApplied) {
+      setApplied(done);
+    }
+    if (!isRewardClaimed) {
+      setIsRewardClaimed(claimed);
+    }
     setIsBlocked(claimed || isTimerStarted);
   }, [isModalVisible, done, claimed, createdAt]);
+
+  useEffect(() => {
+    const newStyle: React.CSSProperties = {
+      borderRadius: '20px',
+      padding: '10px 7px',
+      border: isApplied ? '2px solid green' : '2px solid gray',
+    };
+    setCardStyle(newStyle);
+  }, [isApplied]);
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -149,37 +165,36 @@ const AutotaskCard: FC<AutotaskProps> = ({
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
+  const baseStyle = {
+    borderRadius: '20px',
+    padding: '10px 7px',
+  };
+
+  const conditionalStyle = isApplied ? { border: '2px solid green' } : { border: '2px solid gray' };
+
+  const combinedStyle = { ...baseStyle, ...conditionalStyle };
+
   return (
-    <Card
-      className='SubtaskCard'
-      mb='3'
-      style={
-        isApplied
-          ? { width: '100%', border: '2px solid green' }
-          : { width: '100%', border: '1px solid yellow' }
-      }
-    >
+    <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between'>
         <Flex>
-          {isRewardClaimed ? (
-            <CheckOutlined style={{ color: 'green', marginRight: '15px', fontSize: '24px' }} />
-          ) : (
-            <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
-          )}
+          {icon}
 
           <Flex direction='column'>
-            <Text size='5' weight='medium'>
+            <Text size='4' weight='medium'>
               {title}
             </Text>
-            <Text weight='medium'>
-              <Text color='yellow'>Price:</Text> {price}$
+            <Text weight='medium' size='3' color='gray'>
+              +{price} M2E
             </Text>
           </Flex>
         </Flex>
 
-        <IconButton onClick={handleDialogOpen}>
-          <ChevronRightIcon></ChevronRightIcon>
-        </IconButton>
+        {isRewardClaimed ? (
+          <CheckOutlined style={{ color: 'green', fontSize: '20px', marginRight: '10px' }} />
+        ) : (
+          <RightOutlined style={{ color: '#fecf0a', fontSize: '20px', marginRight: '10px' }} />
+        )}
 
         <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
           <Sheet.Container>
@@ -213,7 +228,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
               }
             </Sheet.Content>
           </Sheet.Container>
-          <Sheet.Backdrop />
+          <Sheet.Backdrop onTap={() => handleDialogClose()} />
         </Sheet>
       </Flex>
     </Card>

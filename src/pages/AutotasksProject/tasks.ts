@@ -6,6 +6,7 @@ export interface Autotask {
   description: string;
   reward: number;
   children?: ReactNode;
+  icon?: ReactNode;
 }
 
 export const tasks: Autotask[] = [

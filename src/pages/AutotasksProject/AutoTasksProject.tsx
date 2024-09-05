@@ -14,6 +14,7 @@ import { RootState } from '../../shared/utils/redux/store';
 import { useGetAutotaskApplications } from '../../shared/utils/api/hooks/autotasks/useGetAutotaskApplications';
 import Loading from '../../shared/components/Loading';
 import CopyableRef from './components/CopyableField/CopyableRef';
+import { getIconByTaskId } from '../../shared/utils/helpers/getIconByTaskId';
 
 const AutoTasksProject = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -62,9 +63,10 @@ const AutoTasksProject = () => {
             return {
               ...task,
               children: <CopyableRef refLink={refData.refLink} />,
+              icon: getIconByTaskId(task.id),
             };
           }
-          return task;
+          return { ...task, icon: getIconByTaskId(task.id) };
         })
       );
     }
@@ -76,50 +78,14 @@ const AutoTasksProject = () => {
 
   return (
     <Flex direction='column'>
-      <Flex className={styles.bannerContainer}>
-        <img src={fallbackBanner} alt='banner' className={styles.bannerImage} />
-      </Flex>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column'>
-          <Heading weight='medium'>Points for activity</Heading>
-          <Text color='yellow' weight='medium' mb='5'>
-            Category: Platform tasks
-          </Text>
-          <Flex mb='5'>
-            <TaskDescriptionDisplay description={`<p>Fulfill tasks = earn points</p>`} />
-          </Flex>
-          <Flex align='center' direction='row' mb='2'>
-            <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-            <Text weight='medium' size='5'>
-              Tags:{' '}
-              {['partnership', 'socials'].map((tag, index) => (
-                <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                  {tag}
-                </Badge>
-              ))}
-            </Text>
-          </Flex>
-          <Flex direction='column' mb='5'>
-            <Flex align='center' mb='2'>
-              <TeamOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Host
-              </Text>
-            </Flex>
-            <Card>
-              <Flex align='center'>
-                <Text weight='medium' size='6'>
-                  Meme factory
-                </Text>
-              </Flex>
-            </Card>
-          </Flex>
+          <Heading weight='bold'>Tasks</Heading>
 
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='2'>
-              <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Subtasks
+              <Text weight='light' size='3' color='gray'>
+                We'll reward you immediately with m2e points after each task completion
               </Text>
             </Flex>
             {refLoading ? (
@@ -141,6 +107,7 @@ const AutoTasksProject = () => {
                   createdAt={
                     applications.find((application) => task.id === application.taskId)?.createdAt
                   }
+                  icon={task.icon}
                 />
               ))
             )}

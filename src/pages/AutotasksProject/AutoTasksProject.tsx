@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useGetAutotaskApplications } from '../../shared/utils/api/hooks/autotasks/useGetAutotaskApplications';
 import Loading from '../../shared/components/Loading';
+import CopyableRef from './components/CopyableField/CopyableRef';
 
 const AutoTasksProject = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -60,9 +61,7 @@ const AutoTasksProject = () => {
           if (task.id === 1) {
             return {
               ...task,
-              children: (
-                <CopyableTextField size={'2'} fieldSize='3' value={refData.refLink ?? ' '} />
-              ),
+              children: <CopyableRef refLink={refData.refLink} />,
             };
           }
           return task;

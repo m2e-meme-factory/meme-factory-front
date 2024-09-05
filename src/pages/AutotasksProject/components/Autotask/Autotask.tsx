@@ -1,4 +1,4 @@
-import { Card, Dialog, Flex, IconButton, Text } from '@radix-ui/themes';
+import { Card, Flex, IconButton, Text } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { CheckOutlined, RocketOutlined } from '@ant-design/icons';
 import { ChevronRightIcon, Cross1Icon } from '@radix-ui/react-icons';
@@ -11,6 +11,9 @@ import { getAutotaskApplications } from '../../../../shared/utils/api/requests/a
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../shared/utils/redux/store';
 import { AxiosResponse } from 'axios';
+import { Sheet } from 'react-modal-sheet';
+import '../../../../styles/CustomSheetsStyles.css';
+import styles from './Autotask.module.css';
 
 interface AutotaskProps {
   id: number;
@@ -123,7 +126,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
       const applicationInfoResponse = await fetchApplicationInfo();
 
       if (applicationInfoResponse && applicationInfoResponse.data.length > 0) {
-        console.log(applicationInfoResponse.data, 'ответ api');
         setApplicationInfo(applicationInfoResponse.data[0]);
 
         if (applicationInfoResponse.data[0]) {
@@ -175,44 +177,44 @@ const AutotaskCard: FC<AutotaskProps> = ({
           </Flex>
         </Flex>
 
-        <Dialog.Root open={isModalVisible}>
-          <Dialog.Trigger>
-            <IconButton onClick={handleDialogOpen}>
-              <ChevronRightIcon />
-            </IconButton>
-          </Dialog.Trigger>
-          <Dialog.Content>
-            <Dialog.Title className='Accent'>
-              <span>Subtask: {title}</span>
-            </Dialog.Title>
-            <Dialog.Description>
-              <Text>{description}</Text>
-              <div style={{ margin: '10px' }} />
-              <div>{children}</div>
-            </Dialog.Description>
+        <IconButton onClick={handleDialogOpen}>
+          <ChevronRightIcon></ChevronRightIcon>
+        </IconButton>
 
-            <button
-              style={{ marginTop: '10px' }}
-              className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-              disabled={isBlocked}
-              onClick={!isApplied ? handleSendApplication : handleClaimReward}
-            >
-              <Text>
-                {isTimerStarted && timeLeft > 0
-                  ? `Time left: ${formatTime(timeLeft)}`
-                  : isApplied
-                    ? 'Claim Reward'
-                    : 'Check!'}
-              </Text>
-            </button>
+        <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
+          <Sheet.Container>
+            <Sheet.Header />
+            <Sheet.Content>
+              {
+                <div className={styles.content}>
+                  <div className={styles.information}>
+                    <h2 className={styles.title}>
+                      🚀<span className={styles.accent}>Subtask:</span> {title}
+                    </h2>
+                    <p className={styles.description}>{description}</p>
+                    <>{children}</>
+                  </div>
 
-            <Dialog.Close>
-              <button onClick={handleDialogClose} className='IconButton' aria-label='Close'>
-                <Cross1Icon />
-              </button>
-            </Dialog.Close>
-          </Dialog.Content>
-        </Dialog.Root>
+                  <button
+                    style={{ marginBottom: '10px' }}
+                    className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
+                    disabled={isBlocked}
+                    onClick={!isApplied ? handleSendApplication : handleClaimReward}
+                  >
+                    <Text>
+                      {isTimerStarted && timeLeft > 0
+                        ? `Time left: ${formatTime(timeLeft)}`
+                        : isApplied
+                          ? 'Claim Reward'
+                          : 'Check!'}
+                    </Text>
+                  </button>
+                </div>
+              }
+            </Sheet.Content>
+          </Sheet.Container>
+          <Sheet.Backdrop />
+        </Sheet>
       </Flex>
     </Card>
   );

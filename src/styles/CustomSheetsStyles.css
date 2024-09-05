@@ -1,0 +1,18 @@
+.react-modal-sheet-backdrop {
+    /* custom styles */
+}
+.react-modal-sheet-container {
+    background-color: #121212 !important;
+}
+.react-modal-sheet-header {
+    /* custom styles */
+}
+.react-modal-sheet-drag-indicator {
+    /* custom styles */
+}
+.react-modal-sheet-content {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-left: 3vw !important;
+    margin-right: 3vw !important;
+}

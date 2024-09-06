@@ -1,25 +1,23 @@
-import { Card, Flex, Text } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
+import { Card, Flex, Text } from '@radix-ui/themes';
 import { CheckOutlined, RightOutlined } from '@ant-design/icons';
-import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
-import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
-import { AutotaskApplicationDTO } from 'api';
-import { calculateTimeLeft } from '../../../../shared/utils/helpers/calculateTimeLeft';
-import { showToastWithPromise } from '../../../../shared/utils/helpers/notify';
-import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotasks/getAutotaskApplications';
+import { Sheet } from 'react-modal-sheet';
+import styles from './Autotask.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../shared/utils/redux/store';
+import { AutotaskApplicationDTO, CreateAutotaskApplicationDTO, RefDataResponse } from 'api';
+import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
+import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
+import { useGetRefData } from '../../../../shared/utils/api/hooks/user/useGetRefData';
+import { showErrorMessage, showToastWithPromise } from '../../../../shared/utils/helpers/notify';
 import { AxiosResponse } from 'axios';
-import { Sheet } from 'react-modal-sheet';
-import '../../../../styles/CustomSheetsStyles.css';
-import styles from './Autotask.module.css';
+import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotasks/getAutotaskApplications';
 
-interface AutotaskProps {
+interface IntegratedAutotaskProps {
   id: number;
   title: string;
   description: string;
   price: number;
-  createdAt?: string;
   children?: ReactNode;
   icon?: ReactNode;
   userId: number;
@@ -27,7 +25,7 @@ interface AutotaskProps {
   done: boolean;
 }
 
-const AutotaskCard: FC<AutotaskProps> = ({
+const IntegratedAutotask: FC<IntegratedAutotaskProps> = ({
   id,
   title,
   description,
@@ -36,35 +34,60 @@ const AutotaskCard: FC<AutotaskProps> = ({
   userId,
   done,
   claimed,
-  createdAt,
   icon,
 }) => {
   const user = useSelector((state: RootState) => state.user.user);
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [isApplied, setApplied] = useState(done);
   const [isRewardClaimed, setIsRewardClaimed] = useState(claimed);
-  const [isTimerStarted, setTimerStarted] = useState(false);
   const [isBlocked, setIsBlocked] = useState(claimed);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [isConditionCompleted, setConditionCompleted] = useState<boolean>();
   const [applicationInfo, setApplicationInfo] = useState<AutotaskApplicationDTO>();
   const [cardStyle, setCardStyle] = useState<React.CSSProperties>({});
+  const [refData, setRefData] = useState<RefDataResponse>();
 
-  const mutation = useApplyForAutotask(setApplicationInfo, setTimeLeft);
+  const applyMutation = useApplyForAutotask(setApplicationInfo);
   const claimReward = useClaimReward();
 
+  const { data: refDataResponse, refetch } = useGetRefData(user?.telegramId);
+
   useEffect(() => {
-    if (createdAt) {
-      const timeLeftCalculated = calculateTimeLeft(createdAt);
-      setTimeLeft(timeLeftCalculated);
+    if (refDataResponse) {
+      setRefData(refDataResponse.data);
     }
-    if (!isApplied) {
-      setApplied(done);
+  }, [refDataResponse]);
+
+  useEffect(() => {
+    if (refData) {
+      setConditionCompleted(refData.count > 0);
     }
-    if (!isRewardClaimed) {
-      setIsRewardClaimed(claimed);
-    }
-    setIsBlocked(claimed || isTimerStarted);
-  }, [isModalVisible, done, claimed, createdAt]);
+  }, [refData]);
+
+  useEffect(() => {
+    const updateTaskState = async () => {
+      if (!isApplied) {
+        setApplied(done);
+      }
+      if (!isRewardClaimed) {
+        setIsRewardClaimed(claimed);
+      }
+      if (!isBlocked) {
+        setIsBlocked(claimed);
+      }
+
+      const newStyle: React.CSSProperties = {
+        borderRadius: '20px',
+        padding: '10px 7px',
+        border: isApplied ? '2px solid green' : '2px solid gray',
+      };
+      setCardStyle(newStyle);
+
+      await handleRefetch();
+    };
+
+    updateTaskState();
+  }, [isModalVisible, done, claimed]);
 
   useEffect(() => {
     const newStyle: React.CSSProperties = {
@@ -75,38 +98,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
     setCardStyle(newStyle);
   }, [isApplied]);
 
-  useEffect(() => {
-    if (timeLeft > 0) {
-      setTimerStarted(true);
-      setIsBlocked(true);
-    } else {
-      setTimerStarted(false);
-      setIsBlocked(false);
-    }
-  }, [timeLeft]);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
-
-    if (isBlocked && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(timer!);
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
-  }, [isBlocked, timeLeft]);
-
   const handleDialogClose = () => {
     setModalVisible(false);
   };
@@ -115,12 +106,40 @@ const AutotaskCard: FC<AutotaskProps> = ({
     setModalVisible(true);
   };
 
-  const handleSendApplication = () => {
+  const handleCheckAndApply = async () => {
     setApplied(true);
-    mutation.mutate({
-      params: { title, description, reward: price, taskId: id, userId, isIntegrated: false },
-    });
-    setTimeLeft(120);
+    if (!isConditionCompleted) {
+      setIsBlocked(true);
+    }
+    const autotaskApplicationDTO: CreateAutotaskApplicationDTO = {
+      title,
+      description,
+      reward: price,
+      taskId: id,
+      userId: userId,
+      isIntegrated: true,
+    };
+
+    applyMutation.mutate({ params: autotaskApplicationDTO });
+    await handleRefetch();
+  };
+
+  useEffect(() => {
+    if (typeof isConditionCompleted === 'boolean') {
+      setIsBlocked(!isConditionCompleted);
+    }
+  }, [isConditionCompleted]);
+
+  const handleRefetch = async () => {
+    try {
+      await refetch();
+      if (refData) {
+        setConditionCompleted((refData?.count ?? 0) > 0);
+      }
+    } catch (error) {
+      console.error('Error refetching data:', error);
+      showErrorMessage('Failed to fetch ref data');
+    }
   };
 
   const fetchApplicationInfo = async (): Promise<
@@ -160,21 +179,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
-
-  const baseStyle = {
-    borderRadius: '20px',
-    padding: '10px 7px',
-  };
-
-  const conditionalStyle = isApplied ? { border: '2px solid green' } : { border: '2px solid gray' };
-
-  const combinedStyle = { ...baseStyle, ...conditionalStyle };
-
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between'>
@@ -201,32 +205,34 @@ const AutotaskCard: FC<AutotaskProps> = ({
           <Sheet.Container>
             <Sheet.Header />
             <Sheet.Content>
-              {
-                <div className={styles.content}>
-                  <div className={styles.information}>
-                    <h2 className={styles.title}>
-                      🚀<span className={styles.accent}>Subtask:</span> {title}
-                    </h2>
-                    <p className={styles.description}>{description}</p>
-                    <>{children}</>
-                  </div>
+              <div className={styles.content}>
+                <div className={styles.information}>
+                  <h2 className={styles.title}>
+                    🚀<span className={styles.accent}>Subtask:</span> {title}
+                  </h2>
+                  <p className={styles.description}>{description}</p>
+                  {children}
+                </div>
 
+                {!isApplied ? (
+                  <button
+                    style={{ marginBottom: '10px' }}
+                    className='ProposalButton'
+                    onClick={handleCheckAndApply}
+                  >
+                    <Text>Check!</Text>
+                  </button>
+                ) : (
                   <button
                     style={{ marginBottom: '10px' }}
                     className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
                     disabled={isBlocked}
-                    onClick={!isApplied ? handleSendApplication : handleClaimReward}
+                    onClick={handleClaimReward}
                   >
-                    <Text>
-                      {isTimerStarted && timeLeft > 0
-                        ? `Time left: ${formatTime(timeLeft)}`
-                        : isApplied
-                          ? 'Claim Reward'
-                          : 'Check!'}
-                    </Text>
+                    <Text>Claim Reward!</Text>
                   </button>
-                </div>
-              }
+                )}
+              </div>
             </Sheet.Content>
           </Sheet.Container>
           <Sheet.Backdrop onTap={() => handleDialogClose()} />
@@ -236,4 +242,4 @@ const AutotaskCard: FC<AutotaskProps> = ({
   );
 };
 
-export default AutotaskCard;
+export default IntegratedAutotask;

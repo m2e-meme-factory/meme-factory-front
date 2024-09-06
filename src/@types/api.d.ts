@@ -220,6 +220,7 @@ declare module 'api' {
     description: string;
     reward: number;
     isConfirmed: boolean;
+    isIntegrated: boolean;
     url?: string;
     userId: number;
     taskId: number;
@@ -233,6 +234,7 @@ declare module 'api' {
     url?: string;
     userId: number;
     taskId: number;
+    isIntegrated: boolean;
   }
 
   export interface GetAutotaskApplicationsParams {

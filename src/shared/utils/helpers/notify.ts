@@ -14,6 +14,7 @@ export const showErrorMessage = (message: string) => {
       borderRadius: '10px',
       background: '#333',
       color: '#fff',
+      zIndex: 9999999,
     },
   });
 };
@@ -24,6 +25,7 @@ export const showSuccessMessage = (message: string) => {
       borderRadius: '10px',
       background: '#333',
       color: '#fff',
+      zIndex: 9999999,
     },
   });
 };
@@ -34,6 +36,7 @@ export const showMessage = (message: string) => {
       borderRadius: '10px',
       background: '#333',
       color: '#fff',
+      zIndex: 9999999,
     },
   });
 };
@@ -56,6 +59,7 @@ export const showToastWithPromise = async ({
         borderRadius: '10px',
         background: '#333',
         color: '#fff',
+        zIndex: 9999999,
       },
     }
   );

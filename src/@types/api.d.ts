@@ -71,8 +71,7 @@ declare module 'api' {
   }
 
   export interface VerifyUserRequestData {
-    queryId: string;
-    userData: VerifyUserData;
+    userId: string;
   }
 
   interface EventDetails {

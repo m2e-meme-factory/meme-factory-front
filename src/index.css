@@ -1,5 +1,7 @@
 :root {
   --brand-color: #fecf0a;
+  --swiper-pagination-color: #fecf0a;
+  --swiper-pagination-bullet-inactive-color: #83a4a4;
 }
 
 body {
@@ -15,6 +17,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.swiper {
+  width: 100vw;
+  height: 100vh;
+}
+
+.swiper-pagination {
+  bottom: 10vh !important;
+  color: #fecf0a !important;
+}
+
+.swiper-slide {
+  background: #121212 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rt-TextFieldInput {

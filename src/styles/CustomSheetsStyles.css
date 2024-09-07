@@ -14,6 +14,7 @@
 .react-modal-sheet-content {
     display: flex !important;
     flex-direction: column !important;
+    align-items: center !important;
     margin-left: 3vw !important;
     margin-right: 3vw !important;
 }

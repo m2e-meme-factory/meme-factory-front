@@ -1,0 +1,40 @@
+.link {
+    text-decoration: none;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.card {
+    width: 100%;
+    border-radius: 25px;
+    background-color: #2f3135;
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.websiteInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.socialsName {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: white;
+    margin: 0;
+}
+
+.warning {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: dimgray;
+    text-align: justify;
+    margin: 0 0 10px;
+}

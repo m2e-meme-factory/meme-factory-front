@@ -1,45 +1,98 @@
-import React, { FC } from 'react';
-import Stories from 'react-insta-stories';
-import { Story } from 'react-insta-stories/dist/interfaces';
-import { Button } from '@radix-ui/themes';
-
-const stories: Story[] = [
-  {
-    url: 'https://api.meme-factory.site/uploads/tutorial/26ba574c-2c1b-4030-8711-c0b6e24f52d2_mmfctry.webp',
-    duration: 6000,
-  },
-];
+import { FC, useEffect, useRef, useState } from 'react';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Button, Text } from '@radix-ui/themes';
 
 interface TutorialProps {
   onComplete: () => void;
 }
 
 const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
+  const swiperRef = useRef<Swiper | null>(null);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  useEffect(() => {
+    swiperRef.current = new Swiper('.swiper', {
+      modules: [Navigation, Pagination],
+      direction: 'horizontal',
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    });
+
+    if (swiperRef.current) {
+      swiperRef.current.on('slideChange', () => {
+        setCurrentSlideIndex(swiperRef.current?.activeIndex);
+      });
+    }
+
+    return () => swiperRef.current?.destroy();
+  }, []);
+
+  const handleNextSlide = () => {
+    swiperRef.current?.slideNext();
+  };
+
   const handleTutorialCompleted = () => {
     localStorage.setItem('onboardCompleted', 'true');
     onComplete();
   };
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
-      <Stories
-        stories={stories}
-        width='100vw'
-        height='100vh'
-        defaultInterval={1500}
-        onAllStoriesEnd={handleTutorialCompleted}
-      />
+    <div className='swiper'>
+      <div className='swiper-wrapper'>
+        <div className='swiper-slide'>
+          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
+            Приветствую тебя, Создатель! С нами ты можешь стать мощным инфлюенсером и продвигать
+            бренды со всего мира!
+          </Text>
+        </div>
+        <div className='swiper-slide'>
+          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
+            Meme Factory - первая Meme-To-Earn платформа, где люди постят мемы и зарабатывают на
+            этом, а бренды повышают узнаваемость за счет рекламных интеграций.
+          </Text>
+        </div>
+        <div className='swiper-slide'>
+          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
+            Как получить Airdrop и заработать (в 1-2 сообщении): - Приглашай друзей 10 000 -
+            Выкладывай в соцсети контент о проекте - Отмечай нас в соцсетях - Делай активности
+            (комментируй, лайкай и т.д.) И участвуй в эйрдроп
+          </Text>
+        </div>
+        <div className='swiper-slide'>
+          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
+            Меня зовут Скай, я помогаю брендам улетать в небеса, ха-ха Я расскажу тебе, как мы тут
+            работаем. Все просто, как никогда! 1. Берем популярный мем на английском языке, либо
+            создаем уникальный 2. Скачиваем промо материалы от рекламодателя (анимацию) 3.
+            Накладываем анимацию/лого/текст 4. Указываем аккаунт рекламодателя соавтором или
+            упоминаем его
+          </Text>
+        </div>
+        <div className='swiper-slide'>
+          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
+            Тебя приветствует твой первый заказчик - Фабрика Мемов (Meme Factory) Мы хотим, чтобы о
+            нас знали везде и нам нужна твоя помощь! Выкладывай контент в соцсетях и получай поинты
+            ЕЖЕДЕНЕВНО
+          </Text>
+        </div>
+      </div>
+      <div className='swiper-pagination'></div>
       <Button
-        onClick={handleTutorialCompleted}
-        variant='ghost'
+        size='3'
+        onClick={currentSlideIndex !== 4 ? handleNextSlide : handleTutorialCompleted}
         style={{
           position: 'absolute',
-          top: '20px',
-          right: '20px',
-          zIndex: '1001',
+          bottom: '20px',
+          right: '50%',
+          transform: 'translateX(50%)',
+          zIndex: '9999',
         }}
       >
-        Skip all
+        {currentSlideIndex === 4 ? 'Make money' : 'Next'}
       </Button>
     </div>
   );

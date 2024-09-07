@@ -46,6 +46,7 @@ const IntegratedAutotask: FC<IntegratedAutotaskProps> = ({
   const [applicationInfo, setApplicationInfo] = useState<AutotaskApplicationDTO>();
   const [cardStyle, setCardStyle] = useState<React.CSSProperties>({});
   const [refData, setRefData] = useState<RefDataResponse>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const applyMutation = useApplyForAutotask(setApplicationInfo);
   const claimReward = useClaimReward();
@@ -158,6 +159,9 @@ const IntegratedAutotask: FC<IntegratedAutotaskProps> = ({
   };
 
   const handleClaimReward = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     if (!applicationInfo && user) {
       const applicationInfoResponse = await fetchApplicationInfo();
 
@@ -177,6 +181,8 @@ const IntegratedAutotask: FC<IntegratedAutotaskProps> = ({
       setIsBlocked(true);
       claimReward.mutate({ params: { userId, applicationId: applicationInfo.id } });
     }
+
+    setIsSubmitting(false);
   };
 
   return (

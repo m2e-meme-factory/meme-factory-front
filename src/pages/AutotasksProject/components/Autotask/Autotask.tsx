@@ -54,6 +54,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const [timeLeft, setTimeLeft] = useState(0);
   const [applicationInfo, setApplicationInfo] = useState<AutotaskApplicationDTO>();
   const [cardStyle, setCardStyle] = useState<React.CSSProperties>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const mutation = useApplyForAutotask(setApplicationInfo, setTimeLeft);
   const claimReward = useClaimReward();
@@ -145,6 +146,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
   };
 
   const handleClaimReward = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     if (!applicationInfo && user) {
       const applicationInfoResponse = await fetchApplicationInfo();
 
@@ -164,6 +168,8 @@ const AutotaskCard: FC<AutotaskProps> = ({
       setIsBlocked(true);
       claimReward.mutate({ params: { userId, applicationId: applicationInfo.id } });
     }
+
+    setIsSubmitting(false);
   };
 
   const formatTime = (seconds: number) => {

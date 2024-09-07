@@ -112,6 +112,7 @@ const AutoTasksProject = () => {
                     description={task.description}
                     price={task.reward}
                     children={task.children}
+                    url={task.url}
                     userId={parseInt(user?.id ?? '')}
                     done={doneTasksIds.has(task.id)}
                     claimed={claimedTasksIds.has(task.id)}
@@ -119,6 +120,7 @@ const AutoTasksProject = () => {
                       applications.find((application) => task.id === application.taskId)?.createdAt
                     }
                     icon={task.icon}
+                    category={task.category}
                   />
                 )
               )

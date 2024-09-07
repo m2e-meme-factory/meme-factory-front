@@ -13,6 +13,8 @@ import { AxiosResponse } from 'axios';
 import { Sheet } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
 import styles from './Autotask.module.css';
+import SocialsLink from '../../../../shared/components/SocialsLink/SocialsLink';
+import { getIconByTaskId } from '../../../../shared/utils/helpers/getIconByTaskId';
 
 interface AutotaskProps {
   id: number;
@@ -21,7 +23,9 @@ interface AutotaskProps {
   price: number;
   createdAt?: string;
   children?: ReactNode;
+  url?: string;
   icon?: ReactNode;
+  category: string;
   userId: number;
   claimed: boolean;
   done: boolean;
@@ -38,6 +42,8 @@ const AutotaskCard: FC<AutotaskProps> = ({
   claimed,
   createdAt,
   icon,
+  category,
+  url,
 }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -166,14 +172,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
-  const baseStyle = {
-    borderRadius: '20px',
-    padding: '10px 7px',
-  };
-
-  const conditionalStyle = isApplied ? { border: '2px solid green' } : { border: '2px solid gray' };
-
-  const combinedStyle = { ...baseStyle, ...conditionalStyle };
+  useEffect(() => {
+    console.log(isBlocked);
+  }, [isBlocked]);
 
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
@@ -208,6 +209,12 @@ const AutotaskCard: FC<AutotaskProps> = ({
                       🚀<span className={styles.accent}>Subtask:</span> {title}
                     </h2>
                     <p className={styles.description}>{description}</p>
+                    <div className={styles.linkContainer}>
+                      <h3>Your task:</h3>
+                      {url && (
+                        <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
+                      )}
+                    </div>
                     <>{children}</>
                   </div>
 

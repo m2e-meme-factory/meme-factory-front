@@ -52,10 +52,19 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
       <div className='swiper-wrapper'>
         <div className='swiper-slide'>
           <Flex direction='column'>
+            <img
+              src={profile}
+              alt='Profile illustration'
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'contain',
+              }}
+            />
             <Text
-              weight='medium'
+              weight='regular'
               size='4'
-              style={{ textAlign: 'justify', margin: '0 5vw 2vh 5vw' }}
+              style={{ textAlign: 'justify', margin: '3vh 5vw 5vh 5vw' }}
             >
               На нашей фабрике мемов очень просто зарабатывать: Самый простой вариант -{' '}
               <Link
@@ -69,16 +78,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               </Link>
               . Подпишись на наши соцсети и получи свои первые мем койны.
             </Text>
-            <img
-              src={profile}
-              alt='Profile illustration'
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'contain',
-                marginBottom: '10vh',
-              }}
-            />
           </Flex>
           <Button
             size='3'
@@ -96,10 +95,19 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
         </div>
         <div className='swiper-slide'>
           <Flex direction='column'>
+            <img
+              src={autotasks}
+              alt='Autotask illustration'
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'contain',
+              }}
+            />
             <Text
-              weight='medium'
+              weight='regular'
               size='4'
-              style={{ textAlign: 'justify', margin: '0 5vw 2vh 5vw' }}
+              style={{ textAlign: 'justify', margin: '3vh 5vw 5vh 5vw' }}
             >
               Второй вариант - это приглашать друзей! За каждого приглашенного криейтора ты получишь
               100 мем койнов. Просто{' '}
@@ -113,16 +121,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                 делись своей реферальной ссылкой.
               </Link>
             </Text>
-            <img
-              src={autotasks}
-              alt='Autotask illustration'
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'contain',
-                marginBottom: '10vh',
-              }}
-            />
           </Flex>
           <Button
             size='3'
@@ -140,10 +138,19 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
         </div>
         <div className='swiper-slide'>
           <Flex direction='column'>
+            <img
+              src={projects}
+              alt='Projects illustration'
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'contain',
+              }}
+            />
             <Text
-              weight='medium'
+              weight='regular'
               size='4'
-              style={{ textAlign: 'justify', margin: '0 5vw 2vh 5vw' }}
+              style={{ textAlign: 'justify', margin: '3vh 5vw 5vh 5vw' }}
             >
               И третий, беспроигрышный вариант - это выкладывать контент! Для этого{' '}
               <Link
@@ -157,16 +164,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               </Link>{' '}
               и выполняй задания.
             </Text>
-            <img
-              src={projects}
-              alt='Projects illustration'
-              style={{
-                width: '100%',
-                maxHeight: '400px',
-                objectFit: 'contain',
-                marginBottom: '10vh',
-              }}
-            />
           </Flex>
           <Button
             size='3'

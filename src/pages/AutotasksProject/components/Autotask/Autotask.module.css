@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     width: 85%;
+    min-height: 400px;
 }
 
 .linkContainer {

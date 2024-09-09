@@ -12,13 +12,13 @@ import {
   Box,
   Tabs,
   Dialog,
+  Theme,
 } from '@radix-ui/themes';
 import CopyableCode from '../../shared/components/CopyableCode';
 import CopyableTextField from '../../shared/components/CopyableTextField';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
-import { ArrowLeftIcon, ChevronRightIcon, GearIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 import styles from './ProfilePage.module.css';
-import { Link } from 'react-router-dom';
 import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +31,8 @@ import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
 import { RootState } from '../../shared/utils/redux/store';
 import { useVerifyUser } from '../../shared/utils/api/hooks/user/useVerifyUser';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
+import { Sheet } from 'react-modal-sheet';
+import verified from './../../shared/imgs/verify.png';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -39,6 +41,7 @@ export default function ProfilePage() {
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'account';
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const [walletAddress, setWalletAddress] = useState<string>();
   const user = useSelector((state: RootState) => state.user.user);
@@ -58,6 +61,14 @@ export default function ProfilePage() {
     return () => unsubscribe();
   }, [tonConnectUI]);
 
+  const handleDialogClose = () => {
+    setModalVisible(false);
+  };
+
+  const handleDialogOpen = () => {
+    setModalVisible(true);
+  };
+
   useEffect(() => {
     const connect = async (wallet: string) => {
       await connectWallet({ params: { tonWalletAddress: wallet } });
@@ -71,6 +82,7 @@ export default function ProfilePage() {
 
   const handleVerify = () => {
     if (user) {
+      handleDialogClose();
       verifyMutation.mutate({ params: { telegramId: user.telegramId } });
     }
   };
@@ -179,40 +191,56 @@ export default function ProfilePage() {
           </Card>
 
           <Card m='4'>
-            <Heading>Socials</Heading>
+            <Heading mb='3'>Socials</Heading>
             <button className={styles.ConnectButton}>Connect Socials</button>
           </Card>
 
           <Card m='4'>
-            <Heading>Verify</Heading>
-            <Text color='gray' size='2'>
-              Verified users have auto approve for any project apply and have 100% chance for
-              receiving airdrop. Instant verification price: 5 USDT
-            </Text>
+            <Heading mb='3'>Verify</Heading>
+            <Flex direction='column'>
+              <Text color='gray' mb='2' size='2'>
+                Verified users have auto approve for any project apply and have 100% chance for
+                receiving airdrop. Instant verification price: 5 USDT
+              </Text>
+              <Button onClick={handleDialogOpen}>Verify</Button>
+            </Flex>
 
-            <Dialog.Root>
-              <Dialog.Trigger>
-                <button className={styles.ConnectButton}>Verify now</button>
-              </Dialog.Trigger>
-
-              <Dialog.Content maxWidth='450px'>
-                <Dialog.Title>Verify now</Dialog.Title>
-                <Dialog.Description size='2' mb='4'>
-                  Are you sure you want to verify your profile?
-                </Dialog.Description>
-
-                <Flex gap='3' mt='4' justify='end'>
-                  <Dialog.Close>
-                    <Button variant='soft' color='gray'>
-                      Cancel
-                    </Button>
-                  </Dialog.Close>
-                  <Dialog.Close>
-                    <Button onClick={handleVerify}>Verify</Button>
-                  </Dialog.Close>
-                </Flex>
-              </Dialog.Content>
-            </Dialog.Root>
+            <Sheet
+              isOpen={isModalVisible}
+              onClose={() => handleDialogClose()}
+              detent='content-height'
+            >
+              <Sheet.Container>
+                <Sheet.Header />
+                <Sheet.Content>
+                  {
+                    <div className={styles.content}>
+                      <div className={styles.information}>
+                        <img src={verified} alt='Verified icon' className={styles.image} />
+                        <h2 className={styles.title}>🔥 Benefits of verified accounts</h2>
+                        <ul className={styles.description}>
+                          <li>100% chance for Airdrop claim</li>
+                          <li>Auto approve to any project</li>
+                          <li>High priority for checking task completion</li>
+                        </ul>
+                      </div>
+                      <Theme
+                        accentColor='amber'
+                        appearance={'dark'}
+                        grayColor='mauve'
+                        radius='medium'
+                        hasBackground={false}
+                      >
+                        <Button onClick={handleVerify} style={{ width: '100%' }}>
+                          Verify Now
+                        </Button>
+                      </Theme>
+                    </div>
+                  }
+                </Sheet.Content>
+              </Sheet.Container>
+              <Sheet.Backdrop onTap={() => handleDialogClose()} />
+            </Sheet>
           </Card>
 
           <Card m='4'>

@@ -42,7 +42,7 @@ const ProfileSettingsPage = () => {
 
   const handleVerify = () => {
     if (user) {
-      verifyMutation.mutate({ params: { userId: user.id } });
+      verifyMutation.mutate({ params: { telegramId: user.telegramId } });
     }
   };
 

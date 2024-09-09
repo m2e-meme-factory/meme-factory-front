@@ -4,7 +4,11 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Button, Text } from '@radix-ui/themes';
+import { Button, Flex, Text } from '@radix-ui/themes';
+import { Link, useNavigate } from 'react-router-dom';
+import profile from './../imgs/profile.webp';
+import autotasks from './../imgs/airdrop.webp';
+import projects from './../imgs/projects.webp';
 
 interface TutorialProps {
   onComplete: () => void;
@@ -13,6 +17,8 @@ interface TutorialProps {
 const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
   const swiperRef = useRef<Swiper | null>(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     swiperRef.current = new Swiper('.swiper', {
@@ -45,10 +51,35 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
     <div className='swiper'>
       <div className='swiper-wrapper'>
         <div className='swiper-slide'>
-          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
-            Приветствую тебя, Создатель! С нами ты можешь стать мощным инфлюенсером и продвигать
-            бренды со всего мира!
-          </Text>
+          <Flex direction='column'>
+            <Text
+              weight='medium'
+              size='4'
+              style={{ textAlign: 'justify', margin: '0 5vw 2vh 5vw' }}
+            >
+              На нашей фабрике мемов очень просто зарабатывать: Самый простой вариант -{' '}
+              <Link
+                onClick={() => {
+                  handleTutorialCompleted();
+                }}
+                style={{ color: 'var(--brand-color)' }}
+                to='/projects/autotasks'
+              >
+                это участвовать в airdrop
+              </Link>
+              . Подпишись на наши соцсети и получи свои первые мем койны.
+            </Text>
+            <img
+              src={profile}
+              alt='Profile illustration'
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'contain',
+                marginBottom: '10vh',
+              }}
+            />
+          </Flex>
           <Button
             size='3'
             onClick={handleNextSlide}
@@ -64,10 +95,35 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           </Button>
         </div>
         <div className='swiper-slide'>
-          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
-            Meme Factory - первая Meme-To-Earn платформа, где люди постят мемы и зарабатывают на
-            этом, а бренды повышают узнаваемость за счет рекламных интеграций.
-          </Text>
+          <Flex direction='column'>
+            <Text
+              weight='medium'
+              size='4'
+              style={{ textAlign: 'justify', margin: '0 5vw 2vh 5vw' }}
+            >
+              Второй вариант - это приглашать друзей! За каждого приглашенного криейтора ты получишь
+              100 мем койнов. Просто{' '}
+              <Link
+                onClick={() => {
+                  handleTutorialCompleted();
+                }}
+                style={{ color: 'var(--brand-color)' }}
+                to='/profile'
+              >
+                делись своей реферальной ссылкой.
+              </Link>
+            </Text>
+            <img
+              src={autotasks}
+              alt='Autotask illustration'
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'contain',
+                marginBottom: '10vh',
+              }}
+            />
+          </Flex>
           <Button
             size='3'
             onClick={handleNextSlide}
@@ -83,48 +139,35 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           </Button>
         </div>
         <div className='swiper-slide'>
-          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
-            Как получить Airdrop и заработать (в 1-2 сообщении): - Приглашай друзей 10 000 -
-            Выкладывай в соцсети контент о проекте - Отмечай нас в соцсетях - Делай активности
-            (комментируй, лайкай и т.д.) И участвуй в эйрдроп.
-          </Text>
-          <Button
-            size='3'
-            onClick={handleNextSlide}
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '50%',
-              transform: 'translateX(50%)',
-              zIndex: '9999',
-            }}
-          >
-            Next
-          </Button>
-        </div>
-        <div className='swiper-slide'>
-          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
-            Меня зовут Скай, я помогаю брендам улетать в небеса, ха-ха Я расскажу тебе, как мы тут
-            работаем. Все просто, как никогда!
-          </Text>
-          <Button
-            size='3'
-            onClick={handleNextSlide}
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '50%',
-              transform: 'translateX(50%)',
-              zIndex: '9999',
-            }}
-          >
-            Next
-          </Button>
-        </div>
-        <div className='swiper-slide'>
-          <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
-            Тебя приветствует твой первый заказчик - Фабрика Мемов (Meme Factory).
-          </Text>
+          <Flex direction='column'>
+            <Text
+              weight='medium'
+              size='4'
+              style={{ textAlign: 'justify', margin: '0 5vw 2vh 5vw' }}
+            >
+              И третий, беспроигрышный вариант - это выкладывать контент! Для этого{' '}
+              <Link
+                onClick={() => {
+                  handleTutorialCompleted();
+                }}
+                style={{ color: 'var(--brand-color)' }}
+                to='/projects'
+              >
+                выбирай проекты
+              </Link>{' '}
+              и выполняй задания.
+            </Text>
+            <img
+              src={projects}
+              alt='Projects illustration'
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'contain',
+                marginBottom: '10vh',
+              }}
+            />
+          </Flex>
           <Button
             size='3'
             onClick={handleTutorialCompleted}

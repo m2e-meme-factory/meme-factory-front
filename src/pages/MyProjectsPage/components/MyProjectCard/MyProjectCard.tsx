@@ -1,49 +1,76 @@
-import React, { FC } from 'react';
-import { Text, Card, Flex, Heading } from '@radix-ui/themes';
+import React, { FC, useEffect, useState } from 'react';
+import { Text, Card, Flex, Heading, Box } from '@radix-ui/themes';
 import CardBanner from '../../../PublicProjectsPage/components/CardBanner/CardBanner';
-import { task } from '../../../../shared/consts/task-example';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../shared/utils/redux/store';
+import { Role } from '../../../../shared/consts/userRoles';
+import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
+import { ProjectStatus } from '../../../../shared/consts/project-statuses';
+import { shortenString } from '../../../../shared/utils/helpers/shortenString';
 
 interface MyProjectCardProps {
+  id: string;
   title: string;
   category: string;
-  freelancersCount: number;
-  status: 'published' | 'on_moderation';
+  bannerUrl: string;
+  status: ProjectStatus;
 }
 
-const MyProjectCard: FC<MyProjectCardProps> = ({ title, category, freelancersCount, status }) => {
-  const navigate = useNavigate();
+const StyledCard = styled(Card)`
+  padding: 0;
+  margin: 0 0 15px;
+  width: 100%;
+  background-color: #121212;
+`;
 
-  const StyledCard = styled(Card)`
-    padding: 0;
-    margin: 0 0 15px;
-    width: 100%;
-    background-color: #121212;
-  `;
+const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl, status }) => {
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user.user);
+  const { data: freelancersResponse } = useGetProjectFreelancers(id, 'accepted');
+  const [freelancers, setFreelancersCount] = useState<number>();
+
+  useEffect(() => {
+    if (freelancersResponse) {
+      setFreelancersCount(freelancersResponse.data.length);
+    }
+  }, [freelancersResponse]);
+
+  const handleClick = () => {
+    if (user) {
+      if (user.role === Role.ADVERTISER) {
+        navigate(`/projects/${id}/details`);
+      } else {
+        navigate(`/projects/${id}/logs/${user.id}`);
+      }
+    }
+  };
 
   return (
-    <StyledCard onClick={() => navigate('/projects/1')}>
+    <StyledCard onClick={handleClick}>
       <Flex direction='column'>
-        <CardBanner />
+        <CardBanner bannerUrl={bannerUrl} />
         <Flex direction='column' m='4'>
-          <Heading>{task.title}</Heading>
+          <Heading>{shortenString(title, 40)}</Heading>
           <Text mb='3' color='yellow' weight='medium'>
-            {task.category}
+            {category}
           </Text>
-          <Card
-            mb='3'
-            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-              event.stopPropagation();
-              navigate('/about');
-            }}
-          >
+          <Card mb='3'>
             <Flex direction='column'>
               <Text size='2' color='gray'>
                 Freelancers count:
               </Text>
               <Text weight='medium' color='yellow' size='5'>
-                {freelancersCount}
+                {typeof freelancers === 'number' ? (
+                  freelancers
+                ) : (
+                  <Box
+                    width='20px'
+                    height='30px'
+                    style={{ backgroundColor: 'gray', borderRadius: '5px' }}
+                  ></Box>
+                )}
               </Text>
             </Flex>
           </Card>

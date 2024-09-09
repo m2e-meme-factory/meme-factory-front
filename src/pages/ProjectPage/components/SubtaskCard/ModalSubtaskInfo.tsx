@@ -1,11 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button, Flex, Text } from '@radix-ui/themes';
-import { task } from '../../../../shared/consts/task-example';
-import { shortenDescription } from '../../../../shared/utils/helpers/shortenDescription';
+import { shortenString } from '../../../../shared/utils/helpers/shortenString';
 import React, { FC, useState } from 'react';
 
 interface ModalInfoProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -24,14 +23,17 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
         <Flex direction='column'>
           <Text className='TextAccent'>Description:</Text>
           <Text className='Description'>
-            {isDescVisible ? task.description : shortenDescription(task.description)}
-            <Button
-              variant='ghost'
-              onClick={handleToggleDescription}
-              style={{ marginLeft: '8px', color: '#fecf0a' }}
-            >
-              {isDescVisible ? 'View Less' : 'View More'}
-            </Button>
+            {description.length < 100 && description}
+            {isDescVisible && description.length >= 100 ? description : shortenString(description)}
+            {description.length >= 100 && (
+              <Button
+                variant='ghost'
+                onClick={handleToggleDescription}
+                style={{ marginLeft: '8px', color: '#fecf0a' }}
+              >
+                {isDescVisible ? 'View Less' : 'View More'}
+              </Button>
+            )}
           </Text>
           <Text className='Price'>
             <span className='TextAccent'>Price:</span> {price}$

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   Grid,
   Text,
@@ -12,49 +11,113 @@ import {
   IconButton,
   Box,
   Tabs,
+  Dialog,
+  Theme,
 } from '@radix-ui/themes';
-import { useTelegram } from '../../shared/hooks/useTelegram';
 import CopyableCode from '../../shared/components/CopyableCode';
 import CopyableTextField from '../../shared/components/CopyableTextField';
-import { useGetRefData } from '../../shared/utils/api/hooks/useGetRefData';
-import { useGetUserData } from '../../shared/utils/api/hooks/useGetUserData';
-import { ChevronRightIcon, GearIcon } from '@radix-ui/react-icons';
+import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 import styles from './ProfilePage.module.css';
-import { Link } from 'react-router-dom';
 import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { RefDataResponse, User } from 'api';
+import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
+import { setUser } from '../../shared/utils/redux/user/userSlice';
+import { useSearchParams } from 'react-router-dom';
+import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
+import { RootState } from '../../shared/utils/redux/store';
+import { useVerifyUser } from '../../shared/utils/api/hooks/user/useVerifyUser';
+import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
+import { Sheet } from 'react-modal-sheet';
+import verified from './../../shared/imgs/verify.png';
 
 export default function ProfilePage() {
-  const { user, webApp } = useTelegram();
-  const tg = webApp;
+  const dispatch = useDispatch();
+  const [userSt, setUserSt] = useState<User>();
+  const { data: userDataResponse } = useAuthMe();
+  const [refData, setRefData] = useState<RefDataResponse | null>(null);
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') || 'account';
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  const userId = user?.id?.toString();
+  const [walletAddress, setWalletAddress] = useState<string>();
+  const user = useSelector((state: RootState) => state.user.user);
+  const [tonConnectUI] = useTonConnectUI();
 
-  const { data: userRes, isLoading: userLoading } = useGetUserData('', userId);
-  const refId = userRes?.data?.user?.refId?.toString();
-  const { data: refData, isLoading: refLoading } = useGetRefData('', refId);
+  const verifyMutation = useVerifyUser();
 
-  // if (userLoading || refLoading) {
-  //   return (
-  //     <Flex className={styles.LoadingContainer} align='center' justify='center'>
-  //       <Spinner size='3' />
-  //     </Flex>
-  //   );
-  // }
+  useEffect(() => {
+    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
+      if (wallet) {
+        setWalletAddress(wallet.account.address);
+      } else {
+        setWalletAddress('');
+      }
+    });
 
-  const type = 'platform';
+    return () => unsubscribe();
+  }, [tonConnectUI]);
 
-  const userData = userRes?.data?.user;
-  const refCount = refData?.data?.count || '0';
-  const refUUID = userData?.ref_uuid || '';
+  const handleDialogClose = () => {
+    setModalVisible(false);
+  };
+
+  const handleDialogOpen = () => {
+    setModalVisible(true);
+  };
+
+  useEffect(() => {
+    const connect = async (wallet: string) => {
+      await connectWallet({ params: { tonWalletAddress: wallet } });
+    };
+
+    if (walletAddress) {
+      console.log(walletAddress);
+      connect(walletAddress);
+    }
+  }, [walletAddress]);
+
+  const handleVerify = () => {
+    if (user) {
+      handleDialogClose();
+      verifyMutation.mutate({ params: { telegramId: user.telegramId } });
+    }
+  };
+
+  useEffect(() => {
+    if (userDataResponse) {
+      setUserSt(userDataResponse.data);
+      dispatch(setUser(userDataResponse.data));
+    }
+  }, [userDataResponse]);
+
+  const { data, isLoading: refLoading } = useGetRefData(userSt?.telegramId);
+
+  useEffect(() => {
+    if (data) {
+      setRefData(data.data);
+    }
+  }, [data]);
+
+  if (refLoading) {
+    return (
+      <Flex className={styles.LoadingContainer} align='center' justify='center'>
+        <Spinner size='3' />
+      </Flex>
+    );
+  }
+
+  const refCount = refData?.count;
 
   return (
-    <Tabs.Root defaultValue='account'>
+    <Tabs.Root defaultValue={defaultTab}>
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        {type === 'platform' && <Tabs.Trigger value='dashboard'>Dashboard</Tabs.Trigger>}
-        {type === 'platform' && <Tabs.Trigger value='my-projects'>Projects</Tabs.Trigger>}
+        <Tabs.Trigger value='myprojects'>My Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>
@@ -63,11 +126,6 @@ export default function ProfilePage() {
             <Grid gap='4'>
               <Flex align='center'>
                 <Heading mr='3'>Profile</Heading>
-                <Link to='/profile/settings'>
-                  <IconButton variant='soft'>
-                    <GearIcon />
-                  </IconButton>
-                </Link>
               </Flex>
               <DataList.Root>
                 <DataList.Item align='center'>
@@ -81,22 +139,18 @@ export default function ProfilePage() {
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>ID</DataList.Label>
                   <DataList.Value>
-                    <CopyableCode value={userId || ''} />
+                    <CopyableCode value={userSt?.id || ''} />
                   </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>Name</DataList.Label>
-                  <DataList.Value>{`${user?.last_name} ${user?.first_name}`}</DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Nickname</DataList.Label>
                   <DataList.Value>
-                    <CopyableCode value={`${user?.username}`} />
+                    <CopyableCode value={`${userSt?.username}`} />
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>Creator</DataList.Value>
+                  <DataList.Value>{userSt?.role}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Grid>
@@ -108,7 +162,7 @@ export default function ProfilePage() {
                 <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
-                <Heading>$26 412.03</Heading>
+                <Heading>${userSt?.balance ?? '0'}</Heading>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw
@@ -120,11 +174,7 @@ export default function ProfilePage() {
             <Grid gap='4'>
               <Heading>Referas</Heading>
               <Text color='gray'>Your Ref link:</Text>
-              <CopyableTextField
-                size={'2'}
-                fieldSize='3'
-                value={`https://t.me/m2e_meme_factory_bot?start=ref_${refUUID}`}
-              />
+              <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} />
               <DataList.Root mt='4'>
                 <DataList.Item align='center'>
                   <DataList.Item>
@@ -139,20 +189,71 @@ export default function ProfilePage() {
               </DataList.Root>
             </Grid>
           </Card>
-        </Tabs.Content>
 
-        <Tabs.Content value='dashboard'>
           <Card m='4'>
-            <Flex justify='between'>
-              <Heading>Dashboard</Heading>
-              <Link to='/create-project'>
-                <Button>Create Project</Button>
-              </Link>
+            <Heading mb='3'>Socials</Heading>
+            <button className={styles.ConnectButton}>Connect Socials</button>
+          </Card>
+
+          <Card m='4'>
+            <Heading mb='3'>Verify</Heading>
+            <Flex direction='column'>
+              <Text color='gray' mb='2' size='2'>
+                Verified users have auto approve for any project apply and have 100% chance for
+                receiving airdrop. Instant verification price: 5 USDT
+              </Text>
+              <Button onClick={handleDialogOpen}>Verify</Button>
+            </Flex>
+
+            <Sheet
+              isOpen={isModalVisible}
+              onClose={() => handleDialogClose()}
+              detent='content-height'
+            >
+              <Sheet.Container>
+                <Sheet.Header />
+                <Sheet.Content>
+                  {
+                    <div className={styles.content}>
+                      <div className={styles.information}>
+                        <img src={verified} alt='Verified icon' className={styles.image} />
+                        <h2 className={styles.title}>🔥 Benefits of verified accounts</h2>
+                        <ul className={styles.description}>
+                          <li>100% chance for Airdrop claim</li>
+                          <li>Auto approve to any project</li>
+                          <li>High priority for checking task completion</li>
+                        </ul>
+                      </div>
+                      <Theme
+                        accentColor='amber'
+                        appearance={'dark'}
+                        grayColor='mauve'
+                        radius='medium'
+                        hasBackground={false}
+                      >
+                        <Button onClick={handleVerify} style={{ width: '100%' }}>
+                          Verify Now
+                        </Button>
+                      </Theme>
+                    </div>
+                  }
+                </Sheet.Content>
+              </Sheet.Container>
+              <Sheet.Backdrop onTap={() => handleDialogClose()} />
+            </Sheet>
+          </Card>
+
+          <Card m='4'>
+            <Flex align='center' justify='between'>
+              <Heading size='4' mr='6'>
+                Connect TON Wallet
+              </Heading>
+              <TonConnectButton />
             </Flex>
           </Card>
         </Tabs.Content>
 
-        <Tabs.Content value='my-projects'>
+        <Tabs.Content value='myprojects'>
           <MyProjectsPage />
         </Tabs.Content>
 

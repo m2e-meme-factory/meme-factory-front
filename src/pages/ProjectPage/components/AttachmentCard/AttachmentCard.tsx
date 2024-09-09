@@ -1,32 +1,39 @@
-import { Card, Flex, IconButton, Text } from '@radix-ui/themes';
-import { DownloadOutlined, FileOutlined } from '@ant-design/icons';
+import { Card, Flex, Text } from '@radix-ui/themes';
+import { FileOutlined } from '@ant-design/icons';
 import { FC } from 'react';
+import { processFileName } from '../../../../shared/utils/helpers/processFilename';
 
 interface AttachmentCardProps {
   name: string;
-  url: string;
 }
 
-const AttachmentCard: FC<AttachmentCardProps> = ({ name, url }) => {
-  const [fileName, fileExtension] = name.split('.');
+const AttachmentCard: FC<AttachmentCardProps> = ({ name }) => {
+  const { fileName, fileExtension } = processFileName(name);
 
   return (
     <Card mt='2' mb='2'>
-      <Flex align='center' justify='between'>
-        <Flex>
-          <FileOutlined style={{ color: 'yellow', marginRight: '15px' }} />
-          <Flex direction='column'>
-            <Text size='5' weight='medium'>
-              {fileName}
-            </Text>
-            <Text size='3' color='gray'>
-              {fileExtension}
-            </Text>
-          </Flex>
+      <Flex>
+        <FileOutlined style={{ color: 'yellow', marginRight: '15px' }} />
+        <Flex direction='column'>
+          <Text
+            size='5'
+            weight='medium'
+            wrap='pretty'
+            style={{
+              maxWidth: '70vw',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {fileName}
+          </Text>
+          <Text size='3' color='gray'>
+            {fileExtension}
+          </Text>
         </Flex>
-        <IconButton size='3'>
-          <DownloadOutlined />
-        </IconButton>
       </Flex>
     </Card>
   );

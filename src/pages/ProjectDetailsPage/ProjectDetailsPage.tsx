@@ -1,20 +1,57 @@
-import { Button, Card, Flex, Table, Heading, IconButton, Text, ScrollArea } from '@radix-ui/themes';
-import React from 'react';
+import { Button, Card, Flex, Heading, IconButton, Text } from '@radix-ui/themes';
+import React, { useEffect, useState } from 'react';
 import {
   ArrowLeftIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
   Pencil1Icon,
 } from '@radix-ui/react-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
+import { Project } from 'api';
+import { setProject } from '../../shared/utils/redux/project/projectSlice';
+import { useDispatch } from 'react-redux';
+import Loading from '../../shared/components/Loading';
+import FreelancersStats from './components/FreelancersStats';
+import PendingApplications from './components/PendingApplications';
+import { useGetTotalSpending } from '../../shared/utils/api/hooks/project/useGetTotalSpending';
 
 const ProjectDetailsPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { data, isLoading } = useGetProject(id);
+  const { data: totalSpendingsResponse, isLoading: totalSpendingsLoading } =
+    useGetTotalSpending(id);
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [totalSpendings, setTotalSpendings] = useState<number>();
+
+  useEffect(() => {
+    if (totalSpendingsResponse) {
+      setTotalSpendings(totalSpendingsResponse.data);
+    }
+  }, [totalSpendingsResponse]);
+
+  useEffect(() => {
+    if (currentProject) {
+      dispatch(setProject(currentProject));
+    }
+  }, [currentProject]);
+
+  useEffect(() => {
+    if (data) {
+      setCurrentProject(data.data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton mr='3' onClick={() => navigate(-1)}>
+        <IconButton mr='3' onClick={() => navigate('/profile?tab=myprojects')}>
           <ArrowLeftIcon />
         </IconButton>
         <Heading>Project details</Heading>
@@ -26,50 +63,32 @@ const ProjectDetailsPage = () => {
             <Text mb='2' color='gray'>
               Total spendings
             </Text>
-            <Heading>$26 412.03</Heading>
+            {totalSpendingsLoading ? <Loading /> : <Heading>${totalSpendings}</Heading>}
           </Flex>
-          <Button>
+          <Button onClick={() => navigate('/profile?tab=transactions')}>
             <ChevronRightIcon /> Transactions
           </Button>
         </Flex>
       </Card>
 
       <Card mt='5'>
-        <Heading mb='3'>Actions</Heading>
         <Flex align='center' justify='between'>
-          <Button m='1' size='3'>
+          <Button size='2' onClick={() => navigate(`/projects/${id}`)}>
             <MagnifyingGlassIcon />
             View Project Page
           </Button>
-          <Button m='1' size='3'>
+          <Button size='2' onClick={() => navigate(`/projects/${id}/edit`)}>
             <Pencil1Icon />
             Edit Project
           </Button>
         </Flex>
       </Card>
 
-      <Heading mt='5'>Freelancers</Heading>
-      <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>Username</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Tasks done</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Income</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
+      <Heading mt='5'>Pending applications</Heading>
+      <PendingApplications />
 
-          <Table.Body>
-            <Table.Row>
-              <Table.RowHeaderCell onClick={() => navigate('/about')}>
-                Danilo Sousa
-              </Table.RowHeaderCell>
-              <Table.Cell>1</Table.Cell>
-              <Table.Cell>$20000</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table.Root>
-      </ScrollArea>
+      <Heading mt='5'>Active freelancers</Heading>
+      <FreelancersStats />
     </Flex>
   );
 };

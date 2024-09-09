@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Flex } from '@radix-ui/themes';
 import styles from './CardBanner.module.css';
+import fallbackBanner from './../../../../shared/imgs/fallbackBanner.png';
 
-const IMAGE_URL =
-  'https://cdna.artstation.com/p/assets/images/images/012/308/904/large/divya-jain-firewatch-dhj.jpg?1534140299';
+interface CardBannerProps {
+  bannerUrl?: string;
+}
 
-const CardBanner = () => {
+const CardBanner: FC<CardBannerProps> = ({ bannerUrl }) => {
   return (
     <Flex className={styles.bannerContainer}>
-      <img src={IMAGE_URL} alt='CardBannerImage' className={styles.bannerImage} />
+      <img
+        src={bannerUrl ? `https://api.meme-factory.site${bannerUrl}` : fallbackBanner}
+        className={styles.bannerImage}
+        alt={' '}
+      />
     </Flex>
   );
 };

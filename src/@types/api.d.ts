@@ -1,131 +1,357 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+declare module 'api' {
+  import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+  import { Role } from '../shared/consts/userRoles';
+  import { ProjectStatus } from '../shared/consts/project-statuses';
 
-export interface VerifyUserData {
-  userId: string;
-  name: string;
-  phoneNumber: string;
-  email: string;
+  export interface VerifyUserData {
+    userId: string;
+    name: string;
+    phoneNumber: string;
+    email: string;
+  }
+
+  export interface GetTxByUserParams {
+    userId: string;
+  }
+
+  export interface CreateEventDto {
+    projectId: number;
+    userId: number;
+    role: Role;
+    eventType: EventType;
+    description?: string;
+    details?: EventDetails;
+    progressProjectId?: number;
+    message?: string;
+  }
+
+  export interface DownloadFilesParams {
+    projectId: string;
+    telegramId: string;
+  }
+
+  export interface GetPublicProjectsParams {
+    tags?: string[];
+    category?: string;
+    page: number;
+    limit: number;
+  }
+
+  export interface GetMyProjectsParams {
+    userId: string;
+    page: number;
+    limit: number;
+  }
+
+  export interface TaskInfo {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+  }
+
+  export interface Task {
+    projectId: string;
+    task: TaskInfo;
+    taskId: string;
+  }
+
+  interface ProjectProgress {
+    id: number;
+    userId: number;
+    projectId: number;
+    status: 'pending' | 'accepted' | 'rejected';
+    createdAt: Date;
+    updatedAt?: Date;
+    events: Event[];
+    user: User;
+    appliedTasks: number[];
+    approvedTasks: number[];
+    rejectedTasks: number[];
+  }
+
+  export interface VerifyUserRequestData {
+    telegramId: string;
+  }
+
+  interface EventDetails {
+    transactionId?: number;
+    amount?: number;
+    taskId?: number;
+    approvedEventId?: number;
+    eventId?: number;
+  }
+
+  enum EventType {
+    APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
+    APPLICATION_APPROVED = 'APPLICATION_APPROVED',
+    APPLICATION_REJECTED = 'APPLICATION_REJECTED',
+    TASK_SUBMIT = 'TASK_SUBMIT',
+    TASK_REJECTED = 'TASK_REJECTED',
+    TASK_COMPLETED = 'TASK_COMPLETED',
+    DISPUTE_OPENED = 'DISPUTE_OPENED',
+    DISPUTE_RESOLVED = 'DISPUTE_RESOLVED',
+    USER_MESSAGE = 'USER_MESSAGE',
+  }
+
+  export interface Event {
+    id: number;
+    progressProjectId: string;
+    projectId: number;
+    userId: number;
+    role: Role;
+    message: string;
+    eventType: EventType;
+    description?: string;
+    createdAt: Date;
+    details?: EventDetails;
+  }
+
+  interface FreelancersResponse {
+    progress: ProjectProgress;
+    user: User;
+  }
+
+  interface ProgressWithProjectResponse {
+    progress: ProjectProgress;
+    project: ProjectData;
+  }
+
+  export interface UpdateProjectPayload {
+    projectId: string;
+    project: UpdateProjectDTO;
+  }
+
+  export interface UpdateProjectDTO {
+    title: string;
+    description: string;
+    bannerUrl: string | null;
+    files: string[];
+    category: string | null;
+    tags: string[];
+    subtasks: UpdateTaskDTO[];
+    deletedTasks: string[];
+    authorId: string | undefined;
+  }
+
+  export interface UpdateTaskDTO {
+    id?: string;
+    title: string;
+    description: string;
+    price: number;
+  }
+
+  export interface CreateProjectDTO {
+    title: string;
+    description: string;
+    bannerUrl: string | null;
+    files: string[];
+    category: string | null;
+    tags: string[];
+    subtasks: CreateSubtaskDTO[];
+    authorId: string | undefined;
+  }
+
+  interface Transaction {
+    id: number;
+    projectId: number;
+    taskId: number;
+    fromUserId: number;
+    toUserId: number;
+    amount: number;
+    createdAt: Date;
+    toUser: User;
+    fromUser: User;
+    type: 'DEPOSIT' | 'WITHDRAWAL' | 'SYSTEM' | 'PAYMENT';
+  }
+
+  export interface GetUserDataParams {
+    user_id: string;
+  }
+
+  export interface GetUserByIdParams {
+    id: string;
+  }
+
+  export interface GetUserByTelegramParams {
+    id: number;
+  }
+
+  export interface GetRefDataParams {
+    telegramId: string;
+  }
+
+  export interface LoginPayload {
+    initData: { initData: string };
+  }
+
+  export type ApiRequestConfig = AxiosRequestConfig;
+
+  export interface LoginResponseData {
+    token: string;
+    user: User;
+  }
+
+  export type RequestConfig<Params = undefined> = Params extends undefined
+    ? { config?: ApiRequestConfig }
+    : { params: Params; config?: ApiRequestConfig };
+
+  export interface ConnectWalletDTO {
+    tonWalletAddress: string;
+  }
+
+  export interface User {
+    id: string;
+    telegramId: string;
+    username: string;
+    role: Role;
+    isBaned: boolean;
+    isVerified: boolean;
+    createdAt: Date;
+    inviterRefCode?: string;
+    refCode?: string;
+    balance: string;
+  }
+
+  export interface AutotaskApplicationDTO {
+    id: number;
+    title: string;
+    description: string;
+    reward: number;
+    isConfirmed: boolean;
+    isIntegrated: boolean;
+    url?: string;
+    userId: number;
+    taskId: number;
+    createdAt: string;
+  }
+
+  export interface CreateAutotaskApplicationDTO {
+    title: string;
+    description: string;
+    reward: number;
+    url?: string;
+    userId: number;
+    taskId: number;
+    isIntegrated: boolean;
+  }
+
+  export interface GetAutotaskApplicationsParams {
+    userId?: number;
+  }
+
+  export interface GetAutoTaskApplicationByIdParams {
+    applicationId: number;
+  }
+
+  export interface ClaimRewardParams {
+    applicationId: number;
+    userId: number;
+  }
+
+  export interface GetProgressByProjectIdParams {
+    projectId: string;
+    userId?: string;
+  }
+
+  export interface ApplyForProjectParams {
+    projectId: string;
+    message: string;
+  }
+
+  export interface GetEventsByProjectIdParams {
+    progressId: string;
+  }
+
+  export interface AcceptApplicationForProjectParams {
+    progressId: string;
+    message: string;
+  }
+
+  export interface RejectApplicationForProjectParams {
+    progressId: string;
+    message: string;
+  }
+
+  export interface GetUserProgressesParams {
+    userId: string;
+  }
+
+  export interface GetProjectFreelancersParams {
+    projectId: string;
+    status: 'accepted' | 'pending' | 'rejected';
+  }
+
+  export interface GetTotalSpendingsParams {
+    projectId: string;
+  }
+
+  export interface UserWithRef {
+    id: number;
+    telegramId: string;
+    username: string;
+    isBaned: boolean;
+    isVerified: boolean;
+    createdAt: Date;
+    inviterRefCode?: string;
+    refCode: string;
+  }
+
+  export interface CreateSubtaskDTO {
+    title: string;
+    description: string;
+    price: number;
+  }
+
+  export interface PaginatedProjects {
+    projects: Project[];
+    total: number;
+  }
+
+  interface ApplyTaskCompletionParams {
+    taskId: string;
+    message: string;
+  }
+
+  interface TaskCompletionParams {
+    taskId: number;
+    message: string;
+    creatorId: number;
+    eventId: number;
+  }
+
+  export interface ProjectData {
+    id: string;
+    title: string;
+    description: string;
+    bannerUrl: string;
+    files: string[];
+    category: string;
+    tags: string[];
+    tasks: Task[];
+    authorId: string;
+    status: ProjectStatus;
+    author: User;
+  }
+
+  export interface Project {
+    project: ProjectData;
+    maxPrice: string | null;
+    minPrice: string | null;
+  }
+
+  export interface UpdateStatusPayload {
+    id: string;
+    payload: { status: ProjectStatus };
+  }
+
+  export interface RefDataResponse {
+    refLink: string;
+    count: number;
+  }
+
+  export type VerifyUserResponse = AxiosResponse<any>;
+  export type GetUserDataResponse = AxiosResponse<UserWithRef>;
+  export type GetRefDataResponse = AxiosResponse<RefDataResponse>;
+  export type LoginResponse = AxiosResponse<LoginResponseData>;
 }
-
-export interface Subtask {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-}
-
-export interface VerifyUserRequestData {
-  queryId: string;
-  userData: VerifyUserData;
-}
-
-enum EventType {
-  PROJECT_CREATED = 'PROJECT_CREATED',
-  PROJECT_UPDATED = 'PROJECT_UPDATED',
-  PROJECT_DELETED = 'PROJECT_DELETED',
-  APPLICATION_SUBMITTED = 'APPLICATION_SUBMITTED',
-  APPLICATION_APPROVED = 'APPLICATION_APPROVED',
-  APPLICATION_REJECTED = 'APPLICATION_REJECTED',
-  TASK_COMPLETED = 'TASK_COMPLETED',
-  TASK_UPDATED = 'TASK_UPDATED',
-  TRANSACTION_COMPLETED = 'TRANSACTION_COMPLETED',
-  DISPUTE_OPENED = 'DISPUTE_OPENED',
-  DISPUTE_RESOLVED = 'DISPUTE_RESOLVED',
-  USER_MESSAGE = 'USER_MESSAGE',
-  RATING_GIVEN = 'RATING_GIVEN',
-}
-
-enum Role {
-  CREATOR = 'creator',
-  ADVISER = 'adviser',
-}
-
-interface LogDetails {
-  transactionId?: number;
-  message?: string;
-  amount?: number;
-  subtaskId?: number;
-}
-
-interface LogEntry {
-  id: number;
-  projectId: number;
-  userId: number;
-  role: Role;
-  eventType: EventType;
-  description?: string;
-  createdAt: Date;
-  details: LogDetails;
-}
-
-interface Transaction {
-  id: number;
-  projectId: number;
-  taskId: number;
-  fromUserId: number;
-  toUserId: number;
-  amount: number;
-  createdAt: Date;
-}
-
-enum DisputeStatus {
-  OPEN = 'open',
-  RESOLVED = 'resolved',
-  CLOSED = 'closed',
-}
-
-interface Dispute {
-  id: string;
-  projectId: string;
-  initiatorId: string;
-  defendantId: string;
-  reason: string;
-  status: DisputeStatus;
-  creationDate: string;
-  resolutionDate?: string;
-}
-
-export interface GetUserDataParams {
-  query_id: string;
-  user_id: string;
-}
-
-export interface GetRefDataParams {
-  query_id: string;
-  ref_id: string;
-}
-
-export type ApiRequestConfig = AxiosRequestConfig;
-
-export type RequestConfig<Params = undefined> = Params extends undefined
-  ? { config?: ApiRequestConfig }
-  : { params: Params; config?: ApiRequestConfig };
-
-export interface User {
-  id: string;
-  telegramId: string;
-  username: string;
-  role: Role;
-  isBanned: boolean;
-  isVerified: boolean;
-  createdAt: Date;
-}
-
-export interface Project {
-  id: string;
-  title: string;
-  description: string;
-  bannerUrl: string;
-  attachedFiles: string[];
-  category: string;
-  tags: string[];
-  price: number;
-  tasks: Subtask[];
-  creatorId: string;
-  creationDate: Date;
-  status: string;
-}
-
-export type VerifyUserResponse = AxiosResponse<any>;
-export type GetUserDataResponse = AxiosResponse<any>;
-export type GetRefDataResponse = AxiosResponse<any>;

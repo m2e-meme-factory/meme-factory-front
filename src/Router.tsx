@@ -1,22 +1,25 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { ROUTES } from './shared/consts/routes';
 import BasePageWrapper from './shared/components/BasePageWrapper';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
-import ProjectPage from './pages/ProjectPage/ProjectPage';
-import TasksPage from './pages/PublicProjectsPage/TasksPage';
 import About from './pages/AboutPage/About';
-import VerifyForm from './pages/VerifyPage/VerifyForm';
-import MyProjectsPage from './pages/MyProjectsPage/MyProjectsPage';
 import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
-import React from 'react';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
-import FreelancerLogsPage from './pages/FreelancerLogsPage/FreelancerLogsPage';
+import ProjectLogsPage from './pages/ProjectLogsPage/ProjectLogsPage';
+import { ROUTES } from './shared/consts/routes';
+import React from 'react';
+import ProtectedRoute from './shared/components/ProtectedRoute';
+import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPage';
+import ProjectPage from './pages/ProjectPage/ProjectPage';
+import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import AutoTasksProject from './pages/AutotasksProject/AutoTasksProject';
+import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
-    element: <BasePageWrapper />,
+    element: <ProtectedRoute element={<BasePageWrapper />} />,
     children: [
       {
         path: ROUTES.PROFILE,
@@ -28,15 +31,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <TasksPage />,
+        element: <PublicProjectsPage />,
       },
       {
         path: ROUTES.ABOUT,
         element: <About />,
-      },
-      {
-        path: ROUTES.VERIFY,
-        element: <VerifyForm />,
       },
       {
         path: ROUTES.CREATE_PROJECT,
@@ -51,9 +50,29 @@ export const router = createBrowserRouter([
         element: <ProjectDetailsPage />,
       },
       {
-        path: ROUTES.LOGS,
-        element: <FreelancerLogsPage />,
+        path: ROUTES.EDIT,
+        element: <EditProjectPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+      },
+      {
+        path: ROUTES.AUTOTASKS,
+        element: <AutoTasksProject />,
       },
     ],
+  },
+  {
+    path: ROUTES.LOGS,
+    element: <ProtectedRoute element={<ProjectLogsPage />} />,
+  },
+  {
+    path: ROUTES.UNAUTHORIZED,
+    element: <UnauthorizedPage />,
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ]);

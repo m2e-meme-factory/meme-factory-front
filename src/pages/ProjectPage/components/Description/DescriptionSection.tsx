@@ -22,9 +22,11 @@ const TaskDescriptionDisplay: FC<TaskDescriptionDisplayProps> = ({ description }
             ? parse(description)
             : parse(description.substring(0, 50) + (description.length > 50 ? '...' : ''))}
         </div>
-        <Button variant='ghost' onClick={toggleDescription} size='1'>
-          {isExpanded ? 'Свернуть' : 'Развернуть'}
-        </Button>
+        {description.length > 50 && (
+          <Button mt='3' variant='ghost' onClick={toggleDescription} size='1'>
+            {isExpanded ? 'Свернуть' : 'Развернуть'}
+          </Button>
+        )}
       </Flex>
     </Card>
   );

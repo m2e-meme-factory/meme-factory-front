@@ -1,9 +1,11 @@
 :root {
   --brand-color: #fecf0a;
+  --swiper-pagination-color: #fecf0a;
+  --swiper-pagination-bullet-inactive-color: #83a4a4;
 }
 
 body {
-  /* background: var(--grass-5); */
+  background-color: #000000;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -15,6 +17,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.swiper {
+  width: 100vw;
+  height: 100vh;
+}
+
+.swiper-pagination {
+  bottom: 10vh !important;
+  color: #fecf0a !important;
+}
+
+.swiper-slide {
+  background: #121212;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rt-TextFieldInput {

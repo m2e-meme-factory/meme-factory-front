@@ -1,7 +1,7 @@
 import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
-import { Flex, Code, IconButton, TextField, IconButtonProps, Box } from '@radix-ui/themes';
+import { IconButton, TextField, IconButtonProps } from '@radix-ui/themes';
 import React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 interface CopyableTextFieldProps extends IconButtonProps {
   value: string;
@@ -46,17 +46,6 @@ const CopyableTextField = ({ value, fieldSize, ...props }: CopyableTextFieldProp
         </IconButton>
       </TextField.Slot>
     </TextField.Root>
-
-    // <Flex align="center" gap="2" justify={"between"}>
-    //   <IconButton
-    //     aria-label="Copy value"
-    //     variant="solid"
-    //     size={value}
-    //     onClick={handleCopy}
-    //   >
-    //     {icon === "copy" ? <CopyIcon /> : <CheckIcon />}
-    //   </IconButton>
-    // </Flex>
   );
 };
 

@@ -1,125 +1,120 @@
 import { Button, Flex, Heading, ScrollArea, Table } from '@radix-ui/themes';
-import * as Form from '@radix-ui/react-form';
-import * as Dialog from '@radix-ui/react-dialog';
-import React from 'react';
-import { Cross2Icon } from '@radix-ui/react-icons';
-
-interface FormDataFields {
-  sender: string;
-  receiver: string;
-  projectId: string;
-}
+import React, { useEffect, useState } from 'react';
+import { useGetTransactionsByUser } from '../../shared/utils/api/hooks/transactions/useGetTransactionsByUser';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../shared/utils/redux/store';
+import Loading from '../../shared/components/Loading';
+import { Transaction } from 'api';
+import { useNavigate } from 'react-router-dom';
+import Select, { MultiValue } from 'react-select';
+import { CUSTOM_SELECT_STYLES_MULTI } from '../../styles/customSelectStyles';
+import makeAnimated from 'react-select/animated';
+import { TX_TYPE_OPTIONS } from '../../shared/consts/txTypesOptions';
+import { Option } from '../../@types/app';
 
 const TransactionsHistoryPage = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const user = useSelector((state: RootState) => state.user.user);
+  const { data: txResponse, isLoading } = useGetTransactionsByUser({ userId: user?.id ?? '' });
+  const [currentTransactions, setCurrentTransactions] = useState<Transaction[]>([]);
+  const [selectedTxTypes, setSelectedTxTypes] = useState<Option[]>([]);
+  const navigate = useNavigate();
+  const animatedComponents = makeAnimated();
 
-    const formData = new FormData(event.currentTarget);
-    const data: FormDataFields = {
-      sender: formData.get('sender') as string,
-      receiver: formData.get('receiver') as string,
-      projectId: formData.get('project-id') as string,
-    };
+  useEffect(() => {
+    if (txResponse && txResponse.data.length > 0) {
+      filterTransactions(txResponse.data);
+    }
+  }, [txResponse, selectedTxTypes]);
 
-    console.log(data);
+  const filterTransactions = (transactions: Transaction[]) => {
+    if (selectedTxTypes.length === 0) {
+      setCurrentTransactions(transactions);
+    } else {
+      const selectedTypes = selectedTxTypes.map((option) => option.value);
+      const filteredTransactions = transactions.filter((transaction) =>
+        selectedTypes.includes(transaction.type)
+      );
+      setCurrentTransactions(filteredTransactions);
+    }
   };
+
+  const handleApplicationStatusChange = (selectedStatus: MultiValue<Option>) => {
+    setSelectedTxTypes(selectedStatus as Option[]);
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <Flex>
-              <Heading mr='3'>Transactions</Heading>
-              <Button variant='soft'>Filters</Button>
-            </Flex>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className='DialogOverlay' />
-            <Dialog.Content className='DialogContent'>
-              <Dialog.Title className='DialogTitle'>Filters</Dialog.Title>
-              <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-                <Form.Field className='FormField' name='sender'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label className='FormLabel'>Sender</Form.Label>
-                  </div>
-                  <Form.Control asChild>
-                    <input className='Input' type='text' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Field className='FormField' name='receiver'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label className='FormLabel'>Receiver</Form.Label>
-                  </div>
-                  <Form.Control asChild>
-                    <input className='Input' type='text' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Field className='FormField' name='project-id'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label className='FormLabel'>Project Id</Form.Label>
-                  </div>
-                  <Form.Control asChild>
-                    <input className='Input' type='text' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Submit asChild>
-                  <button className='Button' style={{ marginTop: 10 }}>
-                    Find
-                  </button>
-                </Form.Submit>
-              </Form.Root>
-              <Dialog.Close asChild>
-                <button className='IconButton' aria-label='Close'>
-                  <Cross2Icon />
-                </button>
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+        <Heading>Transactions history</Heading>
+      </Flex>
+      <Flex mt='2' mb='4' direction='column'>
+        <Heading size='2' mb='2'>
+          Tx type
+        </Heading>
+        <Select
+          isSearchable={false}
+          onChange={handleApplicationStatusChange}
+          placeholder='Select tx type'
+          closeMenuOnSelect={false}
+          components={animatedComponents}
+          options={TX_TYPE_OPTIONS}
+          styles={CUSTOM_SELECT_STYLES_MULTI}
+          isMulti={true}
+          isClearable={true}
+        />
       </Flex>
       <Flex direction='column'>
         <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
           <Table.Root>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>Task</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Tx Id</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
-
             <Table.Body>
-              <Table.Row>
-                <Table.RowHeaderCell>
-                  Some big task title to check how cell size adjusts to text size
-                </Table.RowHeaderCell>
-                <Table.RowHeaderCell>Ilon Muskulistiy</Table.RowHeaderCell>
-                <Table.RowHeaderCell>Kanye South</Table.RowHeaderCell>
-                <Table.RowHeaderCell>$39284</Table.RowHeaderCell>
-              </Table.Row>
+              {currentTransactions &&
+                currentTransactions.map((transaction) => (
+                  <Table.Row key={transaction.id}>
+                    <Table.Cell>{transaction.id}</Table.Cell>
+                    <Table.Cell>
+                      {transaction.type === 'SYSTEM'
+                        ? 'platform'
+                        : transaction.type === 'DEPOSIT'
+                          ? ''
+                          : (transaction.fromUser?.username ?? '—') +
+                            ` (${transaction.fromUser?.telegramId ?? '—'})`}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {transaction.type === 'WITHDRAWAL'
+                        ? ''
+                        : (transaction.toUser?.username ?? '—') +
+                          ` (${transaction.toUser?.telegramId ?? '—'})`}
+                    </Table.Cell>
+                    <Table.Cell>{transaction.amount}</Table.Cell>
+                    <Table.Cell>{transaction.type.toLowerCase()}</Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        style={{ padding: '20px' }}
+                        onClick={() =>
+                          navigate(
+                            `/projects/${transaction.projectId}/logs/${transaction.toUserId}?fromTab=transactions`
+                          )
+                        }
+                      >
+                        To history
+                      </Button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
             </Table.Body>
           </Table.Root>
         </ScrollArea>

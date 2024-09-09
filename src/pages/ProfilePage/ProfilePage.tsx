@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
   const handleVerify = () => {
     if (user) {
-      verifyMutation.mutate({ params: { userId: user.id } });
+      verifyMutation.mutate({ params: { telegramId: user.telegramId } });
     }
   };
 
@@ -114,11 +114,6 @@ export default function ProfilePage() {
             <Grid gap='4'>
               <Flex align='center'>
                 <Heading mr='3'>Profile</Heading>
-                <Link to='/profile/settings'>
-                  <IconButton variant='soft'>
-                    <GearIcon />
-                  </IconButton>
-                </Link>
               </Flex>
               <DataList.Root>
                 <DataList.Item align='center'>

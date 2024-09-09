@@ -71,7 +71,7 @@ declare module 'api' {
   }
 
   export interface VerifyUserRequestData {
-    userId: string;
+    telegramId: string;
   }
 
   interface EventDetails {

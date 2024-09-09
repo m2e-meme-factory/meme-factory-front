@@ -219,25 +219,6 @@ const IntegratedAutotask: FC<IntegratedAutotaskProps> = ({
                   <p className={styles.description}>{description}</p>
                   {children}
                 </div>
-
-                {!isApplied ? (
-                  <button
-                    style={{ marginBottom: '10px' }}
-                    className='ProposalButton'
-                    onClick={handleCheckAndApply}
-                  >
-                    <Text>Check!</Text>
-                  </button>
-                ) : (
-                  <button
-                    style={{ marginBottom: '10px' }}
-                    className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-                    disabled={isBlocked}
-                    onClick={handleClaimReward}
-                  >
-                    <Text>Claim Reward!</Text>
-                  </button>
-                )}
               </div>
             </Sheet.Content>
           </Sheet.Container>

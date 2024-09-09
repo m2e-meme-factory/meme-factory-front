@@ -5,6 +5,6 @@ import api from '../../api';
 export type VerifyUserConfig = RequestConfig<VerifyUserRequestData>;
 
 export const verifyUser = (config: VerifyUserConfig): Promise<VerifyUserResponse> => {
-  const newConfig = addAuthorizationHeader(config);
-  return api.post(`users/verify_user`, { user_id: newConfig?.params.userId }, newConfig);
+  const newConfig = addAuthorizationHeader(config.config);
+  return api.post('users/verify_user', { telegramId: config.params.telegramId }, newConfig);
 };

@@ -30,7 +30,7 @@ code {
 }
 
 .swiper-slide {
-  background: #121212 !important;
+  background: #121212;
   display: flex;
   justify-content: center;
   align-items: center;

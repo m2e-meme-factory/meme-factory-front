@@ -49,51 +49,98 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             Приветствую тебя, Создатель! С нами ты можешь стать мощным инфлюенсером и продвигать
             бренды со всего мира!
           </Text>
+          <Button
+            size='3'
+            onClick={handleNextSlide}
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '50%',
+              transform: 'translateX(50%)',
+              zIndex: '9999',
+            }}
+          >
+            Next
+          </Button>
         </div>
         <div className='swiper-slide'>
           <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
             Meme Factory - первая Meme-To-Earn платформа, где люди постят мемы и зарабатывают на
             этом, а бренды повышают узнаваемость за счет рекламных интеграций.
           </Text>
+          <Button
+            size='3'
+            onClick={handleNextSlide}
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '50%',
+              transform: 'translateX(50%)',
+              zIndex: '9999',
+            }}
+          >
+            Next
+          </Button>
         </div>
         <div className='swiper-slide'>
           <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
             Как получить Airdrop и заработать (в 1-2 сообщении): - Приглашай друзей 10 000 -
             Выкладывай в соцсети контент о проекте - Отмечай нас в соцсетях - Делай активности
-            (комментируй, лайкай и т.д.) И участвуй в эйрдроп
+            (комментируй, лайкай и т.д.) И участвуй в эйрдроп.
           </Text>
+          <Button
+            size='3'
+            onClick={handleNextSlide}
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '50%',
+              transform: 'translateX(50%)',
+              zIndex: '9999',
+            }}
+          >
+            Next
+          </Button>
         </div>
         <div className='swiper-slide'>
           <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
             Меня зовут Скай, я помогаю брендам улетать в небеса, ха-ха Я расскажу тебе, как мы тут
-            работаем. Все просто, как никогда! 1. Берем популярный мем на английском языке, либо
-            создаем уникальный 2. Скачиваем промо материалы от рекламодателя (анимацию) 3.
-            Накладываем анимацию/лого/текст 4. Указываем аккаунт рекламодателя соавтором или
-            упоминаем его
+            работаем. Все просто, как никогда!
           </Text>
+          <Button
+            size='3'
+            onClick={handleNextSlide}
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '50%',
+              transform: 'translateX(50%)',
+              zIndex: '9999',
+            }}
+          >
+            Next
+          </Button>
         </div>
         <div className='swiper-slide'>
           <Text weight='medium' size='4' style={{ textAlign: 'justify', margin: '0 5vw' }}>
-            Тебя приветствует твой первый заказчик - Фабрика Мемов (Meme Factory) Мы хотим, чтобы о
-            нас знали везде и нам нужна твоя помощь! Выкладывай контент в соцсетях и получай поинты
-            ЕЖЕДЕНЕВНО
+            Тебя приветствует твой первый заказчик - Фабрика Мемов (Meme Factory).
           </Text>
+          <Button
+            size='3'
+            onClick={handleTutorialCompleted}
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '50%',
+              transform: 'translateX(50%)',
+              zIndex: '9999',
+            }}
+          >
+            Make money
+          </Button>
         </div>
       </div>
       <div className='swiper-pagination'></div>
-      <Button
-        size='3'
-        onClick={currentSlideIndex !== 4 ? handleNextSlide : handleTutorialCompleted}
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          right: '50%',
-          transform: 'translateX(50%)',
-          zIndex: '9999',
-        }}
-      >
-        {currentSlideIndex === 4 ? 'Make money' : 'Next'}
-      </Button>
     </div>
   );
 };

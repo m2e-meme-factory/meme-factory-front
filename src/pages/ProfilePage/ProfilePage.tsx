@@ -223,7 +223,8 @@ export default function ProfilePage() {
             <button className={styles.ConnectButton}>Connect Socials</button>
           </Card> */}
 
-          <Card m='4'>
+          {userSt?.isVerified ? null : (
+          <Card m='4' >
           <Grid gap='4'>
             <Heading>Verify</Heading>
               <Callout.Root>
@@ -244,7 +245,7 @@ export default function ProfilePage() {
               onClose={() => handleDialogClose()}
               detent='content-height'
             >
-              <Sheet.Container>
+              <Sheet.Container style={{overflowY: 'auto'}}>
                 <Sheet.Header />
                 <Sheet.Content>
                   {
@@ -272,6 +273,7 @@ export default function ProfilePage() {
             </Sheet>
             </Grid>
           </Card>
+          )}
 
           <Card m='4'>
             <Flex align='center' justify='between'>

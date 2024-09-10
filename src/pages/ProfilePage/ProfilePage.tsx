@@ -249,7 +249,7 @@ export default function ProfilePage() {
                 <Sheet.Content>
                   {
                       <Theme>
-                        <Grid gap='8' mb='5' align='center'>
+                        <Grid gap='8' m='4' mb='5' align='center'>
                           <Flex  justify='center'>
                             <img width='80%' src={verified} alt='Verified icon' />
                           </Flex>

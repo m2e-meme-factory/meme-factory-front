@@ -102,16 +102,20 @@ const TransactionsHistoryPage = () => {
                     <Table.Cell>{transaction.amount}</Table.Cell>
                     <Table.Cell>{transaction.type.toLowerCase()}</Table.Cell>
                     <Table.Cell>
-                      <Button
-                        style={{ padding: '20px' }}
-                        onClick={() =>
-                          navigate(
-                            `/projects/${transaction.projectId}/logs/${transaction.toUserId}?fromTab=transactions`
-                          )
-                        }
-                      >
-                        To history
-                      </Button>
+                      {
+                        transaction.type == 'PAYMENT' && (
+                          <Button
+                            style={{ padding: '20px' }}
+                            onClick={() =>
+                              navigate(
+                                `/projects/${transaction.projectId}/logs/${transaction.toUserId}?fromTab=transactions`
+                              )
+                            }
+                          >
+                            To history
+                          </Button>
+                        )
+                      }
                     </Table.Cell>
                   </Table.Row>
                 ))}

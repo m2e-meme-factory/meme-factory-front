@@ -244,7 +244,7 @@ export default function ProfilePage() {
               onClose={() => handleDialogClose()}
               detent='content-height'
             >
-              <Sheet.Container>
+              <Sheet.Container style={{overflowY: 'auto'}}>
                 <Sheet.Header />
                 <Sheet.Content>
                   {

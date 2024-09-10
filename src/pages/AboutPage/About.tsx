@@ -1,4 +1,4 @@
-import { Badge, Card, DataList, Grid, Heading, Text } from '@radix-ui/themes';
+import { Badge, Button, Card, DataList, Grid, Heading, Text } from '@radix-ui/themes';
 import * as React from 'react';
 import packageJson from '../../../package.json';
 import CopyableTextField from '../../shared/components/CopyableTextField';
@@ -23,6 +23,9 @@ export default function About() {
             Access token:
           </Text>
           <CopyableTextField size={'2'} fieldSize='3' value={localStorage.getItem('token') ?? ''} />
+          <Button onClick={() => {    
+            localStorage.setItem('onboardCompleted', 'false');
+          }}>Tutoral again</Button>
         </Grid>
       </Card>
     </>

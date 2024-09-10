@@ -101,13 +101,14 @@ const AutoTasksProject = () => {
                     children={task.children}
                     url={task.url}
                     userId={parseInt(user?.id ?? '')}
-                    done={autotasks.indexOf(task) == 0} //doneTasksIds.has(task.id)}
-                    claimed={autotasks.indexOf(task) == 0}// claimedTasksIds.has(task.id)}
+                    done={doneTasksIds.has(task.id)}
+                    claimed={claimedTasksIds.has(task.id)}
                     createdAt={
                       applications.find((application) => task.id === application.taskId)?.createdAt
                     }
                     icon={task.icon}
                     category={task.category}
+                    refLink={refData?.refLink}
                   />
                 )
               )

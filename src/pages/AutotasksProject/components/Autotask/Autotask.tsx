@@ -3,7 +3,7 @@ import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { CheckOutlined, RightOutlined } from '@ant-design/icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
 import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
-import { AutotaskApplicationDTO } from 'api';
+import { AutotaskApplicationDTO, User } from 'api';
 import { calculateTimeLeft } from '../../../../shared/utils/helpers/calculateTimeLeft';
 import { showToastWithPromise } from '../../../../shared/utils/helpers/notify';
 import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotasks/getAutotaskApplications';
@@ -32,6 +32,7 @@ interface AutotaskProps {
   userId: number;
   claimed: boolean;
   done: boolean;
+  refLink?: string
 }
 
 const AutotaskCard: FC<AutotaskProps> = ({
@@ -47,6 +48,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   icon,
   category,
   url,
+  refLink
 }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -184,6 +186,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   useEffect(() => {
     console.log(isBlocked);
   }, [isBlocked]);
+  
 
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
@@ -247,12 +250,11 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     )}
                     {category == 'referral' && (
                       <>
-                        
                         <Text color='gray'>Your Ref link:</Text>
                         <CopyableTextField
                           size={'2'}
                           fieldSize='3'
-                          value={'https://t.me/bot?start='}
+                          value={refLink || ""}
                         />
                       </>
                     )}

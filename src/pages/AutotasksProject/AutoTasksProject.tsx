@@ -108,6 +108,7 @@ const AutoTasksProject = () => {
                     }
                     icon={task.icon}
                     category={task.category}
+                    refLink={refData?.refLink}
                   />
                 )
               )

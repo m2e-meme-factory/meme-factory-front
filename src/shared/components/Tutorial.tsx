@@ -53,7 +53,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
         <div className='swiper-slide'>
           <Flex direction='column'>
             <img
-              src={profile}
+              src={autotasks}
               alt='Profile illustration'
               style={{
                 height: '80vh',
@@ -102,7 +102,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
         <div className='swiper-slide'>
           <Flex direction='column'>
             <img
-              src={autotasks}
+              src={profile}
               alt='Autotask illustration'
               style={{
                 height: '80vh',

@@ -76,13 +76,13 @@ const AutoTasksProject = () => {
   return (
     <Flex direction='column'>
       <Flex className={styles.content} direction='column'>
-        <Flex m='4' direction='column'>
+        <Flex m='4' direction='column' gap='2'>
           <Heading weight='bold'>Tasks</Heading>
 
           <Flex direction='column' mb='5'>
-            <Flex align='center' mb='2'>
+            <Flex align='center' mb='4'>
               <Text weight='light' size='3' color='gray'>
-                We'll reward you immediately with m2e points after each task completion
+                You'll be rewarded immediately with M2E points after each task completion
               </Text>
             </Flex>
             {refLoading ? (
@@ -91,20 +91,7 @@ const AutoTasksProject = () => {
               </Flex>
             ) : (
               autotasks.map((task) =>
-                task.id === 1 ? (
-                  <IntegratedAutotask
-                    key={task.id}
-                    id={task.id}
-                    title={task.title}
-                    description={task.description}
-                    price={task.reward}
-                    children={task.children}
-                    userId={parseInt(user?.id ?? '')}
-                    done={doneTasksIds.has(task.id)}
-                    claimed={claimedTasksIds.has(task.id)}
-                    icon={task.icon}
-                  />
-                ) : (
+                (
                   <AutotaskCard
                     key={task.id}
                     id={task.id}

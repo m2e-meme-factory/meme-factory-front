@@ -13,11 +13,13 @@ import {
   Tabs,
   Dialog,
   Theme,
+  Callout,
+  Blockquote,
 } from '@radix-ui/themes';
 import CopyableCode from '../../shared/components/CopyableCode';
 import CopyableTextField from '../../shared/components/CopyableTextField';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import styles from './ProfilePage.module.css';
 import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
 import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
@@ -33,6 +35,32 @@ import { useVerifyUser } from '../../shared/utils/api/hooks/user/useVerifyUser';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 import { Sheet } from 'react-modal-sheet';
 import verified from './../../shared/imgs/verify.png';
+import { List } from '@radix-ui/react-tabs';
+import styled from 'styled-components';
+
+const GlowingBtn = styled(Button)`
+  background: linear-gradient(180deg, var(--brand-color) 0%, var(--brand-color) 100%);
+  box-shadow: 0px 0px 20px 0px var(--brand-color);
+  animation: glow 3s ease-in-out infinite alternate;
+
+@keyframes glow {
+  0% {
+    box-shadow: 0px 0px 20px 0px var(--brand-color);
+  }
+
+  50% {
+    box-shadow: 0px 0px 20px -20px var(--brand-color);
+  }
+
+  100% {
+    box-shadow: 0px 0px 20px 0px var(--brand-color);
+  }
+}
+
+  &:hover {
+    box-shadow: 0px 0px 20px 0px var(--brand-color);
+  }
+`
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -131,8 +159,8 @@ export default function ProfilePage() {
                 <DataList.Item align='center'>
                   <DataList.Label minWidth='88px'>Status</DataList.Label>
                   <DataList.Value>
-                    <Badge color='jade' variant='soft' radius='full'>
-                      Authorized
+                    <Badge color={userSt?.isVerified ? 'jade' : 'red'} variant='soft' radius='full'>
+                      {userSt?.isVerified ? 'Verified' : 'Not Verified'}
                     </Badge>
                   </DataList.Value>
                 </DataList.Item>
@@ -162,7 +190,7 @@ export default function ProfilePage() {
                 <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
-                <Heading>${userSt?.balance ?? '0'}</Heading>
+                <Heading>{userSt?.balance ?? '0'} <Badge color='bronze'>M2E</Badge></Heading>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw
@@ -190,20 +218,26 @@ export default function ProfilePage() {
             </Grid>
           </Card>
 
-          <Card m='4'>
+          {/* <Card m='4'>
             <Heading mb='3'>Socials</Heading>
             <button className={styles.ConnectButton}>Connect Socials</button>
-          </Card>
+          </Card> */}
 
           <Card m='4'>
-            <Heading mb='3'>Verify</Heading>
-            <Flex direction='column'>
-              <Text color='gray' mb='2' size='2'>
-                Verified users have auto approve for any project apply and have 100% chance for
-                receiving airdrop. Instant verification price: 5 USDT
-              </Text>
-              <Button onClick={handleDialogOpen}>Verify</Button>
-            </Flex>
+          <Grid gap='4'>
+            <Heading>Verify</Heading>
+              <Callout.Root>
+                <Callout.Icon>
+                  <InfoCircledIcon height={20} width={20}/>
+                </Callout.Icon>
+                <Callout.Text>
+                  {/* <Text color='gray' mb='2' size='2'> */}
+                    Verified users have auto approve for any project apply and have 100% chance for
+                    receiving airdrop. Instant verification price: 5 USDT
+                  {/* </Text> */}
+                </Callout.Text>
+              </Callout.Root>
+              <GlowingBtn size='3' onClick={handleDialogOpen}>Verify</GlowingBtn>
 
             <Sheet
               isOpen={isModalVisible}
@@ -214,33 +248,29 @@ export default function ProfilePage() {
                 <Sheet.Header />
                 <Sheet.Content>
                   {
-                    <div className={styles.content}>
-                      <div className={styles.information}>
-                        <img src={verified} alt='Verified icon' className={styles.image} />
-                        <h2 className={styles.title}>🔥 Benefits of verified accounts</h2>
-                        <ul className={styles.description}>
-                          <li>100% chance for Airdrop claim</li>
-                          <li>Auto approve to any project</li>
-                          <li>High priority for checking task completion</li>
-                        </ul>
-                      </div>
-                      <Theme
-                        accentColor='amber'
-                        appearance={'dark'}
-                        grayColor='mauve'
-                        radius='medium'
-                        hasBackground={false}
-                      >
-                        <Button onClick={handleVerify} style={{ width: '100%' }}>
-                          Verify Now
-                        </Button>
+                      <Theme>
+                        <Grid gap='8' m='4' mb='5' align='center'>
+                          <Flex  justify='center'>
+                            <img width='80%' src={verified} alt='Verified icon' />
+                          </Flex>
+                          <Grid gap='2'>
+                            <Heading mb='2'>Benefits of verified accounts 🔥</Heading>
+                            <Blockquote>100% chance for Airdrop claim</Blockquote>
+                            <Blockquote>Auto approve to any project</Blockquote>
+                            <Blockquote>High priority for checking task completion</Blockquote>
+                          </Grid>
+                            
+                          <GlowingBtn size='4' onClick={handleVerify} style={{ width: '100%' }}>
+                            Verify Now
+                          </GlowingBtn>
+                        </Grid>
                       </Theme>
-                    </div>
                   }
                 </Sheet.Content>
               </Sheet.Container>
               <Sheet.Backdrop onTap={() => handleDialogClose()} />
             </Sheet>
+            </Grid>
           </Card>
 
           <Card m='4'>

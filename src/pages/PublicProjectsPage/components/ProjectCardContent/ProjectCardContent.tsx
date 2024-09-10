@@ -2,15 +2,21 @@ import { Flex, Heading, Text } from '@radix-ui/themes';
 import { TagsOutlined } from '@ant-design/icons';
 import React, { FC } from 'react';
 import { ProjectData } from 'api';
+import styled from 'styled-components';
 
 interface ProjectCardContentProps {
   project: ProjectData;
 }
 
+const SecondaryHeading = styled(Heading)`
+  font-family: var(--default-font) !important;
+  text-transform: none;
+`
+
 const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
   return (
     <Flex direction='column' m='4'>
-      <Heading>{project.title}</Heading>
+      <SecondaryHeading>{project.title}</SecondaryHeading>
       <Text mb='3' color='yellow' weight='medium'>
         {project.category}
       </Text>

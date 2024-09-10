@@ -4,7 +4,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Button, Flex, Text } from '@radix-ui/themes';
+import { Button, Card, Flex, Text } from '@radix-ui/themes';
 import { Link, useNavigate } from 'react-router-dom';
 import profile from './../imgs/profile.webp';
 import autotasks from './../imgs/airdrop.webp';
@@ -56,28 +56,34 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               src={profile}
               alt='Profile illustration'
               style={{
-                width: '100%',
-                maxHeight: '400px',
+                height: '80vh',
                 objectFit: 'contain',
+                animation: 'updown 6s linear infinite',
               }}
             />
-            <Text
-              weight='regular'
-              size='4'
-              style={{ textAlign: 'justify', margin: '3vh 5vw 5vh 5vw' }}
+            <Card
+              style={{
+                position: 'absolute',
+                bottom: '12vh',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '80%',
+              }}
             >
-              На нашей фабрике мемов очень просто зарабатывать: Самый простой вариант -{' '}
-              <Link
-                onClick={() => {
-                  handleTutorialCompleted();
-                }}
-                style={{ color: 'var(--brand-color)' }}
-                to='/projects/autotasks'
-              >
-                это участвовать в airdrop
-              </Link>
-              . Подпишись на наши соцсети и получи свои первые мем койны.
-            </Text>
+              <Text weight='regular' size='3' style={{ textAlign: 'justify' }}>
+                На нашей фабрике мемов очень просто зарабатывать: Самый простой вариант -{' '}
+                <Link
+                  onClick={() => {
+                    handleTutorialCompleted();
+                  }}
+                  style={{ color: 'var(--brand-color)' }}
+                  to='/projects/autotasks'
+                >
+                  это участвовать в airdrop
+                </Link>
+                . Подпишись на наши соцсети и получи свои первые мем койны.
+              </Text>
+            </Card>
           </Flex>
           <Button
             size='3'
@@ -99,28 +105,35 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               src={autotasks}
               alt='Autotask illustration'
               style={{
-                width: '100%',
-                maxHeight: '400px',
+                height: '80vh',
                 objectFit: 'contain',
+                animation: 'updown 6s linear infinite',
               }}
             />
-            <Text
-              weight='regular'
-              size='4'
-              style={{ textAlign: 'justify', margin: '3vh 5vw 5vh 5vw' }}
+
+            <Card
+              style={{
+                position: 'absolute',
+                bottom: '12vh',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '80%',
+              }}
             >
-              Второй вариант - это приглашать друзей! За каждого приглашенного криейтора ты получишь
-              100 мем койнов. Просто{' '}
-              <Link
-                onClick={() => {
-                  handleTutorialCompleted();
-                }}
-                style={{ color: 'var(--brand-color)' }}
-                to='/profile'
-              >
-                делись своей реферальной ссылкой.
-              </Link>
-            </Text>
+              <Text weight='regular' size='3' style={{ textAlign: 'justify' }}>
+                Второй вариант - это приглашать друзей! За каждого приглашенного криейтора ты
+                получишь 100 мем койнов. Просто{' '}
+                <Link
+                  onClick={() => {
+                    handleTutorialCompleted();
+                  }}
+                  style={{ color: 'var(--brand-color)' }}
+                  to='/profile'
+                >
+                  делись своей реферальной ссылкой.
+                </Link>
+              </Text>
+            </Card>
           </Flex>
           <Button
             size='3'
@@ -142,28 +155,35 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               src={projects}
               alt='Projects illustration'
               style={{
-                width: '100%',
-                maxHeight: '400px',
+                height: '80vh',
                 objectFit: 'contain',
+                animation: 'updown 6s linear infinite',
               }}
             />
-            <Text
-              weight='regular'
-              size='4'
-              style={{ textAlign: 'justify', margin: '3vh 5vw 5vh 5vw' }}
+
+            <Card
+              style={{
+                position: 'absolute',
+                bottom: '12vh',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '80%',
+              }}
             >
-              И третий, беспроигрышный вариант - это выкладывать контент! Для этого{' '}
-              <Link
-                onClick={() => {
-                  handleTutorialCompleted();
-                }}
-                style={{ color: 'var(--brand-color)' }}
-                to='/projects'
-              >
-                выбирай проекты
-              </Link>{' '}
-              и выполняй задания.
-            </Text>
+              <Text weight='regular' size='3' style={{ textAlign: 'justify' }}>
+                И третий, беспроигрышный вариант - это выкладывать контент! Для этого{' '}
+                <Link
+                  onClick={() => {
+                    handleTutorialCompleted();
+                  }}
+                  style={{ color: 'var(--brand-color)' }}
+                  to='/projects'
+                >
+                  выбирай проекты
+                </Link>{' '}
+                и выполняй задания.
+              </Text>
+            </Card>
           </Flex>
           <Button
             size='3'

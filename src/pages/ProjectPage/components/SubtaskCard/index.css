@@ -84,7 +84,7 @@ input {
     width: 95%;
     margin: 0 auto;
     text-align: center;
-    border: 3px solid black;
+    border: 3px solid #121212;
     transition: border 0.3s ease;
 }
 

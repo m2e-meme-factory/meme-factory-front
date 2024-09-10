@@ -118,7 +118,7 @@ const PublicProjectsPage = () => {
   return (
     <>
       <Flex m='4' direction='column'>
-        <Heading>Public projects</Heading>
+        <Heading>Projects</Heading>
         <Text color='gray'>Earn M2E by completing them</Text>
       </Flex>
       <Flex justify='between' p='4' direction='column'>

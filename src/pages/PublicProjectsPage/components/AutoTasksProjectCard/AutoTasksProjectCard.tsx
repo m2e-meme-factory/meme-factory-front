@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import CardBanner from '../CardBanner/CardBanner';
 import ProjectCardContent from '../ProjectCardContent/ProjectCardContent';
 import React from 'react';
@@ -10,23 +10,28 @@ const StyledCard = styled(Card)`
   padding: 0;
   margin: 0 0 15px;
   width: 100%;
-  border: 1px solid yellow;
+  border: 1px solid var(--yellow-9);
   background-color: #121212;
 `;
+
+const SecondaryHeading = styled(Heading)`
+  font-family: var(--default-font) !important;
+  text-transform: none;
+`
 
 const AutoTasksProjectCard = () => {
   const navigate = useNavigate();
 
   return (
-    <StyledCard onClick={() => navigate(`/projects/autotasks`)}>
+    <StyledCard variant='classic' onClick={() => navigate(`/projects/autotasks`)}>
       <Flex direction='column'>
         <CardBanner />
         <Flex direction='column' m='4'>
-          <Heading>Points for activity!</Heading>
-          <Text mb='3' color='yellow' weight='medium'>
+          <SecondaryHeading>Airdrop Tasks</SecondaryHeading>
+          {/* <Text mb='3' color='yellow' weight='medium'>
             Platform tasks
-          </Text>
-          <Flex mb='3'>
+          </Text> */}
+          {/* <Flex mb='3'>
             <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
             <Text weight='medium'>
               Tags:{' '}
@@ -36,7 +41,7 @@ const AutoTasksProjectCard = () => {
                 </span>
               ))}
             </Text>
-          </Flex>
+          </Flex> */}
         </Flex>
       </Flex>
     </StyledCard>

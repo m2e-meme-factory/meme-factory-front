@@ -17,8 +17,8 @@ import { calculateTimeLeft } from '../../../helpers/calculateTimeLeft';
 import { AutotaskApplicationDTO } from 'api';
 
 export const useApplyForAutotask = (
-  setTimeLeft: Dispatch<SetStateAction<number>>,
-  setApplicationInfo: Dispatch<SetStateAction<AutotaskApplicationDTO | undefined>>
+  setApplicationInfo: Dispatch<SetStateAction<AutotaskApplicationDTO | undefined>>,
+  setTimeLeft?: Dispatch<SetStateAction<number>>
 ) => {
   const [savedVariables, setSavedVariables] = useState<ApplyForAutotaskConfig>();
   const { webApp } = useTelegram();
@@ -28,11 +28,13 @@ export const useApplyForAutotask = (
       return await applyForAutotask(config);
     },
     onSuccess: (data) => {
-      const timeLeft = calculateTimeLeft(data.data.createdAt);
+      if (!data.data.isIntegrated) {
+        if (setTimeLeft) {
+          setTimeLeft(calculateTimeLeft(data.data.createdAt));
+        }
+      }
       showSuccessMessage('Application was sent successfully');
-      setTimeLeft(timeLeft);
       setApplicationInfo(data.data);
-      console.log('поменял значение таймера и апп инфо', timeLeft);
     },
     onMutate: (variables) => {
       setSavedVariables(variables);

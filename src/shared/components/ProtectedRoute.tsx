@@ -40,21 +40,21 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
     setIsTutorialCompleted(true);
   };
 
-  if (isLoading) {
-    return (
-      <Flex style={{ height: '100vh' }} align='center' justify='center'>
-        <Spinner size='3' />
-      </Flex>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Flex style={{ height: '100vh' }} align='center' justify='center'>
+  //       <Spinner size='3' />
+  //     </Flex>
+  //   );
+  // }
 
-  if (!isTutorialCompleted && !error) {
-    return <Tutorial onComplete={handleTutorialComplete} />;
-  }
+  // if (!isTutorialCompleted && !error) {
+    // return <Tutorial onComplete={handleTutorialComplete} />;
+  // }
 
-  if (error) {
-    return <Navigate to='/unauthorized' state={{ from: location }} />;
-  }
+  // if (error) {
+  //   return <Navigate to='/unauthorized' state={{ from: location }} />;
+  // }
 
   return element;
 };

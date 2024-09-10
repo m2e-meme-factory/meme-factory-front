@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+.rt-Heading {
+  font-family: 'ME' !important;
+  text-transform: uppercase;
+}

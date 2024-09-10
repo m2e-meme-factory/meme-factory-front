@@ -15,8 +15,8 @@ export const tasks: Autotask[] = [
   {
     id: 1,
     title: 'Points for friends',
-    description: `Invite your friends to join our app and earn rewards! Share your unique referral link with them, and when they sign up and start using the app, both you and your friends will earn bonus points. This is a fantastic way to grow our community while getting rewarded for bringing your friends on board. The more friends you invite, the more rewards you can earn. Start sharing now and watch your points accumulate as your friends join the fun! 💸`,
-    reward: 10,
+    description: `Invite friend to claim 100 M2E 💸`,
+    reward: 100,
     category: 'referral',
   },
   {

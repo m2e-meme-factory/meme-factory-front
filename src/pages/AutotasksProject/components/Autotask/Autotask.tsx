@@ -1,4 +1,4 @@
-import { Card, Flex, Text } from '@radix-ui/themes';
+import { Badge, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { CheckOutlined, RightOutlined } from '@ant-design/icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
@@ -15,6 +15,9 @@ import '../../../../styles/CustomSheetsStyles.css';
 import styles from './Autotask.module.css';
 import SocialsLink from '../../../../shared/components/SocialsLink/SocialsLink';
 import { getIconByTaskId } from '../../../../shared/utils/helpers/getIconByTaskId';
+import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
+import CopyableRef from '../CopyableField/CopyableRef';
+import CopyableTextField from '../../../../shared/components/CopyableTextField';
 
 interface AutotaskProps {
   id: number;
@@ -77,7 +80,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
     const newStyle: React.CSSProperties = {
       borderRadius: '20px',
       padding: '10px 7px',
-      border: isApplied ? '2px solid green' : '2px solid gray',
+      border: isApplied ? '2px solid #45a951' : '2px solid var(--gray-10)',
     };
     setCardStyle(newStyle);
   }, [isApplied]);
@@ -184,7 +187,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
 
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
-      <Flex align='center' justify='between'>
+      <Flex align='center' justify='between' pl='2' pr='2'>
         <Flex>
           {icon}
 
@@ -193,53 +196,117 @@ const AutotaskCard: FC<AutotaskProps> = ({
               {title}
             </Text>
             <Text weight='medium' size='3' color='gray'>
-              +{price} M2E
+              <i>
+                +{price} <Badge color='gold'>M2E</Badge>
+              </i>
             </Text>
           </Flex>
         </Flex>
 
         {isRewardClaimed ? (
-          <CheckOutlined style={{ color: 'green', fontSize: '20px', marginRight: '10px' }} />
+          <CheckIcon color='#45a951' width={20} height={20} />
         ) : (
-          <RightOutlined style={{ color: '#fecf0a', fontSize: '20px', marginRight: '10px' }} />
+          // <CheckOutlined style={{ color: 'green', fontSize: '20px', marginRight: '10px' }} />
+          <CaretRightIcon width={20} height={20} />
+          // <RightOutlined style={{ fontSize: '20px', marginRight: '10px' }} />
         )}
 
         <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
           <Sheet.Container>
             <Sheet.Header />
             <Sheet.Content>
-              {
-                <div className={styles.content}>
-                  <div className={styles.information}>
-                    <h2 className={styles.title}>
-                      🚀<span className={styles.accent}>Subtask:</span> {title}
-                    </h2>
-                    <p className={styles.description}>{description}</p>
-                    <div className={styles.linkContainer}>
-                      <h3>Your task:</h3>
-                      {url && (
-                        <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
-                      )}
+              <Theme>
+                {
+                  <Flex m='4' gap='2' direction='column'>
+                    {/* <Text>{description}</Text> */}
+                    <Flex mb='5' mt='4' direction={'column'} gap='2'>
+                      <Heading align='center'>{title}</Heading>
+                      <Flex justify='center'>
+                        <Badge size='3' color={isApplied ? 'yellow' : 'gray'} variant='soft'>
+                          {isTimerStarted && timeLeft > 0
+                            ? `On approve`
+                            : isApplied
+                              ? 'Approved'
+                              : 'Pending'}
+                        </Badge>
+                      </Flex>
+                      <Text align='center' color='gray'>
+                        <i>
+                          +{price} <Badge color='bronze'>M2E</Badge>
+                        </i>
+                      </Text>
+                    </Flex>
+                    <Callout.Root color='gray' mb='4'>
+                          <Callout.Icon>
+                            <InfoCircledIcon width={20} height={20} />
+                          </Callout.Icon>
+                          <Callout.Text>{description}asasd</Callout.Text>
+                        </Callout.Root>
+                    {url && (
+                      <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
+                    )}
+                    {category == 'referral' && (
+                      <>
+                        
+                        <Text color='gray'>Your Ref link:</Text>
+                        <CopyableTextField
+                          size={'2'}
+                          fieldSize='3'
+                          value={'https://t.me/bot?start='}
+                        />
+                      </>
+                    )}
+                    {category != 'referral' && (
+                      <>
+                        <Button
+                          mb='2'
+                          size='4'
+                          className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
+                          disabled={isBlocked}
+                          onClick={!isApplied ? handleSendApplication : handleClaimReward}
+                        >
+                          {isTimerStarted && timeLeft > 0
+                            ? `Time left: ${formatTime(timeLeft)}`
+                            : isApplied
+                              ? 'Claim Reward'
+                              : 'Check!'}
+                        </Button>
+                      </>
+                    )}
+                  </Flex>
+                }
+                {/* {
+                  <div className={styles.content}>
+                    <div className={styles.information}>
+                      <h2 className={styles.title}>
+                        🚀 {title}
+                      </h2>
+                      <p className={styles.description}>{description}</p>
+                      <div className={styles.linkContainer}>
+                        {url && (
+                          <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
+                        )}
+                      </div>
+                      <>{children}</>
                     </div>
-                    <>{children}</>
-                  </div>
 
-                  <button
-                    style={{ marginBottom: '10px' }}
-                    className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-                    disabled={isBlocked}
-                    onClick={!isApplied ? handleSendApplication : handleClaimReward}
-                  >
-                    <Text>
-                      {isTimerStarted && timeLeft > 0
-                        ? `Time left: ${formatTime(timeLeft)}`
-                        : isApplied
-                          ? 'Claim Reward'
-                          : 'Check!'}
-                    </Text>
-                  </button>
-                </div>
-              }
+                    <button
+                      style={{ marginBottom: '10px' }}
+                      className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
+                      disabled={isBlocked}
+                      onClick={!isApplied ? handleSendApplication : handleClaimReward}
+                    >
+                      <Text>
+                        {isTimerStarted && timeLeft > 0
+                          ? `Time left: ${formatTime(timeLeft)}`
+                          : isApplied
+                            ? 'Claim Reward'
+                            : 'Check!'}
+                      </Text>
+                    </button>
+                  </div>
+                } */}
+              </Theme>
             </Sheet.Content>
           </Sheet.Container>
           <Sheet.Backdrop onTap={() => handleDialogClose()} />

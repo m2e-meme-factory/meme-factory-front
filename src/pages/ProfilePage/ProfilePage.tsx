@@ -43,24 +43,24 @@ const GlowingBtn = styled(Button)`
   box-shadow: 0px 0px 20px 0px var(--brand-color);
   animation: glow 3s ease-in-out infinite alternate;
 
-@keyframes glow {
-  0% {
-    box-shadow: 0px 0px 20px 0px var(--brand-color);
-  }
+  @keyframes glow {
+    0% {
+      box-shadow: 0px 0px 20px 0px var(--brand-color);
+    }
 
-  50% {
-    box-shadow: 0px 0px 20px -20px var(--brand-color);
-  }
+    50% {
+      box-shadow: 0px 0px 20px -20px var(--brand-color);
+    }
 
-  100% {
-    box-shadow: 0px 0px 20px 0px var(--brand-color);
+    100% {
+      box-shadow: 0px 0px 20px 0px var(--brand-color);
+    }
   }
-}
 
   &:hover {
     box-shadow: 0px 0px 20px 0px var(--brand-color);
   }
-`
+`;
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -190,7 +190,9 @@ export default function ProfilePage() {
                 <Text mb='2' color='gray'>
                   Available Balance
                 </Text>
-                <Heading>{userSt?.balance ?? '0'} <Badge color='bronze'>M2E</Badge></Heading>
+                <Heading>
+                  {userSt?.balance ?? '0'} <Badge color='bronze'>M2E</Badge>
+                </Heading>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw
@@ -224,55 +226,57 @@ export default function ProfilePage() {
           </Card> */}
 
           {userSt?.isVerified ? null : (
-          <Card m='4' >
-          <Grid gap='4'>
-            <Heading>Verify</Heading>
-              <Callout.Root>
-                <Callout.Icon>
-                  <InfoCircledIcon height={20} width={20}/>
-                </Callout.Icon>
-                <Callout.Text>
-                  {/* <Text color='gray' mb='2' size='2'> */}
+            <Card m='4'>
+              <Grid gap='4'>
+                <Heading>Verify</Heading>
+                <Callout.Root>
+                  <Callout.Icon>
+                    <InfoCircledIcon height={20} width={20} />
+                  </Callout.Icon>
+                  <Callout.Text>
+                    {/* <Text color='gray' mb='2' size='2'> */}
                     Verified users have auto approve for any project apply and have 100% chance for
                     receiving airdrop. Instant verification price: 5 USDT
-                  {/* </Text> */}
-                </Callout.Text>
-              </Callout.Root>
-              <GlowingBtn size='3' onClick={handleDialogOpen}>Verify</GlowingBtn>
+                    {/* </Text> */}
+                  </Callout.Text>
+                </Callout.Root>
+                <GlowingBtn size='3' onClick={handleDialogOpen}>
+                  Verify
+                </GlowingBtn>
 
-            <Sheet
-              isOpen={isModalVisible}
-              onClose={() => handleDialogClose()}
-              detent='content-height'
-            >
-              <Sheet.Container style={{overflowY: 'auto'}}>
-                <Sheet.Header />
-                <Sheet.Content>
-                  {
-                      <Theme>
-                        <Grid gap='8' m='4' mb='5' align='center'>
-                          <Flex  justify='center'>
-                            <img width='80%' src={verified} alt='Verified icon' />
-                          </Flex>
-                          <Grid gap='2'>
-                            <Heading mb='2'>Benefits of verified accounts 🔥</Heading>
-                            <Blockquote>100% chance for Airdrop claim</Blockquote>
-                            <Blockquote>Auto approve to any project</Blockquote>
-                            <Blockquote>High priority for checking task completion</Blockquote>
+                <Sheet
+                  isOpen={isModalVisible}
+                  onClose={() => handleDialogClose()}
+                  detent='content-height'
+                >
+                  <Sheet.Container style={{ overflowY: 'auto' }}>
+                    <Sheet.Header />
+                    <Sheet.Content>
+                      {
+                        <Theme>
+                          <Grid gap='8' m='4' mb='5' align='center'>
+                            <Flex justify='center'>
+                              <img width='80%' src={verified} alt='Verified icon' />
+                            </Flex>
+                            <Grid gap='2'>
+                              <Heading mb='2'>Benefits of verified accounts 🔥</Heading>
+                              <Blockquote>100% chance for Airdrop claim</Blockquote>
+                              <Blockquote>Auto approve to any project</Blockquote>
+                              <Blockquote>High priority for checking task completion</Blockquote>
+                            </Grid>
+
+                            <GlowingBtn size='4' onClick={handleVerify} style={{ width: '100%' }}>
+                              Verify Now
+                            </GlowingBtn>
                           </Grid>
-                            
-                          <GlowingBtn size='4' onClick={handleVerify} style={{ width: '100%' }}>
-                            Verify Now
-                          </GlowingBtn>
-                        </Grid>
-                      </Theme>
-                  }
-                </Sheet.Content>
-              </Sheet.Container>
-              <Sheet.Backdrop onTap={() => handleDialogClose()} />
-            </Sheet>
-            </Grid>
-          </Card>
+                        </Theme>
+                      }
+                    </Sheet.Content>
+                  </Sheet.Container>
+                  <Sheet.Backdrop onTap={() => handleDialogClose()} />
+                </Sheet>
+              </Grid>
+            </Card>
           )}
 
           <Card m='4'>

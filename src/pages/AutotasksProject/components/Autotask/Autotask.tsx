@@ -32,7 +32,7 @@ interface AutotaskProps {
   userId: number;
   claimed: boolean;
   done: boolean;
-  refLink?: string
+  refLink?: string;
 }
 
 const AutotaskCard: FC<AutotaskProps> = ({
@@ -48,7 +48,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   icon,
   category,
   url,
-  refLink
+  refLink,
 }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -186,7 +186,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
   useEffect(() => {
     console.log(isBlocked);
   }, [isBlocked]);
-  
 
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
@@ -217,67 +216,64 @@ const AutotaskCard: FC<AutotaskProps> = ({
         <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
           <Sheet.Container>
             <Sheet.Header />
-            <Sheet.Content>
-              <Theme>
-                {
-                  <Flex m='4' gap='2' direction='column'>
-                    {/* <Text>{description}</Text> */}
-                    <Flex mb='5' mt='4' direction={'column'} gap='2'>
-                      <Heading align='center'>{title}</Heading>
-                      <Flex justify='center'>
-                        <Badge size='3' color={isApplied ? 'yellow' : 'gray'} variant='soft'>
-                          {isTimerStarted && timeLeft > 0
-                            ? `On approve`
-                            : isApplied
-                              ? 'Approved'
-                              : 'Pending'}
-                        </Badge>
+            <Sheet.Scroller>
+              <Sheet.Content>
+                <Theme>
+                  {
+                    <Flex m='4' gap='2' direction='column'>
+                      {/* <Text>{description}</Text> */}
+                      <Flex mb='5' mt='4' direction={'column'} gap='2'>
+                        <Heading align='center'>{title}</Heading>
+                        <Flex justify='center'>
+                          <Badge size='3' color={isApplied ? 'yellow' : 'gray'} variant='soft'>
+                            {isTimerStarted && timeLeft > 0
+                              ? `On approve`
+                              : isApplied
+                                ? 'Approved'
+                                : 'Pending'}
+                          </Badge>
+                        </Flex>
+                        <Text align='center' color='gray'>
+                          <i>
+                            +{price} <Badge color='bronze'>M2E</Badge>
+                          </i>
+                        </Text>
                       </Flex>
-                      <Text align='center' color='gray'>
-                        <i>
-                          +{price} <Badge color='bronze'>M2E</Badge>
-                        </i>
-                      </Text>
+                      <Callout.Root color='gray' mb='4'>
+                        <Callout.Icon>
+                          <InfoCircledIcon width={20} height={20} />
+                        </Callout.Icon>
+                        <Callout.Text>{description}asasd</Callout.Text>
+                      </Callout.Root>
+                      {url && (
+                        <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
+                      )}
+                      {category == 'referral' && (
+                        <>
+                          <Text color='gray'>Your Ref link:</Text>
+                          <CopyableTextField size={'2'} fieldSize='3' value={refLink || ''} />
+                        </>
+                      )}
+                      {category != 'referral' && (
+                        <>
+                          <Button
+                            mb='2'
+                            size='4'
+                            className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
+                            disabled={isBlocked}
+                            onClick={!isApplied ? handleSendApplication : handleClaimReward}
+                          >
+                            {isTimerStarted && timeLeft > 0
+                              ? `Time left: ${formatTime(timeLeft)}`
+                              : isApplied
+                                ? 'Claim Reward'
+                                : 'Check!'}
+                          </Button>
+                        </>
+                      )}
                     </Flex>
-                    <Callout.Root color='gray' mb='4'>
-                          <Callout.Icon>
-                            <InfoCircledIcon width={20} height={20} />
-                          </Callout.Icon>
-                          <Callout.Text>{description}asasd</Callout.Text>
-                        </Callout.Root>
-                    {url && (
-                      <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
-                    )}
-                    {category == 'referral' && (
-                      <>
-                        <Text color='gray'>Your Ref link:</Text>
-                        <CopyableTextField
-                          size={'2'}
-                          fieldSize='3'
-                          value={refLink || ""}
-                        />
-                      </>
-                    )}
-                    {category != 'referral' && (
-                      <>
-                        <Button
-                          mb='2'
-                          size='4'
-                          className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-                          disabled={isBlocked}
-                          onClick={!isApplied ? handleSendApplication : handleClaimReward}
-                        >
-                          {isTimerStarted && timeLeft > 0
-                            ? `Time left: ${formatTime(timeLeft)}`
-                            : isApplied
-                              ? 'Claim Reward'
-                              : 'Check!'}
-                        </Button>
-                      </>
-                    )}
-                  </Flex>
-                }
-                {/* {
+                  }
+                  {/* {
                   <div className={styles.content}>
                     <div className={styles.information}>
                       <h2 className={styles.title}>
@@ -308,8 +304,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     </button>
                   </div>
                 } */}
-              </Theme>
-            </Sheet.Content>
+                </Theme>
+              </Sheet.Content>
+            </Sheet.Scroller>
           </Sheet.Container>
           <Sheet.Backdrop onTap={() => handleDialogClose()} />
         </Sheet>

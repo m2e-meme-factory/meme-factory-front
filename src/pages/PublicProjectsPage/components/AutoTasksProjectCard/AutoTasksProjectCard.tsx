@@ -17,7 +17,7 @@ const StyledCard = styled(Card)`
 const SecondaryHeading = styled(Heading)`
   font-family: var(--default-font) !important;
   text-transform: none;
-`
+`;
 
 const AutoTasksProjectCard = () => {
   const navigate = useNavigate();

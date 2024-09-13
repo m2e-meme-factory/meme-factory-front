@@ -11,7 +11,7 @@ interface ProjectCardContentProps {
 const SecondaryHeading = styled(Heading)`
   font-family: var(--default-font) !important;
   text-transform: none;
-`
+`;
 
 const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
   return (

@@ -208,20 +208,17 @@ const AutotaskCard: FC<AutotaskProps> = ({
         {isRewardClaimed ? (
           <CheckIcon color='#45a951' width={20} height={20} />
         ) : (
-          // <CheckOutlined style={{ color: 'green', fontSize: '20px', marginRight: '10px' }} />
           <CaretRightIcon width={20} height={20} />
-          // <RightOutlined style={{ fontSize: '20px', marginRight: '10px' }} />
         )}
 
         <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
           <Sheet.Container>
             <Sheet.Header />
-            <Sheet.Scroller>
-              <Sheet.Content>
+            <Sheet.Content>
+              <Sheet.Scroller>
                 <Theme>
                   {
                     <Flex m='4' gap='2' direction='column'>
-                      {/* <Text>{description}</Text> */}
                       <Flex mb='5' mt='4' direction={'column'} gap='2'>
                         <Heading align='center'>{title}</Heading>
                         <Flex justify='center'>
@@ -243,7 +240,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                         <Callout.Icon>
                           <InfoCircledIcon width={20} height={20} />
                         </Callout.Icon>
-                        <Callout.Text>{description}asasd</Callout.Text>
+                        <Callout.Text>{description}</Callout.Text>
                       </Callout.Root>
                       {url && (
                         <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
@@ -273,40 +270,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
                       )}
                     </Flex>
                   }
-                  {/* {
-                  <div className={styles.content}>
-                    <div className={styles.information}>
-                      <h2 className={styles.title}>
-                        🚀 {title}
-                      </h2>
-                      <p className={styles.description}>{description}</p>
-                      <div className={styles.linkContainer}>
-                        {url && (
-                          <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
-                        )}
-                      </div>
-                      <>{children}</>
-                    </div>
-
-                    <button
-                      style={{ marginBottom: '10px' }}
-                      className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-                      disabled={isBlocked}
-                      onClick={!isApplied ? handleSendApplication : handleClaimReward}
-                    >
-                      <Text>
-                        {isTimerStarted && timeLeft > 0
-                          ? `Time left: ${formatTime(timeLeft)}`
-                          : isApplied
-                            ? 'Claim Reward'
-                            : 'Check!'}
-                      </Text>
-                    </button>
-                  </div>
-                } */}
                 </Theme>
-              </Sheet.Content>
-            </Sheet.Scroller>
+              </Sheet.Scroller>
+            </Sheet.Content>
           </Sheet.Container>
           <Sheet.Backdrop onTap={() => handleDialogClose()} />
         </Sheet>

@@ -252,7 +252,7 @@ export default function ProfilePage() {
                   <Sheet.Container style={{ overflowY: 'auto' }}>
                     <Sheet.Header />
                     <Sheet.Content>
-                      {
+                      <Sheet.Scroller>
                         <Theme>
                           <Grid gap='8' m='4' mb='5' align='center'>
                             <Flex justify='center'>
@@ -270,7 +270,7 @@ export default function ProfilePage() {
                             </GlowingBtn>
                           </Grid>
                         </Theme>
-                      }
+                      </Sheet.Scroller>
                     </Sheet.Content>
                   </Sheet.Container>
                   <Sheet.Backdrop onTap={() => handleDialogClose()} />

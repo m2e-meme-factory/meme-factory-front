@@ -46,7 +46,7 @@ export const tasks: Autotask[] = [
   {
     id: 5,
     title: 'Subscribe Youtube',
-    description: `Subscribe to our YouTube channel and be a part of our growing audience.`,
+    description: `Subscribe to our YouTube channel and be a part of our growing audience.Subscribe to our YouTube channel and be a part of our growing audience.`,
     reward: 100,
     category: 'Youtube',
     url: 'https://www.youtube.com/',

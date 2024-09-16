@@ -1,4 +1,4 @@
-import { Text, Flex, Heading, Button } from '@radix-ui/themes';
+import { Text, Flex, Heading, Button, Dialog, Box, IconButton } from '@radix-ui/themes';
 import React, { useEffect, useRef, useState } from 'react';
 import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
@@ -22,10 +22,29 @@ import SubtaskCard from '../ProjectPage/components/SubtaskCard/SubtaskCard';
 import { UserRoleInProject } from '../ProjectPage/ProjectPage';
 import AutotaskCard from '../AutotasksProject/components/Autotask/Autotask';
 import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
+import { FilterOutlined } from '@ant-design/icons';
+import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+// import {
+//   Dialog,
+//   DialogClose,
+//   DialogContent,
+//   DialogDescription,
+//   DialogOverlay,
+//   DialogPortal,
+//   DialogTitle,
+//   DialogTrigger,
+// } from '@radix-ui/react-dialog';
+// import { Cross2Icon } from '@radix-ui/react-icons';
 
 const BlockObserver = styled.div`
   height: 40px;
   background-color: black;
+`;
+
+// add props is opened
+const FiltersContent = styled(Box)`
+  overflow: hidden;
+  transition: 0.6s ease all;
 `;
 
 const PublicProjectsPage = () => {
@@ -115,13 +134,23 @@ const PublicProjectsPage = () => {
     loadedPages.current.clear();
   };
 
+  const [isOpened, setIsOpened] = useState(false);
+
   return (
     <>
       <Flex m='4' direction='column'>
-        <Heading>Projects</Heading>
-        <Text color='gray'>Earn M2E by completing them</Text>
+        <Flex justify='between' align='center'>
+          <Box>
+            <Heading>Projects</Heading>
+            <Text color='gray'>Earn M2E by completing them</Text>2
+          </Box>
+
+          <IconButton size='3' onClick={() => setIsOpened(!isOpened)}>
+            <MixerHorizontalIcon />
+          </IconButton>
+        </Flex>
       </Flex>
-      <Flex justify='between' p='4' direction='column'>
+      {/* <Flex justify='between' p='4' direction='column'>
         <Flex direction='column' mb='5'>
           <Text mb='2' weight='medium'>
             Category:
@@ -157,7 +186,44 @@ const PublicProjectsPage = () => {
         <Button mt='3' onClick={handleFindButtonClick}>
           Find
         </Button>
-      </Flex>
+      </Flex> */}
+
+      <FiltersContent style={{ height: isOpened ? 'auto' : '0' }}>
+        <Flex justify='between' p='4' pt='0' direction='column'>
+          <Flex direction='column' gap='4' mb='2'>
+            <Flex direction='column'>
+              <Text weight='medium'>Category:</Text>
+              <Select
+                onChange={handleCategoryChange}
+                placeholder='Select category'
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                options={CATEGORIES}
+                styles={CUSTOM_SELECT_STYLES_SINGLE}
+                isMulti={false}
+                isSearchable={false}
+                isClearable={true}
+              />
+            </Flex>
+            <Flex direction='column'>
+              <Text weight='medium'>Tags:</Text>
+              <Select
+                onChange={handleTagsChange}
+                placeholder='Select tags'
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                options={TAGS}
+                styles={CUSTOM_SELECT_STYLES_MULTI}
+                isSearchable={false}
+                isClearable={true}
+              />
+            </Flex>
+            <Button onClick={handleFindButtonClick}>Find</Button>
+          </Flex>
+        </Flex>
+      </FiltersContent>
+
       <Flex m='4' direction='column'>
         <AutoTasksProjectCard />
         {projects.map((project, index) => (

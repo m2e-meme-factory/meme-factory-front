@@ -1,4 +1,4 @@
-import { Badge, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
+import { Badge, Box, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { CheckOutlined, RightOutlined } from '@ant-design/icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
@@ -239,7 +239,16 @@ const AutotaskCard: FC<AutotaskProps> = ({
                         </i>
                       </Text>
                     </Flex>
-                    <Callout.Root color='gray' mb='4'>
+                    
+                    {category == 'referral' && (
+                      <Box mb='4'>
+                          <CopyableRef
+                            refLink={refLink || "test"}
+                          />
+                      </Box>
+                    )}
+                    
+                    <Callout.Root color='gray' mb={category == 'refferal' ? '4' : '8'}>
                           <Callout.Icon>
                             <InfoCircledIcon width={20} height={20} />
                           </Callout.Icon>
@@ -247,16 +256,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
                         </Callout.Root>
                     {url && (
                       <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
-                    )}
-                    {category == 'referral' && (
-                      <>
-                        <Text color='gray'>Your Ref link:</Text>
-                        <CopyableTextField
-                          size={'2'}
-                          fieldSize='3'
-                          value={refLink || ""}
-                        />
-                      </>
                     )}
                     {category != 'referral' && (
                       <>

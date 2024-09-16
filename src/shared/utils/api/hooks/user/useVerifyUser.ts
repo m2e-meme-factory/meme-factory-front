@@ -5,5 +5,8 @@ import { showSuccessMessage } from '../../../helpers/notify';
 export const useVerifyUser = () =>
   useMutation({
     mutationFn: (config: VerifyUserConfig) => verifyUser(config),
-    onSuccess: () => showSuccessMessage('You are verified!'),
+    onSuccess: () => {
+      showSuccessMessage('You are verified!')
+      setTimeout(() => window.location.reload(), 1000);
+    },
   });

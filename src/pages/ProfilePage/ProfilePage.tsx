@@ -112,6 +112,7 @@ export default function ProfilePage() {
     if (user) {
       handleDialogClose();
       verifyMutation.mutate({ params: { telegramId: user.telegramId } });
+      
     }
   };
 

@@ -1,4 +1,4 @@
-import { Badge, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
+import { Badge, Box, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { CheckOutlined, RightOutlined } from '@ant-design/icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
@@ -217,7 +217,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
             <Sheet.Content>
               <Sheet.Scroller>
                 <Theme>
-                  {
+                  
                     <Flex m='4' gap='2' direction='column'>
                       <Flex mb='5' mt='4' direction={'column'} gap='2'>
                         <Heading align='center'>{title}</Heading>
@@ -269,7 +269,41 @@ const AutotaskCard: FC<AutotaskProps> = ({
                         </>
                       )}
                     </Flex>
-                  }
+                    
+                    {category == 'referral' && (
+                      <Box mb='4'>
+                          <CopyableRef
+                            refLink={refLink || "test"}
+                          />
+                      </Box>
+                    )}
+                    
+                    <Callout.Root color='gray' mb={category == 'refferal' ? '4' : '8'}>
+                          <Callout.Icon>
+                            <InfoCircledIcon width={20} height={20} />
+                          </Callout.Icon>
+                          <Callout.Text>{description}asasd</Callout.Text>
+                        </Callout.Root>
+                    {url && (
+                      <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
+                    )}
+                    {category != 'referral' && (
+                      <>
+                        <Button
+                          mb='2'
+                          size='4'
+                          className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
+                          disabled={isBlocked}
+                          onClick={!isApplied ? handleSendApplication : handleClaimReward}
+                        >
+                          {isTimerStarted && timeLeft > 0
+                            ? `Time left: ${formatTime(timeLeft)}`
+                            : isApplied
+                              ? 'Claim Reward'
+                              : 'Check!'}
+                        </Button>
+                      </>
+                    )}
                 </Theme>
               </Sheet.Scroller>
             </Sheet.Content>

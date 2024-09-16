@@ -1,5 +1,6 @@
 import React, { FC, useRef } from 'react';
 import styles from './CopyableRef.module.css';
+import { Box, Button } from '@radix-ui/themes';
 
 const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -8,8 +9,8 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   const [isCopied, setIsCopied] = React.useState(false);
 
   const handleCopyText = () => {
-    if (inputRef.current) {
-      const textToCopy = inputRef.current.value;
+    // if (inputRef.current) {
+      const textToCopy = refLink;
 
       if (navigator.clipboard) {
         navigator.clipboard
@@ -30,7 +31,7 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
       } else {
         copyFallback(textToCopy);
       }
-    }
+    // }
   };
 
   const copyFallback = (text: string) => {
@@ -57,18 +58,23 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   };
 
   return (
-    <div className={styles.refLinkContainer}>
-      <h4 className={styles.title}>Your referral link:</h4>
-      <div className={styles.inputContainer}>
-        <input className={styles.refInput} defaultValue={refLink ?? ' '} ref={inputRef} readOnly />
-        <button
-          className={isCopied ? styles.copiedButton : styles.copyButton}
-          onClick={handleCopyText}
-        >
+    <Box asChild width="100%">
+      <Button onClick={handleCopyText} size="4">
           {copyButtonText}
-        </button>
-      </div>
-    </div>
+      </Button>
+    </Box>
+    // <div className={styles.refLinkContainer}>
+    //   <h4 className={styles.title}>Your referral link:</h4>
+    //   <div className={styles.inputContainer}>
+    //     <input className={styles.refInput} defaultValue={refLink ?? ' '} ref={inputRef} readOnly />
+    //     <button
+    //       className={isCopied ? styles.copiedButton : styles.copyButton}
+    //       onClick={handleCopyText}
+    //     >
+    //       {copyButtonText}
+    //     </button>
+    //   </div>
+    // </div>
   );
 };
 

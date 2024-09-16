@@ -77,7 +77,7 @@ const AutoTasksProject = () => {
     <Flex direction='column'>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column' gap='2'>
-          <Heading weight='bold'>Tasks</Heading>
+          <Heading weight='bold'>Airdrop Tasks</Heading>
 
           <Flex direction='column' mb='5'>
             <Flex align='center' mb='4'>
@@ -90,26 +90,51 @@ const AutoTasksProject = () => {
                 <Spinner />
               </Flex>
             ) : (
-              autotasks.map((task) => (
-                <AutotaskCard
-                  key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  description={task.description}
-                  price={task.reward}
-                  children={task.children}
-                  url={task.url}
-                  userId={parseInt(user?.id ?? '')}
-                  done={doneTasksIds.has(task.id)}
-                  claimed={claimedTasksIds.has(task.id)}
-                  createdAt={
-                    applications.find((application) => task.id === application.taskId)?.createdAt
-                  }
-                  icon={task.icon}
-                  category={task.category}
-                  refLink={refData?.refLink}
-                />
-              ))
+              autotasks.map((task) =>
+                (
+                  task.category == "referral" ? 
+                  
+                  // Referal autotask:
+                  <AutotaskCard
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    description={task.description}
+                    price={task.reward}
+                    children={task.children}
+                    url={task.url}
+                    userId={parseInt(user?.id ?? '')}
+                    done={(refData?.count || 0) > 0}
+                    claimed={(refData?.count || 0) > 0}
+                    createdAt={
+                      applications.find((application) => task.id === application.taskId)?.createdAt
+                    }
+                    icon={task.icon}
+                    category={task.category}
+                    refLink={refData?.refLink}
+                  />
+
+                  :
+                  <AutotaskCard
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    description={task.description}
+                    price={task.reward}
+                    children={task.children}
+                    url={task.url}
+                    userId={parseInt(user?.id ?? '')}
+                    done={doneTasksIds.has(task.id)}
+                    claimed={claimedTasksIds.has(task.id)}
+                    createdAt={
+                      applications.find((application) => task.id === application.taskId)?.createdAt
+                    }
+                    icon={task.icon}
+                    category={task.category}
+                    refLink={refData?.refLink}
+                  />
+                )
+              )
             )}
           </Flex>
         </Flex>

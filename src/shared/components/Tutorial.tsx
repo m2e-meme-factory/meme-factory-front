@@ -11,6 +11,7 @@ import airdrop from './../imgs/airdrop-green.png';
 import projects from './../imgs/first_meme.png';
 import styled from 'styled-components';
 import useAnimationFrame from '../utils/animations/useAnimationFrame';
+import GlowingButton from './Buttons/GlowingButton';
 
 interface TutorialProps {
   onComplete: () => void;
@@ -294,7 +295,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               </Text>
             </Box>
           </StyledCard>
-          <Button
+          <GlowingButton
             size="3"
             onClick={handleTutorialCompleted}
             style={{
@@ -306,7 +307,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             }}
           >
             Make Money
-          </Button>
+          </GlowingButton>
         </div>
       </div>
       <div className='swiper-pagination'></div>

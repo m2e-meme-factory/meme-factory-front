@@ -37,30 +37,7 @@ import { Sheet } from 'react-modal-sheet';
 import verified from './../../shared/imgs/verify.png';
 import { List } from '@radix-ui/react-tabs';
 import styled from 'styled-components';
-
-const GlowingBtn = styled(Button)`
-  background: linear-gradient(180deg, var(--brand-color) 0%, var(--brand-color) 100%);
-  box-shadow: 0px 0px 20px 0px var(--brand-color);
-  animation: glow 3s ease-in-out infinite alternate;
-
-  @keyframes glow {
-    0% {
-      box-shadow: 0px 0px 20px 0px var(--brand-color);
-    }
-
-    50% {
-      box-shadow: 0px 0px 20px -20px var(--brand-color);
-    }
-
-    100% {
-      box-shadow: 0px 0px 20px 0px var(--brand-color);
-    }
-  }
-
-  &:hover {
-    box-shadow: 0px 0px 20px 0px var(--brand-color);
-  }
-`;
+import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -241,9 +218,9 @@ export default function ProfilePage() {
                     {/* </Text> */}
                   </Callout.Text>
                 </Callout.Root>
-                <GlowingBtn size='3' onClick={handleDialogOpen}>
+                <GlowingButton size='3' onClick={handleDialogOpen}>
                   Verify
-                </GlowingBtn>
+                </GlowingButton>
 
                 <Sheet
                   isOpen={isModalVisible}
@@ -266,9 +243,9 @@ export default function ProfilePage() {
                               <Blockquote>High priority for checking task completion</Blockquote>
                             </Grid>
 
-                            <GlowingBtn size='4' onClick={handleVerify} style={{ width: '100%' }}>
+                            <GlowingButton size='4' onClick={handleVerify} style={{ width: '100%' }}>
                               Verify Now
-                            </GlowingBtn>
+                            </GlowingButton>
                           </Grid>
                         </Theme>
                       </Sheet.Scroller>

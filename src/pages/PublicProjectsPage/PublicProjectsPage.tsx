@@ -42,10 +42,6 @@ const BlockObserver = styled.div`
 `;
 
 // add props is opened
-const FiltersContent = styled(Box)`
-  overflow: hidden;
-  transition: 0.6s ease all;
-`;
 
 const PublicProjectsPage = () => {
   const loadedPages = useRef(new Set<number>());
@@ -188,7 +184,7 @@ const PublicProjectsPage = () => {
         </Button>
       </Flex> */}
 
-      <FiltersContent style={{ height: isOpened ? 'auto' : '0' }}>
+      <Box style={{ display: isOpened ? 'block' : 'none' }}>
         <Flex justify='between' p='4' pt='0' direction='column'>
           <Flex direction='column' gap='4' mb='2'>
             <Flex direction='column'>
@@ -222,7 +218,7 @@ const PublicProjectsPage = () => {
             <Button onClick={handleFindButtonClick}>Find</Button>
           </Flex>
         </Flex>
-      </FiltersContent>
+      </Box>
 
       <Flex m='4' direction='column'>
         <AutoTasksProjectCard />

@@ -23,9 +23,13 @@ export default function About() {
             Access token:
           </Text>
           <CopyableTextField size={'2'} fieldSize='3' value={localStorage.getItem('token') ?? ''} />
-          <Button onClick={() => {    
-            localStorage.setItem('onboardCompleted', 'false');
-          }}>Tutoral again</Button>
+          <Button
+            onClick={() => {
+              localStorage.setItem('onboardCompleted', 'false');
+            }}
+          >
+            Tutoral again
+          </Button>
         </Grid>
       </Card>
     </>

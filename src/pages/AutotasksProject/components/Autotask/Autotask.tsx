@@ -217,76 +217,40 @@ const AutotaskCard: FC<AutotaskProps> = ({
             <Sheet.Content>
               <Sheet.Scroller>
                 <Theme>
-                  
-                    <Flex m='4' gap='2' direction='column'>
-                      <Flex mb='5' mt='4' direction={'column'} gap='2'>
-                        <Heading align='center'>{title}</Heading>
-                        <Flex justify='center'>
-                          <Badge size='3' color={isApplied ? 'yellow' : 'gray'} variant='soft'>
-                            {isTimerStarted && timeLeft > 0
-                              ? `On approve`
-                              : isApplied
-                                ? 'Approved'
-                                : 'Pending'}
-                          </Badge>
-                        </Flex>
-                        <Text align='center' color='gray'>
-                          <i>
-                            +{price} <Badge color='bronze'>M2E</Badge>
-                          </i>
-                        </Text>
+                  <Flex m='4' gap='2' direction='column'>
+                    <Flex mb='5' mt='4' direction={'column'} gap='2'>
+                      <Heading align='center'>{title}</Heading>
+                      <Flex justify='center'>
+                        <Badge size='3' color={isApplied ? 'yellow' : 'gray'} variant='soft'>
+                          {isTimerStarted && timeLeft > 0
+                            ? `On approve`
+                            : isApplied
+                              ? 'Approved'
+                              : 'Pending'}
+                        </Badge>
                       </Flex>
-                      <Callout.Root color='gray' mb='4'>
-                        <Callout.Icon>
-                          <InfoCircledIcon width={20} height={20} />
-                        </Callout.Icon>
-                        <Callout.Text>{description}</Callout.Text>
-                      </Callout.Root>
-                      {url && (
-                        <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
-                      )}
-                      {category == 'referral' && (
-                        <>
-                          <Text color='gray'>Your Ref link:</Text>
-                          <CopyableTextField size={'2'} fieldSize='3' value={refLink || ''} />
-                        </>
-                      )}
-                      {category != 'referral' && (
-                        <>
-                          <Button
-                            mb='2'
-                            size='4'
-                            className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-                            disabled={isBlocked}
-                            onClick={!isApplied ? handleSendApplication : handleClaimReward}
-                          >
-                            {isTimerStarted && timeLeft > 0
-                              ? `Time left: ${formatTime(timeLeft)}`
-                              : isApplied
-                                ? 'Claim Reward'
-                                : 'Check!'}
-                          </Button>
-                        </>
-                      )}
+                      <Text align='center' color='gray'>
+                        <i>
+                          +{price} <Badge color='bronze'>M2E</Badge>
+                        </i>
+                      </Text>
                     </Flex>
-                    
                     {category == 'referral' && (
                       <Box mb='4'>
-                          <CopyableRef
-                            refLink={refLink || "test"}
-                          />
+                        <CopyableRef refLink={refLink || 'test'} />
                       </Box>
                     )}
-                    
-                    <Callout.Root color='gray' mb={category == 'refferal' ? '4' : '8'}>
-                          <Callout.Icon>
-                            <InfoCircledIcon width={20} height={20} />
-                          </Callout.Icon>
-                          <Callout.Text>{description}asasd</Callout.Text>
-                        </Callout.Root>
+
+                    <Callout.Root color='gray' mb={category == 'refferal' ? '8' : '4'}>
+                      <Callout.Icon>
+                        <InfoCircledIcon width={20} height={20} />
+                      </Callout.Icon>
+                      <Callout.Text>{description}</Callout.Text>
+                    </Callout.Root>
                     {url && (
                       <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
                     )}
+                    
                     {category != 'referral' && (
                       <>
                         <Button
@@ -304,6 +268,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                         </Button>
                       </>
                     )}
+                  </Flex>
                 </Theme>
               </Sheet.Scroller>
             </Sheet.Content>

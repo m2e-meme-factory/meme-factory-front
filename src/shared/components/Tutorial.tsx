@@ -153,7 +153,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
     if (currntSlide) {
       const offsetNormalized = currntSlide.getBoundingClientRect().x / html.width;
       setWithIndex(currentSlideIndex, offsetNormalized);
-      console.log(currentSlideIndex, offsetNormalized, currntSlide.getBoundingClientRect().x);
     }
     
     
@@ -199,7 +198,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             </Iphone>
           </Flex>
           <StyledCard>
-            <Box pt={{initial: "2", xs: "2", sm: "4"}} pb={{initial: "2", xs: "2", sm: "4"}}>
+            <Box pt='2' pb='2'>
               <Heading size="5">
               Join Airdrop!
               </Heading>
@@ -241,7 +240,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           </Flex>
           
           <StyledCard>
-          <Box pt={{initial: "2", xs: "2", sm: "4"}} pb={{initial: "2", xs: "2", sm: "4"}}>
+          <Box pt='2' pb='2'>
               <Heading size="5">
               Invite Friends! 
               </Heading>
@@ -282,7 +281,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             </Iphone>
           </Flex>
           <StyledCard>
-          <Box pt={{initial: "2", xs: "2", sm: "4"}} pb={{initial: "2", xs: "2", sm: "4"}}>
+          <Box pt='2' pb='2'>
               <Heading size="5">
               Create content!
               </Heading>

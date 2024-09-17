@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import RadditOutlined from '../../imgs/RadditOutlined';
+import { Flex } from '@radix-ui/themes';
 
 type IconType = {
   [key: number]: ReactNode;
@@ -87,9 +88,11 @@ const icons: IconType = {
     />
   ),
   8: (
-    <RadditOutlined 
-      style={{ fill: 'var(--gray-10)', margin: '0 15px 0 10px', height: '24px' }} 
-    />
+    <Flex justify='center' align='center'>
+      <RadditOutlined 
+        style={{ fill: 'var(--gray-10)', margin: '0 15px 0 10px', height: '24px' }} 
+      />
+    </Flex>
   ),
   9: (
     <MediumOutlined 

@@ -61,7 +61,7 @@ export const tasks: Autotask[] = [
     url: 'https://www.tiktok.com/@m2e_pro',
   },
   {
-    id: 6,
+    id: 7,
     title: 'Follow us on Instagram',
     description: `Follow MemeFactory on Instagram to stay updated with our latest posts, stories, and exclusive content. `,
     reward: 100,
@@ -69,7 +69,7 @@ export const tasks: Autotask[] = [
     url: 'https://www.instagram.com/m2e__pro/',
   },
   {
-    id: 7,
+    id: 8,
     title: 'Visit our Raddit',
     description: `Show your support by liking our post on Raddit.`,
     reward: 100,
@@ -77,7 +77,7 @@ export const tasks: Autotask[] = [
     url: 'https://www.reddit.com/user/m2epro/',
   },
   {
-    id: 8,
+    id: 9,
     title: 'Like our post on Medium',
     description: `Show your support by liking our post on Medium.`,
     reward: 100,
@@ -85,7 +85,7 @@ export const tasks: Autotask[] = [
     url: 'https://medium.com/@mail_13487',
   },
   {
-    id: 9,
+    id: 10,
     title: 'Join Discord',
     description: `Become a part of the Meme Factory community by joining our Discord channel.`,
     reward: 100,

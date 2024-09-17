@@ -180,7 +180,7 @@ export default function ProfilePage() {
 
           <Card m='4'>
             <Grid gap='4'>
-              <Heading>Referas</Heading>
+              <Heading>Referals</Heading>
               <Text color='gray'>Your Ref link:</Text>
               <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} />
               <DataList.Root mt='4'>

@@ -11,6 +11,7 @@ export interface Autotask {
   icon?: ReactNode;
 }
 
+
 export const tasks: Autotask[] = [
   {
     id: 1,
@@ -33,7 +34,7 @@ export const tasks: Autotask[] = [
     description: `Stay updated with the latest news and updates by following Meme Factory on X.`,
     reward: 100,
     category: 'X',
-    url: 'https://x.com/',
+    url: 'https://twitter.com/m2e_pro',
   },
   {
     id: 4,
@@ -41,15 +42,23 @@ export const tasks: Autotask[] = [
     description: `Become a part of the Meme Factory community by joining our Telegram channel.`,
     reward: 100,
     category: 'Telegram',
-    url: 'https://t.me/miniapped_bot/',
+    url: 'https://t.me/m2e_pro',
   },
   {
     id: 5,
     title: 'Subscribe Youtube',
-    description: `Subscribe to our YouTube channel and be a part of our growing audience.Subscribe to our YouTube channel and be a part of our growing audience.`,
+    description: `Subscribe to our YouTube channel and be a part of our growing audience.`,
     reward: 100,
     category: 'Youtube',
-    url: 'https://www.youtube.com/',
+    url: 'https://www.youtube.com/channel/UCZ94hPs00bBTxWsZjGZp_gQ ',
+  },
+  {
+    id: 6,
+    title: 'Subscribe on Tik Tok',
+    description: `Subscribe to our Tik Tok channel and be a part of our growing audience.`,
+    reward: 100,
+    category: 'Tik Tok',
+    url: 'https://www.tiktok.com/@m2e_pro',
   },
   {
     id: 6,
@@ -57,14 +66,30 @@ export const tasks: Autotask[] = [
     description: `Follow MemeFactory on Instagram to stay updated with our latest posts, stories, and exclusive content. `,
     reward: 100,
     category: 'Instagram',
-    url: 'https://www.instagram.com/',
+    url: 'https://www.instagram.com/m2e__pro/',
   },
   {
     id: 7,
-    title: 'Like our post on Facebook',
-    description: `Show your support by liking our post on Facebook.`,
+    title: 'Visit our Raddit',
+    description: `Show your support by liking our post on Raddit.`,
     reward: 100,
-    category: 'Facebook',
-    url: 'https://www.facebook.com/',
+    category: 'Raddit',
+    url: 'https://www.reddit.com/user/m2epro/',
+  },
+  {
+    id: 8,
+    title: 'Like our post on Medium',
+    description: `Show your support by liking our post on Medium.`,
+    reward: 100,
+    category: 'Medium',
+    url: 'https://medium.com/@mail_13487',
+  },
+  {
+    id: 9,
+    title: 'Join Discord',
+    description: `Become a part of the Meme Factory community by joining our Discord channel.`,
+    reward: 100,
+    category: 'Discord',
+    url: 'https://discord.com/channels/@me',
   },
 ];

@@ -138,7 +138,7 @@ const PublicProjectsPage = () => {
         <Flex justify='between' align='center'>
           <Box>
             <Heading>Projects</Heading>
-            <Text color='gray'>Earn M2E by completing them</Text>2
+            <Text color='gray'>Join project and earn profit!</Text>
           </Box>
 
           <IconButton size='3' onClick={() => setIsOpened(!isOpened)}>

@@ -93,10 +93,6 @@ max-width: 350px;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-
-  & :before {
-    background-color: #000 !important;
-  }
 `
 const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
   const swiperRef = useRef<Swiper | null>(null);

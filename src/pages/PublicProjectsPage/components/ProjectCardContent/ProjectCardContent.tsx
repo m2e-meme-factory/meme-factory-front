@@ -17,11 +17,11 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
   return (
     <Flex direction='column' m='4'>
       <SecondaryHeading>{project.title}</SecondaryHeading>
-      <Flex direction='row' justify='between' align='center'>
+      <Flex direction='row' justify='start' align='center'>
         <Text mb='3' color='yellow' weight='medium'>
-          {project.category}
+          {project.category + ':'}
         </Text>
-        <Flex mb='3'>
+        <Flex mb='3' ml='2'>
           <Text weight='medium'>
             {project.tags.map((tag, index) => (
               <span key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>

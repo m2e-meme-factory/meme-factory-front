@@ -1,33 +1,43 @@
-import { Text, Flex, Heading, Button, Box, Tabs, Callout } from '@radix-ui/themes';
 import React, { useEffect, useRef, useState } from 'react';
-import ProjectCard from './components/ProjectCard/ProjectCard';
-import { CATEGORIES } from '../../shared/consts/categories';
-import { TAGS } from '../../shared/consts/tags';
+import { Text, Flex, Heading, Button, Box, Tabs, Callout } from '@radix-ui/themes';
+import { motion, AnimatePresence } from 'framer-motion';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { useInView } from 'react-intersection-observer';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { useSwipeable } from 'react-swipeable';
+import { Cross2Icon, InfoCircledIcon } from '@radix-ui/react-icons';
+
+import ProjectCard from './components/ProjectCard/ProjectCard';
+import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
+import CreatorsProjects from '../MyProjectsPage/components/CreatorsProjects';
+import AdvertisersProjects from '../MyProjectsPage/components/AdvertisersProjects';
+import Loading from '../../shared/components/Loading';
+
+import { CATEGORIES } from '../../shared/consts/categories';
+import { TAGS } from '../../shared/consts/tags';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
-import Loading from '../../shared/components/Loading';
+import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
+import { RootState } from '../../shared/utils/redux/store';
+import { Project } from 'api';
 import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import { Project } from 'api';
-import { useInView } from 'react-intersection-observer';
-import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../shared/utils/redux/store';
-import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
-
-import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
-import { Cross2Icon, InfoCircledIcon } from '@radix-ui/react-icons';
-import CreatorsProjects from '../MyProjectsPage/components/CreatorsProjects';
-import AdvertisersProjects from '../MyProjectsPage/components/AdvertisersProjects';
-import { useSwipeable } from 'react-swipeable';
 
 const BlockObserver = styled.div`
   height: 40px;
   background-color: black;
+`;
+
+const TabContentWrapper = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 enum TabsOption {
@@ -35,7 +45,27 @@ enum TabsOption {
   PUBLIC = 'public',
 }
 
-const PublicProjectsPage = () => {
+const tabVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+};
+
+const tabTransition = {
+  x: { type: 'spring', stiffness: 300, damping: 30 },
+  opacity: { duration: 0.2 },
+};
+
+export default function Component() {
   const loadedPages = useRef(new Set<number>());
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -52,27 +82,12 @@ const PublicProjectsPage = () => {
   const [isColumn, setIsColumn] = useState(false);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const tagsRef = useRef<HTMLDivElement | null>(null);
-  const [currentTab, setCurrentTab] = useState<TabsOption>('public' as TabsOption);
+  const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.PUBLIC);
   const [showFindButton, setShowFindButton] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
+  const [isCalloutVisible, setIsCalloutVisible] = useState(true);
 
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: (_eventData) => setCurrentTab('my' as TabsOption),
-    onSwipedRight: (_eventData) => setCurrentTab('public' as TabsOption),
-    trackMouse: true,
-  });
-
-  useEffect(() => {
-    if (categoryRef.current && tagsRef.current) {
-      const categoryHeight = categoryRef.current.offsetHeight;
-      const tagsHeight = tagsRef.current.offsetHeight;
-
-      if (tagsHeight > categoryHeight) {
-        setIsColumn(true);
-      } else {
-        setIsColumn(false);
-      }
-    }
-  }, [tempCategory, tempTags]);
+  const [[page, direction], setPage] = useState([0, 0]);
 
   const DISPLAY_LIMIT = 10;
 
@@ -91,6 +106,12 @@ const PublicProjectsPage = () => {
 
   const { ref, inView } = useInView({
     threshold: 1.0,
+  });
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => handleTabChange(TabsOption.MY),
+    onSwipedRight: () => handleTabChange(TabsOption.PUBLIC),
+    trackMouse: true,
   });
 
   useEffect(() => {
@@ -130,6 +151,19 @@ const PublicProjectsPage = () => {
     }
   }, [inView]);
 
+  useEffect(() => {
+    if (categoryRef.current && tagsRef.current) {
+      const categoryHeight = categoryRef.current.offsetHeight;
+      const tagsHeight = tagsRef.current.offsetHeight;
+
+      if (tagsHeight > categoryHeight) {
+        setIsColumn(true);
+      } else {
+        setIsColumn(false);
+      }
+    }
+  }, [tempCategory, tempTags]);
+
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
     setTempTags(tags);
@@ -158,12 +192,14 @@ const PublicProjectsPage = () => {
   };
 
   const handleTabChange = (value: string) => {
-    setCurrentTab(value as TabsOption);
+    const newTab = value as TabsOption;
+    setPage([
+      page + (newTab === TabsOption.PUBLIC ? -1 : 1),
+      newTab === TabsOption.PUBLIC ? -1 : 1,
+    ]);
+    setCurrentTab(newTab);
     setIsOpened(false);
   };
-
-  const [isOpened, setIsOpened] = useState(false);
-  const [isCalloutVisible, setIsCalloutVisible] = useState(true);
 
   return (
     <div {...swipeHandlers}>
@@ -196,107 +232,121 @@ const PublicProjectsPage = () => {
           </Flex>
         </Tabs.List>
 
-        <Box pt='3'>
-          <Tabs.Content value='public'>
-            <>
-              <Box style={{ display: isOpened && user?.role !== 'advertiser' ? 'block' : 'none' }}>
-                <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
-                  <Flex direction='column' gap='2' mb='1'>
-                    <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap'>
-                      <div
-                        style={{
-                          flexGrow: 1,
-                          width: isColumn ? '100%' : 'auto',
-                        }}
-                        ref={categoryRef}
-                      >
-                        <Select
-                          onChange={handleCategoryChange}
-                          placeholder='Select category'
-                          closeMenuOnSelect={true}
-                          components={animatedComponents}
-                          options={CATEGORIES}
-                          styles={CUSTOM_SELECT_STYLES_SINGLE}
-                          isMulti={false}
-                          isSearchable={false}
-                          isClearable={true}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          flexGrow: 1,
-                          width: isColumn ? '100%' : 'auto',
-                        }}
-                        ref={tagsRef}
-                      >
-                        <Select
-                          onChange={handleTagsChange}
-                          placeholder='Select tags'
-                          closeMenuOnSelect={false}
-                          components={animatedComponents}
-                          isMulti
-                          options={TAGS}
-                          styles={CUSTOM_SELECT_STYLES_MULTI}
-                          isSearchable={false}
-                          isClearable={true}
-                        />
-                      </div>
+        <Box pt='3' style={{ position: 'relative', minHeight: '600px' }}>
+          <AnimatePresence initial={false} custom={direction}>
+            <TabContentWrapper
+              key={currentTab}
+              custom={direction}
+              variants={tabVariants}
+              initial='enter'
+              animate='center'
+              exit='exit'
+              transition={tabTransition}
+            >
+              {currentTab === TabsOption.PUBLIC && (
+                <>
+                  <Box
+                    style={{ display: isOpened && user?.role !== 'advertiser' ? 'block' : 'none' }}
+                  >
+                    <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
+                      <Flex direction='column' gap='2' mb='1'>
+                        <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap'>
+                          <div
+                            style={{
+                              flexGrow: 1,
+                              width: isColumn ? '100%' : 'auto',
+                            }}
+                            ref={categoryRef}
+                          >
+                            <Select
+                              onChange={handleCategoryChange}
+                              placeholder='Select category'
+                              closeMenuOnSelect={true}
+                              components={animatedComponents}
+                              options={CATEGORIES}
+                              styles={CUSTOM_SELECT_STYLES_SINGLE}
+                              isMulti={false}
+                              isSearchable={false}
+                              isClearable={true}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              flexGrow: 1,
+                              width: isColumn ? '100%' : 'auto',
+                            }}
+                            ref={tagsRef}
+                          >
+                            <Select
+                              onChange={handleTagsChange}
+                              placeholder='Select tags'
+                              closeMenuOnSelect={false}
+                              components={animatedComponents}
+                              isMulti
+                              options={TAGS}
+                              styles={CUSTOM_SELECT_STYLES_MULTI}
+                              isSearchable={false}
+                              isClearable={true}
+                            />
+                          </div>
+                        </Flex>
+                        {showFindButton && <Button onClick={handleFindButtonClick}>Find</Button>}
+                      </Flex>
                     </Flex>
-                    {showFindButton && <Button onClick={handleFindButtonClick}>Find</Button>}
+                  </Box>
+                  {isCalloutVisible && (
+                    <Flex m='4'>
+                      <Callout.Root
+                        color='yellow'
+                        style={{ position: 'relative', padding: '1rem' }}
+                      >
+                        <Callout.Icon style={{ marginTop: '0.4rem' }}>
+                          <InfoCircledIcon />
+                        </Callout.Icon>
+                        <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
+                          Discover a range of available projects on this page, where you can join
+                          and tackle tasks to earn m2e rewards.
+                        </Callout.Text>
+                        <button
+                          onClick={() => {
+                            setIsCalloutVisible(false);
+                          }}
+                          style={{
+                            position: 'absolute',
+                            top: '0.5rem',
+                            right: '0.5rem',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <Cross2Icon />
+                        </button>
+                      </Callout.Root>
+                    </Flex>
+                  )}
+                  <Flex m='4' direction='column'>
+                    <AutoTasksProjectCard />
+                    {projects.map((project, index) => (
+                      <ProjectCard key={index} project={project} />
+                    ))}
                   </Flex>
-                </Flex>
-              </Box>
-              {isCalloutVisible && (
-                <Flex m='4'>
-                  <Callout.Root color='yellow' style={{ position: 'relative', padding: '1rem' }}>
-                    <Callout.Icon style={{ marginTop: '0.4rem' }}>
-                      <InfoCircledIcon />
-                    </Callout.Icon>
-                    <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
-                      Discover a range of available projects on this page, where you can join and
-                      tackle tasks to earn m2e rewards.
-                    </Callout.Text>
-                    <button
-                      onClick={() => {
-                        setIsCalloutVisible(false);
-                      }}
-                      style={{
-                        position: 'absolute',
-                        top: '0.5rem',
-                        right: '0.5rem',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Cross2Icon />
-                    </button>
-                  </Callout.Root>
-                </Flex>
+                  {isLoading && <Loading />}
+                  {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
+                </>
               )}
-              <Flex m='4' direction='column'>
-                <AutoTasksProjectCard />
-                {projects.map((project, index) => (
-                  <ProjectCard key={index} project={project} />
-                ))}
-              </Flex>
-              {isLoading && <Loading />}
-              {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
-            </>
-          </Tabs.Content>
-
-          <Tabs.Content value='my'>
-            <>
-              {user?.role === 'creator' && (
-                <CreatorsProjects user={user} isOpened={isOpened} setIsOpened={setIsOpened} />
+              {currentTab === TabsOption.MY && (
+                <>
+                  {user?.role === 'creator' && (
+                    <CreatorsProjects user={user} isOpened={isOpened} setIsOpened={setIsOpened} />
+                  )}
+                  {user?.role === 'advertiser' && <AdvertisersProjects user={user} />}
+                </>
               )}
-              {user?.role === 'advertiser' && <AdvertisersProjects user={user} />}
-            </>
-          </Tabs.Content>
+            </TabContentWrapper>
+          </AnimatePresence>
         </Box>
       </Tabs.Root>
     </div>
   );
-};
-
-export default PublicProjectsPage;
+}

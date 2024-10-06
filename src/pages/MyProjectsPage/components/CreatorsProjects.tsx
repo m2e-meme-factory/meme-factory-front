@@ -10,6 +10,7 @@ import { Option } from '../../../@types/app';
 import { APPLICATION_STATUSES } from '../../../shared/consts/application-statuses';
 import MyProjectCardForCreator from './MyProjectCard/MyProjectCardForCreator';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { setProject } from '../../../shared/utils/redux/project/projectSlice';
 
 interface CreatorsProjectsProps {
   user: User;
@@ -27,6 +28,13 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
   const { data: response } = useGetUserProgresses({
     userId: user?.id || '',
   });
+
+  useEffect(() => {
+    if (response) {
+      let projects = response.data.map((progress) => progress.project);
+      setMyProjects(projects);
+    }
+  }, [response]);
 
   const handleProjectStatusChange = (selectedStatus: MultiValue<Option>) => {
     setSelectedProjectStatuses(selectedStatus.map((status) => status.value));
@@ -48,7 +56,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
           const isApplicationStatusMatch =
             selectedApplicationStatuses.length === 0 ||
             selectedApplicationStatuses.includes(progressWithProject.progress.status);
-
+          console.log(isProjectStatusMatch, isApplicationStatusMatch);
           return isProjectStatusMatch && isApplicationStatusMatch;
         })
         .map((progress) => progress.project);
@@ -59,9 +67,11 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
     }
   };
 
+  console.log(myProjects);
+
   return (
     <>
-      <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
+      <Flex justify='center' p='1' pt='0' pb='0' direction='column'>
         <div style={{ display: isOpened ? 'block' : 'none' }}>
           <Flex direction='column' gap='2'>
             <Flex direction='row' justify='between' gap='2'>

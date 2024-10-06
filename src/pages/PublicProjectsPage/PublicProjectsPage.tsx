@@ -221,14 +221,16 @@ export default function Component() {
                 {user?.role === 'creator' ? 'Joined' : 'My projects'}
               </Tabs.Trigger>
             </Flex>
-            <Button
-              size='1'
-              mr='3'
-              style={{ borderRadius: '15px' }}
-              onClick={() => setIsOpened(!isOpened)}
-            >
-              Filters
-            </Button>
+            {!(user?.role === 'advertiser' && currentTab === 'my') && (
+              <Button
+                size='1'
+                mr='3'
+                style={{ borderRadius: '15px' }}
+                onClick={() => setIsOpened(!isOpened)}
+              >
+                Filters
+              </Button>
+            )}
           </Flex>
         </Tabs.List>
 
@@ -245,9 +247,7 @@ export default function Component() {
             >
               {currentTab === TabsOption.PUBLIC && (
                 <>
-                  <Box
-                    style={{ display: isOpened && user?.role !== 'advertiser' ? 'block' : 'none' }}
-                  >
+                  <Box style={{ display: isOpened ? 'block' : 'none' }}>
                     <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
                       <Flex direction='column' gap='2' mb='1'>
                         <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap'>
@@ -325,7 +325,7 @@ export default function Component() {
                       </Callout.Root>
                     </Flex>
                   )}
-                  <Flex m='4' direction='column'>
+                  <Flex m='4' mb='8' direction='column'>
                     <AutoTasksProjectCard />
                     {projects.map((project, index) => (
                       <ProjectCard key={index} project={project} />
@@ -338,7 +338,9 @@ export default function Component() {
               {currentTab === TabsOption.MY && (
                 <>
                   {user?.role === 'creator' && (
-                    <CreatorsProjects user={user} isOpened={isOpened} setIsOpened={setIsOpened} />
+                    <Flex justify='center'>
+                      <CreatorsProjects user={user} isOpened={isOpened} setIsOpened={setIsOpened} />
+                    </Flex>
                   )}
                   {user?.role === 'advertiser' && <AdvertisersProjects user={user} />}
                 </>

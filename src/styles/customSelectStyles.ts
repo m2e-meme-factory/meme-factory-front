@@ -3,7 +3,7 @@ import { StylesConfig } from 'react-select';
 export const CUSTOM_SELECT_STYLES_MULTI: StylesConfig<any, true> = {
   control: (provided, state) => ({
     ...provided,
-    // 'width': '91vw',
+    'width': '100%',
     'backgroundColor': '#121212',
     'borderColor': state.isFocused ? '#fecf0a' : 'grey',
     'boxShadow': state.isFocused ? `0 0 0 1px #fecf0a` : 'none',
@@ -13,7 +13,7 @@ export const CUSTOM_SELECT_STYLES_MULTI: StylesConfig<any, true> = {
   }),
   menu: (provided) => ({
     ...provided,
-    // width: '91vw',
+    width: '100%',
     backgroundColor: '#121212',
   }),
   option: (provided, state) => ({

@@ -12,29 +12,15 @@ import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import { Project, ProjectProgress, User } from 'api';
+import { Project } from 'api';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
-import SubtaskCard from '../ProjectPage/components/SubtaskCard/SubtaskCard';
-import { UserRoleInProject } from '../ProjectPage/ProjectPage';
-import AutotaskCard from '../AutotasksProject/components/Autotask/Autotask';
+
 import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
-import { FilterOutlined } from '@ant-design/icons';
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
-// import {
-//   Dialog,
-//   DialogClose,
-//   DialogContent,
-//   DialogDescription,
-//   DialogOverlay,
-//   DialogPortal,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@radix-ui/react-dialog';
-// import { Cross2Icon } from '@radix-ui/react-icons';
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -45,7 +31,6 @@ const BlockObserver = styled.div`
 
 const PublicProjectsPage = () => {
   const loadedPages = useRef(new Set<number>());
-  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
 
   const [tempTags, setTempTags] = useState<string[]>([]);
@@ -58,12 +43,27 @@ const PublicProjectsPage = () => {
   const [isEnd, setIsEnd] = useState(false);
   const [refsCount, setRefsCount] = useState<number>(0);
   const [autoTaskDone, setAutoTaskDone] = useState<boolean>(false);
+  const [isColumn, setIsColumn] = useState(false);
+  const categoryRef = useRef<HTMLDivElement | null>(null);
+  const tagsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (categoryRef.current && tagsRef.current) {
+      const categoryHeight = categoryRef.current.offsetHeight;
+      const tagsHeight = tagsRef.current.offsetHeight;
+
+      if (tagsHeight > categoryHeight) {
+        setIsColumn(true);
+      } else {
+        setIsColumn(false);
+      }
+    }
+  }, [tempCategory, tempTags]);
 
   const DISPLAY_LIMIT = 10;
 
   const previousTags = useRef<string[]>(tags);
   const previousCategory = useRef<string | null>(category);
-
   const animatedComponents = makeAnimated();
 
   const { data, isLoading } = useGetPublicProjects({
@@ -102,6 +102,9 @@ const PublicProjectsPage = () => {
         previousCategory.current = category;
         setIsEnd(false);
       } else {
+        if (currentPage === 1) {
+          setProjects([]);
+        }
         setIsEnd(true);
       }
     }
@@ -124,8 +127,14 @@ const PublicProjectsPage = () => {
   };
 
   const handleFindButtonClick = () => {
-    setTags(tempTags);
-    setCategory(tempCategory);
+    if (tempTags.length === 0 && tempCategory === null) {
+      setTags([]);
+      setCategory(null);
+    } else {
+      setTags(tempTags);
+      setCategory(tempCategory);
+    }
+
     setCurrentPage(1);
     loadedPages.current.clear();
   };
@@ -146,74 +155,49 @@ const PublicProjectsPage = () => {
           </IconButton>
         </Flex>
       </Flex>
-      {/* <Flex justify='between' p='4' direction='column'>
-        <Flex direction='column' mb='5'>
-          <Text mb='2' weight='medium'>
-            Category:
-          </Text>
-          <Select
-            onChange={handleCategoryChange}
-            placeholder='Select category'
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            options={CATEGORIES}
-            styles={CUSTOM_SELECT_STYLES_SINGLE}
-            isMulti={false}
-            isSearchable={false}
-            isClearable={true}
-          />
-        </Flex>
-        <Flex direction='column'>
-          <Text mb='2' weight='medium'>
-            Tags:
-          </Text>
-          <Select
-            onChange={handleTagsChange}
-            placeholder='Select tags'
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            isMulti
-            options={TAGS}
-            styles={CUSTOM_SELECT_STYLES_MULTI}
-            isSearchable={false}
-            isClearable={true}
-          />
-        </Flex>
-        <Button mt='3' onClick={handleFindButtonClick}>
-          Find
-        </Button>
-      </Flex> */}
 
       <Box style={{ display: isOpened ? 'block' : 'none' }}>
         <Flex justify='between' p='4' pt='0' direction='column'>
           <Flex direction='column' gap='4' mb='2'>
-            <Flex direction='column'>
-              <Text weight='medium'>Category:</Text>
-              <Select
-                onChange={handleCategoryChange}
-                placeholder='Select category'
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                options={CATEGORIES}
-                styles={CUSTOM_SELECT_STYLES_SINGLE}
-                isMulti={false}
-                isSearchable={false}
-                isClearable={true}
-              />
-            </Flex>
-            <Flex direction='column'>
-              <Text weight='medium'>Tags:</Text>
-              <Select
-                onChange={handleTagsChange}
-                placeholder='Select tags'
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                isMulti
-                options={TAGS}
-                styles={CUSTOM_SELECT_STYLES_MULTI}
-                isSearchable={false}
-                isClearable={true}
-              />
+            <Flex direction={isColumn ? 'column' : 'row'} gap='4' mb='2' wrap='wrap'>
+              <div
+                style={{
+                  flexGrow: 1,
+                  width: isColumn ? '100%' : 'auto',
+                }}
+                ref={categoryRef}
+              >
+                <Select
+                  onChange={handleCategoryChange}
+                  placeholder='Select category'
+                  closeMenuOnSelect={true}
+                  components={animatedComponents}
+                  options={CATEGORIES}
+                  styles={CUSTOM_SELECT_STYLES_SINGLE}
+                  isMulti={false}
+                  isSearchable={false}
+                  isClearable={true}
+                />
+              </div>
+              <div
+                style={{
+                  flexGrow: 1,
+                  width: isColumn ? '100%' : 'auto',
+                }}
+                ref={tagsRef}
+              >
+                <Select
+                  onChange={handleTagsChange}
+                  placeholder='Select tags'
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={TAGS}
+                  styles={CUSTOM_SELECT_STYLES_MULTI}
+                  isSearchable={false}
+                  isClearable={true}
+                />
+              </div>
             </Flex>
             <Button onClick={handleFindButtonClick}>Find</Button>
           </Flex>

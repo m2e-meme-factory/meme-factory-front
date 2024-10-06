@@ -191,6 +191,7 @@ const SheetSubtaskCard = ({
                                   <button
                                     className='ProposalButtonDisabled'
                                     style={{ marginTop: 10 }}
+                                    disabled={true}
                                   >
                                     Submit
                                   </button>

@@ -23,7 +23,6 @@ const ModalSubtaskInfo: FC<ModalInfoProps> = ({ id, title, description, price })
         <Flex direction='column'>
           <Text className='TextAccent'>Description:</Text>
           <Text className='Description'>
-            {description.length < 100 && description}
             {isDescVisible && description.length >= 100 ? description : shortenString(description)}
             {description.length >= 100 && (
               <Button

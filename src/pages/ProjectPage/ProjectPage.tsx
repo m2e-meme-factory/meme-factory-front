@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Card, Flex, Heading, Text, Dialog, TextArea } from '@radix-ui/themes';
 import {
-  DollarOutlined,
+  Badge,
+  Button,
+  Card,
+  Flex,
+  Heading,
+  Text,
+  Dialog,
+  TextArea,
+  Link,
+  Separator,
+  Box,
+} from '@radix-ui/themes';
+import {
   PushpinOutlined,
   TagsOutlined,
   TeamOutlined,
@@ -22,10 +33,12 @@ import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFil
 import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
 import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
 import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
-import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import { showErrorMessage, showToastWithPromise } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
 import { BASE_URL } from '../../shared/consts/baseURL';
+import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -62,6 +75,8 @@ const ProjectPage = () => {
     setApplyBlocked,
     setCurrentUserRole
   );
+
+  console.log(progress);
 
   useEffect(() => {
     if (projectInfoResponse) {
@@ -125,15 +140,15 @@ const ProjectPage = () => {
   const handleDownload = async () => {
     setIsDownloading(true);
     if (currentProject && user) {
-      try {
-        await downloadFiles({
-          params: { projectId: currentProject.project.id, telegramId: user.telegramId },
-        });
-      } catch (error) {
-        setDownloadError(true);
-      } finally {
-        setIsDownloading(false);
-      }
+      await showToastWithPromise({
+        success: 'Files are downloaded successfully',
+        error: 'Error occurred while downloading files',
+        process: 'Downloading files',
+        callback: () =>
+          downloadFiles({
+            params: { projectId: currentProject.project.id, telegramId: user.telegramId },
+          }),
+      });
     }
   };
 
@@ -163,32 +178,60 @@ const ProjectPage = () => {
     ? `${BASE_URL}${currentProject?.project.bannerUrl}`
     : fallbackBanner;
 
+  console.log(user);
+
   return (
     <Flex direction='column'>
+      {/* Banner */}
       <Flex className={styles.bannerContainer}>
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
+      {/* Title */}
       <Flex className={styles.content} direction='column'>
-        <Flex m='4' direction='column'>
-          <Heading weight='medium'>{shortenString(currentProject?.project.title, 40)}</Heading>
+        <Flex m='4' mt='2' direction='column'>
+          <Heading weight='medium'>{currentProject?.project.title}</Heading>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
               Edit project
             </Button>
           )}
 
+          {/* Description */}
+          <Flex mb='2' mt='2' direction='column'>
+            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
+            {currentProject && currentProject.project.files.length > 0 && (
+              <Link
+                mt='1'
+                style={{ alignSelf: 'end', cursor: 'pointer', fontSize: '13px' }}
+                onClick={handleDownload}
+              >
+                Download attachments
+              </Link>
+            )}
+          </Flex>
+
           {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
-            <Button onClick={handleEditClick} disabled={true} my='2'>
-              Apply to earn
+            <Button disabled={true} my='2' style={{ fontSize: '16px' }}>
+              Join
             </Button>
           )}
 
+          {/* Join project modal */}
           {currentUserRole === 'guestCreator' && (
             <Dialog.Root>
               <Dialog.Trigger>
-                <Button my='2' disabled={applyBlocked}>
-                  Apply to earn
-                </Button>
+                <GlowingButton
+                  size='3'
+                  style={{
+                    width: '100%',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    marginBottom: '10px',
+                  }}
+                  disabled={applyBlocked}
+                >
+                  Join
+                </GlowingButton>
               </Dialog.Trigger>
 
               <Dialog.Content maxWidth='450px'>
@@ -212,63 +255,25 @@ const ProjectPage = () => {
                   </Dialog.Close>
                   <Dialog.Close>
                     <Button onClick={handleApplyClick} loading={isApplyLoading}>
-                      Apply
+                      Join
                     </Button>
                   </Dialog.Close>
                 </Flex>
               </Dialog.Content>
             </Dialog.Root>
           )}
-          <Text color='yellow' weight='medium' mb='5'>
-            Category: {currentProject?.project.category}
-          </Text>
-          <Flex mb='5'>
-            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
-          </Flex>
-          <Flex align='center' direction='row' mb='2'>
-            <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-            <Text weight='medium' size='5'>
-              Tags:{' '}
-              {currentProject?.project.tags &&
-                currentProject?.project.tags.map((tag, index) => (
-                  <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                    {tag}
-                  </Badge>
-                ))}
-            </Text>
-          </Flex>
-          <Flex direction='column' mb='5'>
-            <Flex align='center' mb='2'>
-              <TeamOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Host
-              </Text>
-            </Flex>
-            <Card>
-              <Flex align='center'>
-                <Text weight='medium' size='6'>
-                  {shortenString(
-                    currentProject
-                      ? currentProject.project.author.username
-                        ? currentProject.project.author.username
-                        : `User ${currentProject.project.author.telegramId}`
-                      : 'Meme factory'
-                  )}
-                </Text>
-              </Flex>
-            </Card>
-          </Flex>
 
-          <Flex direction='column' mb='5'>
+          {/* Tasks */}
+          <Flex direction='column' mb='3'>
             <Flex align='center' mb='2'>
               <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />
               <Text weight='medium' size='5'>
-                Subtasks
+                Tasks
               </Text>
             </Flex>
             {currentProject?.project.tasks &&
               currentProject?.project.tasks.map((subtask, index) => (
-                <SubtaskCard
+                <SheetSubtaskCard
                   key={index}
                   id={subtask.task.id}
                   description={subtask.task.description}
@@ -279,31 +284,59 @@ const ProjectPage = () => {
                 />
               ))}
           </Flex>
-          <Flex direction='column'>
-            <Flex mb='2' direction='column'>
-              <Flex align='center' justify='start'>
-                <PushpinOutlined style={{ color: 'yellow', marginRight: '8px' }} />
+
+          {/* Category and tags */}
+          <Flex align='center' direction='row' mb='2'>
+            {currentProject?.project && (
+              <>
+                <Text weight='medium' mr='2'>
+                  {currentProject.project.category?.toUpperCase()}
+                </Text>
+                <Separator mr='2' orientation='vertical' />
                 <Text weight='medium' size='5'>
-                  Attachments
+                  {currentProject.project.tags?.map((tag, index) => (
+                    <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
+                      {tag.toUpperCase()}
+                    </Badge>
+                  ))}
                 </Text>
-                <Button ml='3' onClick={handleDownload} loading={isDownloading}>
-                  Download
-                </Button>
-              </Flex>
-              {downloadError ? (
-                <Text color='red' mt='2' size='2'>
-                  Sorry, something went wrong. Try again later
-                </Text>
-              ) : (
-                <Text color='gray' mt='2' size='2'>
-                  Files will be sent to the MemeFactory bot chat
-                </Text>
-              )}
+              </>
+            )}
+          </Flex>
+
+          {/* Host */}
+          <Flex direction='row' align='center'>
+            <Flex
+              style={{
+                width: '2.5rem',
+                height: '2.5rem',
+                borderRadius: '13px',
+                background: 'gray',
+              }}
+              mr='2'
+              align='center'
+              justify='center'
+            >
+              <Text weight='bold' size='5'>
+                {shortenString(
+                  currentProject
+                    ? currentProject.project.author.username
+                      ? currentProject.project.author.username[0].toUpperCase()
+                      : `User ${currentProject.project.author.telegramId}`[0].toUpperCase()
+                    : 'Meme factory'[0].toUpperCase()
+                )}
+              </Text>
             </Flex>
-            {currentProject?.project.files &&
-              currentProject?.project.files.map((file, index) => (
-                <AttachmentCard key={index} name={file} />
-              ))}
+
+            <Text weight='medium' size='6'>
+              {shortenString(
+                currentProject
+                  ? currentProject.project.author.username
+                    ? currentProject.project.author.username
+                    : `User ${currentProject.project.author.telegramId}`
+                  : 'Meme factory'
+              )}
+            </Text>
           </Flex>
         </Flex>
       </Flex>

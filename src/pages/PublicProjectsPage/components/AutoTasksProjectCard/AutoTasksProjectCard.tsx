@@ -24,24 +24,24 @@ const GlowingCard = styled(Card)`
   box-shadow: 0px 0px 20px 0px var(--brand-color);
   animation: glow 3s ease-in-out infinite alternate;
 
-@keyframes glow {
-  0% {
-    box-shadow: 0px 0px 20px 0px var(--brand-color);
-  }
+  @keyframes glow {
+    0% {
+      box-shadow: 0px 0px 20px 0px var(--brand-color);
+    }
 
-  50% {
-    box-shadow: 0px 0px 20px -20px var(--brand-color);
-  }
+    50% {
+      box-shadow: 0px 0px 20px -20px var(--brand-color);
+    }
 
-  100% {
-    box-shadow: 0px 0px 20px 0px var(--brand-color);
+    100% {
+      box-shadow: 0px 0px 20px 0px var(--brand-color);
+    }
   }
-}
 
   &:hover {
     box-shadow: 0px 0px 20px 0px var(--brand-color);
   }
-`
+`;
 
 const AutoTasksProjectCard = () => {
   const navigate = useNavigate();
@@ -52,9 +52,7 @@ const AutoTasksProjectCard = () => {
         <Flex>
           <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
           <Flex direction='column'>
-            <Heading>
-              Airdrop tasks
-            </Heading>
+            <Heading>Airdrop tasks</Heading>
           </Flex>
         </Flex>
         <IconButton>

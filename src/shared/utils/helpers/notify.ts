@@ -59,7 +59,7 @@ export const showToastWithPromise = async ({
         borderRadius: '10px',
         background: '#333',
         color: '#fff',
-        zIndex: 9999999,
+        zIndex: '9999999 !important',
       },
     }
   );

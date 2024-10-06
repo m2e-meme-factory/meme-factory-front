@@ -343,8 +343,6 @@ code {
   backdrop-filter: blur(8px);
 }
 
-
-
 @keyframes updown {
   0% {
     transform: translateY(-5vh);

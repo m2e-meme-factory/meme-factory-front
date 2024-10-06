@@ -1,6 +1,5 @@
 .react-modal-sheet-backdrop {
     background: rgba(0, 0, 0, 0.3) !important;
-    backdrop-filter: blur(7px) !important;
 }
 .react-modal-sheet-container {
     background-color: #121212 !important;

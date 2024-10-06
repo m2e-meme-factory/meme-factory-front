@@ -11,7 +11,6 @@ import { useGetAutotaskApplications } from '../../shared/utils/api/hooks/autotas
 import Loading from '../../shared/components/Loading';
 import CopyableRef from './components/CopyableField/CopyableRef';
 import { getIconByTaskId } from '../../shared/utils/helpers/getIconByTaskId';
-import IntegratedAutotask from './components/Autotask/IntegratedAutotask';
 
 const AutoTasksProject = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -91,9 +90,7 @@ const AutoTasksProject = () => {
               </Flex>
             ) : (
               autotasks.map((task) =>
-                (
-                  task.category == "referral" ? 
-                  
+                task.category == 'referral' ? (
                   // Referal autotask:
                   <AutotaskCard
                     key={task.id}
@@ -113,8 +110,7 @@ const AutoTasksProject = () => {
                     category={task.category}
                     refLink={refData?.refLink}
                   />
-
-                  :
+                ) : (
                   <AutotaskCard
                     key={task.id}
                     id={task.id}

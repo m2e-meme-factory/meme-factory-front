@@ -1,9 +1,8 @@
 import { Badge, Box, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { CheckOutlined, RightOutlined } from '@ant-design/icons';
 import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
 import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
-import { AutotaskApplicationDTO, User } from 'api';
+import { AutotaskApplicationDTO } from 'api';
 import { calculateTimeLeft } from '../../../../shared/utils/helpers/calculateTimeLeft';
 import { showToastWithPromise } from '../../../../shared/utils/helpers/notify';
 import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotasks/getAutotaskApplications';
@@ -12,12 +11,11 @@ import { RootState } from '../../../../shared/utils/redux/store';
 import { AxiosResponse } from 'axios';
 import { Sheet } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
-import styles from './Autotask.module.css';
 import SocialsLink from '../../../../shared/components/SocialsLink/SocialsLink';
 import { getIconByTaskId } from '../../../../shared/utils/helpers/getIconByTaskId';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import CopyableRef from '../CopyableField/CopyableRef';
-import CopyableTextField from '../../../../shared/components/CopyableTextField';
+import { Toaster } from 'react-hot-toast';
 
 interface AutotaskProps {
   id: number;
@@ -250,7 +248,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     {url && (
                       <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
                     )}
-                    
+
                     {category != 'referral' && (
                       <>
                         <Button

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+import '../../styles/Tutorial.css'
 
 const mockups = [
   '/images/screen1.png', // Изображения для экрана iPhone

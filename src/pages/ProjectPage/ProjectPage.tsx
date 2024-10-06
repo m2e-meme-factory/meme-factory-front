@@ -254,7 +254,11 @@ const ProjectPage = () => {
                     </Button>
                   </Dialog.Close>
                   <Dialog.Close>
-                    <Button onClick={handleApplyClick} loading={isApplyLoading} disabled={applicationMessage.length === 0}>
+                    <Button
+                      onClick={handleApplyClick}
+                      loading={isApplyLoading}
+                      disabled={applicationMessage.length === 0}
+                    >
                       Join
                     </Button>
                   </Dialog.Close>

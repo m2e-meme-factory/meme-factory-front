@@ -107,7 +107,7 @@ const ProjectLogsPage = () => {
     const fromTab = searchParams.get('fromTab');
 
     if (fromTab) {
-      navigate(`/profile?tab=${fromTab}`);
+      navigate(`/projects`);
     } else {
       navigate(-1);
     }

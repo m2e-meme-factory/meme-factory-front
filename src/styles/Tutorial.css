@@ -1,0 +1,16 @@
+.swiper {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+.swiper-pagination {
+    bottom: 8.6vh !important;
+    color: #fecf0a !important;
+}
+
+.swiper-slide {
+    background: #121212 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}

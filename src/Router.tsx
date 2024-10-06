@@ -15,6 +15,7 @@ import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import AutoTasksProject from './pages/AutotasksProject/AutoTasksProject';
 import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
+import Component from './pages/PublicProjectsPage/PublicProjectsPageV2';
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <PublicProjectsPage />,
+        element: <Component />,
       },
       {
         path: ROUTES.FRIENDS,

@@ -12,6 +12,7 @@ import projects from './../imgs/first_meme.png';
 import styled from 'styled-components';
 import useAnimationFrame from '../utils/animations/useAnimationFrame';
 import GlowingButton from './Buttons/GlowingButton';
+import '../../styles/Tutorial.css'
 
 interface TutorialProps {
   onComplete: () => void;

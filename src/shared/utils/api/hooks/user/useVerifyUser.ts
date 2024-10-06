@@ -6,7 +6,7 @@ export const useVerifyUser = () =>
   useMutation({
     mutationFn: (config: VerifyUserConfig) => verifyUser(config),
     onSuccess: () => {
-      showSuccessMessage('You are verified!')
+      showSuccessMessage('You are verified!');
       setTimeout(() => window.location.reload(), 1000);
     },
   });

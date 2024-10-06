@@ -89,7 +89,6 @@ export default function ProfilePage() {
     if (user) {
       handleDialogClose();
       verifyMutation.mutate({ params: { telegramId: user.telegramId } });
-      
     }
   };
 
@@ -243,7 +242,11 @@ export default function ProfilePage() {
                               <Blockquote>High priority for checking task completion</Blockquote>
                             </Grid>
 
-                            <GlowingButton size='4' onClick={handleVerify} style={{ width: '100%' }}>
+                            <GlowingButton
+                              size='4'
+                              onClick={handleVerify}
+                              style={{ width: '100%' }}
+                            >
                               Verify Now
                             </GlowingButton>
                           </Grid>

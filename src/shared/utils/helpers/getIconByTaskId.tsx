@@ -89,18 +89,16 @@ const icons: IconType = {
   ),
   8: (
     <Flex justify='center' align='center'>
-      <RadditOutlined 
-        style={{ fill: 'var(--gray-10)', margin: '0 15px 0 10px', height: '24px' }} 
-      />
+      <RadditOutlined style={{ fill: 'var(--gray-10)', margin: '0 15px 0 10px', height: '24px' }} />
     </Flex>
   ),
   9: (
-    <MediumOutlined 
+    <MediumOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
   10: (
-    <DiscordOutlined 
+    <DiscordOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),

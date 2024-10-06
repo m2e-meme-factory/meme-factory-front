@@ -1,5 +1,5 @@
-import { Button } from "@radix-ui/themes";
-import styled from "styled-components";
+import { Button } from '@radix-ui/themes';
+import styled from 'styled-components';
 
 const GlowingButton = styled(Button)`
   background: linear-gradient(180deg, var(--brand-color) 0%, var(--brand-color) 100%);

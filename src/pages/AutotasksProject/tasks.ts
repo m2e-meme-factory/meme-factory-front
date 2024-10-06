@@ -11,7 +11,6 @@ export interface Autotask {
   icon?: ReactNode;
 }
 
-
 export const tasks: Autotask[] = [
   {
     id: 1,
@@ -70,10 +69,10 @@ export const tasks: Autotask[] = [
   },
   {
     id: 8,
-    title: 'Visit our Raddit',
-    description: `Show your support by liking our post on Raddit.`,
+    title: 'Visit our Reddit',
+    description: `Show your support by liking our post on Reddit.`,
     reward: 100,
-    category: 'Raddit',
+    category: 'Reddit',
     url: 'https://www.reddit.com/user/m2epro/',
   },
   {

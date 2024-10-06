@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import BasePageWrapper from './shared/components/BasePageWrapper';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
-import About from './pages/AboutPage/About';
+import Friends from './pages/FriendsPage/Friends';
 import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
@@ -34,8 +34,8 @@ export const router = createBrowserRouter([
         element: <PublicProjectsPage />,
       },
       {
-        path: ROUTES.ABOUT,
-        element: <About />,
+        path: ROUTES.FRIENDS,
+        element: <Friends />,
       },
       {
         path: ROUTES.CREATE_PROJECT,

@@ -35,12 +35,14 @@ import { useVerifyUser } from '../../shared/utils/api/hooks/user/useVerifyUser';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 import { Sheet } from 'react-modal-sheet';
 import verified from './../../shared/imgs/verify.png';
-import { List } from '@radix-ui/react-tabs';
-import styled from 'styled-components';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { verifyUser } from '../../shared/utils/api/requests/user/verifyUser';
+import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const [userSt, setUserSt] = useState<User>();
   const { data: userDataResponse } = useAuthMe();
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
@@ -52,7 +54,14 @@ export default function ProfilePage() {
   const user = useSelector((state: RootState) => state.user.user);
   const [tonConnectUI] = useTonConnectUI();
 
-  const verifyMutation = useVerifyUser();
+  const { mutate: verify, isPending } = useMutation({
+    mutationFn: verifyUser,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+    },
+    onSuccess: () => showSuccessMessage('Verified successfully'),
+    onError: () => showErrorMessage('Error occurred'),
+  });
 
   useEffect(() => {
     const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
@@ -88,7 +97,7 @@ export default function ProfilePage() {
   const handleVerify = () => {
     if (user) {
       handleDialogClose();
-      verifyMutation.mutate({ params: { telegramId: user.telegramId } });
+      verify({ params: { telegramId: user.telegramId } });
     }
   };
 
@@ -98,24 +107,6 @@ export default function ProfilePage() {
       dispatch(setUser(userDataResponse.data));
     }
   }, [userDataResponse]);
-
-  const { data, isLoading: refLoading } = useGetRefData(userSt?.telegramId);
-
-  useEffect(() => {
-    if (data) {
-      setRefData(data.data);
-    }
-  }, [data]);
-
-  if (refLoading) {
-    return (
-      <Flex className={styles.LoadingContainer} align='center' justify='center'>
-        <Spinner size='3' />
-      </Flex>
-    );
-  }
-
-  const refCount = refData?.count;
 
   return (
     <Tabs.Root defaultValue={defaultTab}>
@@ -127,73 +118,26 @@ export default function ProfilePage() {
       <Box pt='3'>
         <Tabs.Content value='account'>
           <Card m='4'>
-            <Grid gap='4'>
-              <Flex align='center'>
-                <Heading mr='3'>Profile</Heading>
-              </Flex>
-              <DataList.Root>
-                <DataList.Item align='center'>
-                  <DataList.Label minWidth='88px'>Status</DataList.Label>
-                  <DataList.Value>
-                    <Badge color={userSt?.isVerified ? 'jade' : 'red'} variant='soft' radius='full'>
-                      {userSt?.isVerified ? 'Verified' : 'Not Verified'}
-                    </Badge>
-                  </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>ID</DataList.Label>
-                  <DataList.Value>
-                    <CopyableCode value={userSt?.id || ''} />
-                  </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>Nickname</DataList.Label>
-                  <DataList.Value>
-                    <CopyableCode value={`${userSt?.username}`} />
-                  </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>{userSt?.role}</DataList.Value>
-                </DataList.Item>
-              </DataList.Root>
-            </Grid>
+            <Flex align='center' justify='between'>
+              <Heading size='4' mr='6'>
+                Connect TON Wallet
+              </Heading>
+              <TonConnectButton />
+            </Flex>
           </Card>
 
           <Card m='4'>
             <Flex justify='between' align='center'>
               <Flex direction='column'>
-                <Text mb='2' color='gray'>
-                  Available Balance
-                </Text>
-                <Heading>
+                <Heading>Available Balance</Heading>
+                <Text>
                   {userSt?.balance ?? '0'} <Badge color='bronze'>M2E</Badge>
-                </Heading>
+                </Text>
               </Flex>
               <Button>
                 <ChevronRightIcon /> Withdraw
               </Button>
             </Flex>
-          </Card>
-
-          <Card m='4'>
-            <Grid gap='4'>
-              <Heading>Referals</Heading>
-              <Text color='gray'>Your Ref link:</Text>
-              <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} />
-              <DataList.Root mt='4'>
-                <DataList.Item align='center'>
-                  <DataList.Item>
-                    <DataList.Label minWidth='88px'>Total Count</DataList.Label>
-                    <DataList.Value>{refCount}</DataList.Value>
-                  </DataList.Item>
-                  <DataList.Item>
-                    <DataList.Label minWidth='88px'>Total profit</DataList.Label>
-                    <DataList.Value>0 M2E</DataList.Value>
-                  </DataList.Item>
-                </DataList.Item>
-              </DataList.Root>
-            </Grid>
           </Card>
 
           {/* <Card m='4'>
@@ -260,12 +204,64 @@ export default function ProfilePage() {
           )}
 
           <Card m='4'>
-            <Flex align='center' justify='between'>
-              <Heading size='4' mr='6'>
-                Connect TON Wallet
-              </Heading>
-              <TonConnectButton />
-            </Flex>
+            <Grid gap='4'>
+              <Flex align='center'>
+                <Heading mr='3'>Profile</Heading>
+              </Flex>
+              <DataList.Root>
+                <DataList.Item align='center'>
+                  <DataList.Label minWidth='88px'>Status</DataList.Label>
+                  <DataList.Value>
+                    <Badge color={userSt?.isVerified ? 'jade' : 'red'} variant='soft' radius='full'>
+                      {userSt?.isVerified ? 'Verified' : 'Not Verified'}
+                    </Badge>
+                  </DataList.Value>
+                </DataList.Item>
+                <DataList.Item>
+                  <DataList.Label minWidth='88px'>ID</DataList.Label>
+                  <DataList.Value>
+                    <CopyableCode value={userSt?.id || ''} />
+                  </DataList.Value>
+                </DataList.Item>
+                <DataList.Item>
+                  <DataList.Label minWidth='88px'>Nickname</DataList.Label>
+                  <DataList.Value>
+                    <CopyableCode value={`${userSt?.username}`} />
+                  </DataList.Value>
+                </DataList.Item>
+                <DataList.Item>
+                  <DataList.Label minWidth='88px'>Type</DataList.Label>
+                  <DataList.Value>{userSt?.role}</DataList.Value>
+                </DataList.Item>
+              </DataList.Root>
+            </Grid>
+          </Card>
+
+          <Card m='4'>
+            <Grid gap='4'>
+              {/*<Heading>About Page</Heading>*/}
+              {/*<DataList.Root>*/}
+              {/*  <DataList.Item align='center'>*/}
+              {/*    <DataList.Label minWidth='88px'>App version:</DataList.Label>*/}
+              {/*    <DataList.Value>*/}
+              {/*      <Badge color='jade' variant='soft' radius='full'>*/}
+              {/*        {packageJson.version}*/}
+              {/*      </Badge>*/}
+              {/*    </DataList.Value>*/}
+              {/*  </DataList.Item>*/}
+              {/*</DataList.Root>*/}
+              {/*<Text color='gray' size='2'>*/}
+              {/*  Access token:*/}
+              {/*</Text>*/}
+              {/*<CopyableTextField size={'2'} fieldSize='3' value={localStorage.getItem('token') ?? ''} />*/}
+              <Button
+                onClick={() => {
+                  localStorage.setItem('onboardCompleted', 'false');
+                }}
+              >
+                Tutorial again
+              </Button>
+            </Grid>
           </Card>
         </Tabs.Content>
 

@@ -8,7 +8,7 @@ export const navigationRoutes = [
     path: '/projects',
   },
   {
-    title: 'About',
-    path: '/about',
+    title: 'Friends',
+    path: '/friends',
   },
 ];

@@ -1,5 +1,5 @@
 export const ROUTES = {
-  ABOUT: '/about',
+  FRIENDS: '/friends',
   PROFILE: '/profile',
   PUBLIC_PROJECTS: '/projects',
   PROJECT_PAGE: '/projects/:id',

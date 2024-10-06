@@ -122,7 +122,6 @@ export default function ProfilePage() {
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        <Tabs.Trigger value='myprojects'>My Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>
@@ -268,10 +267,6 @@ export default function ProfilePage() {
               <TonConnectButton />
             </Flex>
           </Card>
-        </Tabs.Content>
-
-        <Tabs.Content value='myprojects'>
-          <MyProjectsPage />
         </Tabs.Content>
 
         <Tabs.Content value='transactions'>

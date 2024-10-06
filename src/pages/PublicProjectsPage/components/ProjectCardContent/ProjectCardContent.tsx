@@ -17,19 +17,19 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project }) => {
   return (
     <Flex direction='column' m='4'>
       <SecondaryHeading>{project.title}</SecondaryHeading>
-      <Text mb='3' color='yellow' weight='medium'>
-        {project.category}
-      </Text>
-      <Flex mb='3'>
-        <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-        <Text weight='medium'>
-          Tags:{' '}
-          {project.tags.map((tag, index) => (
-            <span key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-              {tag}
-            </span>
-          ))}
+      <Flex direction='row' justify='between' align='center'>
+        <Text mb='3' color='yellow' weight='medium'>
+          {project.category}
         </Text>
+        <Flex mb='3'>
+          <Text weight='medium'>
+            {project.tags.map((tag, index) => (
+              <span key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
+                {tag}
+              </span>
+            ))}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   );

@@ -1,4 +1,4 @@
-import { Text, Flex, Heading, Button, Dialog, Box, IconButton } from '@radix-ui/themes';
+import { Text, Flex, Heading, Button, Box, Tabs, Callout } from '@radix-ui/themes';
 import React, { useEffect, useRef, useState } from 'react';
 import ProjectCard from './components/ProjectCard/ProjectCard';
 import { CATEGORIES } from '../../shared/consts/categories';
@@ -15,19 +15,25 @@ import {
 import { Project } from 'api';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 
 import AutoTasksProjectCard from './components/AutoTasksProjectCard/AutoTasksProjectCard';
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+import { Cross2Icon, InfoCircledIcon } from '@radix-ui/react-icons';
+import CreatorsProjects from '../MyProjectsPage/components/CreatorsProjects';
+import AdvertisersProjects from '../MyProjectsPage/components/AdvertisersProjects';
+import { useSwipeable } from 'react-swipeable';
 
 const BlockObserver = styled.div`
   height: 40px;
   background-color: black;
 `;
 
-// add props is opened
+enum TabsOption {
+  MY = 'my',
+  PUBLIC = 'public',
+}
 
 const PublicProjectsPage = () => {
   const loadedPages = useRef(new Set<number>());
@@ -46,6 +52,14 @@ const PublicProjectsPage = () => {
   const [isColumn, setIsColumn] = useState(false);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const tagsRef = useRef<HTMLDivElement | null>(null);
+  const [currentTab, setCurrentTab] = useState<TabsOption>('public' as TabsOption);
+  const [showFindButton, setShowFindButton] = useState(false);
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: (_eventData) => setCurrentTab('my' as TabsOption),
+    onSwipedRight: (_eventData) => setCurrentTab('public' as TabsOption),
+    trackMouse: true,
+  });
 
   useEffect(() => {
     if (categoryRef.current && tagsRef.current) {
@@ -119,11 +133,13 @@ const PublicProjectsPage = () => {
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
     setTempTags(tags);
+    setShowFindButton(true);
   };
 
   const handleCategoryChange = (selectedCategory: SingleValue<Option>) => {
     const category = selectedCategory ? selectedCategory.value : null;
     setTempCategory(category);
+    setShowFindButton(true);
   };
 
   const handleFindButtonClick = () => {
@@ -137,82 +153,149 @@ const PublicProjectsPage = () => {
 
     setCurrentPage(1);
     loadedPages.current.clear();
+    setIsOpened(false);
+    setShowFindButton(false);
+  };
+
+  const handleTabChange = (value: string) => {
+    setCurrentTab(value as TabsOption);
+    setIsOpened(false);
   };
 
   const [isOpened, setIsOpened] = useState(false);
+  const [isCalloutVisible, setIsCalloutVisible] = useState(true);
 
   return (
-    <>
+    <div {...swipeHandlers}>
       <Flex m='4' direction='column'>
         <Flex justify='between' align='center'>
           <Box>
             <Heading>Projects</Heading>
             <Text color='gray'>Join project and earn profit!</Text>
           </Box>
-
-          <IconButton size='3' onClick={() => setIsOpened(!isOpened)}>
-            <MixerHorizontalIcon />
-          </IconButton>
         </Flex>
       </Flex>
 
-      <Box style={{ display: isOpened ? 'block' : 'none' }}>
-        <Flex justify='between' p='4' pt='0' direction='column'>
-          <Flex direction='column' gap='4' mb='2'>
-            <Flex direction={isColumn ? 'column' : 'row'} gap='4' mb='2' wrap='wrap'>
-              <div
-                style={{
-                  flexGrow: 1,
-                  width: isColumn ? '100%' : 'auto',
-                }}
-                ref={categoryRef}
-              >
-                <Select
-                  onChange={handleCategoryChange}
-                  placeholder='Select category'
-                  closeMenuOnSelect={true}
-                  components={animatedComponents}
-                  options={CATEGORIES}
-                  styles={CUSTOM_SELECT_STYLES_SINGLE}
-                  isMulti={false}
-                  isSearchable={false}
-                  isClearable={true}
-                />
-              </div>
-              <div
-                style={{
-                  flexGrow: 1,
-                  width: isColumn ? '100%' : 'auto',
-                }}
-                ref={tagsRef}
-              >
-                <Select
-                  onChange={handleTagsChange}
-                  placeholder='Select tags'
-                  closeMenuOnSelect={false}
-                  components={animatedComponents}
-                  isMulti
-                  options={TAGS}
-                  styles={CUSTOM_SELECT_STYLES_MULTI}
-                  isSearchable={false}
-                  isClearable={true}
-                />
-              </div>
+      <Tabs.Root defaultValue='public' onValueChange={handleTabChange} value={currentTab}>
+        <Tabs.List justify='start'>
+          <Flex direction='row' justify='between' style={{ width: '100%' }} align='baseline'>
+            <Flex direction='row'>
+              <Tabs.Trigger value='public'>All Projects</Tabs.Trigger>
+              <Tabs.Trigger value='my'>
+                {user?.role === 'creator' ? 'Joined' : 'My projects'}
+              </Tabs.Trigger>
             </Flex>
-            <Button onClick={handleFindButtonClick}>Find</Button>
+            <Button
+              size='1'
+              mr='3'
+              style={{ borderRadius: '15px' }}
+              onClick={() => setIsOpened(!isOpened)}
+            >
+              Filters
+            </Button>
           </Flex>
-        </Flex>
-      </Box>
+        </Tabs.List>
 
-      <Flex m='4' direction='column'>
-        <AutoTasksProjectCard />
-        {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
-        ))}
-      </Flex>
-      {isLoading && <Loading />}
-      {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
-    </>
+        <Box pt='3'>
+          <Tabs.Content value='public'>
+            <>
+              <Box style={{ display: isOpened && user?.role !== 'advertiser' ? 'block' : 'none' }}>
+                <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
+                  <Flex direction='column' gap='2' mb='1'>
+                    <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap'>
+                      <div
+                        style={{
+                          flexGrow: 1,
+                          width: isColumn ? '100%' : 'auto',
+                        }}
+                        ref={categoryRef}
+                      >
+                        <Select
+                          onChange={handleCategoryChange}
+                          placeholder='Select category'
+                          closeMenuOnSelect={true}
+                          components={animatedComponents}
+                          options={CATEGORIES}
+                          styles={CUSTOM_SELECT_STYLES_SINGLE}
+                          isMulti={false}
+                          isSearchable={false}
+                          isClearable={true}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          flexGrow: 1,
+                          width: isColumn ? '100%' : 'auto',
+                        }}
+                        ref={tagsRef}
+                      >
+                        <Select
+                          onChange={handleTagsChange}
+                          placeholder='Select tags'
+                          closeMenuOnSelect={false}
+                          components={animatedComponents}
+                          isMulti
+                          options={TAGS}
+                          styles={CUSTOM_SELECT_STYLES_MULTI}
+                          isSearchable={false}
+                          isClearable={true}
+                        />
+                      </div>
+                    </Flex>
+                    {showFindButton && <Button onClick={handleFindButtonClick}>Find</Button>}
+                  </Flex>
+                </Flex>
+              </Box>
+              {isCalloutVisible && (
+                <Flex m='4'>
+                  <Callout.Root color='yellow' style={{ position: 'relative', padding: '1rem' }}>
+                    <Callout.Icon style={{ marginTop: '0.4rem' }}>
+                      <InfoCircledIcon />
+                    </Callout.Icon>
+                    <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
+                      Discover a range of available projects on this page, where you can join and
+                      tackle tasks to earn m2e rewards.
+                    </Callout.Text>
+                    <button
+                      onClick={() => {
+                        setIsCalloutVisible(false);
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: '0.5rem',
+                        right: '0.5rem',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <Cross2Icon />
+                    </button>
+                  </Callout.Root>
+                </Flex>
+              )}
+              <Flex m='4' direction='column'>
+                <AutoTasksProjectCard />
+                {projects.map((project, index) => (
+                  <ProjectCard key={index} project={project} />
+                ))}
+              </Flex>
+              {isLoading && <Loading />}
+              {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
+            </>
+          </Tabs.Content>
+
+          <Tabs.Content value='my'>
+            <>
+              {user?.role === 'creator' && (
+                <CreatorsProjects user={user} isOpened={isOpened} setIsOpened={setIsOpened} />
+              )}
+              {user?.role === 'advertiser' && <AdvertisersProjects user={user} />}
+            </>
+          </Tabs.Content>
+        </Box>
+      </Tabs.Root>
+    </div>
   );
 };
 

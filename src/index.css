@@ -307,6 +307,11 @@ code {
     monospace;
 }
 
+.swiper-pagination {
+  bottom: 8.6vh !important;
+  color: #fecf0a !important;
+}
+
 .rt-TextFieldInput {
   display: unset;
 }

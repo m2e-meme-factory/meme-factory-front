@@ -29,7 +29,6 @@ import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
-import './components/Swiper.css'
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -303,13 +302,16 @@ export default function Component() {
                     </Box>
                     {isCalloutVisible && (
                       <Flex m='4'>
-                        <Callout.Root color='yellow' style={{ position: 'relative', padding: '1rem' }}>
+                        <Callout.Root
+                          color='yellow'
+                          style={{ position: 'relative', padding: '1rem' }}
+                        >
                           <Callout.Icon style={{ marginTop: '0.4rem' }}>
                             <InfoCircledIcon />
                           </Callout.Icon>
                           <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
-                            Discover a range of available projects on this page, where you can join and
-                            tackle tasks to earn m2e rewards.
+                            Discover a range of available projects on this page, where you can join
+                            and tackle tasks to earn m2e rewards.
                           </Callout.Text>
                           <button
                             onClick={() => {
@@ -343,7 +345,11 @@ export default function Component() {
                   <Flex direction='column' justify='center'>
                     {user?.role === 'creator' && (
                       <Flex justify='center'>
-                        <CreatorsProjects user={user} isOpened={isOpened} setIsOpened={setIsOpened} />
+                        <CreatorsProjects
+                          user={user}
+                          isOpened={isOpened}
+                          setIsOpened={setIsOpened}
+                        />
                       </Flex>
                     )}
                     {user?.role === 'advertiser' && <AdvertisersProjects user={user} />}

@@ -9,7 +9,7 @@ const MyProjectsPage = () => {
   console.log(currentUser);
   return (
     <>
-      {currentUser?.role === 'creator' && <CreatorsProjects user={currentUser} />}
+      {/*{currentUser?.role === 'creator' && <CreatorsProjects user={currentUser} />}*/}
       {currentUser?.role === 'advertiser' && <AdvertisersProjects user={currentUser} />}
     </>
   );

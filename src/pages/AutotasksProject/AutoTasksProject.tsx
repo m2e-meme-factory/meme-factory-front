@@ -11,6 +11,8 @@ import { useGetAutotaskApplications } from '../../shared/utils/api/hooks/autotas
 import Loading from '../../shared/components/Loading';
 import CopyableRef from './components/CopyableField/CopyableRef';
 import { getIconByTaskId } from '../../shared/utils/helpers/getIconByTaskId';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { useNavigate } from 'react-router-dom';
 
 const AutoTasksProject = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -19,6 +21,26 @@ const AutoTasksProject = () => {
   const [doneTasksIds, setDoneTasksIds] = useState<Set<number>>(new Set<number>());
   const [claimedTasksIds, setClaimedTasksIds] = useState<Set<number>>(new Set<number>());
   const [applications, setApplications] = useState<AutotaskApplicationDTO[]>([]);
+
+  const webapp = useWebApp();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    webapp.ready();
+
+    const backButton = webapp.BackButton;
+    backButton.show();
+    backButton.onClick(function () {
+      backButton.hide();
+    });
+
+    const handleBack = () => {
+      navigate(-1);
+      backButton.hide();
+    };
+
+    webapp.onEvent('backButtonClicked', handleBack);
+  }, [navigate, webapp]);
 
   const { data: refDataResponse, isLoading: refLoading } = useGetRefData(user?.telegramId);
   const { data: autotaskApplicationsResponse, isLoading: applicationsLoading } =

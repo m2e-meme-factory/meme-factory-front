@@ -15,6 +15,7 @@ import Loading from '../../shared/components/Loading';
 import FreelancersStats from './components/FreelancersStats';
 import PendingApplications from './components/PendingApplications';
 import { useGetTotalSpending } from '../../shared/utils/api/hooks/project/useGetTotalSpending';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 const ProjectDetailsPage = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,25 @@ const ProjectDetailsPage = () => {
     useGetTotalSpending(id);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [totalSpendings, setTotalSpendings] = useState<number>();
+
+  const webapp = useWebApp();
+
+  useEffect(() => {
+    webapp.ready();
+
+    const backButton = webapp.BackButton;
+    backButton.show();
+    backButton.onClick(function () {
+      backButton.hide();
+    });
+
+    const handleBack = () => {
+      navigate(-1);
+      backButton.hide();
+    };
+
+    webapp.onEvent('backButtonClicked', handleBack);
+  }, [navigate, webapp]);
 
   useEffect(() => {
     if (totalSpendingsResponse) {

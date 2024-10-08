@@ -9,18 +9,19 @@ import ProjectLogsPage from './pages/ProjectLogsPage/ProjectLogsPage';
 import { ROUTES } from './shared/consts/routes';
 import React from 'react';
 import ProtectedRoute from './shared/components/ProtectedRoute';
-import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPage';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
 import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import AutoTasksProject from './pages/AutotasksProject/AutoTasksProject';
 import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
 import Component from './pages/PublicProjectsPage/PublicProjectsPageV2';
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
     element: <ProtectedRoute element={<BasePageWrapper />} />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: ROUTES.PROFILE,

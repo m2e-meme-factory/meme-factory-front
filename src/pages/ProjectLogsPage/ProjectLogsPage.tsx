@@ -14,6 +14,7 @@ import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
@@ -35,6 +36,25 @@ const ProjectLogsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const webapp = useWebApp();
+
+  useEffect(() => {
+    webapp.ready();
+
+    const backButton = webapp.BackButton;
+    backButton.show();
+    backButton.onClick(function () {
+      backButton.hide();
+    });
+
+    const handleBack = () => {
+      navigate(-1);
+      backButton.hide();
+    };
+
+    webapp.onEvent('backButtonClicked', handleBack);
+  }, [navigate, webapp]);
 
   useEffect(() => {
     if (projectResponse) {

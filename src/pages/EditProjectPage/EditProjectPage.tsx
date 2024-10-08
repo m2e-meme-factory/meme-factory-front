@@ -9,7 +9,7 @@ import {
   AlertDialog,
 } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
 import { CATEGORIES } from '../../shared/consts/categories';
 import makeAnimated from 'react-select/animated';
@@ -32,6 +32,7 @@ import { UpdateProjectDTO, UpdateTaskDTO } from 'api';
 import toast from 'react-hot-toast';
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 import EditSubtaskSection from './components/EditSubtaskSection';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 enum ProjectStatus {
   DRAFT = 'draft',
@@ -69,6 +70,25 @@ const EditProjectPage = () => {
     project ? project.project.bannerUrl : null
   );
   const [isProjectSaving, setIsProjectSaving] = useState(false);
+
+  const webapp = useWebApp();
+
+  useEffect(() => {
+    webapp.ready();
+
+    const backButton = webapp.BackButton;
+    backButton.show();
+    backButton.onClick(function () {
+      backButton.hide();
+    });
+
+    const handleBack = () => {
+      navigate(-1);
+      backButton.hide();
+    };
+
+    webapp.onEvent('backButtonClicked', handleBack);
+  }, [navigate, webapp]);
 
   const updateProjectMutation = useUpdateProject(project?.project.id);
 

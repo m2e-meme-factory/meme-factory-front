@@ -30,6 +30,7 @@ import { shortenString } from '../../shared/utils/helpers/shortenString';
 import { BASE_URL } from '../../shared/consts/baseURL';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -52,6 +53,25 @@ const ProjectPage = () => {
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
   const [minPrice, setMinPrice] = useState<number>();
   const [maxPrice, setMaxPrice] = useState<number>();
+
+  const webapp = useWebApp();
+
+  useEffect(() => {
+    webapp.ready();
+
+    const backButton = webapp.BackButton;
+    backButton.show();
+    backButton.onClick(function () {
+      backButton.hide();
+    });
+
+    const handleBack = () => {
+      navigate(-1);
+      backButton.hide();
+    };
+
+    webapp.onEvent('backButtonClicked', handleBack);
+  }, [navigate, webapp]);
 
   const user = useSelector((state: RootState) => state.user.user);
 

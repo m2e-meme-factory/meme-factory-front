@@ -263,6 +263,7 @@ export default function Component() {
                                 width: isColumn ? '100%' : 'auto',
                               }}
                               ref={categoryRef}
+                              className='swiper-no-swiping'
                             >
                               <Select
                                 onChange={handleCategoryChange}
@@ -282,6 +283,7 @@ export default function Component() {
                                 width: isColumn ? '100%' : 'auto',
                               }}
                               ref={tagsRef}
+                              className='swiper-no-swiping'
                             >
                               <Select
                                 onChange={handleTagsChange}

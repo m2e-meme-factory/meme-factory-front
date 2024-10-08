@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
-  Card,
   Flex,
   Heading,
   Text,
@@ -10,17 +9,9 @@ import {
   TextArea,
   Link,
   Separator,
-  Box,
 } from '@radix-ui/themes';
-import {
-  PushpinOutlined,
-  TagsOutlined,
-  TeamOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
+import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
-import AttachmentCard from './components/AttachmentCard/AttachmentCard';
-import SubtaskCard from './components/SubtaskCard/SubtaskCard';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -54,7 +45,6 @@ const ProjectPage = () => {
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
-  const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isApplyLoading, setIsApplyLoading] = useState(false);
   const [applicationMessage, setApplicationMessage] = useState<string>('');
@@ -76,12 +66,9 @@ const ProjectPage = () => {
     setCurrentUserRole
   );
 
-  console.log(progress);
-
   useEffect(() => {
     if (projectInfoResponse) {
       setCurrentProject(projectInfoResponse.data);
-      console.log(projectInfoResponse);
       setMinPrice(parseInt(projectInfoResponse.data.minPrice ?? '0'));
       setMaxPrice(parseInt(projectInfoResponse.data.maxPrice ?? '0'));
       dispatch(setProject(projectInfoResponse.data));
@@ -138,17 +125,19 @@ const ProjectPage = () => {
   };
 
   const handleDownload = async () => {
-    setIsDownloading(true);
-    if (currentProject && user) {
-      await showToastWithPromise({
-        success: 'Files are downloaded successfully',
-        error: 'Error occurred while downloading files',
-        process: 'Downloading files',
-        callback: () =>
-          downloadFiles({
-            params: { projectId: currentProject.project.id, telegramId: user.telegramId },
-          }),
-      });
+    if (!isDownloading) {
+      setIsDownloading(true);
+      if (currentProject && user) {
+        await showToastWithPromise({
+          success: 'Files are downloaded successfully',
+          error: 'Error occurred while downloading files',
+          process: 'Downloading files',
+          callback: () =>
+            downloadFiles({
+              params: { projectId: currentProject.project.id, telegramId: user.telegramId },
+            }),
+        });
+      }
     }
   };
 
@@ -177,8 +166,6 @@ const ProjectPage = () => {
   const bannerLink = currentProject?.project.bannerUrl
     ? `${BASE_URL}${currentProject?.project.bannerUrl}`
     : fallbackBanner;
-
-  console.log(user);
 
   return (
     <Flex direction='column'>

@@ -118,7 +118,7 @@ export default function ProfilePage() {
     }
   };
 
-  const { mutate: verify, isPending } = useMutation({
+  const { mutate: verify } = useMutation({
     mutationFn: verifyUser,
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
@@ -153,7 +153,6 @@ export default function ProfilePage() {
     };
 
     if (walletAddress) {
-      console.log(walletAddress);
       connect(walletAddress);
     }
   }, [walletAddress]);
@@ -336,16 +335,6 @@ export default function ProfilePage() {
           </div>
         </SwiperContainer>
       </Box>
-
-      {/*<Box pt='3'>*/}
-      {/*  <Tabs.Content value='account'>*/}
-      {/*    */}
-      {/*  </Tabs.Content>*/}
-
-      {/*  <Tabs.Content value='transactions'>*/}
-      {/*    <TransactionsHistoryPage />*/}
-      {/*  </Tabs.Content>*/}
-      {/*</Box>*/}
     </Tabs.Root>
   );
 }

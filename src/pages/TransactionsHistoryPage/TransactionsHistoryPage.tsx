@@ -55,17 +55,19 @@ const TransactionsHistoryPage = () => {
         <Heading size='2' mb='2'>
           Tx type
         </Heading>
-        <Select
-          isSearchable={false}
-          onChange={handleApplicationStatusChange}
-          placeholder='Select tx type'
-          closeMenuOnSelect={false}
-          components={animatedComponents}
-          options={TX_TYPE_OPTIONS}
-          styles={CUSTOM_SELECT_STYLES_MULTI}
-          isMulti={true}
-          isClearable={true}
-        />
+        <div className='swiper-no-swiping'>
+          <Select
+            isSearchable={false}
+            onChange={handleApplicationStatusChange}
+            placeholder='Select tx type'
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            options={TX_TYPE_OPTIONS}
+            styles={CUSTOM_SELECT_STYLES_MULTI}
+            isMulti={true}
+            isClearable={true}
+          />
+        </div>
       </Flex>
       <Flex direction='column'>
         <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>

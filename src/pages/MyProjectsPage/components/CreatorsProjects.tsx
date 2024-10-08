@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { ProjectData, User } from 'api';
 import { useGetUserProgresses } from '../../../shared/utils/api/hooks/project/useGetUserProgresses';
 import makeAnimated from 'react-select/animated';
-import { Button, Flex, Heading, Spinner, Text } from '@radix-ui/themes';
+import { Button, Flex, Text } from '@radix-ui/themes';
 import { CUSTOM_SELECT_STYLES_MULTI } from '../../../styles/customSelectStyles';
 import Select, { MultiValue } from 'react-select';
 import { PROJECT_STATUSES } from '../../../shared/consts/project-statuses';
@@ -10,7 +10,6 @@ import { Option } from '../../../@types/app';
 import { APPLICATION_STATUSES } from '../../../shared/consts/application-statuses';
 import MyProjectCardForCreator from './MyProjectCard/MyProjectCardForCreator';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { setProject } from '../../../shared/utils/redux/project/projectSlice';
 
 interface CreatorsProjectsProps {
   user: User;
@@ -56,7 +55,6 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
           const isApplicationStatusMatch =
             selectedApplicationStatuses.length === 0 ||
             selectedApplicationStatuses.includes(progressWithProject.progress.status);
-          console.log(isProjectStatusMatch, isApplicationStatusMatch);
           return isProjectStatusMatch && isApplicationStatusMatch;
         })
         .map((progress) => progress.project);
@@ -67,15 +65,13 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
     }
   };
 
-  console.log(myProjects);
-
   return (
-    <>
+    <Flex direction='column' style={{ width: '95%' }}>
       <Flex justify='center' p='1' pt='0' pb='0' direction='column'>
         <div style={{ display: isOpened ? 'block' : 'none' }}>
           <Flex direction='column' gap='2'>
             <Flex direction='row' justify='between' gap='2'>
-              <div style={{ flexGrow: '1' }}>
+              <div style={{ flexGrow: '1' }} className='swiper-no-swiping'>
                 <Select
                   isSearchable={false}
                   onChange={handleProjectStatusChange}
@@ -89,17 +85,19 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
                 />
               </div>
 
-              <Select
-                isSearchable={false}
-                onChange={handleApplicationStatusChange}
-                placeholder='Application status'
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                options={APPLICATION_STATUSES}
-                styles={CUSTOM_SELECT_STYLES_MULTI}
-                isMulti={true}
-                isClearable={true}
-              />
+              <div className='swiper-no-swiping'>
+                <Select
+                  isSearchable={false}
+                  onChange={handleApplicationStatusChange}
+                  placeholder='Application status'
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  options={APPLICATION_STATUSES}
+                  styles={CUSTOM_SELECT_STYLES_MULTI}
+                  isMulti={true}
+                  isClearable={true}
+                />
+              </div>
             </Flex>
             {showFindButton && <Button onClick={handleFindButtonClick}>Find</Button>}
           </Flex>
@@ -123,7 +121,7 @@ const CreatorsProjects: FC<CreatorsProjectsProps> = ({ user, isOpened, setIsOpen
           ))
         )}
       </Flex>
-    </>
+    </Flex>
   );
 };
 

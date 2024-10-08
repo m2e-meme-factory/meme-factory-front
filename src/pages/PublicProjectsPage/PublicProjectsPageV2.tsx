@@ -38,12 +38,14 @@ const BlockObserver = styled.div`
 const SwiperContainer = styled.div`
   .swiper {
     width: 100%;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 150px);
+    z-index: 0;
   }
 
   .swiper-slide {
     overflow-y: auto;
     padding-bottom: 60px;
+    z-index: 0;
   }
 
   .swiper-pagination {
@@ -126,7 +128,7 @@ export default function Component() {
 
   useEffect(() => {
     if (user && refResponse) {
-      setRefsCount(refResponse.data.count);
+      setRefsCount(refResponse.count);
     }
   }, [refResponse]);
 

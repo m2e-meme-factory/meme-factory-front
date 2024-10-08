@@ -12,7 +12,7 @@ import ProtectedRoute from './shared/components/ProtectedRoute';
 import ProjectPage from './pages/ProjectPage/ProjectPage';
 import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
-import AutoTasksProject from './pages/AutotasksProject/AutoTasksProject';
+import FastTasksPage from './pages/AutotasksProject/FastTasksPage';
 import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
 import Component from './pages/PublicProjectsPage/PublicProjectsPageV2';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
@@ -61,7 +61,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.AUTOTASKS,
-        element: <AutoTasksProject />,
+        element: <FastTasksPage />,
       },
     ],
   },

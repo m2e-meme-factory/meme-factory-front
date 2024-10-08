@@ -1,36 +1,43 @@
-import { Badge, Box, Button, Callout, Card, Flex, Heading, Text, Theme } from '@radix-ui/themes';
+import {
+  Badge,
+  Box,
+  Button,
+  Callout,
+  Card,
+  Flex,
+  Heading,
+  Spinner,
+  Text,
+  Theme,
+} from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { useApplyForAutotask } from '../../../../shared/utils/api/hooks/autotasks/useApplyForAutotask';
-import { useClaimReward } from '../../../../shared/utils/api/hooks/autotasks/useClaimReward';
-import { AutotaskApplicationDTO } from 'api';
-import { calculateTimeLeft } from '../../../../shared/utils/helpers/calculateTimeLeft';
-import { showToastWithPromise } from '../../../../shared/utils/helpers/notify';
-import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotasks/getAutotaskApplications';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../shared/utils/redux/store';
-import { AxiosResponse } from 'axios';
+import { showErrorMessage, showSuccessMessage } from '../../../../shared/utils/helpers/notify';
 import { Sheet } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
-import SocialsLink from '../../../../shared/components/SocialsLink/SocialsLink';
-import { getIconByTaskId } from '../../../../shared/utils/helpers/getIconByTaskId';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import CopyableRef from '../CopyableField/CopyableRef';
-import { Toaster } from 'react-hot-toast';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotask/getAutotaskApplications';
+import { applyAutotaskCompletion } from '../../../../shared/utils/api/requests/autotask/applyForAutotaskCompletion';
+import { claimAutotaskReward } from '../../../../shared/utils/api/requests/autotask/claimAutotaskReward';
+import styles from '../../../../shared/components/SocialsLink/SocialsLink.module.css';
+import { UNSUBSCRIBE_WARNING } from '../../../../shared/consts/strings';
+import { getSocialsNameByTaskId } from '../../../../shared/utils/helpers/getSocialsNameByTaskId';
 
 interface AutotaskProps {
   id: number;
   title: string;
   description: string;
-  price: number;
+  price: string;
   createdAt?: string;
   children?: ReactNode;
-  url?: string;
+  url: string | null;
   icon?: ReactNode;
-  category: string;
   userId: number;
   claimed: boolean;
-  done: boolean;
+  applied: boolean;
   refLink?: string;
+  category: 'ref' | 'default';
 }
 
 const AutotaskCard: FC<AutotaskProps> = ({
@@ -40,82 +47,51 @@ const AutotaskCard: FC<AutotaskProps> = ({
   price,
   children,
   userId,
-  done,
+  applied,
   claimed,
-  createdAt,
   icon,
-  category,
   url,
   refLink,
+  category,
 }) => {
-  const user = useSelector((state: RootState) => state.user.user);
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isApplied, setApplied] = useState(done);
-  const [isRewardClaimed, setIsRewardClaimed] = useState(claimed);
-  const [isTimerStarted, setTimerStarted] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(claimed);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [applicationInfo, setApplicationInfo] = useState<AutotaskApplicationDTO>();
-  const [cardStyle, setCardStyle] = useState<React.CSSProperties>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
-  const mutation = useApplyForAutotask(setApplicationInfo, setTimeLeft);
-  const claimReward = useClaimReward();
+  //State of autotask
+  type ApplicationStatus = 'applied' | 'claimed' | 'unstarted';
+  const [isApplied, setIsApplied] = useState(applied);
+  const [isClaimed, setIsClaimed] = useState(claimed);
+  const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus>(
+    isApplied ? (isClaimed ? 'claimed' : 'applied') : 'unstarted'
+  );
 
   useEffect(() => {
-    if (createdAt) {
-      const timeLeftCalculated = calculateTimeLeft(createdAt);
-      setTimeLeft(timeLeftCalculated);
-    }
-    if (!isApplied) {
-      setApplied(done);
-    }
-    if (!isRewardClaimed) {
-      setIsRewardClaimed(claimed);
-    }
-    setIsBlocked(claimed || isTimerStarted);
-  }, [isModalVisible, done, claimed, createdAt]);
+    setApplicationStatus(isApplied ? (isClaimed ? 'claimed' : 'applied') : 'unstarted');
+  }, [isApplied, isClaimed]);
+
+  //Card styles
+  type CardStyles = Record<'applied' | 'claimed' | 'unstarted', string>;
+  const cardStyles: CardStyles = {
+    applied: '2px solid #e8c020',
+    claimed: '2px solid #45a951',
+    unstarted: '2px solid var(--gray-10)',
+  };
+
+  const [cardStyle, setCardStyle] = useState<React.CSSProperties>({
+    border: cardStyles[applicationStatus as ApplicationStatus],
+    borderRadius: '20px',
+    padding: '10px 7px',
+  });
 
   useEffect(() => {
-    const newStyle: React.CSSProperties = {
+    setCardStyle({
+      border: cardStyles[applicationStatus as ApplicationStatus],
       borderRadius: '20px',
       padding: '10px 7px',
-      border: isApplied ? '2px solid #45a951' : '2px solid var(--gray-10)',
-    };
-    setCardStyle(newStyle);
-  }, [isApplied]);
+    });
+  }, [applicationStatus]);
 
-  useEffect(() => {
-    if (timeLeft > 0) {
-      setTimerStarted(true);
-      setIsBlocked(true);
-    } else {
-      setTimerStarted(false);
-      setIsBlocked(false);
-    }
-  }, [timeLeft]);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
-
-    if (isBlocked && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(timer!);
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
-  }, [isBlocked, timeLeft]);
+  //Modal controls
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleDialogClose = () => {
     setModalVisible(false);
@@ -125,65 +101,68 @@ const AutotaskCard: FC<AutotaskProps> = ({
     setModalVisible(true);
   };
 
-  const handleSendApplication = () => {
-    setApplied(true);
-    mutation.mutate({
-      params: { title, description, reward: price, taskId: id, userId, isIntegrated: false },
-    });
-    setTimeLeft(120);
-  };
-
-  const fetchApplicationInfo = async (): Promise<
-    AxiosResponse<AutotaskApplicationDTO[]> | undefined
-  > => {
-    if (user) {
-      return await showToastWithPromise({
-        success: 'Application info fetched successfully',
-        process: 'Fetching application info',
-        error: 'Error while fetching application info',
-        callback: () => getAutotaskApplications({ params: { userId: parseInt(user.id) } }),
-      });
-    } else {
-      return undefined;
-    }
-  };
-
-  const handleClaimReward = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-
-    if (!applicationInfo && user) {
-      const applicationInfoResponse = await fetchApplicationInfo();
-
-      if (applicationInfoResponse && applicationInfoResponse.data.length > 0) {
-        setApplicationInfo(applicationInfoResponse.data[0]);
-
-        if (applicationInfoResponse.data[0]) {
-          setIsRewardClaimed(true);
-          setIsBlocked(true);
-          claimReward.mutate({
-            params: { userId, applicationId: applicationInfoResponse.data[0].id },
-          });
-        }
-      }
-    } else if (applicationInfo) {
-      setIsRewardClaimed(true);
-      setIsBlocked(true);
-      claimReward.mutate({ params: { userId, applicationId: applicationInfo.id } });
-    }
-
-    setIsSubmitting(false);
-  };
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
+  // Autotask application
+  const {
+    data: application,
+    isLoading: applicationLoading,
+    refetch: refetchApplication,
+  } = useQuery({
+    queryFn: () => getAutotaskApplications({ params: { userId: userId, taskId: id } }),
+    queryKey: ['autotaskApplication', userId, id],
+    enabled: applied,
+    select: (data) => data.data[0],
+  });
 
   useEffect(() => {
-    console.log(isBlocked);
-  }, [isBlocked]);
+    if (application) {
+      const status: ApplicationStatus = application.isConfirmed ? 'claimed' : 'applied';
+      setApplicationStatus(status);
+    }
+  }, [application]);
+
+  const [submitting, setSubmitting] = useState(false);
+
+  //Apply for autotask
+  const { mutate: apply, isPending: isApplying } = useMutation({
+    mutationFn: applyAutotaskCompletion,
+    onError: () => {
+      showErrorMessage('Error occurred while applying autotask completion');
+    },
+    onSuccess: () => {
+      setIsApplied(true);
+    },
+    onSettled: () => {
+      setSubmitting(false);
+      refetchApplication();
+    },
+  });
+
+  //Claim reward
+  const { mutate: claim, isPending: isClaiming } = useMutation({
+    mutationFn: claimAutotaskReward,
+    onError: () => {
+      showErrorMessage('Error occurred while claiming reward');
+    },
+    onSuccess: () => {
+      setIsClaimed(true);
+      showSuccessMessage('Reward claimed successfully!');
+    },
+    onSettled: () => {
+      refetchApplication();
+    },
+  });
+
+  const handleClick = () => {
+    console.log(submitting, applicationStatus);
+    if (!submitting) {
+      if (applicationStatus === 'unstarted') {
+        setSubmitting(true);
+        setTimeout(() => apply({ params: { taskId: id } }), 5000);
+      } else if (applicationStatus === 'applied') {
+        claim({ params: { taskId: id } });
+      }
+    }
+  };
 
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
@@ -203,7 +182,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
           </Flex>
         </Flex>
 
-        {isRewardClaimed ? (
+        {isClaimed ? (
           <CheckIcon color='#45a951' width={20} height={20} />
         ) : (
           <CaretRightIcon width={20} height={20} />
@@ -219,12 +198,12 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     <Flex mb='5' mt='4' direction={'column'} gap='2'>
                       <Heading align='center'>{title}</Heading>
                       <Flex justify='center'>
-                        <Badge size='3' color={isApplied ? 'yellow' : 'gray'} variant='soft'>
-                          {isTimerStarted && timeLeft > 0
-                            ? `On approve`
-                            : isApplied
-                              ? 'Approved'
-                              : 'Pending'}
+                        <Badge
+                          size='3'
+                          color={isApplied ? (isClaimed ? 'green' : 'yellow') : 'gray'}
+                          variant='soft'
+                        >
+                          {applicationStatus}
                         </Badge>
                       </Flex>
                       <Text align='center' color='gray'>
@@ -233,39 +212,79 @@ const AutotaskCard: FC<AutotaskProps> = ({
                         </i>
                       </Text>
                     </Flex>
-                    {category == 'referral' && (
+                    {category === 'ref' && (
                       <Box mb='4'>
                         <CopyableRef refLink={refLink || 'test'} />
                       </Box>
                     )}
 
-                    <Callout.Root color='gray' mb={category == 'refferal' ? '8' : '4'}>
+                    <Callout.Root color='gray' mb={category === 'ref' ? '8' : '4'}>
                       <Callout.Icon>
                         <InfoCircledIcon width={20} height={20} />
                       </Callout.Icon>
                       <Callout.Text>{description}</Callout.Text>
                     </Callout.Root>
-                    {url && (
-                      <SocialsLink icon={getIconByTaskId(id)} socialsName={category} url={url} />
-                    )}
-
-                    {category != 'referral' && (
-                      <>
-                        <Button
-                          mb='2'
-                          size='4'
-                          className={isBlocked ? 'ProposalButtonDisabled' : 'ProposalButton'}
-                          disabled={isBlocked}
-                          onClick={!isApplied ? handleSendApplication : handleClaimReward}
-                        >
-                          {isTimerStarted && timeLeft > 0
-                            ? `Time left: ${formatTime(timeLeft)}`
-                            : isApplied
-                              ? 'Claim Reward'
-                              : 'Check!'}
-                        </Button>
-                      </>
-                    )}
+                    <Flex>
+                      <Flex direction='column' gap='2'>
+                        {isApplied && isClaimed ? (
+                          <div className={styles.card} onClick={handleClick}>
+                            <div className={styles.cardContent}>
+                              <div className={styles.websiteInfo}>
+                                {icon}
+                                <p className={styles.socialsName}>
+                                  Go to {getSocialsNameByTaskId(id)}
+                                </p>
+                              </div>
+                              <CheckIcon color='#45a951' width={20} height={20} />
+                            </div>
+                          </div>
+                        ) : isApplied ? (
+                          <div className={styles.card} onClick={handleClick}>
+                            <div className={styles.cardContent}>
+                              <Flex justify='center' align='center' style={{ width: '100%' }}>
+                                <p className={styles.socialsName}>Check</p>
+                              </Flex>
+                            </div>
+                          </div>
+                        ) : (
+                          <a
+                            href={url ?? ''}
+                            target='_blank'
+                            className={styles.link}
+                            onClick={handleClick}
+                          >
+                            <div className={styles.card}>
+                              <div className={styles.cardContent}>
+                                {submitting ? (
+                                  <div className={styles.card}>
+                                    <div className={styles.cardContent}>
+                                      <Flex
+                                        justify='center'
+                                        align='center'
+                                        style={{ width: '100%' }}
+                                      >
+                                        <Spinner></Spinner>
+                                      </Flex>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div className={styles.websiteInfo}>
+                                      {icon}
+                                      <p className={styles.socialsName}>
+                                        Go to {getSocialsNameByTaskId(id)}
+                                      </p>
+                                    </div>
+                                    <CaretRightIcon width={20} height={20} />
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </a>
+                        )}
+                        <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
+                      </Flex>
+                    </Flex>
                   </Flex>
                 </Theme>
               </Sheet.Scroller>

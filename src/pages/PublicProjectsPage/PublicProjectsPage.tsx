@@ -116,7 +116,7 @@ export default function Component() {
 
   useEffect(() => {
     if (user && refResponse) {
-      setRefsCount(refResponse.data.count);
+      setRefsCount(refResponse.count);
     }
   }, [refResponse]);
 

@@ -48,12 +48,14 @@ enum TabsOption {
 const SwiperContainer = styled.div`
   .swiper {
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 120px);
+    z-index: 0;
   }
 
   .swiper-slide {
     overflow-y: auto;
     padding-bottom: 60px;
+    z-index: 0;
   }
 
   .swiper-pagination {

@@ -8,6 +8,7 @@
     width: 100%;
     border-radius: 25px;
     background-color: #2f3135;
+    cursor: pointer
 }
 
 .cardContent {

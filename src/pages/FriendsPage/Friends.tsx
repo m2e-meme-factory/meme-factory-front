@@ -29,7 +29,7 @@ export default function Friends() {
 
   useEffect(() => {
     if (data) {
-      setRefData(data.data);
+      setRefData(data);
     }
   }, [data]);
 

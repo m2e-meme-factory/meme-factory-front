@@ -213,42 +213,6 @@ declare module 'api' {
     balance: string;
   }
 
-  export interface AutotaskApplicationDTO {
-    id: number;
-    title: string;
-    description: string;
-    reward: number;
-    isConfirmed: boolean;
-    isIntegrated: boolean;
-    url?: string;
-    userId: number;
-    taskId: number;
-    createdAt: string;
-  }
-
-  export interface CreateAutotaskApplicationDTO {
-    title: string;
-    description: string;
-    reward: number;
-    url?: string;
-    userId: number;
-    taskId: number;
-    isIntegrated: boolean;
-  }
-
-  export interface GetAutotaskApplicationsParams {
-    userId?: number;
-  }
-
-  export interface GetAutoTaskApplicationByIdParams {
-    applicationId: number;
-  }
-
-  export interface ClaimRewardParams {
-    applicationId: number;
-    userId: number;
-  }
-
   export interface GetProgressByProjectIdParams {
     projectId: string;
     userId?: string;
@@ -332,6 +296,32 @@ declare module 'api' {
     authorId: string;
     status: ProjectStatus;
     author: User;
+  }
+
+  export interface Autotask {
+    id: number;
+    title: string;
+    description: string;
+    reward: string;
+    url: string | null;
+    createdAt: string;
+    isIntegrated: boolean;
+    autoTaskApplication: AutotaskApplication[];
+  }
+
+  export interface AutotaskApplication {
+    id: number;
+    userId: number;
+    taskId: number;
+    isConfirmed: boolean;
+    createdAt: string;
+    user: User;
+    task: Autotask;
+  }
+
+  export interface GetAutotaskApplicationsParams {
+    userId?: number;
+    taskId?: number;
   }
 
   export interface Project {

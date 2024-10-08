@@ -52,7 +52,7 @@ const AutoTasksProjectCard = () => {
         <Flex>
           <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
           <Flex direction='column'>
-            <Heading>Fast tasks</Heading>
+            <Heading>FAST TASKS</Heading>
           </Flex>
         </Flex>
         <IconButton>

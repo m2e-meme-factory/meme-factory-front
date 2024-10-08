@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './shared/utils/redux/store';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import { WebAppProvider } from '@vkruglikov/react-telegram-web-app';
 
 const queryClient = new QueryClient();
 const manifestUrl =
@@ -12,11 +13,15 @@ const manifestUrl =
 const ProviderWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <TonConnectUIProvider manifestUrl={manifestUrl}>
-      <TelegramProvider>
+      <WebAppProvider
+        options={{
+          smoothButtonsTransition: true,
+        }}
+      >
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
         </Provider>
-      </TelegramProvider>
+      </WebAppProvider>
     </TonConnectUIProvider>
   );
 };

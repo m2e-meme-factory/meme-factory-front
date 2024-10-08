@@ -2,12 +2,12 @@ import { useMutation } from '@tanstack/react-query';
 import { deleteProject, OnlyIdProjectConfig } from '../../requests/project/project-requests';
 import { useNavigate } from 'react-router-dom';
 import { login, LoginConfig } from '../../requests/auth/login';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { useState } from 'react';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useDeleteProject = () => {
   const navigate = useNavigate();
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
   const [savedVariables, setSavedVariables] = useState<OnlyIdProjectConfig | null>(null);
 
   return useMutation({
@@ -19,9 +19,9 @@ export const useDeleteProject = () => {
       setSavedVariables(variables);
     },
     onError: async (error: any) => {
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

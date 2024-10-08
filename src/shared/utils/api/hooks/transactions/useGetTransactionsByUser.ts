@@ -1,13 +1,13 @@
 import { GetTxByUserParams } from 'api';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { useQuery } from '@tanstack/react-query';
 import { getTxByUser } from '../../requests/transactions/getTxByUser';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { showErrorMessage } from '../../../helpers/notify';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useGetTransactionsByUser = (params: GetTxByUserParams) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
     queryKey: ['userTransactions', params.userId],
@@ -20,9 +20,9 @@ export const useGetTransactionsByUser = (params: GetTxByUserParams) => {
         return await getTxByUser({ params: params });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401) {
-          if (webApp) {
+          if (initData) {
             const loginConfig: LoginConfig = {
-              params: { initData: { initData: webApp.initData } },
+              params: { initData: { initData: initData } },
             };
             try {
               const response = await login(loginConfig);

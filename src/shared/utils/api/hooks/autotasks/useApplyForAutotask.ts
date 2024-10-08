@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { useMutation } from '@tanstack/react-query';
 import {
   applyForAutotask,
@@ -15,13 +14,14 @@ import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 import { calculateTimeLeft } from '../../../helpers/calculateTimeLeft';
 import { AutotaskApplicationDTO } from 'api';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useApplyForAutotask = (
   setApplicationInfo: Dispatch<SetStateAction<AutotaskApplicationDTO | undefined>>,
   setTimeLeft?: Dispatch<SetStateAction<number>>
 ) => {
   const [savedVariables, setSavedVariables] = useState<ApplyForAutotaskConfig>();
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   return useMutation({
     mutationFn: async (config: ApplyForAutotaskConfig) => {
@@ -40,10 +40,10 @@ export const useApplyForAutotask = (
       setSavedVariables(variables);
     },
     onError: async (error: AxiosError) => {
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         showErrorMessage('Unauthorized! Trying to login');
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

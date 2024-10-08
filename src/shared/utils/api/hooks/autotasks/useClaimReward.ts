@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { claimReward, ClaimRewardConfig } from '../../requests/autotasks/claimReward';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -10,10 +9,11 @@ import {
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useClaimReward = () => {
   const [savedVariables, setSavedVariables] = useState<ClaimRewardConfig>();
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   return useMutation({
     mutationFn: (config: ClaimRewardConfig) => claimReward(config),
@@ -21,10 +21,10 @@ export const useClaimReward = () => {
       showSuccessMessage('Reward was claimed!');
     },
     onError: async (error: AxiosError) => {
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         showErrorMessage('Unauthorized! Trying to login');
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

@@ -1,12 +1,12 @@
 import { GetAutotaskApplicationsParams } from 'api';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { getAutotaskApplications } from '../../requests/autotasks/getAutotaskApplications';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useGetAutotaskApplications = (params: GetAutotaskApplicationsParams) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
     queryKey: ['getUserAutotaskApplications', params.userId],
@@ -18,9 +18,9 @@ export const useGetAutotaskApplications = (params: GetAutotaskApplicationsParams
       try {
         return await getAutotaskApplications({ params: params });
       } catch (error) {
-        if (error instanceof AxiosError && error.response?.status === 401 && webApp) {
+        if (error instanceof AxiosError && error.response?.status === 401 && initData) {
           const loginConfig: LoginConfig = {
-            params: { initData: { initData: webApp.initData } },
+            params: { initData: { initData: initData } },
           };
 
           try {

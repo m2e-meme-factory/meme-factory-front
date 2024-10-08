@@ -1,12 +1,12 @@
 import { getProgressByProjectId } from '../../requests/project/project-requests';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { GetProgressByProjectIdParams } from 'api';
 import { AxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { login, LoginConfig } from '../../requests/auth/login';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useGetProgress = (params: GetProgressByProjectIdParams) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
     queryKey: ['getProgress', params.projectId, params.userId],
@@ -15,9 +15,9 @@ export const useGetProgress = (params: GetProgressByProjectIdParams) => {
         return await getProgressByProjectId({ params: params });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401) {
-          if (webApp) {
+          if (initData) {
             const loginConfig: LoginConfig = {
-              params: { initData: { initData: webApp.initData } },
+              params: { initData: { initData: initData } },
             };
             try {
               const response = await login(loginConfig);

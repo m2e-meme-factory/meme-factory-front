@@ -9,7 +9,7 @@ import {
   AlertDialog,
 } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
 import { CATEGORIES } from '../../shared/consts/categories';
 import makeAnimated from 'react-select/animated';
@@ -73,22 +73,21 @@ const EditProjectPage = () => {
 
   const webapp = useWebApp();
 
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
   useEffect(() => {
     webapp.ready();
-
-    const backButton = webapp.BackButton;
-    backButton.show();
-    backButton.onClick(function () {
-      backButton.hide();
-    });
-
-    const handleBack = () => {
-      navigate(-1);
-      backButton.hide();
-    };
-
+    webapp.BackButton.show();
     webapp.onEvent('backButtonClicked', handleBack);
-  }, [navigate, webapp]);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   const updateProjectMutation = useUpdateProject(project?.project.id);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -56,22 +56,21 @@ const ProjectPage = () => {
 
   const webapp = useWebApp();
 
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
   useEffect(() => {
     webapp.ready();
-
-    const backButton = webapp.BackButton;
-    backButton.show();
-    backButton.onClick(function () {
-      backButton.hide();
-    });
-
-    const handleBack = () => {
-      navigate(-1);
-      backButton.hide();
-    };
-
+    webapp.BackButton.show();
     webapp.onEvent('backButtonClicked', handleBack);
-  }, [navigate, webapp]);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   const user = useSelector((state: RootState) => state.user.user);
 

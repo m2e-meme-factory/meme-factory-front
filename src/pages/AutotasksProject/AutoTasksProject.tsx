@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Flex, Heading, Spinner, Text } from '@radix-ui/themes';
 import styles from '../ProjectPage/ProjectPage.module.css';
 import AutotaskCard from './components/Autotask/Autotask';
@@ -25,22 +25,21 @@ const AutoTasksProject = () => {
   const webapp = useWebApp();
   const navigate = useNavigate();
 
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
   useEffect(() => {
     webapp.ready();
-
-    const backButton = webapp.BackButton;
-    backButton.show();
-    backButton.onClick(function () {
-      backButton.hide();
-    });
-
-    const handleBack = () => {
-      navigate(-1);
-      backButton.hide();
-    };
-
+    webapp.BackButton.show();
     webapp.onEvent('backButtonClicked', handleBack);
-  }, [navigate, webapp]);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   const { data: refDataResponse, isLoading: refLoading } = useGetRefData(user?.telegramId);
   const { data: autotaskApplicationsResponse, isLoading: applicationsLoading } =

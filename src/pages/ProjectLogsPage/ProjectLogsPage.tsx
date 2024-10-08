@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -39,22 +39,21 @@ const ProjectLogsPage = () => {
 
   const webapp = useWebApp();
 
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
   useEffect(() => {
     webapp.ready();
-
-    const backButton = webapp.BackButton;
-    backButton.show();
-    backButton.onClick(function () {
-      backButton.hide();
-    });
-
-    const handleBack = () => {
-      navigate(-1);
-      backButton.hide();
-    };
-
+    webapp.BackButton.show();
     webapp.onEvent('backButtonClicked', handleBack);
-  }, [navigate, webapp]);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (projectResponse) {

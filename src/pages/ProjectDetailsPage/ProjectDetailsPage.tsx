@@ -1,5 +1,5 @@
 import { Button, Card, Flex, Heading, IconButton, Text } from '@radix-ui/themes';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ArrowLeftIcon,
   ChevronRightIcon,
@@ -29,22 +29,21 @@ const ProjectDetailsPage = () => {
 
   const webapp = useWebApp();
 
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
   useEffect(() => {
     webapp.ready();
-
-    const backButton = webapp.BackButton;
-    backButton.show();
-    backButton.onClick(function () {
-      backButton.hide();
-    });
-
-    const handleBack = () => {
-      navigate(-1);
-      backButton.hide();
-    };
-
+    webapp.BackButton.show();
     webapp.onEvent('backButtonClicked', handleBack);
-  }, [navigate, webapp]);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (totalSpendingsResponse) {

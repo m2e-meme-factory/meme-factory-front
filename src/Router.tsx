@@ -1,21 +1,22 @@
 import { createBrowserRouter } from 'react-router-dom';
+import React, { Suspense, lazy } from 'react';
 import BasePageWrapper from './shared/components/BasePageWrapper';
-import ProfilePage from './pages/ProfilePage/ProfilePage';
-import Friends from './pages/FriendsPage/Friends';
-import CreateProjectPage from './pages/CreateProjectPage/CreateProjectPage';
-import ProfileSettingsPage from './pages/ProfileSettingsPage/ProfileSettingsPage';
-import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
-import ProjectLogsPage from './pages/ProjectLogsPage/ProjectLogsPage';
 import { ROUTES } from './shared/consts/routes';
-import React from 'react';
 import ProtectedRoute from './shared/components/ProtectedRoute';
-import ProjectPage from './pages/ProjectPage/ProjectPage';
-import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
-import FastTasksPage from './pages/AutotasksProject/FastTasksPage';
-import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
-import Component from './pages/PublicProjectsPage/PublicProjectsPageV2';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
+import Loading from './shared/components/Loading';
+
+const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
+const Friends = lazy(() => import('./pages/FriendsPage/Friends'));
+const CreateProjectPage = lazy(() => import('./pages/CreateProjectPage/CreateProjectPage'));
+const ProjectDetailsPage = lazy(() => import('./pages/ProjectDetailsPage/ProjectDetailsPage'));
+const ProjectLogsPage = lazy(() => import('./pages/ProjectLogsPage/ProjectLogsPage'));
+const ProjectPage = lazy(() => import('./pages/ProjectPage/ProjectPage'));
+const EditProjectPage = lazy(() => import('./pages/EditProjectPage/EditProjectPage'));
+const FastTasksPage = lazy(() => import('./pages/AutotasksProject/FastTasksPage'));
+const PublicProjectsPage = lazy(() => import('./pages/PublicProjectsPage/PublicProjectsPageV2'));
 
 export const router = createBrowserRouter([
   {
@@ -25,49 +26,77 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.PROFILE,
-        element: <ProfilePage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProfilePage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.PROJECT_PAGE,
-        element: <ProjectPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProjectPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.PUBLIC_PROJECTS,
-        element: <Component />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PublicProjectsPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.FRIENDS,
-        element: <Friends />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Friends />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.CREATE_PROJECT,
-        element: <CreateProjectPage />,
-      },
-      {
-        path: ROUTES.PROFILE_SETTINGS,
-        element: <ProfileSettingsPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <CreateProjectPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.PROJECT_DETAILS,
-        element: <ProjectDetailsPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProjectDetailsPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.EDIT,
-        element: <EditProjectPage />,
-      },
-      {
-        path: '*',
-        element: <NotFoundPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <EditProjectPage />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES.AUTOTASKS,
-        element: <FastTasksPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <FastTasksPage />
+          </Suspense>
+        ),
       },
     ],
   },
   {
     path: ROUTES.LOGS,
-    element: <ProtectedRoute element={<ProjectLogsPage />} />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute element={<ProjectLogsPage />} />
+      </Suspense>
+    ),
   },
   {
     path: ROUTES.UNAUTHORIZED,

@@ -12,7 +12,6 @@ export const useGetUserProgresses = (params: GetUserProgressesParams) => {
   const query = useQuery({
     queryKey: ['getUserProgress', userId],
     queryFn: async () => {
-      console.log(userId);
       if (!userId) {
         return Promise.reject('userId invalid');
       }
@@ -20,7 +19,6 @@ export const useGetUserProgresses = (params: GetUserProgressesParams) => {
       try {
         return await getUserProgresses({ params: { userId: userId } });
       } catch (error) {
-        console.log(error, 'caught');
         if (error instanceof AxiosError && error.response?.status === 401 && initData) {
           const loginConfig: LoginConfig = {
             params: { initData: { initData: initData } },

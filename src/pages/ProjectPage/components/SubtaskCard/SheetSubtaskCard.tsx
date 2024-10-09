@@ -99,8 +99,6 @@ const SheetSubtaskCard = ({
     handleDialogClose();
   };
 
-  console.log('Роль пользователя', userRole);
-
   return (
     <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between' pl='2' pr='2'>

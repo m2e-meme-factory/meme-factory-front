@@ -32,8 +32,6 @@ const CreatedSubtask: FC<SubtaskCardProps> = ({ title, price, id, setSubtask, de
       price: parseFloat(formData.get('price') as string),
     };
 
-    console.log(updatedSubtask);
-
     setSubtask((prevSubtasks) =>
       prevSubtasks.map((subtask) => (subtask.id === updatedSubtask.id ? updatedSubtask : subtask))
     );

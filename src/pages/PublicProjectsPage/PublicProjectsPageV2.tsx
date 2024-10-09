@@ -22,7 +22,6 @@ import { CATEGORIES } from '../../shared/consts/categories';
 import { TAGS } from '../../shared/consts/tags';
 import { Option } from '../../@types/app';
 import { useGetPublicProjects } from '../../shared/utils/api/hooks/project/useGetPublicProjects';
-import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import { RootState } from '../../shared/utils/redux/store';
 import { Project } from 'api';
 import {
@@ -70,7 +69,6 @@ export default function Component() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isEnd, setIsEnd] = useState(false);
-  const [refsCount, setRefsCount] = useState<number>(0);
   const [isColumn, setIsColumn] = useState(false);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const tagsRef = useRef<HTMLDivElement | null>(null);
@@ -94,8 +92,6 @@ export default function Component() {
     page: currentPage,
     limit: DISPLAY_LIMIT,
   });
-
-  const { data: refResponse, isLoading: refLoading } = useGetRefData(user?.telegramId);
 
   const { ref, inView } = useInView({
     threshold: 1.0,
@@ -125,12 +121,6 @@ export default function Component() {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (user && refResponse) {
-      setRefsCount(refResponse.count);
-    }
-  }, [refResponse]);
 
   useEffect(() => {
     if (data && !loadedPages.current.has(currentPage)) {

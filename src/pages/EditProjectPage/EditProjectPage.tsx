@@ -220,7 +220,6 @@ const EditProjectPage = () => {
         files: files,
       };
 
-      console.log(projectData);
       if (project && projectData) {
         updateProjectMutation.mutate({
           params: { projectId: project.project.id, project: projectData },

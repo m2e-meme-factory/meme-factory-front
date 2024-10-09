@@ -23,6 +23,7 @@ import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreate
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 import toast from 'react-hot-toast';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -168,10 +169,9 @@ const CreateProjectPage = () => {
           files: files,
         };
 
-        console.log('Project Data:', projectData);
         createProjectMutation.mutate({ params: projectData });
       } catch (error) {
-        console.error('Error creating project:', error);
+        showErrorMessage('');
       } finally {
         setCreateLoading(false);
       }

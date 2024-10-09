@@ -36,7 +36,6 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
 
     setSubtasks((prevSubtasks) => [...prevSubtasks, data as TaskInfo]);
     setModalOpen(false);
-    console.log(data);
   };
 
   return (

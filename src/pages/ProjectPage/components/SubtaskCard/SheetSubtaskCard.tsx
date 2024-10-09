@@ -17,6 +17,7 @@ import { UserRoleInProject } from '../../ProjectPage';
 import { ProjectProgress } from 'api';
 import * as Form from '@radix-ui/react-form';
 import { useApplyTaskCompletion } from '../../../../shared/utils/api/hooks/task/useApplyTaskCompletion';
+import './index.css';
 
 interface SheetSubtaskCardProps {
   title: string;

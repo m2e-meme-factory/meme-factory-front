@@ -155,7 +155,7 @@ const ProjectLogsPage = () => {
           </IconButton>
           <Heading ml='3'>{shortenString(currentProject?.project.title, 20)}</Heading>
         </Flex>
-        <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
+        <Button onClick={() => navigate(`/projects/${projectId}`)}>VIEW</Button>
       </Flex>
       <Flex m='4' direction='column' style={{ height: '73vh' }}>
         <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
@@ -198,7 +198,7 @@ const ProjectLogsPage = () => {
             placeholder='Send a message…'
             onChange={handleMessageChange}
             value={message}
-            style={{ width: '80vw', height: '8vh' }}
+            style={{ width: '85%', height: '8vh' }}
           />
           <IconButton size='4' onClick={handleMessageSend}>
             <PaperPlaneIcon />

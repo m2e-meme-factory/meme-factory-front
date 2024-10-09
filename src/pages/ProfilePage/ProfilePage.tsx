@@ -203,9 +203,6 @@ export default function ProfilePage() {
                         </Flex>
                       </Skeleton>
                     </Flex>
-                    <Button>
-                      <ChevronRightIcon /> Withdraw
-                    </Button>
                   </Flex>
                 </Card>
 

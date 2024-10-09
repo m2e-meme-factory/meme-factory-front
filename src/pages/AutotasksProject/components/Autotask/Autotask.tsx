@@ -153,7 +153,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
   });
 
   const handleClick = () => {
-    console.log(submitting, applicationStatus);
     if (!submitting) {
       if (applicationStatus === 'unstarted') {
         setSubmitting(true);
@@ -192,102 +191,96 @@ const AutotaskCard: FC<AutotaskProps> = ({
           <Sheet.Container>
             <Sheet.Header />
             <Sheet.Content>
-              <Sheet.Scroller>
-                <Theme>
-                  <Flex m='4' gap='2' direction='column'>
-                    <Flex mb='5' mt='4' direction={'column'} gap='2'>
-                      <Heading align='center'>{title}</Heading>
-                      <Flex justify='center'>
-                        <Badge
-                          size='3'
-                          color={isApplied ? (isClaimed ? 'green' : 'yellow') : 'gray'}
-                          variant='soft'
-                        >
-                          {applicationStatus}
-                        </Badge>
-                      </Flex>
-                      <Text align='center' color='gray'>
-                        <i>
-                          +{price} <Badge color='bronze'>M2E</Badge>
-                        </i>
-                      </Text>
+              <Theme>
+                <Flex m='4' gap='2' direction='column'>
+                  <Flex mb='5' mt='4' direction={'column'} gap='2'>
+                    <Heading align='center'>{title}</Heading>
+                    <Flex justify='center'>
+                      <Badge
+                        size='3'
+                        color={isApplied ? (isClaimed ? 'green' : 'yellow') : 'gray'}
+                        variant='soft'
+                      >
+                        {applicationStatus}
+                      </Badge>
                     </Flex>
-                    {category === 'ref' && (
-                      <Box mb='4'>
-                        <CopyableRef refLink={refLink || 'test'} />
-                      </Box>
-                    )}
+                    <Text align='center' color='gray'>
+                      <i>
+                        +{price} <Badge color='bronze'>M2E</Badge>
+                      </i>
+                    </Text>
+                  </Flex>
+                  {category === 'ref' && (
+                    <Box mb='4'>
+                      <CopyableRef refLink={refLink || 'test'} />
+                    </Box>
+                  )}
 
-                    <Callout.Root color='gray' mb={category === 'ref' ? '8' : '4'}>
-                      <Callout.Icon>
-                        <InfoCircledIcon width={20} height={20} />
-                      </Callout.Icon>
-                      <Callout.Text>{description}</Callout.Text>
-                    </Callout.Root>
-                    <Flex>
-                      <Flex direction='column' gap='2'>
-                        {isApplied && isClaimed ? (
-                          <div className={styles.card} onClick={handleClick}>
-                            <div className={styles.cardContent}>
-                              <div className={styles.websiteInfo}>
-                                {icon}
-                                <p className={styles.socialsName}>
-                                  Go to {getSocialsNameByTaskId(id)}
-                                </p>
-                              </div>
-                              <CheckIcon color='#45a951' width={20} height={20} />
+                  <Callout.Root color='gray' mb={category === 'ref' ? '8' : '4'}>
+                    <Callout.Icon>
+                      <InfoCircledIcon width={20} height={20} />
+                    </Callout.Icon>
+                    <Callout.Text>{description}</Callout.Text>
+                  </Callout.Root>
+                  <Flex>
+                    <Flex direction='column' gap='2'>
+                      {isApplied && isClaimed ? (
+                        <div className={styles.card} onClick={handleClick}>
+                          <div className={styles.cardContent}>
+                            <div className={styles.websiteInfo}>
+                              {icon}
+                              <p className={styles.socialsName}>
+                                Go to {getSocialsNameByTaskId(id)}
+                              </p>
                             </div>
+                            <CheckIcon color='#45a951' width={20} height={20} />
                           </div>
-                        ) : isApplied ? (
-                          <div className={styles.card} onClick={handleClick}>
+                        </div>
+                      ) : isApplied ? (
+                        <div className={styles.card} onClick={handleClick}>
+                          <div className={styles.cardContent}>
+                            <Flex justify='center' align='center' style={{ width: '100%' }}>
+                              <p className={styles.socialsName}>Check</p>
+                            </Flex>
+                          </div>
+                        </div>
+                      ) : (
+                        <a
+                          href={url ?? ''}
+                          target='_blank'
+                          className={styles.link}
+                          onClick={handleClick}
+                        >
+                          <div className={styles.card}>
                             <div className={styles.cardContent}>
-                              <Flex justify='center' align='center' style={{ width: '100%' }}>
-                                <p className={styles.socialsName}>Check</p>
-                              </Flex>
-                            </div>
-                          </div>
-                        ) : (
-                          <a
-                            href={url ?? ''}
-                            target='_blank'
-                            className={styles.link}
-                            onClick={handleClick}
-                          >
-                            <div className={styles.card}>
-                              <div className={styles.cardContent}>
-                                {submitting ? (
-                                  <div className={styles.card}>
-                                    <div className={styles.cardContent}>
-                                      <Flex
-                                        justify='center'
-                                        align='center'
-                                        style={{ width: '100%' }}
-                                      >
-                                        <Spinner></Spinner>
-                                      </Flex>
-                                    </div>
+                              {submitting ? (
+                                <div className={styles.card}>
+                                  <div className={styles.cardContent}>
+                                    <Flex justify='center' align='center' style={{ width: '100%' }}>
+                                      <Spinner></Spinner>
+                                    </Flex>
                                   </div>
-                                ) : (
-                                  <>
-                                    <div className={styles.websiteInfo}>
-                                      {icon}
-                                      <p className={styles.socialsName}>
-                                        Go to {getSocialsNameByTaskId(id)}
-                                      </p>
-                                    </div>
-                                    <CaretRightIcon width={20} height={20} />
-                                  </>
-                                )}
-                              </div>
+                                </div>
+                              ) : (
+                                <>
+                                  <div className={styles.websiteInfo}>
+                                    {icon}
+                                    <p className={styles.socialsName}>
+                                      Go to {getSocialsNameByTaskId(id)}
+                                    </p>
+                                  </div>
+                                  <CaretRightIcon width={20} height={20} />
+                                </>
+                              )}
                             </div>
-                          </a>
-                        )}
-                        <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
-                      </Flex>
+                          </div>
+                        </a>
+                      )}
+                      <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
                     </Flex>
                   </Flex>
-                </Theme>
-              </Sheet.Scroller>
+                </Flex>
+              </Theme>
             </Sheet.Content>
           </Sheet.Container>
           <Sheet.Backdrop onTap={() => handleDialogClose()} />

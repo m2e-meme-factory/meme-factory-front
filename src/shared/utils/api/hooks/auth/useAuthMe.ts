@@ -35,7 +35,7 @@ export const useAuthMe = () => {
         showErrorMessage('Something went wrong');
       }
     },
-    select: (data) => data,
+    select: (data) => (data ? data.data : null),
     retry: false,
     refetchOnWindowFocus: 'always',
   });

@@ -1,3 +1,8 @@
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import {
   Grid,
   Text,
@@ -12,29 +17,27 @@ import {
   Theme,
   Callout,
   Blockquote,
+  Skeleton,
 } from '@radix-ui/themes';
-import CopyableCode from '../../shared/components/CopyableCode';
 import { ChevronRightIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import { useDispatch, useSelector } from 'react-redux';
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { RefDataResponse, User } from 'api';
+import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
+
+import { RootState } from '../../shared/utils/redux/store';
 import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '../../shared/utils/redux/user/userSlice';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
-import { RootState } from '../../shared/utils/redux/store';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
-import { Sheet } from 'react-modal-sheet';
-import verified from './../../shared/imgs/verify.png';
-import GlowingButton from '../../shared/components/Buttons/GlowingButton';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { verifyUser } from '../../shared/utils/api/requests/user/verifyUser';
 import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
-import { useSwipeable } from 'react-swipeable';
+
+import Loading from '../../shared/components/Loading';
+import CopyableCode from '../../shared/components/CopyableCode';
+import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+
+import verified from './../../shared/imgs/verify.png';
 import Swiper from 'swiper';
 import 'swiper/css';
 import styled from 'styled-components';
-import Loading from '../../shared/components/Loading';
+import { Sheet } from 'react-modal-sheet';
 
 const TransactionsHistoryPage = lazy(
   () => import('../TransactionsHistoryPage/TransactionsHistoryPage')
@@ -66,27 +69,19 @@ const SwiperContainer = styled.div`
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const [userSt, setUserSt] = useState<User>();
-  const { data: userDataResponse } = useAuthMe();
-  const [refData, setRefData] = useState<RefDataResponse | null>(null);
   const [searchParams] = useSearchParams();
-  const defaultTab = searchParams.get('tab') || 'account';
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const [walletAddress, setWalletAddress] = useState<string>();
-  const user = useSelector((state: RootState) => state.user.user);
+  const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
   const [tonConnectUI] = useTonConnectUI();
+  const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
+
+  const defaultTab = searchParams.get('tab') || 'account';
   const swiperRef = useRef<Swiper | null>(null);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string>();
   const [[page, direction], setPage] = useState([0, 0]);
   const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.ACCOUNT);
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => handleTabChange(TabsOption.TRANSACTIONS),
-    onSwipedRight: () => handleTabChange(TabsOption.ACCOUNT),
-    trackMouse: true,
-  });
 
   useEffect(() => {
     swiperRef.current = new Swiper('.swiper', {
@@ -95,7 +90,6 @@ export default function ProfilePage() {
 
     if (swiperRef.current) {
       swiperRef.current.on('slideChange', () => {
-        setCurrentSlideIndex(swiperRef.current!.activeIndex);
         setCurrentTab(
           swiperRef.current!.activeIndex === 0 ? TabsOption.ACCOUNT : TabsOption.TRANSACTIONS
         );
@@ -168,8 +162,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (userDataResponse) {
-      setUserSt(userDataResponse.data);
-      dispatch(setUser(userDataResponse.data));
+      dispatch(setUser(userDataResponse));
     }
   }, [userDataResponse]);
 
@@ -198,9 +191,17 @@ export default function ProfilePage() {
                   <Flex justify='between' align='center'>
                     <Flex direction='column'>
                       <Heading>Available Balance</Heading>
-                      <Text>
-                        {userSt?.balance ?? '0'} <Badge color='bronze'>M2E</Badge>
-                      </Text>
+                      <Skeleton width='4' loading={userDataLoading}>
+                        <Flex
+                          gapX='3'
+                          direction='row'
+                          align='center'
+                          style={{ width: 'fit-content', borderRadius: '5px' }}
+                        >
+                          <Text>{userDataResponse?.balance ?? '0'}</Text>{' '}
+                          <Badge color='bronze'>M2E</Badge>
+                        </Flex>
+                      </Skeleton>
                     </Flex>
                     <Button>
                       <ChevronRightIcon /> Withdraw
@@ -208,7 +209,7 @@ export default function ProfilePage() {
                   </Flex>
                 </Card>
 
-                {userSt && !userSt.isVerified && (
+                {userDataResponse && !userDataResponse.isVerified && (
                   <Card m='4'>
                     <Grid gap='4'>
                       <Heading>Verify</Heading>
@@ -217,10 +218,8 @@ export default function ProfilePage() {
                           <InfoCircledIcon height={20} width={20} />
                         </Callout.Icon>
                         <Callout.Text>
-                          {/* <Text color='gray' mb='2' size='2'> */}
                           Verified users have auto approve for any project apply and have 100%
                           chance for receiving airdrop. Instant verification price: 5 USDT
-                          {/* </Text> */}
                         </Callout.Text>
                       </Callout.Root>
                       <GlowingButton size='3' onClick={handleDialogOpen}>
@@ -276,31 +275,41 @@ export default function ProfilePage() {
                     <DataList.Root>
                       <DataList.Item align='center'>
                         <DataList.Label minWidth='88px'>Status</DataList.Label>
-                        <DataList.Value>
-                          <Badge
-                            color={userSt?.isVerified ? 'jade' : 'red'}
-                            variant='soft'
-                            radius='full'
-                          >
-                            {userSt?.isVerified ? 'Verified' : 'Not Verified'}
-                          </Badge>
-                        </DataList.Value>
+                        <Skeleton loading={userDataLoading}>
+                          <DataList.Value>
+                            <Badge
+                              color={userDataResponse?.isVerified ? 'jade' : 'red'}
+                              variant='soft'
+                              radius='full'
+                            >
+                              {userDataResponse?.isVerified ? 'Verified' : 'Not Verified'}
+                            </Badge>
+                          </DataList.Value>
+                        </Skeleton>
                       </DataList.Item>
                       <DataList.Item>
                         <DataList.Label minWidth='88px'>ID</DataList.Label>
-                        <DataList.Value>
-                          <CopyableCode value={userSt?.id || ''} />
-                        </DataList.Value>
+                        <Skeleton loading={userDataLoading}>
+                          <DataList.Value>
+                            <CopyableCode value={userDataResponse?.id || ''} />
+                          </DataList.Value>
+                        </Skeleton>
                       </DataList.Item>
                       <DataList.Item>
                         <DataList.Label minWidth='88px'>Nickname</DataList.Label>
-                        <DataList.Value>
-                          <CopyableCode value={`${userSt?.username}`} />
-                        </DataList.Value>
+                        <Skeleton loading={userDataLoading}>
+                          <DataList.Value>
+                            <CopyableCode value={`${userDataResponse?.username}`} />
+                          </DataList.Value>
+                        </Skeleton>
                       </DataList.Item>
                       <DataList.Item>
                         <DataList.Label minWidth='88px'>Type</DataList.Label>
-                        <DataList.Value>{userSt?.role}</DataList.Value>
+                        <Skeleton loading={userDataLoading}>
+                          <DataList.Value>
+                            <Text>{userDataResponse?.role}</Text>
+                          </DataList.Value>
+                        </Skeleton>
                       </DataList.Item>
                     </DataList.Root>
                   </Grid>

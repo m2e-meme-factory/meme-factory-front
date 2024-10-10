@@ -149,7 +149,7 @@ const SheetSubtaskCard = ({
                     <Callout.Text>{description}</Callout.Text>
                   </Callout.Root>
 
-                  {status === 'uncompleted' &&
+                  {status === 'uncompleted' || status === 'rejected' &&
                     userRole !== 'projectOwner' &&
                     userRole !== 'guestAdvertiser' && (
                       <Form.Root className='FormRoot' onSubmit={handleSubmit}>

@@ -152,7 +152,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const handleApplyClick = () => {
     if (applicationStatus === 'unstarted' && !submitting) {
       setSubmitting(true);
-      setTimeout(() => apply({ params: { taskId: id } }), 5000);
+      setTimeout(() => apply({ params: { taskId: id } }), 11000);
     }
   };
 

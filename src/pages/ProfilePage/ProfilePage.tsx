@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -38,6 +38,7 @@ import Swiper from 'swiper';
 import 'swiper/css';
 import styled from 'styled-components';
 import { Sheet } from 'react-modal-sheet';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 const TransactionsHistoryPage = lazy(
   () => import('../TransactionsHistoryPage/TransactionsHistoryPage')
@@ -83,6 +84,24 @@ export default function ProfilePage() {
   const [[page, direction], setPage] = useState([0, 0]);
   const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.ACCOUNT);
 
+  const webapp = useWebApp();
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
+  useEffect(() => {
+    webapp.ready();
+    webapp.BackButton.show();
+    webapp.onEvent('backButtonClicked', handleBack);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
+
   useEffect(() => {
     swiperRef.current = new Swiper('.swiper', {
       direction: 'horizontal',
@@ -102,6 +121,10 @@ export default function ProfilePage() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    handleTabChange(defaultTab);
+  }, [defaultTab]);
 
   const handleTabChange = (value: string) => {
     const newTab = value as TabsOption;
@@ -318,7 +341,7 @@ export default function ProfilePage() {
                     <Button
                       onClick={() => {
                         localStorage.setItem('onboardCompleted', 'false');
-                        navigate('/');
+                        navigate('/tutorial');
                       }}
                     >
                       Start tutorial again

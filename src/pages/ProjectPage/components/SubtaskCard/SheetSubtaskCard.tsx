@@ -126,7 +126,7 @@ const SheetSubtaskCard = ({
           <Sheet.Container>
             <Sheet.Header />
             <Sheet.Content>
-              <Theme>
+              <Theme style={{ width: '100%' }}>
                 <Flex m='4' gap='2' direction='column'>
                   <Flex mb='5' mt='4' direction={'column'} gap='2'>
                     <Heading align='center'>{title}</Heading>

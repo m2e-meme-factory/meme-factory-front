@@ -18,7 +18,7 @@ const PendingApplications = () => {
   }, [pendingFreelancers]);
 
   return (
-    <ScrollArea type='always' scrollbars='vertical' style={{ height: 'fit-content' }}>
+    <ScrollArea type='always' scrollbars='both' style={{ height: 'fit-content' }}>
       <Table.Root>
         <Table.Header>
           <Table.Row>

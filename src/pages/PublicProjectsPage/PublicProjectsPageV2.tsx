@@ -57,7 +57,7 @@ enum TabsOption {
   PUBLIC = 'public',
 }
 
-export default function Component() {
+export default function PublicProjectsPage() {
   const loadedPages = useRef(new Set<number>());
   const user = useSelector((state: RootState) => state.user.user);
 

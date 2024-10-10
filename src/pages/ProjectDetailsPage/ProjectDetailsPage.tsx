@@ -70,7 +70,7 @@ const ProjectDetailsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton mr='3' onClick={() => navigate('/profile?tab=myprojects')}>
+        <IconButton mr='3' onClick={() => navigate(-1)}>
           <ArrowLeftIcon />
         </IconButton>
         <Heading>Project details</Heading>
@@ -91,12 +91,16 @@ const ProjectDetailsPage = () => {
       </Card>
 
       <Card mt='5'>
-        <Flex align='center' justify='between'>
-          <Button size='2' onClick={() => navigate(`/projects/${id}`)}>
+        <Flex align='center' justify='between' gapX='2'>
+          <Button size='2' onClick={() => navigate(`/projects/${id}`)} style={{ width: '45%' }}>
             <MagnifyingGlassIcon />
-            View Project Page
+            View Project
           </Button>
-          <Button size='2' onClick={() => navigate(`/projects/${id}/edit`)}>
+          <Button
+            size='2'
+            onClick={() => navigate(`/projects/${id}/edit`)}
+            style={{ width: '45%' }}
+          >
             <Pencil1Icon />
             Edit Project
           </Button>

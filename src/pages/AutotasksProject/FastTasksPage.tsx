@@ -1,12 +1,11 @@
 import { useCallback, useEffect } from 'react';
-import { Flex, Heading, Spinner, Text } from '@radix-ui/themes';
+import { Flex, Heading, Text } from '@radix-ui/themes';
 import styles from '../ProjectPage/ProjectPage.module.css';
 import AutotaskCard from './components/Autotask/Autotask';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
-import CopyableRef from './components/CopyableField/CopyableRef';
 import { getIconByTaskId } from '../../shared/utils/helpers/getIconByTaskId';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useNavigate } from 'react-router-dom';
@@ -65,22 +64,6 @@ const FastTasksPage = () => {
               </Text>
             </Flex>
             <Flex justify='center' direction='column' gap='2'>
-              <AutotaskCard
-                key={0}
-                id={0}
-                title={'Points for friends'}
-                description={'Get 100 m2e for every friend'}
-                price={'100'}
-                children={<CopyableRef refLink={refData ? refData.refLink : ''} />}
-                url={null}
-                userId={parseInt(user?.id ?? '')}
-                applied={(refData?.count || 0) > 0}
-                claimed={(refData?.count || 0) > 0}
-                createdAt={'2024-12-12T12:12:12.462Z'}
-                icon={getIconByTaskId(0)}
-                category={'ref'}
-                refLink={refData?.refLink}
-              />
               {autotasks?.map((task) => (
                 <AutotaskCard
                   key={task.id}
@@ -105,7 +88,7 @@ const FastTasksPage = () => {
                   }
                   createdAt={task.createdAt}
                   icon={getIconByTaskId(0)}
-                  category={'default'}
+                  category={task.isIntegrated ? 'ref' : 'default'}
                   refLink={refData?.refLink}
                 />
               ))}

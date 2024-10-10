@@ -17,6 +17,7 @@ const ProjectPage = lazy(() => import('./pages/ProjectPage/ProjectPage'));
 const EditProjectPage = lazy(() => import('./pages/EditProjectPage/EditProjectPage'));
 const FastTasksPage = lazy(() => import('./pages/AutotasksProject/FastTasksPage'));
 const PublicProjectsPage = lazy(() => import('./pages/PublicProjectsPage/PublicProjectsPageV2'));
+const TutorialPage = lazy(() => import('./pages/TutorialPage/TutorialPage'));
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +102,14 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.UNAUTHORIZED,
     element: <UnauthorizedPage />,
+  },
+  {
+    path: ROUTES.TUTORIAL,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <TutorialPage />
+      </Suspense>
+    ),
   },
   {
     path: '*',

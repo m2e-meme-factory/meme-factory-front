@@ -1,28 +1,18 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Callout,
-  Card,
-  Flex,
-  Heading,
-  Spinner,
-  Text,
-  Theme,
-} from '@radix-ui/themes';
+import { Badge, Box, Callout, Card, Flex, Heading, Spinner, Text, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { showErrorMessage, showSuccessMessage } from '../../../../shared/utils/helpers/notify';
 import { Sheet } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import CopyableRef from '../CopyableField/CopyableRef';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotask/getAutotaskApplications';
 import { applyAutotaskCompletion } from '../../../../shared/utils/api/requests/autotask/applyForAutotaskCompletion';
 import { claimAutotaskReward } from '../../../../shared/utils/api/requests/autotask/claimAutotaskReward';
 import styles from '../../../../shared/components/SocialsLink/SocialsLink.module.css';
 import { UNSUBSCRIBE_WARNING } from '../../../../shared/consts/strings';
 import { getSocialsNameByTaskId } from '../../../../shared/utils/helpers/getSocialsNameByTaskId';
+import { AxiosError } from 'axios';
 
 interface AutotaskProps {
   id: number;
@@ -54,8 +44,6 @@ const AutotaskCard: FC<AutotaskProps> = ({
   refLink,
   category,
 }) => {
-  const queryClient = useQueryClient();
-
   //State of autotask
   type ApplicationStatus = 'applied' | 'claimed' | 'unstarted';
   const [isApplied, setIsApplied] = useState(applied);
@@ -140,8 +128,17 @@ const AutotaskCard: FC<AutotaskProps> = ({
   //Claim reward
   const { mutate: claim, isPending: isClaiming } = useMutation({
     mutationFn: claimAutotaskReward,
-    onError: () => {
-      showErrorMessage('Error occurred while claiming reward');
+    onError: (error: AxiosError) => {
+      const response = error.response?.data as {
+        error: string;
+        message: string;
+        statusCode: number;
+      };
+      if (response) {
+        showErrorMessage(response.message || 'An unknown error occurred');
+      } else {
+        showErrorMessage('An unknown error occurred');
+      }
     },
     onSuccess: () => {
       setIsClaimed(true);
@@ -152,15 +149,17 @@ const AutotaskCard: FC<AutotaskProps> = ({
     },
   });
 
-  const handleClick = () => {
-    if (!submitting) {
-      if (applicationStatus === 'unstarted') {
-        setSubmitting(true);
-        setTimeout(() => apply({ params: { taskId: id } }), 5000);
-      } else if (applicationStatus === 'applied') {
-        claim({ params: { taskId: id } });
-      }
+  const handleApplyClick = () => {
+    if (applicationStatus === 'unstarted' && !submitting) {
+      setSubmitting(true);
+      setTimeout(() => apply({ params: { taskId: id } }), 5000);
     }
+  };
+
+  const handleClaimClick = () => {
+    if (isClaiming && applicationStatus === 'applied') return;
+
+    claim({ params: { taskId: id } });
   };
 
   return (
@@ -222,63 +221,71 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     </Callout.Icon>
                     <Callout.Text>{description}</Callout.Text>
                   </Callout.Root>
-                  <Flex>
-                    <Flex direction='column' gap='2'>
-                      {isApplied && isClaimed ? (
-                        <div className={styles.card} onClick={handleClick}>
-                          <div className={styles.cardContent}>
-                            <div className={styles.websiteInfo}>
-                              {icon}
-                              <p className={styles.socialsName}>
-                                Go to {getSocialsNameByTaskId(id)}
-                              </p>
-                            </div>
-                            <CheckIcon color='#45a951' width={20} height={20} />
-                          </div>
-                        </div>
-                      ) : isApplied ? (
-                        <div className={styles.card} onClick={handleClick}>
-                          <div className={styles.cardContent}>
-                            <Flex justify='center' align='center' style={{ width: '100%' }}>
-                              <p className={styles.socialsName}>Check</p>
-                            </Flex>
-                          </div>
-                        </div>
-                      ) : (
-                        <a
-                          href={url ?? ''}
-                          target='_blank'
-                          className={styles.link}
-                          onClick={handleClick}
-                        >
+                  {category !== 'ref' && (
+                    <Flex>
+                      <Flex direction='column' gap='2'>
+                        {isApplied && isClaimed ? (
                           <div className={styles.card}>
                             <div className={styles.cardContent}>
-                              {submitting ? (
-                                <div className={styles.card}>
-                                  <div className={styles.cardContent}>
-                                    <Flex justify='center' align='center' style={{ width: '100%' }}>
-                                      <Spinner></Spinner>
-                                    </Flex>
-                                  </div>
-                                </div>
-                              ) : (
-                                <>
-                                  <div className={styles.websiteInfo}>
-                                    {icon}
-                                    <p className={styles.socialsName}>
-                                      Go to {getSocialsNameByTaskId(id)}
-                                    </p>
-                                  </div>
-                                  <CaretRightIcon width={20} height={20} />
-                                </>
-                              )}
+                              <div className={styles.websiteInfo}>
+                                {icon}
+                                <p className={styles.socialsName}>
+                                  {/*Go to {getSocialsNameByTaskId(id)}*/}
+                                  {title}
+                                </p>
+                              </div>
+                              <CheckIcon color='#45a951' width={20} height={20} />
                             </div>
                           </div>
-                        </a>
-                      )}
-                      <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
+                        ) : isApplied ? (
+                          <div className={styles.card} onClick={handleClaimClick}>
+                            <div className={styles.cardContent}>
+                              <Flex justify='center' align='center' style={{ width: '100%' }}>
+                                <p className={styles.socialsName}>Check</p>
+                              </Flex>
+                            </div>
+                          </div>
+                        ) : (
+                          <a
+                            href={url ?? ''}
+                            target='_blank'
+                            className={styles.link}
+                            onClick={handleApplyClick}
+                          >
+                            <div className={styles.card}>
+                              <div className={styles.cardContent}>
+                                {submitting || isClaiming ? (
+                                  <div className={styles.card}>
+                                    <div className={styles.cardContent}>
+                                      <Flex
+                                        justify='center'
+                                        align='center'
+                                        style={{ width: '100%' }}
+                                      >
+                                        <Spinner></Spinner>
+                                      </Flex>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div className={styles.websiteInfo}>
+                                      {icon}
+                                      <p className={styles.socialsName}>
+                                        {/*Go to {getSocialsNameByTaskId(id)}*/}
+                                        {title}
+                                      </p>
+                                    </div>
+                                    <CaretRightIcon width={20} height={20} />
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </a>
+                        )}
+                        <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
+                      </Flex>
                     </Flex>
-                  </Flex>
+                  )}
                 </Flex>
               </Theme>
             </Sheet.Content>

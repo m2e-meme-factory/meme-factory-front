@@ -2,8 +2,8 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { Project, User } from 'api';
 import { useGetMyProjects } from '../../../shared/utils/api/hooks/project/useGetMyProjects';
 import { useInView } from 'react-intersection-observer';
-import { Button, Flex, Heading, Text } from '@radix-ui/themes';
-import { Link } from 'react-router-dom';
+import { Button, Flex, Text } from '@radix-ui/themes';
+import { useNavigate } from 'react-router-dom';
 import MyProjectCard from './MyProjectCard/MyProjectCard';
 import Loading from '../../../shared/components/Loading';
 import styled from 'styled-components';
@@ -20,6 +20,7 @@ interface AdvertisersProjectsProps {
 
 const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
   const loadedPages = useRef(new Set<number>());
+  const navigate = useNavigate();
 
   const [myProjects, setMyProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,11 +59,15 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
     <>
       <Flex m='4' direction='column'>
         <Flex align='center'>
-          <Link to='/create-project' style={{ width: '100%' }}>
-            <Button style={{ width: '100%' }} size='3'>
-              Create project
-            </Button>
-          </Link>
+          <Button
+            onClick={() => {
+              navigate('/create-project');
+            }}
+            style={{ width: '100%' }}
+            size='3'
+          >
+            Create project
+          </Button>
         </Flex>
         <Flex mt='4' direction='column'>
           {myProjects.length === 0 ? (

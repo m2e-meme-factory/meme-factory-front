@@ -12,4 +12,5 @@ export const ROUTES = {
   EDIT: '/projects/:id/edit',
   AUTOTASKS: '/projects/autotasks',
   UNAUTHORIZED: '/unauthorized',
+  TUTORIAL: '/tutorial',
 };

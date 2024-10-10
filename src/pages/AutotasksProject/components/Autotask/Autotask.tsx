@@ -115,13 +115,19 @@ const AutotaskCard: FC<AutotaskProps> = ({
     mutationFn: applyAutotaskCompletion,
     onError: () => {
       showErrorMessage('Error occurred while applying autotask completion');
+      setSubmitting(false);
     },
     onSuccess: () => {
-      setIsApplied(true);
+      setTimeout(() => {
+        setSubmitting(false);
+        setIsApplied(true);
+      }, 11000);
     },
     onSettled: () => {
-      setSubmitting(false);
-      refetchApplication();
+      setTimeout(() => {
+        setSubmitting(false);
+        refetchApplication();
+      }, 11000);
     },
   });
 
@@ -152,7 +158,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const handleApplyClick = () => {
     if (applicationStatus === 'unstarted' && !submitting) {
       setSubmitting(true);
-      setTimeout(() => apply({ params: { taskId: id } }), 11000);
+      apply({ params: { taskId: id } });
     }
   };
 

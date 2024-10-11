@@ -7,7 +7,7 @@ import {
   DataList,
   Flex,
   Grid,
-  Heading,
+  Heading, Skeleton,
   Spinner,
   Text,
 } from '@radix-ui/themes';
@@ -189,11 +189,15 @@ export default function Friends() {
             <DataList.Item align='center'>
               <DataList.Item>
                 <DataList.Label minWidth='88px'>Total Count</DataList.Label>
-                <DataList.Value>{refData?.count}</DataList.Value>
+                <Skeleton loading={refLoading}>
+                  <DataList.Value>{refData?.count}</DataList.Value>
+                </Skeleton>
               </DataList.Item>
               <DataList.Item>
                 <DataList.Label minWidth='88px'>Total profit</DataList.Label>
-                <DataList.Value>0 {" "} <Badge color='bronze'>M2E</Badge></DataList.Value>
+                <Skeleton loading={refLoading}>
+                  <DataList.Value>0 {" "} <Badge color='bronze' ml='2'>M2E</Badge></DataList.Value>
+                </Skeleton>
               </DataList.Item>
             </DataList.Item>
           </DataList.Root>

@@ -64,9 +64,19 @@ const WalletPage = () => {
                     </Flex>
                     {
                         tonConnectUI.connected ? (
-                            <Button size="4" color='gray' onClick={() => tonConnectUI.disconnect()}>
-                                {tonConnectUI.account?.address || "Disconect"}
-                            </Button>
+                          <Button
+                            size="4"
+                            color='gray'
+                            onClick={() => tonConnectUI.disconnect()}
+                          >
+                              <Text mx='2' style={{
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                              }}>
+                                  {tonConnectUI.account?.address || "Disconnect"}
+                              </Text>
+                          </Button>
                         ) : (
                             <GlowingButton size="4" onClick={() => tonConnectUI.modal.open()}>
                                 Connect

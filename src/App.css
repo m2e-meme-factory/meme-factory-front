@@ -38,6 +38,11 @@
 }
 
 .rt-Heading {
-  font-family: 'ME' !important;
+  font-family:"Space Mono", monospace !important;
   text-transform: uppercase;
+  font-weight: 700;
+}
+
+* {
+  font-family: "Space Mono", monospace;
 }

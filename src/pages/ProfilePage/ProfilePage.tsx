@@ -1,3 +1,8 @@
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import {
   Grid,
   Text,
@@ -5,66 +10,161 @@ import {
   DataList,
   Badge,
   Heading,
-  Spinner,
   Flex,
   Button,
-  IconButton,
   Box,
   Tabs,
-  Dialog,
   Theme,
   Callout,
   Blockquote,
+  Skeleton,
+  ScrollArea,
+  Code,
+  Popover,
+  IconButton,
+  TextArea,
+  AlertDialog,
 } from '@radix-ui/themes';
-import CopyableCode from '../../shared/components/CopyableCode';
-import CopyableTextField from '../../shared/components/CopyableTextField';
-import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
-import { ChevronRightIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import styles from './ProfilePage.module.css';
-import MyProjectsPage from '../MyProjectsPage/MyProjectsPage';
-import TransactionsHistoryPage from '../TransactionsHistoryPage/TransactionsHistoryPage';
-import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect, useState } from 'react';
-import { RefDataResponse, User } from 'api';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+
+import { RootState } from '../../shared/utils/redux/store';
 import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '../../shared/utils/redux/user/userSlice';
-import { useSearchParams } from 'react-router-dom';
-import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
-import { RootState } from '../../shared/utils/redux/store';
-import { useVerifyUser } from '../../shared/utils/api/hooks/user/useVerifyUser';
-import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
-import { Sheet } from 'react-modal-sheet';
-import verified from './../../shared/imgs/verify.png';
-import { List } from '@radix-ui/react-tabs';
+import { verifyUser } from '../../shared/utils/api/requests/user/verifyUser';
+import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
+
+import Loading from '../../shared/components/Loading';
+import CopyableCode from '../../shared/components/CopyableCode';
+import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
+
+import star from './../../shared/imgs/star.webp';
+
+import Swiper from 'swiper';
+import 'swiper/css';
 import styled from 'styled-components';
-import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import { Sheet } from 'react-modal-sheet';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import tsssEmoji from '../../shared/imgs/tsssEmoji.png';
+import yeyEmoji from '../../shared/imgs/yey.png';
+import { ResponsibleImage } from '../../shared/components/ResponsibleImage';
+import toast from 'react-hot-toast';
+
+const TransactionsHistoryPage = lazy(
+  () => import('../TransactionsHistoryPage/TransactionsHistoryPage')
+);
+
+enum TabsOption {
+  AIRDROP = 'airdrop',
+  ACCOUNT = 'account',
+  TRANSACTIONS = 'transactions',
+}
+
+const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT, TabsOption.TRANSACTIONS];
+
+const SwiperContainer = styled.div`
+  .swiper {
+    width: 100%;
+    height: calc(100vh - 120px);
+    z-index: 0;
+  }
+
+  .swiper-slide {
+    overflow-y: auto;
+    padding-bottom: 60px;
+    z-index: 0;
+  }
+
+  .swiper-pagination {
+    bottom: 10px !important;
+  }
+`;
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
-  const [userSt, setUserSt] = useState<User>();
-  const { data: userDataResponse } = useAuthMe();
-  const [refData, setRefData] = useState<RefDataResponse | null>(null);
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
-  const defaultTab = searchParams.get('tab') || 'account';
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const [walletAddress, setWalletAddress] = useState<string>();
+  const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
   const user = useSelector((state: RootState) => state.user.user);
-  const [tonConnectUI] = useTonConnectUI();
+  const navigate = useNavigate();
 
-  const verifyMutation = useVerifyUser();
+  const defaultTab = searchParams.get('tab') || 'airdrop';
+  const action = searchParams.get('action');
+  const swiperRef = useRef<Swiper | null>(null);
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.AIRDROP);
+
+  const webapp = useWebApp();
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
 
   useEffect(() => {
-    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-      if (wallet) {
-        setWalletAddress(wallet.account.address);
-      } else {
-        setWalletAddress('');
-      }
+    webapp.ready();
+    webapp.BackButton.show();
+    webapp.onEvent('backButtonClicked', handleBack);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
+
+  useEffect(() => {
+    swiperRef.current = new Swiper('.swiper', {
+      direction: 'horizontal',
     });
 
-    return () => unsubscribe();
-  }, [tonConnectUI]);
+    if (swiperRef.current) {
+      swiperRef.current.on('slideChange', () => {
+        switch (swiperRef.current!.activeIndex) {
+          case 0:
+            setCurrentTab(TabsOption.AIRDROP);
+            break;
+          case 1:
+            setCurrentTab(TabsOption.ACCOUNT);
+            break;
+          case 2:
+            setCurrentTab(TabsOption.TRANSACTIONS);
+            break;
+        }
+      });
+    }
+
+    return () => {
+      if (swiperRef.current) {
+        swiperRef.current.destroy(true, true);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    handleTabChange(defaultTab);
+  }, [defaultTab]);
+
+  useEffect(() => {
+    if (action === 'verify') {
+      setTimeout(() => handleDialogOpen(), 300);
+    }
+  }, [action]);
+
+  const handleTabChange = (value: string) => {
+    const newTab = value as TabsOption;
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(TABS.indexOf(newTab));
+    }
+  };
+
+  const { mutate: verify } = useMutation({
+    mutationFn: verifyUser,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+    },
+    onSuccess: () => showSuccessMessage('Verified successfully'),
+    onError: () => showErrorMessage('Error occurred'),
+  });
 
   const handleDialogClose = () => {
     setModalVisible(false);
@@ -74,206 +174,445 @@ export default function ProfilePage() {
     setModalVisible(true);
   };
 
-  useEffect(() => {
-    const connect = async (wallet: string) => {
-      await connectWallet({ params: { tonWalletAddress: wallet } });
-    };
-
-    if (walletAddress) {
-      console.log(walletAddress);
-      connect(walletAddress);
-    }
-  }, [walletAddress]);
-
   const handleVerify = () => {
     if (user) {
       handleDialogClose();
-      verifyMutation.mutate({ params: { telegramId: user.telegramId } });
-      
+      verify({ params: { telegramId: user.telegramId } });
     }
   };
 
   useEffect(() => {
     if (userDataResponse) {
-      setUserSt(userDataResponse.data);
-      dispatch(setUser(userDataResponse.data));
+      dispatch(setUser(userDataResponse));
     }
   }, [userDataResponse]);
 
-  const { data, isLoading: refLoading } = useGetRefData(userSt?.telegramId);
-
-  useEffect(() => {
-    if (data) {
-      setRefData(data.data);
-    }
-  }, [data]);
-
-  if (refLoading) {
-    return (
-      <Flex className={styles.LoadingContainer} align='center' justify='center'>
-        <Spinner size='3' />
-      </Flex>
-    );
-  }
-
-  const refCount = refData?.count;
-
   return (
-    <Tabs.Root defaultValue={defaultTab}>
+    <Tabs.Root defaultValue={defaultTab} value={currentTab} onValueChange={handleTabChange}>
       <Tabs.List justify='center' highContrast>
+        <Tabs.Trigger value='airdrop'>Airdrop</Tabs.Trigger>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
         <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-        <Tabs.Trigger value='myprojects'>My Projects</Tabs.Trigger>
       </Tabs.List>
 
       <Box pt='3'>
-        <Tabs.Content value='account'>
-          <Card m='4'>
-            <Grid gap='4'>
-              <Flex align='center'>
-                <Heading mr='3'>Profile</Heading>
-              </Flex>
-              <DataList.Root>
-                <DataList.Item align='center'>
-                  <DataList.Label minWidth='88px'>Status</DataList.Label>
-                  <DataList.Value>
-                    <Badge color={userSt?.isVerified ? 'jade' : 'red'} variant='soft' radius='full'>
-                      {userSt?.isVerified ? 'Verified' : 'Not Verified'}
-                    </Badge>
-                  </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>ID</DataList.Label>
-                  <DataList.Value>
-                    <CopyableCode value={userSt?.id || ''} />
-                  </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>Nickname</DataList.Label>
-                  <DataList.Value>
-                    <CopyableCode value={`${userSt?.username}`} />
-                  </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth='88px'>Type</DataList.Label>
-                  <DataList.Value>{userSt?.role}</DataList.Value>
-                </DataList.Item>
-              </DataList.Root>
-            </Grid>
-          </Card>
-
-          <Card m='4'>
-            <Flex justify='between' align='center'>
-              <Flex direction='column'>
-                <Text mb='2' color='gray'>
-                  Available Balance
-                </Text>
-                <Heading>
-                  {userSt?.balance ?? '0'} <Badge color='bronze'>M2E</Badge>
-                </Heading>
-              </Flex>
-              <Button>
-                <ChevronRightIcon /> Withdraw
-              </Button>
-            </Flex>
-          </Card>
-
-          <Card m='4'>
-            <Grid gap='4'>
-              <Heading>Referals</Heading>
-              <Text color='gray'>Your Ref link:</Text>
-              <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} />
-              <DataList.Root mt='4'>
-                <DataList.Item align='center'>
-                  <DataList.Item>
-                    <DataList.Label minWidth='88px'>Total Count</DataList.Label>
-                    <DataList.Value>{refCount}</DataList.Value>
-                  </DataList.Item>
-                  <DataList.Item>
-                    <DataList.Label minWidth='88px'>Total profit</DataList.Label>
-                    <DataList.Value>0 M2E</DataList.Value>
-                  </DataList.Item>
-                </DataList.Item>
-              </DataList.Root>
-            </Grid>
-          </Card>
-
-          {/* <Card m='4'>
-            <Heading mb='3'>Socials</Heading>
-            <button className={styles.ConnectButton}>Connect Socials</button>
-          </Card> */}
-
-          {userSt?.isVerified ? null : (
-            <Card m='4'>
-              <Grid gap='4'>
-                <Heading>Verify</Heading>
-                <Callout.Root>
-                  <Callout.Icon>
-                    <InfoCircledIcon height={20} width={20} />
-                  </Callout.Icon>
-                  <Callout.Text>
-                    {/* <Text color='gray' mb='2' size='2'> */}
-                    Verified users have auto approve for any project apply and have 100% chance for
-                    receiving airdrop. Instant verification price: 5 USDT
-                    {/* </Text> */}
-                  </Callout.Text>
-                </Callout.Root>
-                <GlowingButton size='3' onClick={handleDialogOpen}>
-                  Verify
-                </GlowingButton>
-
-                <Sheet
-                  isOpen={isModalVisible}
-                  onClose={() => handleDialogClose()}
-                  detent='content-height'
-                >
-                  <Sheet.Container style={{ overflowY: 'auto' }}>
-                    <Sheet.Header />
-                    <Sheet.Content>
-                      <Sheet.Scroller>
-                        <Theme>
-                          <Grid gap='8' m='4' mb='5' align='center'>
-                            <Flex justify='center'>
-                              <img width='80%' src={verified} alt='Verified icon' />
+        <SwiperContainer>
+          <div className='swiper'>
+            <div className='swiper-wrapper'>
+              <div className='swiper-slide'>
+                <Box m='4'>
+                  <Flex direction='column' gap='5'>
+                    <Flex justify='center' align='center' gap='2' direction='column'>
+                      <Heading>
+                        How to increase Airdrop chance?{' '}
+                        <Popover.Root>
+                          <Popover.Trigger>
+                            <Flex align='center' display='inline-flex'>
+                              <IconButton size='4' color='gray' variant='ghost' radius='full'>
+                                <InfoCircledIcon />
+                              </IconButton>
                             </Flex>
-                            <Grid gap='2'>
-                              <Heading mb='2'>Benefits of verified accounts 🔥</Heading>
-                              <Blockquote>100% chance for Airdrop claim</Blockquote>
-                              <Blockquote>Auto approve to any project</Blockquote>
-                              <Blockquote>High priority for checking task completion</Blockquote>
-                            </Grid>
+                          </Popover.Trigger>
+                          <Popover.Content size='1' maxWidth='300px'>
+                            <Text size='2'>
+                              <b>Airdrop</b> is gift in real tokens for active users
+                            </Text>
+                          </Popover.Content>
+                        </Popover.Root>
+                      </Heading>
+                    </Flex>
+                    <Flex direction='column' gap='2'>
+                      <Link
+                        style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                        to='/friends'
+                      >
+                        <Card>
+                          <Flex justify='between' align='center' p='1'>
+                            <Box>
+                              <Box>Invite friends</Box>
+                            </Box>
+                            <Box>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                height='1.75rem'
+                                viewBox='0 0 256 256'
+                              >
+                                <rect width='256' height='256' fill='none' />
+                                <path
+                                  d='M192,120a59.91,59.91,0,0,1,48,24'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='16'
+                                />
+                                <path
+                                  d='M16,144a59.91,59.91,0,0,1,48-24'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='16'
+                                />
+                                <circle
+                                  cx='128'
+                                  cy='144'
+                                  r='40'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='16'
+                                />
+                                <path
+                                  d='M72,216a65,65,0,0,1,112,0'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='16'
+                                />
+                                <path
+                                  d='M161,80a32,32,0,1,1,31,40'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='16'
+                                />
+                                <path
+                                  d='M64,120A32,32,0,1,1,95,80'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth='16'
+                                />
+                              </svg>
+                            </Box>
+                          </Flex>
+                        </Card>
+                      </Link>
 
-                            <GlowingButton size='4' onClick={handleVerify} style={{ width: '100%' }}>
-                              Verify Now
-                            </GlowingButton>
-                          </Grid>
-                        </Theme>
-                      </Sheet.Scroller>
-                    </Sheet.Content>
-                  </Sheet.Container>
-                  <Sheet.Backdrop onTap={() => handleDialogClose()} />
-                </Sheet>
-              </Grid>
-            </Card>
-          )}
+                      <Link
+                        style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                        to='/projects/autotasks'
+                      >
+                        <Card>
+                          <Flex justify='between' align='center' p='1'>
+                            <Box>
+                              <Box>Complete Fast Tasks</Box>
+                            </Box>
+                            <Box>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                height='1.75rem'
+                                fill='currentColor'
+                                viewBox='0 0 256 256'
+                              >
+                                <path d='M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z'></path>
+                              </svg>
+                            </Box>
+                          </Flex>
+                        </Card>
+                      </Link>
 
-          <Card m='4'>
-            <Flex align='center' justify='between'>
-              <Heading size='4' mr='6'>
-                Connect TON Wallet
-              </Heading>
-              <TonConnectButton />
-            </Flex>
-          </Card>
-        </Tabs.Content>
+                      <Card>
+                        <Flex justify='between' align='center' p='1'>
+                          <Box>
+                            <Box>Complete Quests</Box>
+                            <Box>
+                              <Text size='1' color='gray'>
+                                The most valuable type of activity
+                              </Text>
+                            </Box>
+                          </Box>
+                          <Box>
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              height='1.75rem'
+                              viewBox='0 0 256 256'
+                            >
+                              <rect width='256' height='256' fill='none' />
+                              <ellipse
+                                cx='96'
+                                cy='84'
+                                rx='80'
+                                ry='36'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                              <path
+                                d='M16,84v40c0,19.88,35.82,36,80,36s80-16.12,80-36V84'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                              <line
+                                x1='64'
+                                y1='117'
+                                x2='64'
+                                y2='157'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                              <path
+                                d='M176,96.72c36.52,3.34,64,17.86,64,35.28,0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                              <path
+                                d='M80,159.28V172c0,19.88,35.82,36,80,36s80-16.12,80-36V132'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                              <line
+                                x1='192'
+                                y1='165'
+                                x2='192'
+                                y2='205'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                              <line
+                                x1='128'
+                                y1='117'
+                                x2='128'
+                                y2='205'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth='16'
+                              />
+                            </svg>
+                          </Box>
+                        </Flex>
+                      </Card>
+                    </Flex>
 
-        <Tabs.Content value='myprojects'>
-          <MyProjectsPage />
-        </Tabs.Content>
+                    <Skeleton loading={userDataLoading}>
+                      <Heading>
+                        <Flex align='center' display='inline-flex'>
+                          <img
+                            height='30rem'
+                            style={{ transform: 'translateY(5px)' }}
+                            src={userDataResponse?.isVerified ? yeyEmoji : tsssEmoji}
+                            alt=''
+                          />
+                        </Flex>{' '}
+                        {userDataResponse?.isVerified ? (
+                          <>
+                            Congrats!
+                            <br />
+                            Your airdrop is 100% guaranteed!
+                          </>
+                        ) : (
+                          'Want a 100% chance to claim the airdrop?'
+                        )}
+                      </Heading>
+                    </Skeleton>
 
-        <Tabs.Content value='transactions'>
-          <TransactionsHistoryPage />
-        </Tabs.Content>
+                    <Skeleton loading={userDataLoading}>
+                      {userDataResponse?.isVerified ? (
+                        <Button size='4' disabled={true}>
+                          You are verified
+                        </Button>
+                      ) : (
+                        <GlowingButton size='4' onClick={handleDialogOpen}>
+                          Verify Now!
+                        </GlowingButton>
+                      )}
+                    </Skeleton>
+                  </Flex>
+                </Box>
+              </div>
+              <div className='swiper-slide'>
+                <ScrollArea>
+                  {!userDataLoading && !userDataResponse?.isVerified && (
+                    <Card m='4'>
+                      <Grid gap='4'>
+                        <Heading>Verify</Heading>
+                        <Callout.Root>
+                          <Callout.Icon>
+                            <InfoCircledIcon height={20} width={20} />
+                          </Callout.Icon>
+                          <Callout.Text>
+                            Verified users have auto approve for any project apply and have 100%
+                            chance for receiving airdrop. <br />
+                            <br />
+                            Instant verification price: <br /> <Code>5 USDT</Code>
+                          </Callout.Text>
+                        </Callout.Root>
+                        <GlowingButton size='4' onClick={handleDialogOpen}>
+                          Verify
+                        </GlowingButton>
+
+                        <Sheet
+                          isOpen={isModalVisible}
+                          onClose={() => handleDialogClose()}
+                          detent='content-height'
+                        >
+                          <Theme appearance='dark'>
+                            <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+                              <Sheet.Header />
+                              <Sheet.Content>
+                                <Theme>
+                                  <Grid gap='8' m='4' mb='5' align='center'>
+                                    <Flex justify='center'>
+                                      <ResponsibleImage src={star} />
+                                    </Flex>
+                                    <Grid gap='2'>
+                                      <Heading mb='2' align='center'>
+                                        Benefits of verified accounts
+                                      </Heading>
+                                      <Blockquote>100% chance for Airdrop claim</Blockquote>
+                                      <Blockquote>Auto approve to any project</Blockquote>
+                                      <Blockquote>
+                                        High priority for checking task completion
+                                      </Blockquote>
+                                    </Grid>
+
+                                    <GlowingButton
+                                      size='4'
+                                      onClick={handleVerify}
+                                      style={{ width: '100%' }}
+                                    >
+                                      Verify Now
+                                    </GlowingButton>
+                                  </Grid>
+                                </Theme>
+                              </Sheet.Content>
+                            </Sheet.Container>
+                            <Sheet.Backdrop onTap={() => handleDialogClose()} />
+                          </Theme>
+                        </Sheet>
+                      </Grid>
+                    </Card>
+                  )}
+
+                  <Card m='4'>
+                    <Grid gap='4'>
+                      <Flex align='center'>
+                        <Heading mr='3'>Profile</Heading>
+                      </Flex>
+                      <DataList.Root>
+                        <DataList.Item align='center'>
+                          <DataList.Label minWidth='88px'>Status</DataList.Label>
+                          <Skeleton loading={userDataLoading}>
+                            <DataList.Value>
+                              <Badge
+                                color={userDataResponse?.isVerified ? 'jade' : 'red'}
+                                variant='soft'
+                                radius='full'
+                              >
+                                {userDataResponse?.isVerified ? 'Verified' : 'Not Verified'}
+                              </Badge>
+                            </DataList.Value>
+                          </Skeleton>
+                        </DataList.Item>
+                        <DataList.Item>
+                          <DataList.Label minWidth='88px'>ID</DataList.Label>
+                          <Skeleton loading={userDataLoading}>
+                            <DataList.Value>
+                              <CopyableCode value={userDataResponse?.id || ''} />
+                            </DataList.Value>
+                          </Skeleton>
+                        </DataList.Item>
+                        <DataList.Item>
+                          <DataList.Label minWidth='88px'>Nickname</DataList.Label>
+                          <Skeleton loading={userDataLoading}>
+                            <DataList.Value>
+                              <CopyableCode value={`${userDataResponse?.username}`} />
+                            </DataList.Value>
+                          </Skeleton>
+                        </DataList.Item>
+                        <DataList.Item>
+                          <DataList.Label minWidth='88px'>Type</DataList.Label>
+                          <Skeleton loading={userDataLoading}>
+                            <DataList.Value>
+                              <Text>{userDataResponse?.role}</Text>
+                            </DataList.Value>
+                          </Skeleton>
+                        </DataList.Item>
+                      </DataList.Root>
+                    </Grid>
+                  </Card>
+
+                  <Card m='4'>
+                    <Grid gap='4'>
+                      <Heading mr='3'>More</Heading>
+                      <AlertDialog.Root>
+                        <AlertDialog.Trigger>
+                          <AccentButton size='4'>Become Advertiser</AccentButton>
+                        </AlertDialog.Trigger>
+                        <AlertDialog.Content>
+                          <AlertDialog.Title>Become Partner</AlertDialog.Title>
+                          <AlertDialog.Description>
+                            Give us some information about your project
+                            <TextArea style={{ minHeight: '100px' }} mt='4'></TextArea>
+                          </AlertDialog.Description>
+                          <Flex gap='3' mt='4' justify='end'>
+                            <AlertDialog.Cancel>
+                              <Button variant='soft' color='gray'>
+                                Cancel
+                              </Button>
+                            </AlertDialog.Cancel>
+                            <AlertDialog.Action>
+                              <AccentButton
+                                onClick={() => {
+                                  toast.success('Send Advertiser Apply', {
+                                    style: {
+                                      borderRadius: '10px',
+                                      background: '#333',
+                                      color: '#fff',
+                                    },
+                                  });
+                                }}
+                              >
+                                Become Advertiser
+                              </AccentButton>
+                            </AlertDialog.Action>
+                          </Flex>
+                        </AlertDialog.Content>
+                      </AlertDialog.Root>
+                    </Grid>
+                  </Card>
+                </ScrollArea>
+              </div>
+              <div className='swiper-slide'>
+                <Flex direction='column' justify='center'>
+                  <Suspense
+                    fallback={
+                      <Flex justify='center' align='center' style={{ height: '100vh' }}>
+                        <Loading />
+                      </Flex>
+                    }
+                  >
+                    <TransactionsHistoryPage />
+                  </Suspense>
+                </Flex>
+              </div>
+            </div>
+          </div>
+        </SwiperContainer>
       </Box>
     </Tabs.Root>
   );

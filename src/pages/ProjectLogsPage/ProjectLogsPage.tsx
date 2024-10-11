@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
-import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Box, Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
+import { PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
 import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
@@ -14,6 +14,7 @@ import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 const ProjectLogsPage = () => {
   const navigate = useNavigate();
@@ -35,6 +36,24 @@ const ProjectLogsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const webapp = useWebApp();
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
+  useEffect(() => {
+    webapp.ready();
+    webapp.BackButton.show();
+    webapp.onEvent('backButtonClicked', handleBack);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (projectResponse) {
@@ -107,7 +126,7 @@ const ProjectLogsPage = () => {
     const fromTab = searchParams.get('fromTab');
 
     if (fromTab) {
-      navigate(`/profile?tab=${fromTab}`);
+      navigate(`/projects`);
     } else {
       navigate(-1);
     }
@@ -119,71 +138,75 @@ const ProjectLogsPage = () => {
 
   return (
     <>
-      <Flex
-        align='center'
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 1000,
-          backgroundColor: '#121212',
-          padding: '10px',
-        }}
-        justify='between'
-      >
-        <Flex align='center'>
-          <IconButton onClick={handleBackClick} size='3'>
-            <ArrowLeftIcon />
-          </IconButton>
-          <Heading ml='3'>{shortenString(currentProject?.project.title, 20)}</Heading>
+      <Flex height='100vh' position='relative' direction='column'>
+        <Flex
+          p='4'
+          align='center'
+          style={{
+            position: 'sticky',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 2,
+            backgroundColor: 'var(--gray-2)',
+          }}
+          justify='between'
+        >
+          <Flex align='center'>
+            {/* <IconButton onClick={handleBackClick} size='3'>
+              <ArrowLeftIcon />
+            </IconButton> */}
+            <Heading>{shortenString(currentProject?.project.title, 20)}</Heading>
+          </Flex>
+          <Button onClick={() => navigate(`/projects/${projectId}`)}>VIEW</Button>
         </Flex>
-        <Button onClick={() => navigate(`/projects/${projectId}`)}>To project page</Button>
-      </Flex>
-      <Flex m='4' direction='column' style={{ height: '73vh' }}>
-        <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
-          {events.map((event) => (
-            <LogMessage
-              key={event.id}
-              currentUserRole={user?.role ?? Role.CREATOR}
-              event={event}
-              messageType={getEventType(event.eventType)}
-              setNewEventCreated={setNewEventCreated}
-              creatorName={
-                userProgress?.user.username
-                  ? userProgress?.user.username
-                  : `User ${userProgress?.user.telegramId}`
-              }
-              advertiserName={shortenString(
-                currentProject
-                  ? currentProject.project.author.username
+        <Box p='4' asChild>
+          <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
+            {events.map((event) => (
+              <LogMessage
+                key={event.id}
+                currentUserRole={user?.role ?? Role.CREATOR}
+                event={event}
+                messageType={getEventType(event.eventType)}
+                setNewEventCreated={setNewEventCreated}
+                creatorName={
+                  userProgress?.user.username
+                    ? userProgress?.user.username
+                    : `User ${userProgress?.user.telegramId}`
+                }
+                advertiserName={shortenString(
+                  currentProject
                     ? currentProject.project.author.username
-                    : `User ${currentProject.project.author.telegramId}`
-                  : 'Project host'
-              )}
-              allEvents={events}
+                      ? currentProject.project.author.username
+                      : `User ${currentProject.project.author.telegramId}`
+                    : 'Project host'
+                )}
+                allEvents={events}
+              />
+            ))}
+          </ScrollArea>
+        </Box>
+        <Flex
+          p='4'
+          align='center'
+          style={{
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 1000,
+            backgroundColor: 'var(--gray-2)',
+          }}
+        >
+          <Flex width='100%' justify='between' align='center'>
+            <TextArea
+              placeholder='Send a message…'
+              onChange={handleMessageChange}
+              value={message}
+              style={{ width: '85%', height: '8vh' }}
             />
-          ))}
-        </ScrollArea>
-      </Flex>
-      <Flex
-        align='center'
-        style={{
-          position: 'sticky',
-          bottom: 0,
-          zIndex: 1000,
-          backgroundColor: '#121212',
-          padding: '10px',
-        }}
-      >
-        <Flex width='100%' justify='between' align='center'>
-          <TextArea
-            placeholder='Send a message…'
-            onChange={handleMessageChange}
-            value={message}
-            style={{ width: '80vw', height: '8vh' }}
-          />
-          <IconButton size='4' onClick={handleMessageSend}>
-            <PaperPlaneIcon />
-          </IconButton>
+            <IconButton size='4' onClick={handleMessageSend}>
+              <PaperPlaneIcon />
+            </IconButton>
+          </Flex>
         </Flex>
       </Flex>
     </>

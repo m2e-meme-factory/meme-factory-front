@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { BASE_URL } from '../../../../consts/baseURL';
 import api from '../../api';
 
 export const uploadFiles = async (files: File[]): Promise<[{ name: string; url: string }]> => {

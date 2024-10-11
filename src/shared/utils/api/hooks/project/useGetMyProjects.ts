@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getMyProjects } from '../../requests/project/project-requests';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { GetMyProjectsParams } from 'api';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useGetMyProjects = (params: GetMyProjectsParams) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
   const { userId, page, limit } = params;
 
   const query = useQuery({
@@ -19,9 +19,9 @@ export const useGetMyProjects = (params: GetMyProjectsParams) => {
       try {
         return await getMyProjects({ params: { userId: userId, page: page, limit: limit } });
       } catch (error) {
-        if (error instanceof AxiosError && error.response?.status === 401 && webApp) {
+        if (error instanceof AxiosError && error.response?.status === 401 && initData) {
           const loginConfig: LoginConfig = {
-            params: { initData: { initData: webApp.initData } },
+            params: { initData: { initData: initData } },
           };
 
           try {

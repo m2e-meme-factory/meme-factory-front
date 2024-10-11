@@ -9,6 +9,9 @@ import { Role } from '../../../../shared/consts/userRoles';
 import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
 import { ProjectStatus } from '../../../../shared/consts/project-statuses';
 import { shortenString } from '../../../../shared/utils/helpers/shortenString';
+import styles from './BannerSection.module.css';
+import { BASE_URL } from '../../../../shared/consts/baseURL';
+import fallbackBanner from '../../../../shared/imgs/fallbackBanner.png';
 
 interface MyProjectCardProps {
   id: string;
@@ -22,7 +25,7 @@ const StyledCard = styled(Card)`
   padding: 0;
   margin: 0 0 15px;
   width: 100%;
-  background-color: #121212;
+  background-color: var(--gray-2);
 `;
 
 const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl, status }) => {
@@ -50,7 +53,13 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
   return (
     <StyledCard onClick={handleClick}>
       <Flex direction='column'>
-        <CardBanner bannerUrl={bannerUrl} />
+        <Flex className={styles.bannerContainer}>
+          <img
+            src={bannerUrl ? `${BASE_URL}${bannerUrl}` : fallbackBanner}
+            className={styles.bannerImage}
+            alt={' '}
+          />
+        </Flex>
         <Flex direction='column' m='4'>
           <Heading>{shortenString(title, 40)}</Heading>
           <Text mb='3' color='yellow' weight='medium'>

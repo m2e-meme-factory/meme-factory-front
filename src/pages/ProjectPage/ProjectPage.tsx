@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Badge, Button, Card, Flex, Heading, Text, Dialog, TextArea } from '@radix-ui/themes';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  DollarOutlined,
-  PushpinOutlined,
-  TagsOutlined,
-  TeamOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
+  Badge,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  Dialog,
+  TextArea,
+  Link,
+  Separator,
+  Box,
+  Theme,
+  Card,
+} from '@radix-ui/themes';
+import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
-import AttachmentCard from './components/AttachmentCard/AttachmentCard';
-import SubtaskCard from './components/SubtaskCard/SubtaskCard';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -22,10 +27,16 @@ import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFil
 import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
 import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
 import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
-import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import { showErrorMessage, showToastWithPromise } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
 import { BASE_URL } from '../../shared/consts/baseURL';
+import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { Sheet } from 'react-modal-sheet';
+import yeyEmoji from '../../shared/imgs/yey.png';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -41,14 +52,30 @@ const ProjectPage = () => {
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
-  const [downloadError, setDownloadError] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isApplyLoading, setIsApplyLoading] = useState(false);
   const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
-  const [minPrice, setMinPrice] = useState<number>();
-  const [maxPrice, setMaxPrice] = useState<number>();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const webapp = useWebApp();
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
+  useEffect(() => {
+    webapp.ready();
+    webapp.BackButton.show();
+    webapp.onEvent('backButtonClicked', handleBack);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -66,9 +93,6 @@ const ProjectPage = () => {
   useEffect(() => {
     if (projectInfoResponse) {
       setCurrentProject(projectInfoResponse.data);
-      console.log(projectInfoResponse);
-      setMinPrice(parseInt(projectInfoResponse.data.minPrice ?? '0'));
-      setMaxPrice(parseInt(projectInfoResponse.data.maxPrice ?? '0'));
       dispatch(setProject(projectInfoResponse.data));
     }
   }, [projectInfoResponse, dispatch]);
@@ -104,6 +128,14 @@ const ProjectPage = () => {
     }
   };
 
+  const handleDialogClose = () => {
+    setModalVisible(false);
+  };
+
+  const handleDialogOpen = () => {
+    setModalVisible(true);
+  };
+
   const setCurrentUserRoleFromProgress = (status: string) => {
     if (status === 'accepted') {
       setCurrentUserRole('projectMember');
@@ -123,16 +155,18 @@ const ProjectPage = () => {
   };
 
   const handleDownload = async () => {
-    setIsDownloading(true);
-    if (currentProject && user) {
-      try {
-        await downloadFiles({
-          params: { projectId: currentProject.project.id, telegramId: user.telegramId },
+    if (!isDownloading) {
+      setIsDownloading(true);
+      if (currentProject && user) {
+        await showToastWithPromise({
+          success: 'Files are downloaded successfully',
+          error: 'Error occurred while downloading files',
+          process: 'Downloading files',
+          callback: () =>
+            downloadFiles({
+              params: { projectId: currentProject.project.id, telegramId: user.telegramId },
+            }),
         });
-      } catch (error) {
-        setDownloadError(true);
-      } finally {
-        setIsDownloading(false);
       }
     }
   };
@@ -165,30 +199,59 @@ const ProjectPage = () => {
 
   return (
     <Flex direction='column'>
+      {/* Banner */}
       <Flex className={styles.bannerContainer}>
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
-      <Flex className={styles.content} direction='column'>
-        <Flex m='4' direction='column'>
-          <Heading weight='medium'>{shortenString(currentProject?.project.title, 40)}</Heading>
+      {/* Title */}
+      <Flex direction='column'>
+        <Flex m='4' mt='2' gap='5' direction='column'>
+          <Flex justify='between' align='center'>
+            <Heading weight='medium'>{currentProject?.project.title}</Heading>
+            <QuestionMarkCircledIcon onClick={handleDialogOpen} width='25' height='25' />
+          </Flex>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
               Edit project
             </Button>
           )}
 
+          {/* Description */}
+          <Flex mb='2' mt='2' direction='column'>
+            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
+            {currentProject && currentProject.project.files.length > 0 && (
+              <Link
+                mt='1'
+                style={{ alignSelf: 'end', cursor: 'pointer', fontSize: 'var(--font-size-2)' }}
+                onClick={handleDownload}
+              >
+                <i>Download attachments</i>
+              </Link>
+            )}
+          </Flex>
+
           {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
-            <Button onClick={handleEditClick} disabled={true} my='2'>
-              Apply to earn
+            <Button disabled={true} my='2' style={{ fontSize: '16px' }}>
+              Join
             </Button>
           )}
 
+          {/* Join project modal */}
           {currentUserRole === 'guestCreator' && (
             <Dialog.Root>
               <Dialog.Trigger>
-                <Button my='2' disabled={applyBlocked}>
-                  Apply to earn
-                </Button>
+                <GlowingButton
+                  size='4'
+                  style={{
+                    width: '100%',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    marginBottom: '10px',
+                  }}
+                  disabled={applyBlocked}
+                >
+                  Join
+                </GlowingButton>
               </Dialog.Trigger>
 
               <Dialog.Content maxWidth='450px'>
@@ -211,102 +274,213 @@ const ProjectPage = () => {
                     </Button>
                   </Dialog.Close>
                   <Dialog.Close>
-                    <Button onClick={handleApplyClick} loading={isApplyLoading}>
-                      Apply
+                    <Button
+                      onClick={handleApplyClick}
+                      loading={isApplyLoading}
+                      disabled={applicationMessage.length === 0}
+                    >
+                      Join
                     </Button>
                   </Dialog.Close>
                 </Flex>
               </Dialog.Content>
             </Dialog.Root>
           )}
-          <Text color='yellow' weight='medium' mb='5'>
-            Category: {currentProject?.project.category}
-          </Text>
-          <Flex mb='5'>
-            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
-          </Flex>
-          <Flex align='center' direction='row' mb='2'>
-            <TagsOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-            <Text weight='medium' size='5'>
-              Tags:{' '}
-              {currentProject?.project.tags &&
-                currentProject?.project.tags.map((tag, index) => (
-                  <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                    {tag}
-                  </Badge>
-                ))}
-            </Text>
-          </Flex>
-          <Flex direction='column' mb='5'>
-            <Flex align='center' mb='2'>
-              <TeamOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Host
-              </Text>
-            </Flex>
-            <Card>
-              <Flex align='center'>
-                <Text weight='medium' size='6'>
-                  {shortenString(
-                    currentProject
-                      ? currentProject.project.author.username
-                        ? currentProject.project.author.username
-                        : `User ${currentProject.project.author.telegramId}`
-                      : 'Meme factory'
-                  )}
-                </Text>
-              </Flex>
-            </Card>
-          </Flex>
 
-          <Flex direction='column' mb='5'>
+          {/* Tasks */}
+          <Flex direction='column' mb='3'>
             <Flex align='center' mb='2'>
               <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />
               <Text weight='medium' size='5'>
-                Subtasks
+                Tasks
               </Text>
             </Flex>
-            {currentProject?.project.tasks &&
-              currentProject?.project.tasks.map((subtask, index) => (
-                <SubtaskCard
-                  key={index}
-                  id={subtask.task.id}
-                  description={subtask.task.description}
-                  price={subtask.task.price}
-                  title={subtask.task.title}
-                  progress={progress}
-                  userRole={currentUserRole || 'guestCreator'}
-                />
-              ))}
+            <Flex gap='3' direction='column'>
+              {currentProject?.project.tasks &&
+                currentProject?.project.tasks.map((subtask, index) => (
+                  <SheetSubtaskCard
+                    key={index}
+                    id={subtask.task.id}
+                    description={subtask.task.description}
+                    price={subtask.task.price}
+                    title={subtask.task.title}
+                    progress={progress}
+                    userRole={currentUserRole || 'guestCreator'}
+                  />
+                ))}
+            </Flex>
           </Flex>
-          <Flex direction='column'>
-            <Flex mb='2' direction='column'>
-              <Flex align='center' justify='start'>
-                <PushpinOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-                <Text weight='medium' size='5'>
-                  Attachments
-                </Text>
-                <Button ml='3' onClick={handleDownload} loading={isDownloading}>
-                  Download
-                </Button>
-              </Flex>
-              {downloadError ? (
-                <Text color='red' mt='2' size='2'>
-                  Sorry, something went wrong. Try again later
-                </Text>
-              ) : (
-                <Text color='gray' mt='2' size='2'>
-                  Files will be sent to the MemeFactory bot chat
-                </Text>
+
+          {/* Category and tags */}
+          <Box>
+            <Flex align='center' direction='row' mb='2'>
+              {currentProject?.project && (
+                <>
+                  <Text weight='medium' mr='2'>
+                    {currentProject.project.category?.toUpperCase()}
+                  </Text>
+                  <Separator mr='2' orientation='vertical' />
+                  <Text weight='medium' size='5'>
+                    {currentProject.project.tags?.map((tag, index) => (
+                      <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
+                        {tag.toUpperCase()}
+                      </Badge>
+                    ))}
+                  </Text>
+                </>
               )}
             </Flex>
-            {currentProject?.project.files &&
-              currentProject?.project.files.map((file, index) => (
-                <AttachmentCard key={index} name={file} />
-              ))}
-          </Flex>
+
+            {/* Host */}
+            <Flex direction='row' align='center'>
+              <Flex
+                style={{
+                  width: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '13px',
+                  background: 'var(--gray-2)',
+                }}
+                mr='2'
+                align='center'
+                justify='center'
+              >
+                <Text weight='bold' size='5'>
+                  {shortenString(
+                    currentProject
+                      ? currentProject.project.author.username
+                        ? currentProject.project.author.username[0].toUpperCase()
+                        : `User ${currentProject.project.author.telegramId}`[0].toUpperCase()
+                      : 'Meme factory'[0].toUpperCase()
+                  )}
+                </Text>
+              </Flex>
+
+              <Text weight='medium' size='6'>
+                {shortenString(
+                  currentProject
+                    ? currentProject.project.author.username
+                      ? currentProject.project.author.username
+                      : `User ${currentProject.project.author.telegramId}`
+                    : 'Meme factory'
+                )}
+              </Text>
+            </Flex>
+          </Box>
         </Flex>
       </Flex>
+
+      <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
+        <Theme appearance='dark'>
+          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+            <Sheet.Header />
+            <Sheet.Content>
+              <Theme>
+                <Heading mb='4' align='center' size='8'>
+                  What should I do?
+                </Heading>
+
+                <Box m='4' mb='8'>
+                  <Flex direction='column' gap='2'>
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            1
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Box>Join Quest</Box>
+                          <Box>
+                            <Text size='1' color='gray'>
+                              Join Quest with message based on requirements
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Flex>
+                    </Card>
+
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            2
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Box>Await Approval</Box>
+                          <Box>
+                            <Text size='1' color='gray'>
+                              Wait until the advertiser approves{' '}
+                              <Badge>
+                                <Text
+                                  style={{ textDecoration: 'underline' }}
+                                  onClick={() => {
+                                    handleDialogClose();
+                                    navigate('/profile?tab=account&action=verify');
+                                  }}
+                                >
+                                  or verify now
+                                </Text>
+                              </Badge>
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Flex>
+                    </Card>
+
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            3
+                          </Text>
+                        </Box>
+                        <Flex justify='between' width='100%' align='center'>
+                          <Box>
+                            <Box>Complete Tasks</Box>
+                            <Box>
+                              <Text size='1' color='gray'>
+                                Complete listed tasks
+                              </Text>
+                            </Box>
+                          </Box>
+                        </Flex>
+                      </Flex>
+                    </Card>
+
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            4
+                          </Text>
+                        </Box>
+                        <Flex justify='between' width='100%' align='center'>
+                          <Box>
+                            <Box>Get Reward</Box>
+                            <Box>
+                              <Text size='1' color='gray'>
+                                Get <Badge color='bronze'>M2E</Badge> for each completed task
+                              </Text>
+                            </Box>
+                          </Box>
+                          <img
+                            style={{
+                              height: 'var(--font-size-8)',
+                            }}
+                            src={yeyEmoji}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Card>
+                  </Flex>
+                </Box>
+              </Theme>
+            </Sheet.Content>
+          </Sheet.Container>
+          <Sheet.Backdrop onTap={() => handleDialogClose()} />
+        </Theme>
+      </Sheet>
     </Flex>
   );
 };

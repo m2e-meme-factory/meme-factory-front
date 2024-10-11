@@ -28,7 +28,7 @@ const PendingApplicationsRow: FC<PendingApplicationsRowProps> = ({
       </Table.Cell>
       <Table.Cell>
         <Button onClick={() => navigate(`/projects/${progress.projectId}/logs/${user.id}`)}>
-          Read message
+          READ
         </Button>
       </Table.Cell>
       <Table.Cell>

@@ -10,27 +10,27 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
 
   const handleCopyText = () => {
     // if (inputRef.current) {
-      const textToCopy = refLink;
+    const textToCopy = refLink;
 
-      if (navigator.clipboard) {
-        navigator.clipboard
-          .writeText(textToCopy)
-          .then(() => {
-            setIsCopied(true);
-            setCopyButtonText('Copied');
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          setIsCopied(true);
+          setCopyButtonText('Copied');
 
-            setTimeout(() => {
-              setIsCopied(false);
-              setCopyButtonText('Copy');
-            }, 2000);
-          })
-          .catch(() => {
-            console.error('Clipboard copy failed, using fallback method.');
-            copyFallback(textToCopy);
-          });
-      } else {
-        copyFallback(textToCopy);
-      }
+          setTimeout(() => {
+            setIsCopied(false);
+            setCopyButtonText('Copy');
+          }, 2000);
+        })
+        .catch(() => {
+          console.error('Clipboard copy failed, using fallback method.');
+          copyFallback(textToCopy);
+        });
+    } else {
+      copyFallback(textToCopy);
+    }
     // }
   };
 
@@ -58,9 +58,9 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   };
 
   return (
-    <Box asChild width="100%">
-      <Button onClick={handleCopyText} size="4">
-          {copyButtonText}
+    <Box asChild width='100%'>
+      <Button onClick={handleCopyText} size='4'>
+        {copyButtonText}
       </Button>
     </Box>
     // <div className={styles.refLinkContainer}>

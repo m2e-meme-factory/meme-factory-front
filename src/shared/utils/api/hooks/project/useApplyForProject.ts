@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { useMutation } from '@tanstack/react-query';
 import { applyForProject, ApplyForProjectConfig } from '../../requests/project/project-requests';
 import {
@@ -10,13 +9,14 @@ import {
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 import { UserRoleInProject } from '../../../../../pages/ProjectPage/ProjectPage';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useApplyForProject = (
   setApplyLoading: Dispatch<SetStateAction<boolean>>,
   setButtonDisabled: Dispatch<SetStateAction<boolean>>,
   setRole: Dispatch<SetStateAction<UserRoleInProject>>
 ) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
   const [savedVariables, setSavedVariables] = useState<ApplyForProjectConfig | null>(null);
 
   return useMutation({
@@ -32,9 +32,9 @@ export const useApplyForProject = (
     },
     onError: async (error: any) => {
       setApplyLoading(false);
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

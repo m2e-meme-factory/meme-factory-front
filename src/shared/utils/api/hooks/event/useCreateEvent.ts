@@ -1,15 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
 import { createEvent, CreateEventConfig } from '../../requests/event/createEvent';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 import { showErrorMessage, showToastWithPromise } from '../../../helpers/notify';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useCreateEvent = (setEventCreated?: Dispatch<SetStateAction<boolean>>) => {
   const [savedVariables, setSavedVariables] = useState<CreateEventConfig | null>(null);
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   return useMutation({
     mutationFn: (config: CreateEventConfig) => createEvent(config),
@@ -22,9 +22,9 @@ export const useCreateEvent = (setEventCreated?: Dispatch<SetStateAction<boolean
       setSavedVariables(variables);
     },
     onError: async (error: AxiosError) => {
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

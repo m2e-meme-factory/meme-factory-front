@@ -15,7 +15,7 @@ export const useGetRefData = (userId?: string) => {
         throw new Error('Smth went wrong');
       }
     },
-    select: (data) => data,
+    select: (data) => data.data,
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: 'always',

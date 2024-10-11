@@ -1,6 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
-export default function useAnimationFrame(callback: (deltaTime: number) => void, dependencies: any[]) {
+export default function useAnimationFrame(
+  callback: (deltaTime: number) => void,
+  dependencies: any[]
+) {
   const requestRef = useRef<number | undefined>();
   const previousTimeRef = useRef<number | undefined>();
 

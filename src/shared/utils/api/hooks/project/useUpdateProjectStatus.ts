@@ -4,14 +4,14 @@ import {
   UpdateProjectStatusConfig,
 } from '../../requests/project/project-requests';
 import { useNavigate } from 'react-router-dom';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { useState } from 'react';
 import { showSuccessMessage } from '../../../helpers/notify';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useUpdateProjectStatus = (projectId: string) => {
   const navigate = useNavigate();
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
   const [savedVariables, setSavedVariables] = useState<UpdateProjectStatusConfig | null>(null);
 
   return useMutation({
@@ -24,9 +24,9 @@ export const useUpdateProjectStatus = (projectId: string) => {
       setSavedVariables(variables);
     },
     onError: async (error: any) => {
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

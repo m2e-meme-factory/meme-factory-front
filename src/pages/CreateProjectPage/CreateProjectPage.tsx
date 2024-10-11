@@ -1,6 +1,6 @@
 import { Text, Button, Flex, Heading, IconButton, AlertDialog, TextField } from '@radix-ui/themes';
 import './CreateProjectPage.module.css';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
 import { CATEGORIES } from '../../shared/consts/categories';
 import makeAnimated from 'react-select/animated';
@@ -22,6 +22,8 @@ import { RootState } from '../../shared/utils/redux/store';
 import { useCreateProject } from '../../shared/utils/api/hooks/project/useCreateProject';
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 import toast from 'react-hot-toast';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
 
 const CreateProjectPage = () => {
   const animatedComponents = makeAnimated();
@@ -37,6 +39,23 @@ const CreateProjectPage = () => {
   const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<FormError[]>([]);
   const [createLoading, setCreateLoading] = useState<boolean>(false);
+  const webapp = useWebApp();
+
+  const handleBack = useCallback(() => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  }, [navigate, webapp]);
+
+  useEffect(() => {
+    webapp.ready();
+    webapp.BackButton.show();
+    webapp.onEvent('backButtonClicked', handleBack);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   const createProjectMutation = useCreateProject(setCreateLoading);
 
@@ -150,10 +169,9 @@ const CreateProjectPage = () => {
           files: files,
         };
 
-        console.log('Project Data:', projectData);
         createProjectMutation.mutate({ params: projectData });
       } catch (error) {
-        console.error('Error creating project:', error);
+        showErrorMessage('');
       } finally {
         setCreateLoading(false);
       }

@@ -2,11 +2,12 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { Project, User } from 'api';
 import { useGetMyProjects } from '../../../shared/utils/api/hooks/project/useGetMyProjects';
 import { useInView } from 'react-intersection-observer';
-import { Button, Flex, Heading } from '@radix-ui/themes';
-import { Link } from 'react-router-dom';
+import { Button, Flex, Text } from '@radix-ui/themes';
+import { useNavigate } from 'react-router-dom';
 import MyProjectCard from './MyProjectCard/MyProjectCard';
 import Loading from '../../../shared/components/Loading';
 import styled from 'styled-components';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -19,6 +20,7 @@ interface AdvertisersProjectsProps {
 
 const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
   const loadedPages = useRef(new Set<number>());
+  const navigate = useNavigate();
 
   const [myProjects, setMyProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,24 +59,34 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
     <>
       <Flex m='4' direction='column'>
         <Flex align='center'>
-          <Heading mr='3'>My projects</Heading>
-          <Link to='/create-project'>
-            <Button style={{ width: '100%' }} size='3'>
-              Create project
-            </Button>
-          </Link>
+          <Button
+            onClick={() => {
+              navigate('/create-project');
+            }}
+            style={{ width: '100%' }}
+            size='3'
+          >
+            Create project
+          </Button>
         </Flex>
         <Flex mt='4' direction='column'>
-          {myProjects.map((project, index) => (
-            <MyProjectCard
-              key={index}
-              id={project.project.id}
-              bannerUrl={project.project.bannerUrl}
-              title={project.project.title}
-              category={project.project.category}
-              status={project.project.status}
-            />
-          ))}
+          {myProjects.length === 0 ? (
+            <Flex direction='column' style={{ height: '50vh' }} align='center' justify='center'>
+              <MagnifyingGlassIcon style={{ width: '30px', height: '30px', color: 'gray' }} />
+              <Text color='gray'>No Projects Found</Text>
+            </Flex>
+          ) : (
+            myProjects.map((project, index) => (
+              <MyProjectCard
+                key={index}
+                id={project.project.id}
+                bannerUrl={project.project.bannerUrl}
+                title={project.project.title}
+                category={project.project.category}
+                status={project.project.status}
+              />
+            ))
+          )}
         </Flex>
       </Flex>
       {isLoading && <Loading />}

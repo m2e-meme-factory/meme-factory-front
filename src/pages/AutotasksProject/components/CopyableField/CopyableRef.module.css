@@ -43,7 +43,7 @@
 
 .copiedButton {
     color: white;
-    background-color: #121212;
+    background-color: var(--gray-2);
     border: 1px solid #fecf0a;
     border-radius: 10px;
     padding: 10px;

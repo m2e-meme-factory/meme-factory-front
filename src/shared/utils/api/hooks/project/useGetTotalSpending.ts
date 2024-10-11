@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTotalSpendings } from '../../requests/project/project-requests';
 import { AxiosError } from 'axios';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { showErrorMessage } from '../../../helpers/notify';
 import toast from 'react-hot-toast';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useGetTotalSpending = (projectId?: string) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
     queryKey: ['totalSpending', projectId],
@@ -21,9 +21,9 @@ export const useGetTotalSpending = (projectId?: string) => {
         return await getTotalSpendings({ params: { projectId: projectId } });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401) {
-          if (webApp) {
+          if (initData) {
             const loginConfig: LoginConfig = {
-              params: { initData: { initData: webApp.initData } },
+              params: { initData: { initData: initData } },
             };
             try {
               const response = await toast.promise(

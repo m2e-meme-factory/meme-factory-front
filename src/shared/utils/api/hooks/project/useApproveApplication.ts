@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import {
   acceptApplicationForProject,
   AcceptApplicationForProjectConfig,
@@ -12,12 +11,13 @@ import {
 } from '../../../helpers/notify';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useAcceptApplication = (
   setAcceptState: Dispatch<SetStateAction<boolean>>,
   inChat: boolean
 ) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
   const [savedVariables, setSavedVariables] = useState<AcceptApplicationForProjectConfig | null>(
     null
   );
@@ -38,9 +38,9 @@ export const useAcceptApplication = (
     },
     onError: async (error: any) => {
       setAcceptState(false);
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

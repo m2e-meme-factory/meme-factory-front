@@ -6,14 +6,15 @@ import { Flex, Spinner } from '@radix-ui/themes';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../utils/redux/user/userSlice';
 import Tutorial from './Tutorial';
+import { useInitData, useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 interface ProtectedRouteProps {
   element: React.ReactElement;
 }
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
-  const { webApp } = useTelegram();
-  const { isLoading, data, error } = useLogin(webApp?.initData);
+  const [_initDataUnsafe, initData] = useInitData();
+  const { isLoading, data, error } = useLogin(initData);
   const location = useLocation();
   const dispatch = useDispatch();
 

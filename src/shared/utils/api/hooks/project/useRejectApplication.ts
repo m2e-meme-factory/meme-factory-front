@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import {
   rejectApplicationForProject,
   RejectApplicationForProjectConfig,
@@ -12,12 +11,13 @@ import {
 } from '../../../helpers/notify';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 export const useRejectApplication = (
   setRejectState: Dispatch<SetStateAction<boolean>>,
   inChat: boolean
 ) => {
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
   const [savedVariables, setSavedVariables] = useState<RejectApplicationForProjectConfig | null>(
     null
   );
@@ -26,11 +26,11 @@ export const useRejectApplication = (
     mutationFn: (config: RejectApplicationForProjectConfig) => rejectApplicationForProject(config),
     onSuccess: () => {
       if (!inChat) {
-        setRejectState(false); //passed state is reject loading
+        setRejectState(false);
         showSuccessMessage('Application rejected successfully');
         window.location.reload();
       } else {
-        setRejectState(true); //passed state is whether the application rejected
+        setRejectState(true);
       }
     },
     onMutate: (variables) => {
@@ -38,9 +38,9 @@ export const useRejectApplication = (
     },
     onError: async (error: any) => {
       setRejectState(false);
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

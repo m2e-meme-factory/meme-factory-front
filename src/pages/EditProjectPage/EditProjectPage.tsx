@@ -7,9 +7,10 @@ import {
   TextField,
   Card,
   AlertDialog,
+  Box,
 } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
 import { CATEGORIES } from '../../shared/consts/categories';
 import makeAnimated from 'react-select/animated';
@@ -17,7 +18,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import {
   CUSTOM_SELECT_STYLES_MULTI,
@@ -32,6 +33,7 @@ import { UpdateProjectDTO, UpdateTaskDTO } from 'api';
 import toast from 'react-hot-toast';
 import { uploadFiles } from '../../shared/utils/api/requests/files/uploadBanner';
 import EditSubtaskSection from './components/EditSubtaskSection';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 enum ProjectStatus {
   DRAFT = 'draft',
@@ -69,6 +71,30 @@ const EditProjectPage = () => {
     project ? project.project.bannerUrl : null
   );
   const [isProjectSaving, setIsProjectSaving] = useState(false);
+
+  const webapp = useWebApp();
+
+  const [isOpenLeave, setIsOpenLeave] = useState(false);
+
+  const handleLeave = () => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  };
+
+  const handleBack = useCallback(() => {
+    setIsOpenLeave(true);
+  }, [navigate, webapp]);
+
+  useEffect(() => {
+    webapp.ready();
+    webapp.BackButton.show();
+    webapp.onEvent('backButtonClicked', handleBack);
+
+    return () => {
+      webapp.offEvent('backButtonClicked', handleBack);
+      webapp.BackButton.hide();
+    };
+  }, [handleBack, webapp]);
 
   const updateProjectMutation = useUpdateProject(project?.project.id);
 
@@ -201,7 +227,6 @@ const EditProjectPage = () => {
         files: files,
       };
 
-      console.log(projectData);
       if (project && projectData) {
         updateProjectMutation.mutate({
           params: { projectId: project.project.id, project: projectData },
@@ -217,11 +242,9 @@ const EditProjectPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <AlertDialog.Root>
+        <AlertDialog.Root open={isOpenLeave}>
           <AlertDialog.Trigger>
-            <IconButton size='2' mr='3'>
-              <ArrowLeftIcon />
-            </IconButton>
+            <Box></Box>
           </AlertDialog.Trigger>
           <AlertDialog.Content maxWidth='450px'>
             <AlertDialog.Title>Exit project editor</AlertDialog.Title>
@@ -236,7 +259,7 @@ const EditProjectPage = () => {
                 </Button>
               </AlertDialog.Cancel>
               <AlertDialog.Action>
-                <Button onClick={() => navigate(-1)} variant='solid' color='red'>
+                <Button onClick={() => handleLeave()} variant='solid' color='red'>
                   Leave
                 </Button>
               </AlertDialog.Action>

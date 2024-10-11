@@ -1,5 +1,5 @@
 export const ROUTES = {
-  ABOUT: '/about',
+  FRIENDS: '/friends',
   PROFILE: '/profile',
   PUBLIC_PROJECTS: '/projects',
   PROJECT_PAGE: '/projects/:id',
@@ -12,4 +12,6 @@ export const ROUTES = {
   EDIT: '/projects/:id/edit',
   AUTOTASKS: '/projects/autotasks',
   UNAUTHORIZED: '/unauthorized',
+  TUTORIAL: '/tutorial',
+  WALLET: '/wallet',
 };

@@ -14,7 +14,12 @@ root.render(
     <ProviderWrapper>
       <App />
     </ProviderWrapper>
-    <Toaster position='top-center' reverseOrder={false} />
+    <Toaster
+      position='top-center'
+      containerStyle={{ zIndex: '99999 !important' }}
+      toastOptions={{ style: { zIndex: '99999 !important' } }}
+      reverseOrder={false}
+    />
   </React.StrictMode>
 );
 

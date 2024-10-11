@@ -3,7 +3,6 @@ import {
   ApproveTaskCompletionConfig,
 } from '../../requests/task/approveTaskCompletion';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useTelegram } from '../../../../hooks/useTelegram';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import {
@@ -13,6 +12,7 @@ import {
 } from '../../../helpers/notify';
 import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
+import { useInitData } from '@vkruglikov/react-telegram-web-app';
 
 interface Response {
   statusCode: number;
@@ -25,7 +25,7 @@ export const useApproveTaskCompletion = (
   setNewEventCreated?: Dispatch<SetStateAction<boolean>>
 ) => {
   const [savedVariables, setSavedVariables] = useState<ApproveTaskCompletionConfig | null>(null);
-  const { webApp } = useTelegram();
+  const [_initDataUnsafe, initData] = useInitData();
 
   return useMutation({
     mutationFn: (config: ApproveTaskCompletionConfig) => {
@@ -42,10 +42,10 @@ export const useApproveTaskCompletion = (
       setSavedVariables(variables);
     },
     onError: async (error: AxiosError) => {
-      if (error?.response?.status === 401 && webApp) {
+      if (error?.response?.status === 401 && initData) {
         showErrorMessage('Unauthorized! Trying to login');
         const loginConfig: LoginConfig = {
-          params: { initData: { initData: webApp.initData } },
+          params: { initData: { initData: initData } },
         };
 
         try {

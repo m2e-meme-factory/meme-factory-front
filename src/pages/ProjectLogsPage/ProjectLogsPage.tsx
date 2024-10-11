@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Box, Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
-import { ArrowLeftIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import { PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
 import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
@@ -138,9 +138,9 @@ const ProjectLogsPage = () => {
 
   return (
     <>
-      <Flex height="100vh" position="relative" direction='column'>
+      <Flex height='100vh' position='relative' direction='column'>
         <Flex
-          p="4"
+          p='4'
           align='center'
           style={{
             position: 'sticky',
@@ -160,8 +160,8 @@ const ProjectLogsPage = () => {
           </Flex>
           <Button onClick={() => navigate(`/projects/${projectId}`)}>VIEW</Button>
         </Flex>
-        <Box p="4" asChild>
-          <ScrollArea  scrollbars='vertical' ref={scrollAreaRef}>
+        <Box p='4' asChild>
+          <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
             {events.map((event) => (
               <LogMessage
                 key={event.id}
@@ -187,7 +187,7 @@ const ProjectLogsPage = () => {
           </ScrollArea>
         </Box>
         <Flex
-          p="4"
+          p='4'
           align='center'
           style={{
             position: 'sticky',

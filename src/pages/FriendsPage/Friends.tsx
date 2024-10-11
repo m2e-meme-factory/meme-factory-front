@@ -99,7 +99,7 @@ export default function Friends() {
   return (
     <>
       <WebappBackButton />
-      <Flex m='4' justify="center">
+      <Flex m='4' justify='center'>
         <ResponsibleImage src={handshake} />
       </Flex>
       <Heading mb='4' align='center' size='8'>

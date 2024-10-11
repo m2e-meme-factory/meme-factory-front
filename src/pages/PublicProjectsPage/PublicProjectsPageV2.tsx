@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, Flex, Heading, Button, Box, Tabs, Callout, ScrollArea } from '@radix-ui/themes';
+import { Flex, Button, Box, Tabs, ScrollArea } from '@radix-ui/themes';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useSwipeable } from 'react-swipeable';
-import { Cross2Icon, InfoCircledIcon } from '@radix-ui/react-icons';
 import Swiper from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -76,9 +75,7 @@ export default function PublicProjectsPage() {
   const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.PUBLIC);
   const [showFindButton, setShowFindButton] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
-  const [isCalloutVisible, setIsCalloutVisible] = useState(true);
   const swiperRef = useRef<Swiper | null>(null);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [[page, direction], setPage] = useState([0, 0]);
 
   const DISPLAY_LIMIT = 10;
@@ -111,7 +108,6 @@ export default function PublicProjectsPage() {
 
     if (swiperRef.current) {
       swiperRef.current.on('slideChange', () => {
-        setCurrentSlideIndex(swiperRef.current!.activeIndex);
         setCurrentTab(swiperRef.current!.activeIndex === 0 ? TabsOption.PUBLIC : TabsOption.MY);
       });
     }
@@ -245,52 +241,11 @@ export default function PublicProjectsPage() {
         </Tabs.List>
 
         <Box pt='3'>
-          {/* <SwiperContainer>
-            <div className='swiper'>
-              <div className='swiper-wrapper'>
-                <div className='swiper-slide'>
-                  <ScrollArea>
-                    {isCalloutVisible && (
-                      <Flex ml='4' mr='4' mb={isOpened ? '4' : '0'}>
-                        <Callout.Root
-                          color='yellow'
-                          style={{ position: 'relative', padding: '1rem' }}
-                        >
-                          <Callout.Icon style={{ marginTop: '0.4rem' }}>
-                            <InfoCircledIcon />
-                          </Callout.Icon>
-                          <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
-                            Complete Tasks & Quests to increase Airdrop chance
-                            </Callout.Text>
-                            <button
-                              onClick={() => {
-                                setIsCalloutVisible(false);
-                              }}
-                              style={{
-                                position: 'absolute',
-                                top: '0.5rem',
-                                right: '0.5rem',
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                              }}
-                            >
-                              <Cross2Icon />
-                            </button>
-                          </Callout.Root>
-                        </Flex>
-                      )}
-                      </ScrollArea>
-                    </div>
-                  </div>
-                </div>
-          </SwiperContainer> */}
-
           <SwiperContainer>
             <div className='swiper'>
               <div className='swiper-wrapper'>
                 <div className='swiper-slide'>
-                  <ScrollArea scrollbars="vertical" >
+                  <ScrollArea scrollbars='vertical'>
                     <Flex direction='column'>
                       <Box style={{ display: isOpened ? 'block' : 'none' }}>
                         <Flex justify='between' p='4' pt='0' pb='0' direction='column'>

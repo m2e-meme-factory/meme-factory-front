@@ -17,8 +17,8 @@ const SecondaryHeading = styled(Heading)`
 
 const ProjectCardContent: FC<ProjectCardContentProps> = ({ project, minPrice, maxPrice }) => {
   return (
-    <Flex align="end" justify="between" direction="column">
-<Box>
+    <Flex align='end' justify='between' direction='column'>
+      <Box>
         {/* <Flex display="flex" direction="column" align="end">
           <Text mb='3' color='yellow' weight='medium'>
             {project.category}
@@ -36,28 +36,34 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project, minPrice, ma
       </Box>
 
       <Box>
-        {(minPrice && maxPrice) &&
+        {minPrice && maxPrice && (
           <Box>
             {/* <Text size="1" color='gray'>
             Reward:
             </Text> */}
-            <Box p="2" style={{
-              color: 'var(--gray-10)',
-              // borderRadius: "1rem",
-              // border: "1px solid var(--gray-10)",
-              fontSize: "var(--font-size-2)",
-              fontStyle: "italic"
-            }}>
-              {/* {minPrice} - {maxPrice} */}
-              +{project.tasks.map(t => Number(t.task.price)).reduce((accumulator, currentValue) => {
-  return accumulator + currentValue
-},0)} 
-              <Badge color='bronze' ml="1" size="1">M2E</Badge>
+            <Box
+              p='2'
+              style={{
+                color: 'var(--gray-10)',
+                // borderRadius: "1rem",
+                // border: "1px solid var(--gray-10)",
+                fontSize: 'var(--font-size-2)',
+                fontStyle: 'italic',
+              }}
+            >
+              {/* {minPrice} - {maxPrice} */}+
+              {project.tasks
+                .map((t) => Number(t.task.price))
+                .reduce((accumulator, currentValue) => {
+                  return accumulator + currentValue;
+                }, 0)}
+              <Badge color='bronze' ml='1' size='1'>
+                M2E
+              </Badge>
             </Box>
           </Box>
-        }
+        )}
       </Box>
-      
     </Flex>
     // <Flex direction='column'>
 

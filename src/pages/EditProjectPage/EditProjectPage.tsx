@@ -18,7 +18,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import {
   CUSTOM_SELECT_STYLES_MULTI,
@@ -79,7 +79,7 @@ const EditProjectPage = () => {
   const handleLeave = () => {
     navigate(-1);
     webapp.BackButton.hide();
-  }
+  };
 
   const handleBack = useCallback(() => {
     setIsOpenLeave(true);

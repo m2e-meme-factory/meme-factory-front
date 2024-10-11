@@ -1,11 +1,6 @@
-import { Button, Card, Flex, Heading, IconButton, Text } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ArrowLeftIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-  Pencil1Icon,
-} from '@radix-ui/react-icons';
+import { ChevronRightIcon, MagnifyingGlassIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
 import { Project } from 'api';
@@ -70,9 +65,6 @@ const ProjectDetailsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        {/* <IconButton mr='3' onClick={() => navigate(-1)}>
-          <ArrowLeftIcon />
-        </IconButton> */}
         <Heading>Project details</Heading>
       </Flex>
 

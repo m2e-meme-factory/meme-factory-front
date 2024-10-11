@@ -6,7 +6,6 @@ import {
   Card,
   Flex,
   Heading,
-  IconButton,
   Text,
   Theme,
   Tooltip,
@@ -14,7 +13,7 @@ import {
 import { Sheet } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import React, { CSSProperties, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserRoleInProject } from '../../ProjectPage';
 import { ProjectProgress } from 'api';
 import * as Form from '@radix-ui/react-form';
@@ -39,16 +38,6 @@ const STATUS_BADGE_COLOR: Record<TaskStatus, 'gray' | 'yellow' | 'red' | 'green'
   approved: 'green',
 };
 
-const STATUS_BORDER_STYLE: Record<
-  TaskStatus,
-  '2px solid var(--gray-10)' | '2px solid #d5de2a' | '2px solid #852c2c' | '2px solid #45a951'
-> = {
-  uncompleted: '2px solid var(--gray-10)',
-  pending: '2px solid #d5de2a',
-  rejected: '2px solid #852c2c',
-  approved: '2px solid #45a951',
-};
-
 const SheetSubtaskCard = ({
   title,
   description,
@@ -57,7 +46,6 @@ const SheetSubtaskCard = ({
   progress,
   userRole,
 }: SheetSubtaskCardProps) => {
-  const [cardStyle, setCardStyle] = useState<CSSProperties>({});
   const [isRewardClaimed, setIsRewardClaimed] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState<TaskStatus>('uncompleted');
@@ -77,15 +65,6 @@ const SheetSubtaskCard = ({
     }
   }, [progress, id]);
 
-  useEffect(() => {
-    const newStyle: CSSProperties = {
-      // borderRadius: '20px',
-      // padding: '10px 7px',
-      // border: STATUS_BORDER_STYLE[status],
-    };
-    setCardStyle(newStyle);
-  }, [status]);
-
   const handleDialogClose = () => {
     setModalVisible(false);
   };
@@ -103,16 +82,7 @@ const SheetSubtaskCard = ({
   };
 
   return (
-    <Card
-      asChild
-      className='SubtaskCard'
-      style={
-        {
-          // borderBottom: "1px solid var(--gray-2)",
-        }
-      }
-      onClick={handleDialogOpen}
-    >
+    <Card asChild className='SubtaskCard' onClick={handleDialogOpen}>
       <Box p='2'>
         <Flex align='center' justify='between' pl='2' pr='2'>
           <Flex>
@@ -127,10 +97,6 @@ const SheetSubtaskCard = ({
               </Text>
             </Flex>
           </Flex>
-
-          {/* <Button  variant='outline'>
-            Start
-          </Button> */}
 
           {isRewardClaimed ? (
             <Button color='green' variant='outline'>

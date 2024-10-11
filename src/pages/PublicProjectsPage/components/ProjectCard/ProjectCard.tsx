@@ -21,26 +21,34 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
   const navigate = useNavigate();
 
   // if (project.maxPrice === null && project.minPrice === null) {
-    return (
-      <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
-        <Flex justify="between" gap="4">
-          <CardBanner bannerUrl={project.project.bannerUrl} />
-          <Flex direction="column" justify="between" m="4">
-            <Heading size="5">{project.project.title}</Heading>
-            <ProjectCardContent project={project.project} minPrice={project.minPrice} maxPrice={project.maxPrice} />
-          </Flex>
+  return (
+    <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
+      <Flex justify='between' gap='4'>
+        <CardBanner bannerUrl={project.project.bannerUrl} />
+        <Flex direction='column' justify='between' m='4'>
+          <Heading size='5'>{project.project.title}</Heading>
+          <ProjectCardContent
+            project={project.project}
+            minPrice={project.minPrice}
+            maxPrice={project.maxPrice}
+          />
         </Flex>
-    </StyledCard>  
-    )
+      </Flex>
+    </StyledCard>
+  );
   // }
 
   return (
     <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
-      <Flex direction='column' p="4" gap="4">
-        <Heading size="5">{project.project.title}</Heading>
-        <Flex justify="between" gap="4">
+      <Flex direction='column' p='4' gap='4'>
+        <Heading size='5'>{project.project.title}</Heading>
+        <Flex justify='between' gap='4'>
           <CardBanner bannerUrl={project.project.bannerUrl} />
-          <ProjectCardContent project={project.project} minPrice={project.minPrice} maxPrice={project.maxPrice} />
+          <ProjectCardContent
+            project={project.project}
+            minPrice={project.minPrice}
+            maxPrice={project.maxPrice}
+          />
         </Flex>
       </Flex>
     </StyledCard>

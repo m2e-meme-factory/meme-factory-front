@@ -58,8 +58,6 @@ const ProjectPage = () => {
   const [progress, setProgress] = useState<ProjectProgress>();
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [minPrice, setMinPrice] = useState<number>();
-  const [maxPrice, setMaxPrice] = useState<number>();
 
   const webapp = useWebApp();
 
@@ -95,8 +93,6 @@ const ProjectPage = () => {
   useEffect(() => {
     if (projectInfoResponse) {
       setCurrentProject(projectInfoResponse.data);
-      setMinPrice(parseInt(projectInfoResponse.data.minPrice ?? '0'));
-      setMaxPrice(parseInt(projectInfoResponse.data.maxPrice ?? '0'));
       dispatch(setProject(projectInfoResponse.data));
     }
   }, [projectInfoResponse, dispatch]);
@@ -229,9 +225,7 @@ const ProjectPage = () => {
                 style={{ alignSelf: 'end', cursor: 'pointer', fontSize: 'var(--font-size-2)' }}
                 onClick={handleDownload}
               >
-                <i>
-                  Download attachments
-                </i>
+                <i>Download attachments</i>
               </Link>
             )}
           </Flex>

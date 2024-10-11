@@ -215,7 +215,7 @@ export default function PublicProjectsPage() {
             <Flex direction='row'>
               <Tabs.Trigger value='public'>All</Tabs.Trigger>
               <Tabs.Trigger value='my'>
-                {user?.role === 'creator' ? 'Joined' : 'My Tasks'}
+                {user?.role === 'creator' ? 'Joined Quests' : 'My Quests'}
               </Tabs.Trigger>
             </Flex>
             {!(user?.role === 'advertiser' && currentTab === 'my') && (
@@ -270,7 +270,7 @@ export default function PublicProjectsPage() {
             <div className='swiper'>
               <div className='swiper-wrapper'>
                 <div className='swiper-slide'>
-                  <ScrollArea>
+                  <ScrollArea scrollbars="vertical" >
                     <Flex direction='column'>
                       <Box style={{ display: isOpened ? 'block' : 'none' }}>
                         <Flex justify='between' p='4' pt='0' pb='0' direction='column'>

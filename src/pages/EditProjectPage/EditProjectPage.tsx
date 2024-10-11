@@ -7,6 +7,7 @@ import {
   TextField,
   Card,
   AlertDialog,
+  Box,
 } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -73,9 +74,15 @@ const EditProjectPage = () => {
 
   const webapp = useWebApp();
 
-  const handleBack = useCallback(() => {
+  const [isOpenLeave, setIsOpenLeave] = useState(false);
+
+  const handleLeave = () => {
     navigate(-1);
     webapp.BackButton.hide();
+  }
+
+  const handleBack = useCallback(() => {
+    setIsOpenLeave(true);
   }, [navigate, webapp]);
 
   useEffect(() => {
@@ -235,11 +242,9 @@ const EditProjectPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <AlertDialog.Root>
+        <AlertDialog.Root open={isOpenLeave}>
           <AlertDialog.Trigger>
-            <IconButton size='2' mr='3'>
-              <ArrowLeftIcon />
-            </IconButton>
+            <Box></Box>
           </AlertDialog.Trigger>
           <AlertDialog.Content maxWidth='450px'>
             <AlertDialog.Title>Exit project editor</AlertDialog.Title>
@@ -254,7 +259,7 @@ const EditProjectPage = () => {
                 </Button>
               </AlertDialog.Cancel>
               <AlertDialog.Action>
-                <Button onClick={() => navigate(-1)} variant='solid' color='red'>
+                <Button onClick={() => handleLeave()} variant='solid' color='red'>
                   Leave
                 </Button>
               </AlertDialog.Action>

@@ -209,10 +209,12 @@ const ProjectPage = () => {
             {currentProject && currentProject.project.files.length > 0 && (
               <Link
                 mt='1'
-                style={{ alignSelf: 'end', cursor: 'pointer', fontSize: '13px' }}
+                style={{ alignSelf: 'end', cursor: 'pointer', fontSize: 'var(--font-size-2)' }}
                 onClick={handleDownload}
               >
-                Download attachments
+                <i>
+                  Download attachments
+                </i>
               </Link>
             )}
           </Flex>
@@ -228,7 +230,7 @@ const ProjectPage = () => {
             <Dialog.Root>
               <Dialog.Trigger>
                 <GlowingButton
-                  size='3'
+                  size='4'
                   style={{
                     width: '100%',
                     fontSize: '18px',

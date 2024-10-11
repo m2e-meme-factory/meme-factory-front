@@ -12,7 +12,7 @@ export const useGetProgress = (params: GetProgressByProjectIdParams) => {
     queryKey: ['getProgress', params.projectId, params.userId],
     queryFn: async () => {
       try {
-        // return await getProgressByProjectId({ params: params });
+        return await getProgressByProjectId({ params: params });
       } catch (error) {
         if (error instanceof AxiosError && error.response?.status === 401) {
           if (initData) {

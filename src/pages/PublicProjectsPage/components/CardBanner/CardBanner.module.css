@@ -1,13 +1,12 @@
 .bannerContainer {
-    width: 95%;
-    height: 28vh;
+    width: 20vh;
+    height: 20vh;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
     overflow: hidden;
     background-color: var(--gray-2);
-    margin: 10px auto;
 }
 
 .bannerImage {

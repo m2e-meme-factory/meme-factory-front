@@ -27,6 +27,7 @@ import styled from 'styled-components';
 import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import { Link, Navigate } from 'react-router-dom';
+import WebappBackButton from '../../shared/components/WebappBackButton';
 
 const Steps = styled.div`
   position: relative;
@@ -96,6 +97,7 @@ export default function Friends() {
 
   return (
     <>
+      <WebappBackButton />
       <Flex m='4' justify="center">
         <ResponsibleImage src={handshake} />
       </Flex>
@@ -193,7 +195,7 @@ export default function Friends() {
               </DataList.Item>
               <DataList.Item>
                 <DataList.Label minWidth='88px'>Total profit</DataList.Label>
-                <DataList.Value>0 {" "} <Badge color='bronze'>M2E</Badge></DataList.Value>
+                <DataList.Value>{(refData?.count || 0)*100} {"  "} <Badge color='bronze'>M2E</Badge></DataList.Value>
               </DataList.Item>
             </DataList.Item>
           </DataList.Root>

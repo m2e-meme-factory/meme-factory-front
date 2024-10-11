@@ -247,7 +247,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                           <div className={styles.card} onClick={handleClaimClick}>
                             <div className={styles.cardContent}>
                               <Flex justify='center' align='center' style={{ width: '100%' }}>
-                                <p className={styles.socialsName}>Check</p>
+                                <p className={styles.socialsName}>Claim</p>
                               </Flex>
                             </div>
                           </div>

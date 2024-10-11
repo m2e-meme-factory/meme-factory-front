@@ -46,7 +46,6 @@ const SheetSubtaskCard = ({
   progress,
   userRole,
 }: SheetSubtaskCardProps) => {
-  const [isRewardClaimed, setIsRewardClaimed] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState<TaskStatus>('uncompleted');
   const applyTaskCompletionMutation = useApplyTaskCompletion();
@@ -98,7 +97,7 @@ const SheetSubtaskCard = ({
             </Flex>
           </Flex>
 
-          {isRewardClaimed ? (
+          {status === 'approved' ? (
             <Button color='green' variant='outline'>
               Complete again
               <CheckIcon color='#45a951' width={20} height={20} />
@@ -141,60 +140,61 @@ const SheetSubtaskCard = ({
                         <Callout.Text>{description}</Callout.Text>
                       </Callout.Root>
 
-                      {status === 'uncompleted' ||
-                        (status === 'rejected' &&
-                          userRole !== 'projectOwner' &&
-                          userRole !== 'guestAdvertiser' && (
-                            <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-                              <Form.Field className='FormField' name='cover-letter'>
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'baseline',
-                                    justifyContent: 'space-between',
-                                  }}
-                                >
-                                  <Form.Label className='FormLabel'>Cover Letter</Form.Label>
-                                </div>
-                                <Form.Control asChild>
-                                  <textarea className='Textarea' required />
-                                </Form.Control>
-                                <Form.Message className='FormMessage' match='valueMissing'>
-                                  Please enter a cover letter
-                                </Form.Message>
-                                <Form.Message
-                                  className='FormMessage'
-                                  match={(value) => value.length <= 10}
-                                >
-                                  Cover letter must be more than 10 characters
-                                </Form.Message>
-                              </Form.Field>
-                              <Form.Submit asChild>
-                                <Flex justify='center' style={{ width: '87vw' }}>
-                                  {userRole === 'projectMember' && (
+                      {(status === 'uncompleted' ||
+                        status === 'rejected' ||
+                        status === 'approved') &&
+                        userRole !== 'projectOwner' &&
+                        userRole !== 'guestAdvertiser' && (
+                          <Form.Root className='FormRoot' onSubmit={handleSubmit}>
+                            <Form.Field className='FormField' name='cover-letter'>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'baseline',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                <Form.Label className='FormLabel'>Cover Letter</Form.Label>
+                              </div>
+                              <Form.Control asChild>
+                                <textarea className='Textarea' required />
+                              </Form.Control>
+                              <Form.Message className='FormMessage' match='valueMissing'>
+                                Please enter a cover letter
+                              </Form.Message>
+                              <Form.Message
+                                className='FormMessage'
+                                match={(value) => value.length <= 10}
+                              >
+                                Cover letter must be more than 10 characters
+                              </Form.Message>
+                            </Form.Field>
+                            <Form.Submit asChild>
+                              <Flex justify='center' style={{ width: '87vw' }}>
+                                {userRole === 'projectMember' && (
+                                  <button
+                                    className='ProposalButton'
+                                    style={{ marginTop: 10, width: '100%' }}
+                                  >
+                                    Submit
+                                  </button>
+                                )}
+                                {(userRole === 'unconfirmedMember' ||
+                                  userRole === 'guestCreator') && (
+                                  <Tooltip content='Join the project to apply for the task'>
                                     <button
-                                      className='ProposalButton'
+                                      className='ProposalButtonDisabled'
                                       style={{ marginTop: 10, width: '100%' }}
+                                      disabled={true}
                                     >
                                       Submit
                                     </button>
-                                  )}
-                                  {(userRole === 'unconfirmedMember' ||
-                                    userRole === 'guestCreator') && (
-                                    <Tooltip content='Join the project to apply for the task'>
-                                      <button
-                                        className='ProposalButtonDisabled'
-                                        style={{ marginTop: 10, width: '100%' }}
-                                        disabled={true}
-                                      >
-                                        Submit
-                                      </button>
-                                    </Tooltip>
-                                  )}
-                                </Flex>
-                              </Form.Submit>
-                            </Form.Root>
-                          ))}
+                                  </Tooltip>
+                                )}
+                              </Flex>
+                            </Form.Submit>
+                          </Form.Root>
+                        )}
                     </Flex>
                   </Theme>
                 </Sheet.Content>

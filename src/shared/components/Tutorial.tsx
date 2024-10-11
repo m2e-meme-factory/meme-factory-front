@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import useAnimationFrame from '../utils/animations/useAnimationFrame';
 import GlowingButton from './Buttons/GlowingButton';
 
-const M2E = <Badge color="bronze">M2E</Badge>;
+const M2E = <Badge color='bronze'>M2E</Badge>;
 
 interface TutorialProps {
   onComplete: () => void;
@@ -110,14 +110,11 @@ const StyledCard = styled(Card)`
 `;
 const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
   const swiperRef = useRef<Swiper | null>(null);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [slideNormalizedOffset1, setSlideNormalizedOffset1] = useState(0);
   const [slideNormalizedOffset2, setSlideNormalizedOffset2] = useState(1);
   const [slideNormalizedOffset3, setSlideNormalizedOffset3] = useState(1);
   const [slideNormalizedOffset4, setSlideNormalizedOffset4] = useState(1);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     swiperRef.current = new Swiper('.swiper', {
@@ -130,7 +127,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
 
     if (swiperRef.current) {
       swiperRef.current.on('slideChange', () => {
-        // alert(swiperRef.current!.activeIndex)
         setCurrentSlideIndex(swiperRef.current!.activeIndex);
       });
     }
@@ -175,18 +171,12 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
       const offsetNormalized = nextSlide.getBoundingClientRect().x / html.width;
       setWithIndex(currentSlideIndex + 1, offsetNormalized);
     }
-
-    // console.log(slideNormalizedOffset1, slideNormalizedOffset2, slideNormalizedOffset3)
   };
   useAnimationFrame(() => {
     handleResize();
   }, [currentSlideIndex]);
 
-  // useEffect(() => {
-  //   wrapperRef.current?.addEventListener('')
-  // }, [currentSlideIndex])
   return (
-    // <Tutorial3D />
     <SwiperDiv className='swiper'>
       <Box
         style={{
@@ -198,7 +188,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           zIndex: -1,
           transition: 'all 0.5s ease',
           background: `radial-gradient(#fecd0a11, #00000000 100%)`,
-          // linear-gradient(#fecf0a2a, #00000000 80%)`
         }}
       />
       <div className='swiper-wrapper'>
@@ -211,15 +200,16 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
               translate: '0.4s ease all',
             }}
-            >
+          >
             <img
               src={moneybag}
               alt='Profile illustration'
               style={{
-                transform: "translateY(10vh)",
+                transform: 'translateY(10vh)',
                 width: '60%',
                 objectFit: 'contain',
-              }} />
+              }}
+            />
           </Flex>
           <StyledCard>
             <Box pt='2' pb='2'>
@@ -256,7 +246,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             <Iphone>
               <Notch />
               <Screen>
-                {/* <img src={`./path/to/image${index + 1}.png`} alt={`Slide ${index + 1}`} width="100%" /> */}
                 <img
                   src={refs}
                   alt='Profile illustration'
@@ -304,7 +293,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             <Iphone>
               <Notch />
               <Screen>
-                {/* <img src={`./path/to/image${index + 1}.png`} alt={`Slide ${index + 1}`} width="100%" /> */}
                 <img
                   src={airdrop}
                   alt='Profile illustration'
@@ -351,7 +339,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             <Iphone>
               <Notch />
               <Screen>
-                {/* <img src={`./path/to/image${index + 1}.png`} alt={`Slide ${index + 1}`} width="100%" /> */}
                 <img
                   src={projects}
                   alt='Profile illustration'
@@ -367,8 +354,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             <Box pt='2' pb='2'>
               <Heading size='5'>Create content!</Heading>
               <Text size={{ xs: '2', sm: '4' }}>
-                You will post content in socials and
-                earn more than <b>10 000</b> {M2E} daily
+                You will post content in socials and earn more than <b>10 000</b> {M2E} daily
               </Text>
             </Box>
           </StyledCard>

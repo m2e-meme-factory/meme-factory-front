@@ -103,10 +103,17 @@ const SheetSubtaskCard = ({
   };
 
   return (
-    <Card asChild className='SubtaskCard'style={{
-      // borderBottom: "1px solid var(--gray-2)",
-    }} onClick={handleDialogOpen}>
-      <Box p="2">
+    <Card
+      asChild
+      className='SubtaskCard'
+      style={
+        {
+          // borderBottom: "1px solid var(--gray-2)",
+        }
+      }
+      onClick={handleDialogOpen}
+    >
+      <Box p='2'>
         <Flex align='center' justify='between' pl='2' pr='2'>
           <Flex>
             <Flex direction='column'>
@@ -125,19 +132,22 @@ const SheetSubtaskCard = ({
             Start
           </Button> */}
 
-            {isRewardClaimed ? (
-              <Button color='green' variant='outline'>
+          {isRewardClaimed ? (
+            <Button color='green' variant='outline'>
               Complete again
               <CheckIcon color='#45a951' width={20} height={20} />
             </Button>
-            ) : (
-              
-              <Button  variant='outline'>
-                Start
+          ) : (
+            <Button variant='outline'>
+              Start
               <CaretRightIcon width={20} height={20} />
             </Button>
-            )}
-          <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
+          )}
+          <Sheet
+            isOpen={isModalVisible}
+            onClose={() => handleDialogClose()}
+            detent='content-height'
+          >
             <Theme appearance='dark'>
               <Sheet.Container>
                 <Sheet.Header />
@@ -224,7 +234,6 @@ const SheetSubtaskCard = ({
                 </Sheet.Content>
               </Sheet.Container>
               <Sheet.Backdrop onTap={() => handleDialogClose()} />
-
             </Theme>
           </Sheet>
         </Flex>

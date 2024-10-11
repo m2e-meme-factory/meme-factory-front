@@ -15,13 +15,13 @@ export const CUSTOM_SELECT_STYLES_MULTI: StylesConfig<any, true> = {
   menu: (provided) => ({
     ...provided,
     width: '100%',
-    maxHeight: "100vh",
+    maxHeight: '100vh',
     backgroundColor: 'var(--gray-2)',
     fontSize: 'inherit',
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: "60vh",
+    maxHeight: '60vh',
   }),
   option: (provided, state) => ({
     ...provided,
@@ -77,15 +77,14 @@ export const CUSTOM_SELECT_STYLES_SINGLE: StylesConfig<any, false> = {
     '&:hover': {
       borderColor: state.isFocused ? 'var(--gray-4)' : 'var(--gray-2)',
     },
-    'fontSize': "inherit",
+    'fontSize': 'inherit',
   }),
   menu: (provided) => ({
     ...provided,
-    maxHeight: "60vh",
+    maxHeight: '60vh',
     // width: '91vw',
     backgroundColor: 'var(--gray-2)',
     fontSize: 'inherit',
-
   }),
   indicatorSeparator: (provided) => ({
     ...provided,
@@ -93,14 +92,14 @@ export const CUSTOM_SELECT_STYLES_SINGLE: StylesConfig<any, false> = {
   }),
   menuList: (provided) => ({
     ...provided,
-    maxHeight: "60vh",
+    maxHeight: '60vh',
   }),
   option: (provided, state) => ({
     ...provided,
     'backgroundColor': state.isFocused ? 'var(--accent-a10)' : 'var(--gray-2)',
     'color': state.isFocused ? 'black' : 'white',
     '&:active': {
-    'backgroundColor': '#000',
+      backgroundColor: '#000',
       color: 'black',
     },
     'fontSize': 'inherit',

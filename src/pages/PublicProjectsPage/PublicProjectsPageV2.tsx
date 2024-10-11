@@ -215,7 +215,7 @@ export default function PublicProjectsPage() {
             <Flex direction='row'>
               <Tabs.Trigger value='public'>All</Tabs.Trigger>
               <Tabs.Trigger value='my'>
-                {user?.role === 'creator' ? 'Joined' : 'My Tasks'}
+                {user?.role === 'creator' ? 'Joined Quests' : 'My Quests'}
               </Tabs.Trigger>
             </Flex>
             {!(user?.role === 'advertiser' && currentTab === 'my') && (
@@ -245,7 +245,7 @@ export default function PublicProjectsPage() {
         </Tabs.List>
 
         <Box pt='3'>
-          <SwiperContainer>
+          {/* <SwiperContainer>
             <div className='swiper'>
               <div className='swiper-wrapper'>
                 <div className='swiper-slide'>
@@ -261,25 +261,36 @@ export default function PublicProjectsPage() {
                           </Callout.Icon>
                           <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
                             Complete Tasks & Quests to increase Airdrop chance
-                          </Callout.Text>
-                          <button
-                            onClick={() => {
-                              setIsCalloutVisible(false);
-                            }}
-                            style={{
-                              position: 'absolute',
-                              top: '0.5rem',
-                              right: '0.5rem',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Cross2Icon />
-                          </button>
-                        </Callout.Root>
-                      </Flex>
-                    )}
+                            </Callout.Text>
+                            <button
+                              onClick={() => {
+                                setIsCalloutVisible(false);
+                              }}
+                              style={{
+                                position: 'absolute',
+                                top: '0.5rem',
+                                right: '0.5rem',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              <Cross2Icon />
+                            </button>
+                          </Callout.Root>
+                        </Flex>
+                      )}
+                      </ScrollArea>
+                    </div>
+                  </div>
+                </div>
+          </SwiperContainer> */}
+
+          <SwiperContainer>
+            <div className='swiper'>
+              <div className='swiper-wrapper'>
+                <div className='swiper-slide'>
+                  <ScrollArea scrollbars="vertical" >
                     <Flex direction='column'>
                       <Box style={{ display: isOpened ? 'block' : 'none' }}>
                         <Flex justify='between' p='4' pt='0' pb='0' direction='column'>

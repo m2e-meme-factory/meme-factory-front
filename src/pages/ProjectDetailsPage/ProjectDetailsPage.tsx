@@ -70,9 +70,9 @@ const ProjectDetailsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <IconButton mr='3' onClick={() => navigate(-1)}>
+        {/* <IconButton mr='3' onClick={() => navigate(-1)}>
           <ArrowLeftIcon />
-        </IconButton>
+        </IconButton> */}
         <Heading>Project details</Heading>
       </Flex>
 

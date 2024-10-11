@@ -28,6 +28,7 @@ import styled from 'styled-components';
 import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import { Link, Navigate } from 'react-router-dom';
+import WebappBackButton from '../../shared/components/WebappBackButton';
 
 const Steps = styled.div`
   position: relative;
@@ -97,7 +98,8 @@ export default function Friends() {
 
   return (
     <>
-      <Flex m='4' justify='center'>
+      <WebappBackButton />
+      <Flex m='4' justify="center">
         <ResponsibleImage src={handshake} />
       </Flex>
       <Heading mb='4' align='center' size='8'>

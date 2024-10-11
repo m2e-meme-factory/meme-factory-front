@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
@@ -200,15 +200,8 @@ export default function ProfilePage() {
           <div className='swiper'>
             <div className='swiper-wrapper'>
               <div className='swiper-slide'>
-                <Box m='4'>
-                  <Flex direction='column' gap='5'>
-                    <Card>
-                      <Heading size='8'>Meme Factory</Heading>
-                      <Text color='gray'>
-                        - is a service where people post memes and earn money from it, and brands
-                        increase awareness through advertising integrations
-                      </Text>
-                    </Card>
+                <Box m="4">
+                  <Flex direction="column" gap="5">
 
                     <Flex justify='center' align='center' gap='2' direction='column'>
                       <Heading>
@@ -229,7 +222,8 @@ export default function ProfilePage() {
                         </Popover.Root>
                       </Heading>
                     </Flex>
-                    <Flex direction='column' gap='2'>
+                    <Flex direction="column" gap="2">
+                    <Link style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }} to="/friends">
                       <Card>
                         <Flex justify='between' align='center' p='1'>
                           <Box>
@@ -296,7 +290,9 @@ export default function ProfilePage() {
                           </Box>
                         </Flex>
                       </Card>
+                      </Link>
 
+                      <Link style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }} to="/projects/autotasks">
                       <Card>
                         <Flex justify='between' align='center' p='1'>
                           <Box>
@@ -314,6 +310,7 @@ export default function ProfilePage() {
                           </Box>
                         </Flex>
                       </Card>
+                      </Link>
 
                       <Card>
                         <Flex justify='between' align='center' p='1'>

@@ -195,7 +195,7 @@ const ProjectPage = () => {
       </Flex>
       {/* Title */}
       <Flex direction='column'>
-        <Flex m='4' mt='2' gap="5"  direction='column'>
+        <Flex m='4' mt='2' gap='5' direction='column'>
           <Heading weight='medium'>{currentProject?.project.title}</Heading>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
@@ -284,7 +284,7 @@ const ProjectPage = () => {
                 Tasks
               </Text>
             </Flex>
-            <Flex gap="3" direction="column">
+            <Flex gap='3' direction='column'>
               {currentProject?.project.tasks &&
                 currentProject?.project.tasks.map((subtask, index) => (
                   <SheetSubtaskCard
@@ -332,7 +332,7 @@ const ProjectPage = () => {
                 mr='2'
                 align='center'
                 justify='center'
-              >   
+              >
                 <Text weight='bold' size='5'>
                   {shortenString(
                     currentProject

@@ -12,31 +12,31 @@ import WebappBackButton from "../../shared/components/WebappBackButton";
 
 
 const WalletPage = () => {
-    const user = useSelector((state: RootState) => state.user.user);
-    const [tonConnectUI] = useTonConnectUI();
-    const [walletAddress, setWalletAddress] = useState<string>();
+  const user = useSelector((state: RootState) => state.user.user);
+  const [tonConnectUI] = useTonConnectUI();
+  const [walletAddress, setWalletAddress] = useState<string>();
 
-    useEffect(() => {
-        const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-            if (wallet) {
-                setWalletAddress(wallet.account.address);
-            } else {
-                setWalletAddress('');
-            }
-        });
+  useEffect(() => {
+    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
+      if (wallet) {
+        setWalletAddress(wallet.account.address);
+      } else {
+        setWalletAddress('');
+      }
+    });
 
-        return () => unsubscribe();
-    }, [tonConnectUI]);
+    return () => unsubscribe();
+  }, [tonConnectUI]);
 
-    useEffect(() => {
-        const connect = async (wallet: string) => {
-            await connectWallet({ params: { tonWalletAddress: wallet } });
-        };
+  useEffect(() => {
+    const connect = async (wallet: string) => {
+      await connectWallet({ params: { tonWalletAddress: wallet } });
+    };
 
-        if (walletAddress) {
-            connect(walletAddress);
-        }
-    }, [walletAddress]);
+    if (walletAddress) {
+      connect(walletAddress);
+    }
+  }, [walletAddress]);
 
     return (
         <Flex direction="column" minHeight="90vh" justify="center" align="center" m="4" gap="4">

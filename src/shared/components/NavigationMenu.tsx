@@ -1,4 +1,4 @@
-import { Box, Button, Card, Flex, Separator , Text} from '@radix-ui/themes';
+import { Box, Button, Card, Flex, Separator, Text } from '@radix-ui/themes';
 import { Link, useLocation } from 'react-router-dom';
 import { navigationRoutes } from '../consts/navigationRoutes';
 import React from 'react';
@@ -15,12 +15,14 @@ const NavigationMenu = () => {
             {navigationRoutes.map((route, key) => (
               <React.Fragment key={key}>
                 <Link to={route.path}>
-                  <Button size='3' variant={'ghost'} color={location.pathname.includes(route.path) ? "amber" : 'gray'}>
-                    <Flex direction="column" align="center" justify="center">
+                  <Button
+                    size='3'
+                    variant={'ghost'}
+                    color={location.pathname.includes(route.path) ? 'amber' : 'gray'}
+                  >
+                    <Flex direction='column' align='center' justify='center'>
                       {route.icon}
-                      <Text size="1">
-                        {route.title}
-                      </Text>
+                      <Text size='1'>{route.title}</Text>
                     </Flex>
                   </Button>
                 </Link>

@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
           <Suspense fallback={<Loading />}>
             <WalletPage />
           </Suspense>
-        )
+        ),
       },
       {
         path: ROUTES.CREATE_PROJECT,

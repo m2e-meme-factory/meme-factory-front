@@ -38,7 +38,7 @@ const BlockObserver = styled.div`
 const SwiperContainer = styled.div`
   .swiper {
     width: 100%;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 100px);
     z-index: 0;
   }
 
@@ -211,7 +211,7 @@ export default function PublicProjectsPage() {
     <div {...swipeHandlers}>
       <Tabs.Root defaultValue='public' onValueChange={handleTabChange} value={currentTab}>
         <Tabs.List justify='start'>
-          <Flex direction='row' justify='between' align='center' style={{ width: '100%' }} >
+          <Flex direction='row' justify='between' align='center' style={{ width: '100%' }}>
             <Flex direction='row'>
               <Tabs.Trigger value='public'>All</Tabs.Trigger>
               <Tabs.Trigger value='my'>
@@ -219,14 +219,25 @@ export default function PublicProjectsPage() {
               </Tabs.Trigger>
             </Flex>
             {!(user?.role === 'advertiser' && currentTab === 'my') && (
-              <Button
-                variant='outline'
-                size='1'
-                mr='3'
-                // style={{ borderRadius: '15px' }}
-                onClick={() => setIsOpened(!isOpened)}
-              >
-                <svg height="var(--text-size-2)" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M6 12h12M4 8h16M8 16h8" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"></path></g></svg>
+              <Button variant='outline' size='1' mr='3' onClick={() => setIsOpened(!isOpened)}>
+                <svg
+                  height='var(--text-size-2)'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
+                  <g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g>
+                  <g id='SVGRepo_iconCarrier'>
+                    <path
+                      d='M6 12h12M4 8h16M8 16h8'
+                      stroke='currentColor'
+                      stroke-width='1.5'
+                      stroke-miterlimit='10'
+                      stroke-linecap='round'
+                    ></path>
+                  </g>
+                </svg>
                 Filters
               </Button>
             )}
@@ -234,17 +245,21 @@ export default function PublicProjectsPage() {
         </Tabs.List>
 
         <Box pt='3'>
-          
-        {isCalloutVisible && (
-                        <Flex ml="4" mr="4" mb={isOpened ? '4' : '0'}>
-                          <Callout.Root
-                            color='yellow'
-                            style={{ position: 'relative', padding: '1rem' }}
-                          >
-                            <Callout.Icon style={{ marginTop: '0.4rem' }}>
-                              <InfoCircledIcon />
-                            </Callout.Icon>
-                            <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
+          {/* <SwiperContainer>
+            <div className='swiper'>
+              <div className='swiper-wrapper'>
+                <div className='swiper-slide'>
+                  <ScrollArea>
+                    {isCalloutVisible && (
+                      <Flex ml='4' mr='4' mb={isOpened ? '4' : '0'}>
+                        <Callout.Root
+                          color='yellow'
+                          style={{ position: 'relative', padding: '1rem' }}
+                        >
+                          <Callout.Icon style={{ marginTop: '0.4rem' }}>
+                            <InfoCircledIcon />
+                          </Callout.Icon>
+                          <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
                             Complete Tasks & Quests to increase Airdrop chance
                             </Callout.Text>
                             <button
@@ -265,6 +280,11 @@ export default function PublicProjectsPage() {
                           </Callout.Root>
                         </Flex>
                       )}
+                      </ScrollArea>
+                    </div>
+                  </div>
+                </div>
+          </SwiperContainer> */}
 
           <SwiperContainer>
             <div className='swiper'>
@@ -275,9 +295,15 @@ export default function PublicProjectsPage() {
                       <Box style={{ display: isOpened ? 'block' : 'none' }}>
                         <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
                           <Flex direction='column' gap='2' mb='1'>
-                            <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap' style={{
-                              fontSize: "var(--text-size-2)"
-                            }}>
+                            <Flex
+                              direction={isColumn ? 'column' : 'row'}
+                              gap='2'
+                              mb='1'
+                              wrap='wrap'
+                              style={{
+                                fontSize: 'var(--text-size-2)',
+                              }}
+                            >
                               <div
                                 style={{
                                   flexGrow: 1,
@@ -319,7 +345,11 @@ export default function PublicProjectsPage() {
                                 />
                               </div>
                             </Flex>
-                            {showFindButton && <Button variant='outline' onClick={handleFindButtonClick}>Find</Button>}
+                            {showFindButton && (
+                              <Button variant='outline' onClick={handleFindButtonClick}>
+                                Find
+                              </Button>
+                            )}
                           </Flex>
                         </Flex>
                       </Box>
@@ -329,9 +359,7 @@ export default function PublicProjectsPage() {
                           <ProjectCard key={index} project={project} />
                         ))}
 
-                        {(projects.length == 0 && !isLoading) && (
-                            <NothingFound />
-                        )}
+                        {projects.length == 0 && !isLoading && <NothingFound />}
                       </Flex>
                       {isLoading && <Loading />}
                       {!isLoading && <BlockObserver ref={ref}></BlockObserver>}

@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, ScrollArea, Table } from '@radix-ui/themes';
+import { Flex, Heading } from '@radix-ui/themes';
 import React, { useEffect, useState } from 'react';
 import { useGetTransactionsByUser } from '../../shared/utils/api/hooks/transactions/useGetTransactionsByUser';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import makeAnimated from 'react-select/animated';
 import { TX_TYPE_OPTIONS } from '../../shared/consts/txTypesOptions';
 import { Option } from '../../@types/app';
 import NothingFound from '../../shared/components/NothingFound';
+import TransactionCard from './components/TransactionCard';
 
 const TransactionsHistoryPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -53,83 +54,41 @@ const TransactionsHistoryPage = () => {
         <Heading>Transactions history</Heading>
       </Flex>
 
-      {currentTransactions.length == 0 && !isLoading ? (
+      <Flex mt='2' mb='4' direction='column'>
+        <Heading size='2' mb='2'>
+          Tx type
+        </Heading>
+        <div className='swiper-no-swiping'>
+          <Select
+            isSearchable={false}
+            onChange={handleApplicationStatusChange}
+            placeholder='Select tx type'
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            options={TX_TYPE_OPTIONS}
+            styles={CUSTOM_SELECT_STYLES_MULTI}
+            isMulti={true}
+            isClearable={true}
+          />
+        </div>
+      </Flex>
+
+      {currentTransactions.length === 0 && !isLoading ? (
         <NothingFound />
       ) : (
-        <>
-          <Flex mt='2' mb='4' direction='column'>
-            <Heading size='2' mb='2'>
-              Tx type
-            </Heading>
-            <div className='swiper-no-swiping'>
-              <Select
-                isSearchable={false}
-                onChange={handleApplicationStatusChange}
-                placeholder='Select tx type'
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                options={TX_TYPE_OPTIONS}
-                styles={CUSTOM_SELECT_STYLES_MULTI}
-                isMulti={true}
-                isClearable={true}
-              />
-            </div>
-          </Flex>
-          <Flex direction='column'>
-            <ScrollArea type='always' scrollbars='horizontal' style={{ height: 'fit-content' }}>
-              <Table.Root>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.ColumnHeaderCell>Tx Id</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {currentTransactions &&
-                    currentTransactions.map((transaction) => (
-                      <Table.Row key={transaction.id}>
-                        <Table.Cell>{transaction.id}</Table.Cell>
-                        <Table.Cell>
-                          {transaction.type === 'SYSTEM'
-                            ? 'platform'
-                            : transaction.type === 'DEPOSIT'
-                              ? ''
-                              : (transaction.fromUser?.username ?? '—') +
-                                ` (${transaction.fromUser?.telegramId ?? '—'})`}
-                        </Table.Cell>
-                        <Table.Cell>
-                          {transaction.type === 'WITHDRAWAL'
-                            ? ''
-                            : (transaction.toUser?.username ?? '—') +
-                              ` (${transaction.toUser?.telegramId ?? '—'})`}
-                        </Table.Cell>
-                        <Table.Cell>{transaction.amount}</Table.Cell>
-                        <Table.Cell>{transaction.type.toLowerCase()}</Table.Cell>
-                        <Table.Cell>
-                          {transaction.type == 'PAYMENT' && (
-                            <Button
-                              style={{ padding: '20px' }}
-                              onClick={() =>
-                                navigate(
-                                  `/projects/${transaction.projectId}/logs/${transaction.toUserId}?fromTab=transactions`
-                                )
-                              }
-                            >
-                              To history
-                            </Button>
-                          )}
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                </Table.Body>
-              </Table.Root>
-            </ScrollArea>
-          </Flex>
-        </>
+        <Flex direction='column' justify='center' gapY='2'>
+          {currentTransactions.map((transaction) => (
+            <TransactionCard
+              key={transaction.id}
+              type={transaction?.type}
+              fromUser={transaction?.fromUser}
+              toUser={transaction?.toUser}
+              sum={transaction?.amount}
+              projectId={transaction?.projectId}
+              currentUser={user}
+            />
+          ))}
+        </Flex>
       )}
     </Flex>
   );

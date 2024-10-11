@@ -156,7 +156,7 @@ export default function Friends() {
                   <Box>You get Reward</Box>
                   <Box>
                     <Text size='1' color='gray'>
-                      You get 100 <Badge color='bronze'>M2E</Badge> per each friend
+                      You get 1000 <Badge color='bronze'>M2E</Badge> per each friend
                     </Text>
                   </Box>
                 </Box>

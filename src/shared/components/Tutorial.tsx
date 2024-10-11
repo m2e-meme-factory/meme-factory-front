@@ -4,14 +4,17 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Badge, Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { Link, useNavigate } from 'react-router-dom';
 import refs from './../imgs/refs_v2.png';
 import airdrop from './../imgs/airdrop-green.png';
+import moneybag from './../imgs/money-bag.webp';
 import projects from './../imgs/first_meme.png';
 import styled from 'styled-components';
 import useAnimationFrame from '../utils/animations/useAnimationFrame';
 import GlowingButton from './Buttons/GlowingButton';
+
+const M2E = <Badge color="bronze">M2E</Badge>;
 
 interface TutorialProps {
   onComplete: () => void;
@@ -112,6 +115,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
   const [slideNormalizedOffset1, setSlideNormalizedOffset1] = useState(0);
   const [slideNormalizedOffset2, setSlideNormalizedOffset2] = useState(1);
   const [slideNormalizedOffset3, setSlideNormalizedOffset3] = useState(1);
+  const [slideNormalizedOffset4, setSlideNormalizedOffset4] = useState(1);
 
   const navigate = useNavigate();
 
@@ -154,6 +158,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
       if (index == 0) setSlideNormalizedOffset1(offsetNormalized);
       else if (index == 1) setSlideNormalizedOffset2(offsetNormalized);
       else if (index == 2) setSlideNormalizedOffset3(offsetNormalized);
+      else if (index == 3) setSlideNormalizedOffset4(offsetNormalized);
     };
 
     if (currntSlide) {
@@ -203,30 +208,24 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             align='center'
             style={{
               transformStyle: 'preserve-3d',
-              transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
               translate: '0.4s ease all',
             }}
-          >
-            <Iphone>
-              <Notch />
-              <Screen>
-                {/* <img src={`./path/to/image${index + 1}.png`} alt={`Slide ${index + 1}`} width="100%" /> */}
-                <img
-                  src={airdrop}
-                  alt='Profile illustration'
-                  style={{
-                    width: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </Screen>
-            </Iphone>
+            >
+            <img
+              src={moneybag}
+              alt='Profile illustration'
+              style={{
+                transform: "translateY(10vh)",
+                width: '60%',
+                objectFit: 'contain',
+              }} />
           </Flex>
           <StyledCard>
             <Box pt='2' pb='2'>
-              <Heading size='5'>Join Airdrop!</Heading>
+              <Heading size='5'>How to Earn With Us?</Heading>
               <Text size={{ xs: '2', sm: '4' }}>
-                Earn up to <b>10 000</b> coin for joining us
+                The more {M2E} points you get - the more your Airdrop chances.
               </Text>
             </Box>
           </StyledCard>
@@ -241,7 +240,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               zIndex: '9999',
             }}
           >
-            Alright
+            Learn
           </Button>
         </div>
         <div className='swiper-slide'>
@@ -274,7 +273,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             <Box pt='2' pb='2'>
               <Heading size='5'>Invite Friends!</Heading>
               <Text size={{ xs: '2', sm: '4' }}>
-                Earn <b>100</b> coins for each friend.
+                Earn <b>1000</b> {M2E} for each friend.
               </Text>
             </Box>
           </StyledCard>
@@ -307,6 +306,53 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               <Screen>
                 {/* <img src={`./path/to/image${index + 1}.png`} alt={`Slide ${index + 1}`} width="100%" /> */}
                 <img
+                  src={airdrop}
+                  alt='Profile illustration'
+                  style={{
+                    width: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+              </Screen>
+            </Iphone>
+          </Flex>
+          <StyledCard>
+            <Box pt='2' pb='2'>
+              <Heading size='5'>Complete Fast tasks!</Heading>
+              <Text size={{ xs: '2', sm: '4' }}>
+                Earn up to <b>1000</b> {M2E} for each task
+              </Text>
+            </Box>
+          </StyledCard>
+          <Button
+            size='3'
+            onClick={handleNextSlide}
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '50%',
+              transform: 'translateX(50%)',
+              zIndex: '9999',
+            }}
+          >
+            Alright
+          </Button>
+        </div>
+        <div className='swiper-slide'>
+          <Flex
+            direction='column'
+            align='center'
+            style={{
+              transformStyle: 'preserve-3d',
+              transform: `perspective(1200px) rotateX(${slideNormalizedOffset4 * 10 + 10}deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
+              translate: '0.4s ease all',
+            }}
+          >
+            <Iphone>
+              <Notch />
+              <Screen>
+                {/* <img src={`./path/to/image${index + 1}.png`} alt={`Slide ${index + 1}`} width="100%" /> */}
+                <img
                   src={projects}
                   alt='Profile illustration'
                   style={{
@@ -321,7 +367,8 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             <Box pt='2' pb='2'>
               <Heading size='5'>Create content!</Heading>
               <Text size={{ xs: '2', sm: '4' }}>
-                Earn up to <b>10 000</b> coin daily
+                You will post content in socials and
+                earn more than <b>10 000</b> {M2E} daily
               </Text>
             </Box>
           </StyledCard>

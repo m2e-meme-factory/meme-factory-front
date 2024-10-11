@@ -321,32 +321,30 @@ export default function ProfilePage() {
                           <Sheet.Container style={{ overflowY: 'auto', background: "#121113" }}>
                             <Sheet.Header />
                             <Sheet.Content>
-                              <Sheet.Scroller>
-                                <Theme>
-                                  <Grid gap='8' m='4' mb='5' align='center'>
-                                    <Flex justify='center'>
-                                      <ResponsibleImage src={star} />
-                                      {/* <img width='40%' src={star} alt='Verified icon' /> */}
-                                    </Flex>
-                                    <Grid gap='2'>
-                                      <Heading mb='2' align="center">Benefits of verified accounts</Heading>
-                                      <Blockquote>100% chance for Airdrop claim</Blockquote>
-                                      <Blockquote>Auto approve to any project</Blockquote>
-                                      <Blockquote>
-                                        High priority for checking task completion
-                                      </Blockquote>
-                                    </Grid>
-
-                                    <GlowingButton
-                                      size='4'
-                                      onClick={handleVerify}
-                                      style={{ width: '100%' }}
-                                    >
-                                      Verify Now
-                                    </GlowingButton>
+                              <Theme>
+                                <Grid gap='8' m='4' mb='5' align='center'>
+                                  <Flex justify='center'>
+                                    <ResponsibleImage src={star} />
+                                    {/* <img width='40%' src={star} alt='Verified icon' /> */}
+                                  </Flex>
+                                  <Grid gap='2'>
+                                    <Heading mb='2' align="center">Benefits of verified accounts</Heading>
+                                    <Blockquote>100% chance for Airdrop claim</Blockquote>
+                                    <Blockquote>Auto approve to any project</Blockquote>
+                                    <Blockquote>
+                                      High priority for checking task completion
+                                    </Blockquote>
                                   </Grid>
-                                </Theme>
-                              </Sheet.Scroller>
+
+                                  <GlowingButton
+                                    size='4'
+                                    onClick={handleVerify}
+                                    style={{ width: '100%' }}
+                                  >
+                                    Verify Now
+                                  </GlowingButton>
+                                </Grid>
+                              </Theme>
                             </Sheet.Content>
                           </Sheet.Container>
                           <Sheet.Backdrop onTap={() => handleDialogClose()} />

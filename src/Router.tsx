@@ -10,6 +10,7 @@ import Loading from './shared/components/Loading';
 
 const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
 const Friends = lazy(() => import('./pages/FriendsPage/Friends'));
+const WalletPage = lazy(() => import('./pages/WalletPage/WalletPage'));
 const CreateProjectPage = lazy(() => import('./pages/CreateProjectPage/CreateProjectPage'));
 const ProjectDetailsPage = lazy(() => import('./pages/ProjectDetailsPage/ProjectDetailsPage'));
 const ProjectLogsPage = lazy(() => import('./pages/ProjectLogsPage/ProjectLogsPage'));
@@ -56,6 +57,14 @@ export const router = createBrowserRouter([
             <Friends />
           </Suspense>
         ),
+      },
+      {
+        path: ROUTES.WALLET,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <WalletPage />
+          </Suspense>
+        )
       },
       {
         path: ROUTES.CREATE_PROJECT,

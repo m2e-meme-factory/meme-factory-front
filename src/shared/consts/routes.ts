@@ -13,4 +13,5 @@ export const ROUTES = {
   AUTOTASKS: '/projects/autotasks',
   UNAUTHORIZED: '/unauthorized',
   TUTORIAL: '/tutorial',
+  WALLET: '/wallet',
 };

@@ -1,8 +1,9 @@
 .react-modal-sheet-backdrop {
+    box-shadow: 2px 2px #fff;
     background: rgba(0, 0, 0, 0.3) !important;
 }
 .react-modal-sheet-container {
-    background-color: #121212 !important;
+    background-color: #121113 !important;
 }
 .react-modal-sheet-header {
     /* custom styles */

@@ -1,8 +1,12 @@
 import { Button } from '@radix-ui/themes';
 import styled from 'styled-components';
 
-const GlowingButton = styled(Button)`
-  background: linear-gradient(180deg, var(--brand-color) 0%, var(--brand-color) 100%);
+
+export const AccentButton = styled(Button)`
+  background: linear-gradient(180deg, #ffd547 0%, var(--brand-color) 100%);
+`
+
+const GlowingButton = styled(AccentButton)`
   box-shadow: 0px 0px 20px 0px var(--brand-color);
   animation: glow 3s ease-in-out infinite alternate;
 

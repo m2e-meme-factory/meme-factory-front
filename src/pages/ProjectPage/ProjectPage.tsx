@@ -9,6 +9,7 @@ import {
   TextArea,
   Link,
   Separator,
+  Box,
 } from '@radix-ui/themes';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
@@ -193,8 +194,8 @@ const ProjectPage = () => {
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
       {/* Title */}
-      <Flex className={styles.content} direction='column'>
-        <Flex m='4' mt='2' direction='column'>
+      <Flex direction='column'>
+        <Flex m='4' mt='2' gap="5"  direction='column'>
           <Heading weight='medium'>{currentProject?.project.title}</Heading>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
@@ -281,73 +282,77 @@ const ProjectPage = () => {
                 Tasks
               </Text>
             </Flex>
-            {currentProject?.project.tasks &&
-              currentProject?.project.tasks.map((subtask, index) => (
-                <SheetSubtaskCard
-                  key={index}
-                  id={subtask.task.id}
-                  description={subtask.task.description}
-                  price={subtask.task.price}
-                  title={subtask.task.title}
-                  progress={progress}
-                  userRole={currentUserRole || 'guestCreator'}
-                />
-              ))}
+            <Flex gap="3" direction="column">
+              {currentProject?.project.tasks &&
+                currentProject?.project.tasks.map((subtask, index) => (
+                  <SheetSubtaskCard
+                    key={index}
+                    id={subtask.task.id}
+                    description={subtask.task.description}
+                    price={subtask.task.price}
+                    title={subtask.task.title}
+                    progress={progress}
+                    userRole={currentUserRole || 'guestCreator'}
+                  />
+                ))}
+            </Flex>
           </Flex>
 
           {/* Category and tags */}
-          <Flex align='center' direction='row' mb='2'>
-            {currentProject?.project && (
-              <>
-                <Text weight='medium' mr='2'>
-                  {currentProject.project.category?.toUpperCase()}
-                </Text>
-                <Separator mr='2' orientation='vertical' />
-                <Text weight='medium' size='5'>
-                  {currentProject.project.tags?.map((tag, index) => (
-                    <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                      {tag.toUpperCase()}
-                    </Badge>
-                  ))}
-                </Text>
-              </>
-            )}
-          </Flex>
+          <Box>
+            <Flex align='center' direction='row' mb='2'>
+              {currentProject?.project && (
+                <>
+                  <Text weight='medium' mr='2'>
+                    {currentProject.project.category?.toUpperCase()}
+                  </Text>
+                  <Separator mr='2' orientation='vertical' />
+                  <Text weight='medium' size='5'>
+                    {currentProject.project.tags?.map((tag, index) => (
+                      <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
+                        {tag.toUpperCase()}
+                      </Badge>
+                    ))}
+                  </Text>
+                </>
+              )}
+            </Flex>
 
-          {/* Host */}
-          <Flex direction='row' align='center'>
-            <Flex
-              style={{
-                width: '2.5rem',
-                height: '2.5rem',
-                borderRadius: '13px',
-                background: 'gray',
-              }}
-              mr='2'
-              align='center'
-              justify='center'
-            >
-              <Text weight='bold' size='5'>
+            {/* Host */}
+            <Flex direction='row' align='center'>
+              <Flex
+                style={{
+                  width: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '13px',
+                  background: 'var(--gray-2)',
+                }}
+                mr='2'
+                align='center'
+                justify='center'
+              >   
+                <Text weight='bold' size='5'>
+                  {shortenString(
+                    currentProject
+                      ? currentProject.project.author.username
+                        ? currentProject.project.author.username[0].toUpperCase()
+                        : `User ${currentProject.project.author.telegramId}`[0].toUpperCase()
+                      : 'Meme factory'[0].toUpperCase()
+                  )}
+                </Text>
+              </Flex>
+
+              <Text weight='medium' size='6'>
                 {shortenString(
                   currentProject
                     ? currentProject.project.author.username
-                      ? currentProject.project.author.username[0].toUpperCase()
-                      : `User ${currentProject.project.author.telegramId}`[0].toUpperCase()
-                    : 'Meme factory'[0].toUpperCase()
+                      ? currentProject.project.author.username
+                      : `User ${currentProject.project.author.telegramId}`
+                    : 'Meme factory'
                 )}
               </Text>
             </Flex>
-
-            <Text weight='medium' size='6'>
-              {shortenString(
-                currentProject
-                  ? currentProject.project.author.username
-                    ? currentProject.project.author.username
-                    : `User ${currentProject.project.author.telegramId}`
-                  : 'Meme factory'
-              )}
-            </Text>
-          </Flex>
+          </Box>
         </Flex>
       </Flex>
     </Flex>

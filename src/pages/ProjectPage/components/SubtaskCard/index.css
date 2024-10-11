@@ -18,7 +18,7 @@ input {
 }
 
 .DialogContent {
-    background-color: #121212;
+    background-color: var(--gray-2);
     border-radius: 6px;
     box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px;
     position: fixed;
@@ -55,7 +55,7 @@ input {
     top: 10px;
     right: 10px;
     transition: border 0.3s ease;
-    border: 1px solid #121212;
+    border: 1px solid var(--gray-2);
 }
 .IconButton:hover {
     border: 1px solid #fecf0a;
@@ -84,7 +84,7 @@ input {
     width: 95%;
     margin: 0 auto;
     text-align: center;
-    border: 3px solid #121212;
+    border: 3px solid var(--gray-2);
     transition: border 0.3s ease;
 }
 

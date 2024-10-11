@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, Flex, Heading, Button, Box, Tabs, Callout } from '@radix-ui/themes';
+import { Text, Flex, Heading, Button, Box, Tabs, Callout, ScrollArea } from '@radix-ui/themes';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useInView } from 'react-intersection-observer';
@@ -28,6 +28,7 @@ import {
   CUSTOM_SELECT_STYLES_MULTI,
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
+import NothingFound from '../../shared/components/NothingFound';
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -208,31 +209,24 @@ export default function PublicProjectsPage() {
 
   return (
     <div {...swipeHandlers}>
-      <Flex m='4' direction='column'>
-        <Flex justify='between' align='center'>
-          <Box>
-            <Heading>Projects</Heading>
-            <Text color='gray'>Join project and earn profit!</Text>
-          </Box>
-        </Flex>
-      </Flex>
-
       <Tabs.Root defaultValue='public' onValueChange={handleTabChange} value={currentTab}>
         <Tabs.List justify='start'>
-          <Flex direction='row' justify='between' style={{ width: '100%' }} align='baseline'>
+          <Flex direction='row' justify='between' align='center' style={{ width: '100%' }} >
             <Flex direction='row'>
-              <Tabs.Trigger value='public'>All Projects</Tabs.Trigger>
+              <Tabs.Trigger value='public'>All</Tabs.Trigger>
               <Tabs.Trigger value='my'>
-                {user?.role === 'creator' ? 'Joined' : 'My projects'}
+                {user?.role === 'creator' ? 'Joined' : 'My Tasks'}
               </Tabs.Trigger>
             </Flex>
             {!(user?.role === 'advertiser' && currentTab === 'my') && (
               <Button
+                variant='outline'
                 size='1'
                 mr='3'
-                style={{ borderRadius: '15px' }}
+                // style={{ borderRadius: '15px' }}
                 onClick={() => setIsOpened(!isOpened)}
               >
+                <svg height="var(--text-size-2)" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M6 12h12M4 8h16M8 16h8" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"></path></g></svg>
                 Filters
               </Button>
             )}
@@ -240,100 +234,109 @@ export default function PublicProjectsPage() {
         </Tabs.List>
 
         <Box pt='3'>
+          
+        {isCalloutVisible && (
+                        <Flex ml="4" mr="4" mb={isOpened ? '4' : '0'}>
+                          <Callout.Root
+                            color='yellow'
+                            style={{ position: 'relative', padding: '1rem' }}
+                          >
+                            <Callout.Icon style={{ marginTop: '0.4rem' }}>
+                              <InfoCircledIcon />
+                            </Callout.Icon>
+                            <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
+                            Complete Tasks & Quests to increase Airdrop chance
+                            </Callout.Text>
+                            <button
+                              onClick={() => {
+                                setIsCalloutVisible(false);
+                              }}
+                              style={{
+                                position: 'absolute',
+                                top: '0.5rem',
+                                right: '0.5rem',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              <Cross2Icon />
+                            </button>
+                          </Callout.Root>
+                        </Flex>
+                      )}
+
           <SwiperContainer>
             <div className='swiper'>
               <div className='swiper-wrapper'>
                 <div className='swiper-slide'>
-                  <Flex direction='column'>
-                    <Box style={{ display: isOpened ? 'block' : 'none' }}>
-                      <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
-                        <Flex direction='column' gap='2' mb='1'>
-                          <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap'>
-                            <div
-                              style={{
-                                flexGrow: 1,
-                                width: isColumn ? '100%' : 'auto',
-                              }}
-                              ref={categoryRef}
-                              className='swiper-no-swiping'
-                            >
-                              <Select
-                                onChange={handleCategoryChange}
-                                placeholder='Select category'
-                                closeMenuOnSelect={true}
-                                components={animatedComponents}
-                                options={CATEGORIES}
-                                styles={CUSTOM_SELECT_STYLES_SINGLE}
-                                isMulti={false}
-                                isSearchable={false}
-                                isClearable={true}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                flexGrow: 1,
-                                width: isColumn ? '100%' : 'auto',
-                              }}
-                              ref={tagsRef}
-                              className='swiper-no-swiping'
-                            >
-                              <Select
-                                onChange={handleTagsChange}
-                                placeholder='Select tags'
-                                closeMenuOnSelect={false}
-                                components={animatedComponents}
-                                isMulti
-                                options={TAGS}
-                                styles={CUSTOM_SELECT_STYLES_MULTI}
-                                isSearchable={false}
-                                isClearable={true}
-                              />
-                            </div>
+                  <ScrollArea>
+                    <Flex direction='column'>
+                      <Box style={{ display: isOpened ? 'block' : 'none' }}>
+                        <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
+                          <Flex direction='column' gap='2' mb='1'>
+                            <Flex direction={isColumn ? 'column' : 'row'} gap='2' mb='1' wrap='wrap' style={{
+                              fontSize: "var(--text-size-2)"
+                            }}>
+                              <div
+                                style={{
+                                  flexGrow: 1,
+                                  width: isColumn ? '100%' : 'auto',
+                                }}
+                                ref={categoryRef}
+                                className='swiper-no-swiping'
+                              >
+                                <Select
+                                  onChange={handleCategoryChange}
+                                  placeholder='Select category'
+                                  closeMenuOnSelect={true}
+                                  components={animatedComponents}
+                                  options={CATEGORIES}
+                                  styles={CUSTOM_SELECT_STYLES_SINGLE}
+                                  isMulti={false}
+                                  isSearchable={false}
+                                  isClearable={true}
+                                />
+                              </div>
+                              <div
+                                style={{
+                                  flexGrow: 1,
+                                  width: isColumn ? '100%' : 'auto',
+                                }}
+                                ref={tagsRef}
+                                className='swiper-no-swiping'
+                              >
+                                <Select
+                                  onChange={handleTagsChange}
+                                  placeholder='Select tags'
+                                  closeMenuOnSelect={false}
+                                  components={animatedComponents}
+                                  isMulti
+                                  options={TAGS}
+                                  styles={CUSTOM_SELECT_STYLES_MULTI}
+                                  isSearchable={false}
+                                  isClearable={true}
+                                />
+                              </div>
+                            </Flex>
+                            {showFindButton && <Button variant='outline' onClick={handleFindButtonClick}>Find</Button>}
                           </Flex>
-                          {showFindButton && <Button onClick={handleFindButtonClick}>Find</Button>}
                         </Flex>
+                      </Box>
+                      <Flex m='4' mb='8' direction='column'>
+                        <AutoTasksProjectCard />
+                        {projects.map((project, index) => (
+                          <ProjectCard key={index} project={project} />
+                        ))}
+
+                        {(projects.length == 0 && !isLoading) && (
+                            <NothingFound />
+                        )}
                       </Flex>
-                    </Box>
-                    {isCalloutVisible && (
-                      <Flex m='4'>
-                        <Callout.Root
-                          color='yellow'
-                          style={{ position: 'relative', padding: '1rem' }}
-                        >
-                          <Callout.Icon style={{ marginTop: '0.4rem' }}>
-                            <InfoCircledIcon />
-                          </Callout.Icon>
-                          <Callout.Text style={{ marginTop: '0.4rem', marginRight: '0.2rem' }}>
-                            Discover a range of available projects on this page, where you can join
-                            and tackle tasks to earn m2e rewards.
-                          </Callout.Text>
-                          <button
-                            onClick={() => {
-                              setIsCalloutVisible(false);
-                            }}
-                            style={{
-                              position: 'absolute',
-                              top: '0.5rem',
-                              right: '0.5rem',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Cross2Icon />
-                          </button>
-                        </Callout.Root>
-                      </Flex>
-                    )}
-                    <Flex m='4' mb='8' direction='column'>
-                      <AutoTasksProjectCard />
-                      {projects.map((project, index) => (
-                        <ProjectCard key={index} project={project} />
-                      ))}
+                      {isLoading && <Loading />}
+                      {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
                     </Flex>
-                    {isLoading && <Loading />}
-                    {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
-                  </Flex>
+                  </ScrollArea>
                 </div>
                 <div className='swiper-slide'>
                   <Flex direction='column' justify='center'>

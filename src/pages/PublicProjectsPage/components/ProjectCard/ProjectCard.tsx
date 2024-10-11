@@ -10,7 +10,7 @@ const StyledCard = styled(Card)`
   padding: 0;
   margin: 0 0 15px;
   width: 100%;
-  background-color: #121212;
+  background-color: var(--gray-a2);
 `;
 
 interface ProjectCardProps {

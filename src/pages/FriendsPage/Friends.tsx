@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   Button,
   Callout,
   Card,
@@ -20,6 +21,58 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { RefDataResponse } from 'api';
 import { Cross2Icon, InfoCircledIcon } from '@radix-ui/react-icons';
+import handshake from '../../shared/imgs/handshake.webp';
+import yeyEmoji from '../../shared/imgs/yey.png';
+import styled from 'styled-components';
+import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
+import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import { Link, Navigate } from 'react-router-dom';
+
+const Steps = styled.div`
+  position: relative;
+`;
+
+const Step = styled(Flex)`
+  align-items: center;
+`
+const StepBadge = styled.div`
+padding: 0.25rem;
+width: 1.75rem;
+height: 1.75rem;
+  margin-right: 10px;
+  background-color: white;
+  color: var(--gray-1);
+  text-align: center;
+  border-radius: 50%;
+  line-height: 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+`
+
+const StepsLine = styled.div`
+  position: absolute;
+  left: 1.4rem;
+  top: 30px;
+  bottom: 30px;
+  width: 2px;
+  background-color: white;
+  z-index: -1;
+`
+
+const ResponsibleImage = styled.img`
+  height: 100px;
+
+  @media (min-height:600px)  { 
+    height: 100px;
+   }
+  @media (min-height:800px)  { 
+    height: 200px;
+   }
+  @media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
+  @media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
+  @media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
+  @media (min-width:1281px) { /* hi-res laptops and desktops */ }
+`
 
 export default function Friends() {
   const user = useSelector((state: RootState) => state.user.user);
@@ -33,50 +86,105 @@ export default function Friends() {
     }
   }, [data]);
 
-  if (refLoading) {
-    return (
-      <Flex className={styles.LoadingContainer} align='center' justify='center'>
-        <Spinner size='3' />
-      </Flex>
-    );
-  }
+  // if (refLoading) {
+  //   return (
+  //     <Flex className={styles.LoadingContainer} align='center' justify='center'>
+  //       <Spinner size='3' />
+  //     </Flex>
+  //   );
+  // }
 
   return (
     <>
-      <Flex m='4'>
-        {isCalloutVisible && (
-          <Callout.Root color='yellow' style={{ position: 'relative', padding: '1rem' }}>
-            <Callout.Icon style={{ marginTop: '0.5rem' }}>
-              <InfoCircledIcon />
-            </Callout.Icon>
-            <Callout.Text style={{ marginTop: '0.5rem', marginRight: '0.2rem' }}>
-              Invite your friends to the Meme Factory and earn M2E rewards together! By bringing
-              your friends along, you can unlock exclusive content, boost your earnings, and make
-              meme-making even more enjoyable. Don’t miss out on the fun—start inviting today!
-            </Callout.Text>
-            <button
-              onClick={() => {
-                setCalloutVisible(false);
-              }}
-              style={{
-                position: 'absolute',
-                top: '0.5rem',
-                right: '0.5rem',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              <Cross2Icon />
-            </button>
-          </Callout.Root>
-        )}
+      <Flex m='4' justify="center">
+        <ResponsibleImage src={handshake} />
       </Flex>
-      <Card m='4'>
+      <Heading mb="4" align="center" size="8">Invite Friends</Heading>
+
+
+      <Box m="4">
+        <Flex direction="column" gap="2">
+          <Card>
+            <Flex gap="4" align="center" p="1">
+              <Box>
+                <Text size="8" weight="bold">1</Text>
+              </Box>
+              <Box>
+                <Box>Invite friend</Box>
+                <Box>
+                  <Text size="1" color='gray'>Copy Link and send it to your friend</Text>
+                </Box>
+              </Box>
+            </Flex>
+          </Card>
+        
+          <Card>
+            <Flex gap="4" align="center" p="1">
+              <Box>
+                <Text size="8" weight="bold">2</Text>
+              </Box>
+              <Box>
+                <Box>Your Friend Join</Box>
+                <Box>
+                  <Text size="1" color='gray'>Your friend join Meme Factory</Text>
+                </Box>
+              </Box>
+            </Flex>
+          </Card>
+
+
+          <Card>
+            <Flex gap="4" align="center" p="1">
+              <Box>
+                <Text size="8" weight="bold">3</Text>
+              </Box>
+              <Flex justify="between" width="100%" align="center">
+                <Box>
+                  <Box>You get Reward</Box>
+                  <Box>
+                    <Text size="1" color='gray'>You get 100 <Badge color='bronze'>M2E</Badge> per each friend</Text>
+                  </Box>
+                </Box>
+                  <img style={{
+                    height: "var(--font-size-8)",
+                  }} src={yeyEmoji}/>
+
+              </Flex>
+            </Flex>
+          </Card>
+
+        </Flex>
+        {/* <Steps>
+          <Step p="2">
+            <StepBadge>1.</StepBadge>
+            <Box>Invite your friends to the Meme Factory</Box>
+          </Step>
+          <Step p="2">
+            <StepBadge>2.</StepBadge>
+            <Box>Invite your friends to the Meme Factory</Box>
+          </Step>
+          
+          <Step p="2">
+            <StepBadge>1.</StepBadge>
+            <Box>Invite your friends to the Meme Factory</Box>
+          </Step>
+          <StepsLine />
+        </Steps> */}
+          
+      <Card  mt="5"> 
         <Grid gap='4'>
-          <Heading>Referals</Heading>
           <Text color='gray'>Your Ref link:</Text>
-          <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} />
+          {/* <Navigate to={`https://t.me/share?url=${refData?.refLink}&text=Hey, there!\n\nJoin Meme Factory, earn M2E tokens by completing tasks and earn rewards.`}> */}
+            <Link to={`https://t.me/share?url=${refData?.refLink}&text=Hey, there! %0A%0AJoin Meme Factory, earn M2E tokens by completing tasks and earn rewards.`} target='_blank'>
+              <Box asChild width="100%">
+                <GlowingButton size="4" onClick={() => {}}>
+                  Share
+                </GlowingButton>
+              </Box>
+            </Link>
+          {/* </Navigate> */}
+          {/* <CopyableRef refLink={refData?.refLink || "Nan"} /> */}
+          {/* <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} /> */}
           <DataList.Root mt='4'>
             <DataList.Item align='center'>
               <DataList.Item>
@@ -85,31 +193,13 @@ export default function Friends() {
               </DataList.Item>
               <DataList.Item>
                 <DataList.Label minWidth='88px'>Total profit</DataList.Label>
-                <DataList.Value>0 M2E</DataList.Value>
+                <DataList.Value>0 {" "} <Badge color='bronze'>M2E</Badge></DataList.Value>
               </DataList.Item>
             </DataList.Item>
           </DataList.Root>
         </Grid>
       </Card>
-      {/*<Card m='4'>*/}
-      {/*  <Grid gap='4'>*/}
-      {/*    <Heading>About Page</Heading>*/}
-      {/*    <DataList.Root>*/}
-      {/*      <DataList.Item align='center'>*/}
-      {/*        <DataList.Label minWidth='88px'>App version:</DataList.Label>*/}
-      {/*        <DataList.Value>*/}
-      {/*          <Badge color='jade' variant='soft' radius='full'>*/}
-      {/*            {packageJson.version}*/}
-      {/*          </Badge>*/}
-      {/*        </DataList.Value>*/}
-      {/*      </DataList.Item>*/}
-      {/*    </DataList.Root>*/}
-      {/*    <Text color='gray' size='2'>*/}
-      {/*      Access token:*/}
-      {/*    </Text>*/}
-      {/*    <CopyableTextField size={'2'} fieldSize='3' value={localStorage.getItem('token') ?? ''} />*/}
-      {/*  </Grid>*/}
-      {/*</Card>*/}
+      </Box>
     </>
   );
 }

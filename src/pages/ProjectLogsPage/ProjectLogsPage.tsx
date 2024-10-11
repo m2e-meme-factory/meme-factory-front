@@ -144,7 +144,7 @@ const ProjectLogsPage = () => {
           position: 'sticky',
           top: 0,
           zIndex: 1000,
-          backgroundColor: '#121212',
+          backgroundColor: 'var(--gray-2)',
           padding: '10px',
         }}
         justify='between'
@@ -189,7 +189,7 @@ const ProjectLogsPage = () => {
           position: 'sticky',
           bottom: 0,
           zIndex: 1000,
-          backgroundColor: '#121212',
+          backgroundColor: 'var(--gray-2)',
           padding: '10px',
         }}
       >

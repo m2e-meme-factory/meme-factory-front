@@ -4,7 +4,7 @@ const UnauthorizedPage = () => {
   return (
     <Flex width='100vw' height='100vh' direction='column' align='center' justify='center'>
       <Heading color='red'>Unauthorized</Heading>
-      <Text weight='medium'>Sorry, authorization failed. Try again later.</Text>
+      <Text weight='medium' align='center'>Sorry, authorization failed. Try again later.</Text>
     </Flex>
   );
 };

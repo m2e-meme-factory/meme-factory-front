@@ -12,7 +12,7 @@ const StyledCard = styled(Card)`
   margin: 0 0 15px;
   width: 100%;
   border: 1px solid var(--yellow-9);
-  background-color: #121212;
+  background-color: var(--gray-2);
 `;
 
 const SecondaryHeading = styled(Heading)`
@@ -49,11 +49,10 @@ const AutoTasksProjectCard = () => {
   return (
     <GlowingCard className='SubtaskCard' mb='3' onClick={() => navigate(`/projects/autotasks`)}>
       <Flex align='center' justify='between' p='1' pb='4' pt='4'>
-        <Flex>
-          <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} />
-          <Flex direction='column'>
-            <Heading>FAST TASKS</Heading>
-          </Flex>
+        <Flex align='center'>
+          <svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor" viewBox="0 0 256 256"><path d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z"></path></svg>
+          {/* <RocketOutlined style={{ color: 'yellow', marginRight: '15px', fontSize: '24px' }} /> */}
+          <Heading ml="3">FAST TASKS</Heading>
         </Flex>
         <IconButton>
           <ChevronRightIcon />

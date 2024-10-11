@@ -2,8 +2,11 @@
   --brand-color: #fecf0a;
   --swiper-pagination-color: #fecf0a;
   --swiper-pagination-bullet-inactive-color: #83a4a4;
-  --default-font-family: 'Inter', sans-serif !important;
+  --default-font-family: "Space Mono", monospace;
+  /* 'Inter', sans-serif !important; */
   --green-color-1: #00b33c;
+
+
 }
 
 /* cyrillic-ext */
@@ -323,7 +326,34 @@ code {
 
 .radix-themes {
   --my-brand-color: #fecf0a;
-  --amber-9: var(--my-brand-color);
+
+  /* Backgrounds */
+--accent-1: #feca1b; /* Чуть темнее оригинального цвета */
+--accent-2: #ffde5c; /* Светлее и менее насыщенный вариант */
+
+/* Interactive components */
+--accent-3: #ffd200; /* Более насыщенный желтый */
+--accent-4: #fbb917; /* Теплый оттенок ближе к оранжевому */
+--accent-5: #f5b800; /* Чуть более мягкий желтый, приближенный к золотистому */
+
+/* Borders and separators */
+--accent-6: #e6b200; /* Темнее для границ */
+--accent-7: #f0c107; /* Ближе к оригинальному, но с меньшей яркостью */
+--accent-8: #c99b00; /* Более глубокий, почти охряный для четких границ */
+
+/* Solid colors */
+--amber-9: var(--my-brand-color);
+--accent-10: #ffb800; /* Более насыщенный оранжево-желтый для ярких блоков */
+
+/* Accessible text */
+--accent-11: #5e4000; /* Темный цвет для контрастного текста */
+--accent-12: #9f7400; /* Менее темный, но всё еще контрастный для текста */
+
+/* Functional colors */
+--accent-surface: #ffde5c; /* Нейтральный светлый для фона */
+--accent-indicator: #feca0a; /* Оригинальный цвет для индикаторов */
+--accent-track: #f5b800; /* Более мягкий желтый для прогресс-бара или треков */
+--accent-contrast: #2c1d00; /* Очень темный для контрастных элементов */
 }
 
 .blur-filter-8 {
@@ -344,3 +374,28 @@ code {
     transform: translateY(-5vh);
   }
 }
+
+.space-mono-regular {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.space-mono-bold {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.space-mono-regular-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.space-mono-bold-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: italic;
+}
+

@@ -7,7 +7,7 @@ import { router } from './Router';
 function App() {
   return (
     <Theme
-      accentColor='amber'
+      accentColor='yellow'
       appearance={'dark'}
       grayColor='mauve'
       radius='medium'

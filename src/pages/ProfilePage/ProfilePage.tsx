@@ -22,18 +22,14 @@ import {
   Code,
   Popover,
   IconButton,
-  Separator,
-  Dialog,
   TextArea,
   AlertDialog,
 } from '@radix-ui/themes';
-import { ChevronRightIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import { TonConnectButton, TonConnectUI, useTonConnectUI } from '@tonconnect/ui-react';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
 
 import { RootState } from '../../shared/utils/redux/store';
 import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '../../shared/utils/redux/user/userSlice';
-import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 import { verifyUser } from '../../shared/utils/api/requests/user/verifyUser';
 import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
 
@@ -41,7 +37,6 @@ import Loading from '../../shared/components/Loading';
 import CopyableCode from '../../shared/components/CopyableCode';
 import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 
-import verified from './../../shared/imgs/verified.svg';
 import star from './../../shared/imgs/star.webp';
 
 import Swiper from 'swiper';
@@ -50,8 +45,8 @@ import styled from 'styled-components';
 import { Sheet } from 'react-modal-sheet';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import tsssEmoji from '../../shared/imgs/tsssEmoji.png';
+import yeyEmoji from '../../shared/imgs/yey.png';
 import { ResponsibleImage } from '../../shared/components/ResponsibleImage';
-import megaphone from '../../shared/imgs/megaphone.webp';
 import toast from 'react-hot-toast';
 
 const TransactionsHistoryPage = lazy(
@@ -93,6 +88,7 @@ export default function ProfilePage() {
   const navigate = useNavigate();
 
   const defaultTab = searchParams.get('tab') || 'airdrop';
+  const action = searchParams.get('action');
   const swiperRef = useRef<Swiper | null>(null);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -134,9 +130,6 @@ export default function ProfilePage() {
             setCurrentTab(TabsOption.TRANSACTIONS);
             break;
         }
-        // setCurrentTab(
-        //   swiperRef.current!.activeIndex === 0 ? TabsOption.ACCOUNT : TabsOption.TRANSACTIONS
-        // );
       });
     }
 
@@ -151,12 +144,14 @@ export default function ProfilePage() {
     handleTabChange(defaultTab);
   }, [defaultTab]);
 
+  useEffect(() => {
+    if (action === 'verify') {
+      setTimeout(() => handleDialogOpen(), 300);
+    }
+  }, [action]);
+
   const handleTabChange = (value: string) => {
     const newTab = value as TabsOption;
-    // setPage([
-    //   page + (newTab === TabsOption.AIRDROP ? -1 : 1),
-    //   newTab === TabsOption.AIRDROP ? -1 : 1,
-    // ]);
     if (swiperRef.current) {
       swiperRef.current.slideTo(TABS.indexOf(newTab));
     }
@@ -239,9 +234,6 @@ export default function ProfilePage() {
                         <Flex justify='between' align='center' p='1'>
                           <Box>
                             <Box>Invite friends</Box>
-                            {/* <Box>
-                              <Text size="1" color='gray'>Number of inveted frens increase airdrop chanse</Text>
-                              </Box> */}
                           </Box>
                           <Box>
                             <svg
@@ -309,9 +301,6 @@ export default function ProfilePage() {
                         <Flex justify='between' align='center' p='1'>
                           <Box>
                             <Box>Complete Fast Tasks</Box>
-                            {/* <Box>
-                              <Text size="1" color='gray'>Number of inveted frens increase airdrop chanse</Text>
-                              </Box> */}
                           </Box>
                           <Box>
                             <svg
@@ -417,88 +406,105 @@ export default function ProfilePage() {
                       </Card>
                     </Flex>
 
-                    <Heading>
-                      <Flex align='center' display='inline-flex'>
-                        <img
-                          height='30rem'
-                          style={{ transform: 'translateY(5px)' }}
-                          src={tsssEmoji}
-                          alt=''
-                        />
-                      </Flex>{' '}
-                      Want 100% Change to claim Airdrop?
-                    </Heading>
+                    <Skeleton loading={userDataLoading}>
+                      <Heading>
+                        <Flex align='center' display='inline-flex'>
+                          <img
+                            height='30rem'
+                            style={{ transform: 'translateY(5px)' }}
+                            src={userDataResponse?.isVerified ? yeyEmoji : tsssEmoji}
+                            alt=''
+                          />
+                        </Flex>{' '}
+                        {userDataResponse?.isVerified ? (
+                          <>
+                            Congrats!
+                            <br />
+                            Your airdrop is 100% guaranteed!
+                          </>
+                        ) : (
+                          'Want a 100% chance to claim the airdrop?'
+                        )}
+                      </Heading>
+                    </Skeleton>
 
-                    <GlowingButton size='4' onClick={handleDialogOpen}>
-                      Verify Now!
-                    </GlowingButton>
+                    <Skeleton loading={userDataLoading}>
+                      {userDataResponse?.isVerified ? (
+                        <Button size='4' disabled={true}>
+                          You are verified
+                        </Button>
+                      ) : (
+                        <GlowingButton size='4' onClick={handleDialogOpen}>
+                          Verify Now!
+                        </GlowingButton>
+                      )}
+                    </Skeleton>
                   </Flex>
                 </Box>
               </div>
               <div className='swiper-slide'>
                 <ScrollArea>
-                  {/* {userDataResponse && !userDataResponse.isVerified && ( */}
-                  <Card m='4'>
-                    <Grid gap='4'>
-                      <Heading>Verify</Heading>
-                      <Callout.Root>
-                        <Callout.Icon>
-                          <InfoCircledIcon height={20} width={20} />
-                        </Callout.Icon>
-                        <Callout.Text>
-                          Verified users have auto approve for any project apply and have 100%
-                          chance for receiving airdrop. <br />
-                          <br />
-                          Instant verification price: <br /> <Code>5 USDT</Code>
-                        </Callout.Text>
-                      </Callout.Root>
-                      <GlowingButton size='4' onClick={handleDialogOpen}>
-                        Verify
-                      </GlowingButton>
+                  {!userDataLoading && !userDataResponse?.isVerified && (
+                    <Card m='4'>
+                      <Grid gap='4'>
+                        <Heading>Verify</Heading>
+                        <Callout.Root>
+                          <Callout.Icon>
+                            <InfoCircledIcon height={20} width={20} />
+                          </Callout.Icon>
+                          <Callout.Text>
+                            Verified users have auto approve for any project apply and have 100%
+                            chance for receiving airdrop. <br />
+                            <br />
+                            Instant verification price: <br /> <Code>5 USDT</Code>
+                          </Callout.Text>
+                        </Callout.Root>
+                        <GlowingButton size='4' onClick={handleDialogOpen}>
+                          Verify
+                        </GlowingButton>
 
-                      <Sheet
-                        isOpen={isModalVisible}
-                        onClose={() => handleDialogClose()}
-                        detent='content-height'
-                      >
-                        <Theme appearance='dark'>
-                          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
-                            <Sheet.Header />
-                            <Sheet.Content>
-                              <Theme>
-                                <Grid gap='8' m='4' mb='5' align='center'>
-                                  <Flex justify='center'>
-                                    <ResponsibleImage src={star} />
-                                    {/* <img width='40%' src={star} alt='Verified icon' /> */}
-                                  </Flex>
-                                  <Grid gap='2'>
-                                    <Heading mb='2' align='center'>
-                                      Benefits of verified accounts
-                                    </Heading>
-                                    <Blockquote>100% chance for Airdrop claim</Blockquote>
-                                    <Blockquote>Auto approve to any project</Blockquote>
-                                    <Blockquote>
-                                      High priority for checking task completion
-                                    </Blockquote>
+                        <Sheet
+                          isOpen={isModalVisible}
+                          onClose={() => handleDialogClose()}
+                          detent='content-height'
+                        >
+                          <Theme appearance='dark'>
+                            <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+                              <Sheet.Header />
+                              <Sheet.Content>
+                                <Theme>
+                                  <Grid gap='8' m='4' mb='5' align='center'>
+                                    <Flex justify='center'>
+                                      <ResponsibleImage src={star} />
+                                    </Flex>
+                                    <Grid gap='2'>
+                                      <Heading mb='2' align='center'>
+                                        Benefits of verified accounts
+                                      </Heading>
+                                      <Blockquote>100% chance for Airdrop claim</Blockquote>
+                                      <Blockquote>Auto approve to any project</Blockquote>
+                                      <Blockquote>
+                                        High priority for checking task completion
+                                      </Blockquote>
+                                    </Grid>
+
+                                    <GlowingButton
+                                      size='4'
+                                      onClick={handleVerify}
+                                      style={{ width: '100%' }}
+                                    >
+                                      Verify Now
+                                    </GlowingButton>
                                   </Grid>
-
-                                  <GlowingButton
-                                    size='4'
-                                    onClick={handleVerify}
-                                    style={{ width: '100%' }}
-                                  >
-                                    Verify Now
-                                  </GlowingButton>
-                                </Grid>
-                              </Theme>
-                            </Sheet.Content>
-                          </Sheet.Container>
-                          <Sheet.Backdrop onTap={() => handleDialogClose()} />
-                        </Theme>
-                      </Sheet>
-                    </Grid>
-                  </Card>
-                  {/* )} */}
+                                </Theme>
+                              </Sheet.Content>
+                            </Sheet.Container>
+                            <Sheet.Backdrop onTap={() => handleDialogClose()} />
+                          </Theme>
+                        </Sheet>
+                      </Grid>
+                    </Card>
+                  )}
 
                   <Card m='4'>
                     <Grid gap='4'>

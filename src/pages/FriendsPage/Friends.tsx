@@ -95,14 +95,6 @@ export default function Friends() {
     }
   }, [data]);
 
-  // if (refLoading) {
-  //   return (
-  //     <Flex className={styles.LoadingContainer} align='center' justify='center'>
-  //       <Spinner size='3' />
-  //     </Flex>
-  //   );
-  // }
-
   return (
     <>
       <Flex m='4' justify='center'>
@@ -176,27 +168,10 @@ export default function Friends() {
             </Flex>
           </Card>
         </Flex>
-        {/* <Steps>
-          <Step p="2">
-            <StepBadge>1.</StepBadge>
-            <Box>Invite your friends to the Meme Factory</Box>
-          </Step>
-          <Step p="2">
-            <StepBadge>2.</StepBadge>
-            <Box>Invite your friends to the Meme Factory</Box>
-          </Step>
-          
-          <Step p="2">
-            <StepBadge>1.</StepBadge>
-            <Box>Invite your friends to the Meme Factory</Box>
-          </Step>
-          <StepsLine />
-        </Steps> */}
 
         <Card mt='5'>
           <Grid gap='4'>
             <Text color='gray'>Your Ref link:</Text>
-            {/* <Navigate to={`https://t.me/share?url=${refData?.refLink}&text=Hey, there!\n\nJoin Meme Factory, earn M2E tokens by completing tasks and earn rewards.`}> */}
             <Link
               to={`https://t.me/share?url=${refData?.refLink}&text=Hey, there! %0A%0AJoin Meme Factory, earn M2E tokens by completing tasks and earn rewards.`}
               target='_blank'
@@ -207,9 +182,6 @@ export default function Friends() {
                 </GlowingButton>
               </Box>
             </Link>
-            {/* </Navigate> */}
-            {/* <CopyableRef refLink={refData?.refLink || "Nan"} /> */}
-            {/* <CopyableTextField size={'2'} fieldSize='3' value={refData?.refLink || ' '} /> */}
             <DataList.Root mt='4'>
               <DataList.Item align='center'>
                 <DataList.Item>

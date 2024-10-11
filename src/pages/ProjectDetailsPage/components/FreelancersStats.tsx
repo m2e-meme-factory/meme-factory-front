@@ -41,7 +41,7 @@ const FreelancersStats = () => {
                       )
                     }
                   >
-                    Show history
+                    Show
                   </Button>
                 </Table.Cell>
               </Table.Row>

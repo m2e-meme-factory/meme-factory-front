@@ -10,6 +10,8 @@ import {
   Link,
   Separator,
   Box,
+  Theme,
+  Card,
 } from '@radix-ui/themes';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
@@ -32,6 +34,9 @@ import { BASE_URL } from '../../shared/consts/baseURL';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { Sheet } from 'react-modal-sheet';
+import yeyEmoji from '../../shared/imgs/yey.png';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -52,6 +57,7 @@ const ProjectPage = () => {
   const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
+  const [isModalVisible, setModalVisible] = useState(false);
   const [minPrice, setMinPrice] = useState<number>();
   const [maxPrice, setMaxPrice] = useState<number>();
 
@@ -126,6 +132,14 @@ const ProjectPage = () => {
     }
   };
 
+  const handleDialogClose = () => {
+    setModalVisible(false);
+  };
+
+  const handleDialogOpen = () => {
+    setModalVisible(true);
+  };
+
   const setCurrentUserRoleFromProgress = (status: string) => {
     if (status === 'accepted') {
       setCurrentUserRole('projectMember');
@@ -196,7 +210,10 @@ const ProjectPage = () => {
       {/* Title */}
       <Flex direction='column'>
         <Flex m='4' mt='2' gap='5' direction='column'>
-          <Heading weight='medium'>{currentProject?.project.title}</Heading>
+          <Flex justify='between' align='center'>
+            <Heading weight='medium'>{currentProject?.project.title}</Heading>
+            <QuestionMarkCircledIcon onClick={handleDialogOpen} width='25' height='25' />
+          </Flex>
           {currentUserRole === 'projectOwner' && (
             <Button onClick={handleEditClick} my='2'>
               Edit project
@@ -355,6 +372,119 @@ const ProjectPage = () => {
           </Box>
         </Flex>
       </Flex>
+
+      <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
+        <Theme appearance='dark'>
+          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+            <Sheet.Header />
+            <Sheet.Content>
+              <Theme>
+                <Heading mb='4' align='center' size='8'>
+                  What should I do?
+                </Heading>
+
+                <Box m='4' mb='8'>
+                  <Flex direction='column' gap='2'>
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            1
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Box>Join Quest</Box>
+                          <Box>
+                            <Text size='1' color='gray'>
+                              Join Quest with message based on requirements
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Flex>
+                    </Card>
+
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            2
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Box>Await Approval</Box>
+                          <Box>
+                            <Text size='1' color='gray'>
+                              Wait until the advertiser approves{' '}
+                              <Badge>
+                                <Text
+                                  style={{ textDecoration: 'underline' }}
+                                  onClick={() => {
+                                    handleDialogClose();
+                                    navigate('/profile?tab=account&action=verify');
+                                  }}
+                                >
+                                  or verify now
+                                </Text>
+                              </Badge>
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Flex>
+                    </Card>
+
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            3
+                          </Text>
+                        </Box>
+                        <Flex justify='between' width='100%' align='center'>
+                          <Box>
+                            <Box>Complete Tasks</Box>
+                            <Box>
+                              <Text size='1' color='gray'>
+                                Complete listed tasks
+                              </Text>
+                            </Box>
+                          </Box>
+                        </Flex>
+                      </Flex>
+                    </Card>
+
+                    <Card>
+                      <Flex gap='4' align='center' p='1'>
+                        <Box>
+                          <Text size='8' weight='bold'>
+                            4
+                          </Text>
+                        </Box>
+                        <Flex justify='between' width='100%' align='center'>
+                          <Box>
+                            <Box>Get Reward</Box>
+                            <Box>
+                              <Text size='1' color='gray'>
+                                Get <Badge color='bronze'>M2E</Badge> for each completed task
+                              </Text>
+                            </Box>
+                          </Box>
+                          <img
+                            style={{
+                              height: 'var(--font-size-8)',
+                            }}
+                            src={yeyEmoji}
+                          />
+                        </Flex>
+                      </Flex>
+                    </Card>
+                  </Flex>
+                </Box>
+              </Theme>
+            </Sheet.Content>
+          </Sheet.Container>
+          <Sheet.Backdrop onTap={() => handleDialogClose()} />
+        </Theme>
+      </Sheet>
     </Flex>
   );
 };

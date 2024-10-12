@@ -48,11 +48,11 @@ export type UserRoleInProject =
   | 'unconfirmedMember';
 
 const FixedHelpButton = styled(IconButton)`
-position: fixed;
-top: 10px;
-right: 10px;
-z-index: 5;
-`
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+`;
 
 const ProjectPage = () => {
   const dispatch = useDispatch();
@@ -213,16 +213,14 @@ const ProjectPage = () => {
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
       {/* Title */}
-      <FixedHelpButton size="3" onClick={handleDialogOpen} >
+      <FixedHelpButton size='3' onClick={handleDialogOpen}>
         <QuestionMarkCircledIcon width='25' height='25' />
       </FixedHelpButton>
       <Flex direction='column'>
         <Flex m='4' mt='2' gap='5' direction='column'>
-            <Heading weight='medium'>
-              {currentProject?.project.title}
-            </Heading>
+          <Heading weight='medium'>{currentProject?.project.title}</Heading>
           {currentUserRole === 'projectOwner' && (
-            <Button onClick={handleEditClick} my='2' size="4">
+            <Button onClick={handleEditClick} my='2' size='4'>
               Edit project
             </Button>
           )}
@@ -242,9 +240,9 @@ const ProjectPage = () => {
           </Flex>
 
           {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
-              <AccentButton my='2' size="4" onClick={() => navigate(`logs/${user?.id}`)}>
-                Veiw History
-              </AccentButton>
+            <AccentButton my='2' size='4' onClick={() => navigate(`logs/${user?.id}`)}>
+              Veiw History
+            </AccentButton>
           )}
 
           {/* Join project modal */}
@@ -422,7 +420,7 @@ const ProjectPage = () => {
                           <Box>
                             <Text size='1' color='gray'>
                               Wait until the advertiser approves{' '}
-                              <Badge color="yellow">
+                              <Badge color='yellow'>
                                 <Text
                                   style={{ textDecoration: 'underline' }}
                                   onClick={() => {

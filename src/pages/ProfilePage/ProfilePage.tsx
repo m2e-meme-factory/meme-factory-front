@@ -59,7 +59,9 @@ enum TabsOption {
   // TRANSACTIONS = 'transactions',
 }
 
-const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT
+const TABS = [
+  TabsOption.AIRDROP,
+  TabsOption.ACCOUNT,
   // , TabsOption.TRANSACTIONS
 ];
 

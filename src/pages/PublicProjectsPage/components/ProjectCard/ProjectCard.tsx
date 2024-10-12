@@ -42,7 +42,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
     <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
       <Flex direction='column' p='4' gap='4'>
         <Heading size='5'>{project.project.title}</Heading>
-        <Flex justify='between' align="center">
+        <Flex justify='between' align='center'>
           <CardBanner bannerUrl={project.project.bannerUrl} />
           <ProjectCardContent
             project={project.project}
@@ -57,4 +57,4 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
 
 export default ProjectCard;
 
-export {}
+export {};

@@ -246,7 +246,14 @@ export default function WalletPage() {
           <div className='swiper'>
             <div className='swiper-wrapper'>
               <div className='swiper-slide'>
-                <Flex direction='column' minHeight='90vh' justify='center' align='center' m='4' gap='4'>
+                <Flex
+                  direction='column'
+                  minHeight='90vh'
+                  justify='center'
+                  align='center'
+                  m='4'
+                  gap='4'
+                >
                   <WebappBackButton />
                   <ResponsibleImage src={money} />
 
@@ -275,9 +282,18 @@ export default function WalletPage() {
                             <AlertDialog.Trigger>
                               <Button
                                 size='4'
-                                style={{ backgroundColor: 'var(--gray-6)', color: 'var(--gray-11)' }}
+                                style={{
+                                  backgroundColor: 'var(--gray-6)',
+                                  color: 'var(--gray-11)',
+                                }}
                               >
-                                {"Connected: " + tonConnectUI.account?.address.slice(0, 3) + '...' + tonConnectUI.account?.address.slice(tonConnectUI.account?.address.length - 3, tonConnectUI.account?.address.length) || 'Disconnect'}
+                                {'Connected: ' +
+                                  tonConnectUI.account?.address.slice(0, 3) +
+                                  '...' +
+                                  tonConnectUI.account?.address.slice(
+                                    tonConnectUI.account?.address.length - 3,
+                                    tonConnectUI.account?.address.length
+                                  ) || 'Disconnect'}
                               </Button>
                             </AlertDialog.Trigger>
                             <AlertDialog.Content maxWidth='450px'>
@@ -289,7 +305,11 @@ export default function WalletPage() {
                                   </Button>
                                 </AlertDialog.Cancel>
                                 <AlertDialog.Action>
-                                  <Button variant='solid' color='red' onClick={() => tonConnectUI.disconnect()}>
+                                  <Button
+                                    variant='solid'
+                                    color='red'
+                                    onClick={() => tonConnectUI.disconnect()}
+                                  >
                                     Disconnect
                                   </Button>
                                 </AlertDialog.Action>

@@ -137,14 +137,12 @@ export default function Friends() {
         <Card mt='5'>
           <Grid gap='4'>
             <Text color='gray'>Your Ref link:</Text>
-            
-              <Box asChild width='100%'>
-                <GlowingButton size='4' onClick={() => {
-                  webApp.openTelegramLink(`https://t.me/share?url=${refData?.refLink}&text=Join me on Meme Factory and let's earn together! Use my invite link to join the fun.👑`)
-                }}>
-                  Share
-                </GlowingButton>
-              </Box>
+
+            <Box asChild width='100%'>
+              <Skeleton loading={refLoading}>
+                <CopyableRef refLink={refData?.refLink ?? ''}/>
+              </Skeleton>
+            </Box>
             <DataList.Root mt='4'>
               <DataList.Item align='center'>
                 <DataList.Item>

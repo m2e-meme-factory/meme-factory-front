@@ -1,8 +1,16 @@
-import { Flex, Heading, IconButton, Separator } from '@radix-ui/themes';
+import {
+  Flex,
+  Heading,
+  IconButton,
+  Separator,
+  Button,
+  TextField,
+  TextArea,
+  Dialog,
+} from '@radix-ui/themes';
 import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { TaskInfo, UpdateTaskDTO } from 'api';
-import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';
 import EditedSubtask from './EditedSubtask';
@@ -47,21 +55,32 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
     <Flex mb='3' direction='column'>
       <Flex align='center' mt='3'>
         <Heading size='5' mr='3'>
-          Subtasks Creation
+          Tasks Creation
         </Heading>
 
         <Dialog.Root open={modalOpen}>
-          <Dialog.Trigger asChild>
+          <Dialog.Trigger>
             <IconButton size='1' onClick={() => setModalOpen(true)}>
               <PlusIcon />
             </IconButton>
           </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className='DialogOverlay' />
-            <Dialog.Content className='DialogContent'>
-              <Dialog.Title className='DialogTitle Accent'>Create Subtask</Dialog.Title>
-              <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-                <Form.Field className='FormField' name='title'>
+          <Dialog.Content>
+            <Flex justify='between' align='center'>
+              <Dialog.Title>Create Task</Dialog.Title>
+              <Dialog.Close>
+                <Button
+                  mb='3'
+                  onClick={() => setModalOpen(false)}
+                  aria-label='Close'
+                  variant='soft'
+                >
+                  <Cross2Icon />
+                </Button>
+              </Dialog.Close>
+            </Flex>
+            <Form.Root onSubmit={handleSubmit}>
+              <Flex direction='column' gap='2'>
+                <Form.Field name='title'>
                   <div
                     style={{
                       display: 'flex',
@@ -69,17 +88,17 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
                       justifyContent: 'space-between',
                     }}
                   >
-                    <Form.Label className='FormLabel'>Title</Form.Label>
-                    <Form.Message className='FormMessage' match='valueMissing'>
+                    <Form.Label>Title</Form.Label>
+                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='valueMissing'>
                       Please enter a title
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <input className='Input' type='text' required />
+                    <TextField.Root required />
                   </Form.Control>
                 </Form.Field>
 
-                <Form.Field className='FormField' name='description'>
+                <Form.Field name='description'>
                   <div
                     style={{
                       display: 'flex',
@@ -87,17 +106,17 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
                       justifyContent: 'space-between',
                     }}
                   >
-                    <Form.Label className='FormLabel'>Description</Form.Label>
-                    <Form.Message className='FormMessage' match='valueMissing'>
+                    <Form.Label>Description</Form.Label>
+                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='valueMissing'>
                       Please enter a description
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <textarea className='Textarea' required />
+                    <TextArea required />
                   </Form.Control>
                 </Form.Field>
 
-                <Form.Field className='FormField' name='price'>
+                <Form.Field name='price'>
                   <div
                     style={{
                       display: 'flex',
@@ -105,45 +124,35 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
                       justifyContent: 'space-between',
                     }}
                   >
-                    <Form.Label className='FormLabel'>Price</Form.Label>
-                    <Form.Message className='FormMessage' match='valueMissing'>
+                    <Form.Label>Price</Form.Label>
+                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='valueMissing'>
                       Please enter a price
                     </Form.Message>
-                    <Form.Message className='FormMessage' match='typeMismatch'>
+                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='typeMismatch'>
                       Please enter a valid price
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <input className='Input' type='number' required />
+                    <TextField.Root type='number' required />
                   </Form.Control>
                 </Form.Field>
 
                 <Form.Submit asChild>
-                  <button className='Button' style={{ marginTop: 10 }}>
-                    Create subtask
-                  </button>
+                  <Button style={{ marginTop: 10 }}>Create subtask</Button>
                 </Form.Submit>
-              </Form.Root>
-              <Dialog.Close asChild>
-                <button
-                  className='IconButton'
-                  onClick={() => setModalOpen(false)}
-                  aria-label='Close'
-                >
-                  <Cross2Icon />
-                </button>
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
+              </Flex>
+            </Form.Root>
+          </Dialog.Content>
         </Dialog.Root>
       </Flex>
       <Separator my='3' size='4' />
       <Flex direction='column'>
         {subtasks.length > 0 &&
           subtasks.map(
-            (subtask, index) =>
+            (subtask) =>
               subtask.id && (
                 <EditedSubtask
+                  key={subtask.id} // Ensure to add a unique key prop
                   setTasksToDelete={setTasksToDelete}
                   id={subtask.id}
                   setSubtask={setSubtasks}

@@ -21,46 +21,46 @@ type IconType = {
 };
 
 const icons: IconType = {
-  0: (
+  21: (
     <UserAddOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
-  1: (
+  23: (
     <LaptopOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
-  2: <XOutlined style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }} />,
-  3: (
+  24: <XOutlined style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }} />,
+  25: (
     <SendOutlined style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }} />
   ),
-  4: (
+  26: (
     <YoutubeOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
-  5: (
+  27: (
     <TikTokOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
-  6: (
+  28: (
     <InstagramOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
-  7: (
+  29: (
     <Flex justify='center' align='center'>
       <RadditOutlined style={{ fill: 'var(--gray-10)', margin: '0 15px 0 10px', height: '24px' }} />
     </Flex>
   ),
-  8: (
+  31: (
     <MediumOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />
   ),
-  9: (
+  30: (
     <DiscordOutlined
       style={{ color: 'var(--gray-10)', margin: '0 15px 0 10px', fontSize: '24px' }}
     />

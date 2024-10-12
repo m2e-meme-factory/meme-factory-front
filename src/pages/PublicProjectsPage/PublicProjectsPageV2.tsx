@@ -308,7 +308,7 @@ export default function PublicProjectsPage() {
                           </Flex>
                         </Flex>
                       </Box>
-                      <Flex m='4' mb='8' direction='column'>
+                      <Flex m='4' mb='8' gap="3" direction='column'>
                         <AutoTasksProjectCard />
                         {projects.map((project, index) => (
                           <ProjectCard key={index} project={project} />

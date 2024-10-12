@@ -87,7 +87,7 @@ const FastTasksPage = () => {
                     )
                   }
                   createdAt={task.createdAt}
-                  icon={getIconByTaskId(0)}
+                  icon={getIconByTaskId(task.id)}
                   category={task.isIntegrated ? 'ref' : 'default'}
                   refLink={refData?.refLink}
                 />

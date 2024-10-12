@@ -56,10 +56,12 @@ const TransactionsHistoryPage = lazy(
 enum TabsOption {
   AIRDROP = 'airdrop',
   ACCOUNT = 'account',
-  TRANSACTIONS = 'transactions',
+  // TRANSACTIONS = 'transactions',
 }
 
-const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT, TabsOption.TRANSACTIONS];
+const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT
+  // , TabsOption.TRANSACTIONS
+];
 
 const SwiperContainer = styled.div`
   .swiper {
@@ -126,9 +128,9 @@ export default function ProfilePage() {
           case 1:
             setCurrentTab(TabsOption.ACCOUNT);
             break;
-          case 2:
-            setCurrentTab(TabsOption.TRANSACTIONS);
-            break;
+          // case 2:
+          //   setCurrentTab(TabsOption.TRANSACTIONS);
+          //   break;
         }
       });
     }
@@ -192,7 +194,7 @@ export default function ProfilePage() {
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='airdrop'>Airdrop</Tabs.Trigger>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
-        <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
+        {/* <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger> */}
       </Tabs.List>
 
       <Box pt='3'>
@@ -597,7 +599,7 @@ export default function ProfilePage() {
                   </Card>
                 </ScrollArea>
               </div>
-              <div className='swiper-slide'>
+              {/* <div className='swiper-slide'>
                 <Flex direction='column' justify='center'>
                   <Suspense
                     fallback={
@@ -609,7 +611,7 @@ export default function ProfilePage() {
                     <TransactionsHistoryPage />
                   </Suspense>
                 </Flex>
-              </div>
+              </div> */}
             </div>
           </div>
         </SwiperContainer>

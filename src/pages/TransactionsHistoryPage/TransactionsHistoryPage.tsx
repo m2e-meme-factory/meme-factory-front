@@ -55,9 +55,9 @@ const TransactionsHistoryPage = () => {
       </Flex>
 
       <Flex mt='2' mb='4' direction='column'>
-        <Heading size='2' mb='2'>
+        {/* <Heading size='2' mb='2'>
           Tx type
-        </Heading>
+        </Heading> */}
         <div className='swiper-no-swiping'>
           <Select
             isSearchable={false}

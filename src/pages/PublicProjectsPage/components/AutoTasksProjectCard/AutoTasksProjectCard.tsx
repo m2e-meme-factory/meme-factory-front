@@ -44,7 +44,7 @@ const AutoTasksProjectCard = () => {
   const navigate = useNavigate();
 
   return (
-    <GlowingCard className='SubtaskCard' mb='3' onClick={() => navigate(`/projects/autotasks`)}>
+    <GlowingCard className='SubtaskCard' onClick={() => navigate(`/projects/autotasks`)}>
       <Flex align='center' justify='between' p='1' pb='4' pt='4'>
         <Flex align='center'>
           <svg

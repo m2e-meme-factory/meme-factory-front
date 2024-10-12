@@ -12,6 +12,7 @@ import {
   Box,
   Theme,
   Card,
+  IconButton,
 } from '@radix-ui/themes';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
@@ -31,12 +32,13 @@ import { showErrorMessage, showToastWithPromise } from '../../shared/utils/helpe
 import { Role } from '../../shared/consts/userRoles';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
 import { BASE_URL } from '../../shared/consts/baseURL';
-import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { Sheet } from 'react-modal-sheet';
 import yeyEmoji from '../../shared/imgs/yey.png';
+import styled from 'styled-components';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -44,6 +46,13 @@ export type UserRoleInProject =
   | 'guestCreator'
   | 'projectMember'
   | 'unconfirmedMember';
+
+const FixedHelpButton = styled(IconButton)`
+position: fixed;
+top: 10px;
+right: 10px;
+z-index: 5;
+`
 
 const ProjectPage = () => {
   const dispatch = useDispatch();
@@ -159,7 +168,7 @@ const ProjectPage = () => {
       setIsDownloading(true);
       if (currentProject && user) {
         await showToastWithPromise({
-          success: 'Files are downloaded successfully',
+          success: 'Files are downloaded in telegram chat',
           error: 'Error occurred while downloading files',
           process: 'Downloading files',
           callback: () =>
@@ -204,14 +213,16 @@ const ProjectPage = () => {
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
       {/* Title */}
+      <FixedHelpButton size="3" onClick={handleDialogOpen} >
+        <QuestionMarkCircledIcon width='25' height='25' />
+      </FixedHelpButton>
       <Flex direction='column'>
         <Flex m='4' mt='2' gap='5' direction='column'>
-          <Flex justify='between' align='center'>
-            <Heading weight='medium'>{currentProject?.project.title}</Heading>
-            <QuestionMarkCircledIcon onClick={handleDialogOpen} width='25' height='25' />
-          </Flex>
+            <Heading weight='medium'>
+              {currentProject?.project.title}
+            </Heading>
           {currentUserRole === 'projectOwner' && (
-            <Button onClick={handleEditClick} my='2'>
+            <Button onClick={handleEditClick} my='2' size="4">
               Edit project
             </Button>
           )}
@@ -231,9 +242,9 @@ const ProjectPage = () => {
           </Flex>
 
           {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
-            <Button disabled={true} my='2' style={{ fontSize: '16px' }}>
-              Join
-            </Button>
+              <AccentButton my='2' size="4" onClick={() => navigate(`logs/${user?.id}`)}>
+                Veiw History
+              </AccentButton>
           )}
 
           {/* Join project modal */}
@@ -411,7 +422,7 @@ const ProjectPage = () => {
                           <Box>
                             <Text size='1' color='gray'>
                               Wait until the advertiser approves{' '}
-                              <Badge>
+                              <Badge color="yellow">
                                 <Text
                                   style={{ textDecoration: 'underline' }}
                                   onClick={() => {
@@ -419,7 +430,7 @@ const ProjectPage = () => {
                                     navigate('/profile?tab=account&action=verify');
                                   }}
                                 >
-                                  or verify now
+                                  Or Verify now
                                 </Text>
                               </Badge>
                             </Text>

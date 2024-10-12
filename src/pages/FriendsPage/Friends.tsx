@@ -29,6 +29,7 @@ import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRe
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import { Link, Navigate } from 'react-router-dom';
 import WebappBackButton from '../../shared/components/WebappBackButton';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 const Steps = styled.div`
   position: relative;
@@ -95,6 +96,8 @@ export default function Friends() {
       setRefData(data);
     }
   }, [data]);
+
+  const webApp = useWebApp();
 
   return (
     <>
@@ -174,16 +177,14 @@ export default function Friends() {
         <Card mt='5'>
           <Grid gap='4'>
             <Text color='gray'>Your Ref link:</Text>
-            <Link
-              to={`https://t.me/share?url=${refData?.refLink}&text=Hey, there! %0A%0AJoin Meme Factory, earn M2E tokens by completing tasks and earn rewards.`}
-              target='_blank'
-            >
+            
               <Box asChild width='100%'>
-                <GlowingButton size='4' onClick={() => {}}>
+                <GlowingButton size='4' onClick={() => {
+                  webApp.openTelegramLink(`https://t.me/share?url=${refData?.refLink}&text=Join me on Meme Factory and let's earn together! Use my invite link to join the fun.👑`)
+                }}>
                   Share
                 </GlowingButton>
               </Box>
-            </Link>
             <DataList.Root mt='4'>
               <DataList.Item align='center'>
                 <DataList.Item>
@@ -196,7 +197,7 @@ export default function Friends() {
                   <DataList.Label minWidth='88px'>Total profit</DataList.Label>
                   <Skeleton loading={refLoading}>
                     <DataList.Value>
-                      0{' '}
+                      {(refData?.count || 0) * 1000}
                       <Badge color='bronze' ml='2'>
                         M2E
                       </Badge>

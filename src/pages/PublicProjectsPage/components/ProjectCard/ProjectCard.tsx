@@ -8,7 +8,7 @@ import { Project } from 'api';
 
 const StyledCard = styled(Card)`
   padding: 0;
-  margin: 0 0 15px;
+  // margin: 0 0 15px;
   width: 100%;
   background-color: var(--gray-a2);
 `;
@@ -23,10 +23,10 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
   // if (project.maxPrice === null && project.minPrice === null) {
   return (
     <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
-      <Flex justify='between' gap='4'>
+      <Flex justify='between'>
         <CardBanner bannerUrl={project.project.bannerUrl} />
         <Flex direction='column' justify='between' m='4'>
-          <Heading size='5'>{project.project.title}</Heading>
+          <Heading size='3'>{project.project.title}</Heading>
           <ProjectCardContent
             project={project.project}
             minPrice={project.minPrice}
@@ -42,7 +42,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
     <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
       <Flex direction='column' p='4' gap='4'>
         <Heading size='5'>{project.project.title}</Heading>
-        <Flex justify='between' gap='4'>
+        <Flex justify='between' align="center">
           <CardBanner bannerUrl={project.project.bannerUrl} />
           <ProjectCardContent
             project={project.project}
@@ -56,3 +56,5 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
 };
 
 export default ProjectCard;
+
+export {}

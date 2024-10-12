@@ -18,7 +18,7 @@ input {
 }
 
 .DialogContent {
-    background-color: var(--gray-2);
+    background-color: #121212;
     border-radius: 6px;
     box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px;
     position: fixed;

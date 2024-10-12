@@ -1,66 +1,26 @@
 import {
   Badge,
   Box,
-  Button,
-  Callout,
   Card,
   DataList,
   Flex,
   Grid,
   Heading,
   Skeleton,
-  Spinner,
   Text,
 } from '@radix-ui/themes';
-import * as React from 'react';
-import packageJson from '../../../package.json';
-import CopyableTextField from '../../shared/components/CopyableTextField';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import { useEffect, useState } from 'react';
-import styles from '../ProfilePage/ProfilePage.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { RefDataResponse } from 'api';
-import { Cross2Icon, InfoCircledIcon } from '@radix-ui/react-icons';
 import handshake from '../../shared/imgs/handshake.webp';
 import yeyEmoji from '../../shared/imgs/yey.png';
 import styled from 'styled-components';
-import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
-import { Link, Navigate } from 'react-router-dom';
 import WebappBackButton from '../../shared/components/WebappBackButton';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
-const Steps = styled.div`
-  position: relative;
-`;
-
-const Step = styled(Flex)`
-  align-items: center;
-`;
-const StepBadge = styled.div`
-  padding: 0.25rem;
-  width: 1.75rem;
-  height: 1.75rem;
-  margin-right: 10px;
-  background-color: white;
-  color: var(--gray-1);
-  text-align: center;
-  border-radius: 50%;
-  line-height: 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-`;
-
-const StepsLine = styled.div`
-  position: absolute;
-  left: 1.4rem;
-  top: 30px;
-  bottom: 30px;
-  width: 2px;
-  background-color: white;
-  z-index: -1;
-`;
 
 const ResponsibleImage = styled.img`
   height: 100px;

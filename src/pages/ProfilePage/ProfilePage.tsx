@@ -597,6 +597,11 @@ export default function ProfilePage() {
                       </AlertDialog.Root>
                     </Grid>
                   </Card>
+                      <button style={{opacity: 0}} onClick={() => {    
+                        localStorage.setItem('onboardCompleted', 'false');
+                      }}>
+                        tutorial
+                      </button>
                 </ScrollArea>
               </div>
               {/* <div className='swiper-slide'>
@@ -605,7 +610,7 @@ export default function ProfilePage() {
                     fallback={
                       <Flex justify='center' align='center' style={{ height: '100vh' }}>
                         <Loading />
-                      </Flex>
+                      </Flex> 
                     }
                   >
                     <TransactionsHistoryPage />

@@ -65,7 +65,7 @@ const ProjectDetailsPage = () => {
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
-        <Heading>Project details</Heading>
+        <Heading>Quest details</Heading>
       </Flex>
 
       <Card mt='5'>
@@ -86,7 +86,7 @@ const ProjectDetailsPage = () => {
         <Flex align='center' justify='between' gapX='2'>
           <Button size='2' onClick={() => navigate(`/projects/${id}`)} style={{ width: '45%' }}>
             <MagnifyingGlassIcon />
-            View Project
+            View Quest
           </Button>
           <Button
             size='2'
@@ -94,7 +94,7 @@ const ProjectDetailsPage = () => {
             style={{ width: '45%' }}
           >
             <Pencil1Icon />
-            Edit Project
+            Edit Quest
           </Button>
         </Flex>
       </Card>

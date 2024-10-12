@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import MyProjectCard from './MyProjectCard/MyProjectCard';
 import Loading from '../../../shared/components/Loading';
 import styled from 'styled-components';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { MagnifyingGlassIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -66,14 +66,15 @@ const AdvertisersProjects: FC<AdvertisersProjectsProps> = ({ user }) => {
             style={{ width: '100%' }}
             size='3'
           >
-            Create project
+            <PlusCircledIcon width='20' height='20' />
+            Create Quest
           </Button>
         </Flex>
         <Flex mt='4' direction='column'>
           {myProjects.length === 0 ? (
             <Flex direction='column' style={{ height: '50vh' }} align='center' justify='center'>
               <MagnifyingGlassIcon style={{ width: '30px', height: '30px', color: 'gray' }} />
-              <Text color='gray'>No Projects Found</Text>
+              <Text color='gray'>No Quests Found</Text>
             </Flex>
           ) : (
             myProjects.map((project, index) => (

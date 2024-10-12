@@ -10,7 +10,7 @@ import {
   Box,
 } from '@radix-ui/themes';
 import '../CreateProjectPage/CreateProjectPage.module.css';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { TAGS } from '../../shared/consts/tags';
 import { CATEGORIES } from '../../shared/consts/categories';
 import makeAnimated from 'react-select/animated';
@@ -18,7 +18,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../../styles/CustomReactQuill.css';
 import { useNavigate } from 'react-router-dom';
-import { TrashIcon } from '@radix-ui/react-icons';
+import { PlusCircledIcon, TrashIcon } from '@radix-ui/react-icons';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import {
   CUSTOM_SELECT_STYLES_MULTI,
@@ -48,7 +48,8 @@ const EditProjectPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const project = useSelector((state: RootState) => state.project.project);
   const subtasksPrepared = project ? project.project.tasks.map((task) => task.task) : [];
-
+  const bannerInputRef = useRef<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const [subtasksToDelete, setSubtasksToDelete] = useState<string[]>([]);
   const [title, setTitle] = useState(project?.project.title);
@@ -76,9 +77,16 @@ const EditProjectPage = () => {
 
   const [isOpenLeave, setIsOpenLeave] = useState(false);
 
-  const handleLeave = () => {
-    navigate(-1);
-    webapp.BackButton.hide();
+  const handleAddBannerClick = () => {
+    if (bannerInputRef.current) {
+      bannerInputRef.current.click();
+    }
+  };
+
+  const handleAddFileClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleBack = useCallback(() => {
@@ -95,6 +103,11 @@ const EditProjectPage = () => {
       webapp.BackButton.hide();
     };
   }, [handleBack, webapp]);
+
+  const handleLeave = () => {
+    navigate(-1);
+    webapp.BackButton.hide();
+  };
 
   const updateProjectMutation = useUpdateProject(project?.project.id);
 
@@ -114,11 +127,22 @@ const EditProjectPage = () => {
   const handleSingleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     setSingleFile(files);
+    if (bannerInputRef.current) {
+      bannerInputRef.current.value = '';
+    }
+  };
+
+  const handleDeleteBanner = () => {
+    setAttachedBanner(null);
+    setSingleFile([]);
+    if (bannerInputRef.current) {
+      bannerInputRef.current.value = '';
+    }
   };
 
   const handleMultipleFilesChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    setMultipleFiles(files);
+    setMultipleFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -239,6 +263,12 @@ const EditProjectPage = () => {
     }
   };
 
+  const handleDeleteFile = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <Flex m='4' direction='column'>
       <Flex align='center'>
@@ -247,14 +277,20 @@ const EditProjectPage = () => {
             <Box></Box>
           </AlertDialog.Trigger>
           <AlertDialog.Content maxWidth='450px'>
-            <AlertDialog.Title>Exit project editor</AlertDialog.Title>
+            <AlertDialog.Title>Exit quest editor</AlertDialog.Title>
             <AlertDialog.Description size='2'>
               Are you sure you want to leave? Unsaved changes will be lost.
             </AlertDialog.Description>
 
             <Flex gap='3' mt='4' justify='end'>
               <AlertDialog.Cancel>
-                <Button variant='soft' color='gray'>
+                <Button
+                  variant='soft'
+                  color='gray'
+                  onClick={() => {
+                    setIsOpenLeave(false);
+                  }}
+                >
                   Cancel
                 </Button>
               </AlertDialog.Cancel>
@@ -267,7 +303,7 @@ const EditProjectPage = () => {
           </AlertDialog.Content>
         </AlertDialog.Root>
 
-        <Heading>Edit Project</Heading>
+        <Heading>Edit Quest</Heading>
       </Flex>
       <Flex direction='column'>
         <Text weight='medium' mt='3' mb='1'>
@@ -295,7 +331,7 @@ const EditProjectPage = () => {
         <Text weight='medium' mt='3' mb='1'>
           Banner
         </Text>
-        {attachedBanner && (
+        {(attachedBanner || (singleFile && singleFile.length > 0)) && (
           <Card mb='3'>
             <Flex align='center' justify='between'>
               <Text
@@ -309,25 +345,50 @@ const EditProjectPage = () => {
                   textOverflow: 'ellipsis',
                 }}
               >
-                {attachedBanner.substring(55)}
+                {singleFile && singleFile.length > 0
+                  ? singleFile[0].name
+                  : attachedBanner
+                    ? attachedBanner.substring(55)
+                    : ''}
               </Text>
-              <IconButton ml='3' onClick={() => setAttachedBanner(null)}>
+              <IconButton ml='3' onClick={handleDeleteBanner}>
                 <TrashIcon></TrashIcon>
               </IconButton>
             </Flex>
           </Card>
         )}
-        {!attachedBanner && <input type='file' onChange={handleSingleFileChange} />}
+        {!attachedBanner && (
+          <>
+            <Button
+              mx='2'
+              mt='2'
+              size='4'
+              variant='soft'
+              className='gap-1'
+              onClick={handleAddBannerClick}
+            >
+              <PlusCircledIcon width='20' height='20' />
+              Change banner
+            </Button>
+            <input
+              type='file'
+              ref={bannerInputRef}
+              style={{ display: 'none' }}
+              onChange={handleSingleFileChange}
+              accept='image/*'
+            />
+          </>
+        )}
 
         <Text weight='medium' mt='3'>
           Files
         </Text>
         <Flex direction='column' style={{ maxWidth: '100%', overflow: 'hidden' }}>
-          {attachedFiles && (
+          {(attachedFiles.length > 0 || multipleFiles.length > 0) && (
             <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
               {attachedFiles.map((file, index) => (
-                <Card mb='3'>
-                  <li key={index}>
+                <Card mb='3' key={index}>
+                  <li>
                     <Flex align='center' justify='between' style={{ maxWidth: '100%' }}>
                       <Text
                         wrap='pretty'
@@ -354,20 +415,59 @@ const EditProjectPage = () => {
                   </li>
                 </Card>
               ))}
+
+              {multipleFiles.map((file, index) => (
+                <Card mb='3' key={index}>
+                  <li>
+                    <Flex align='center' justify='between' style={{ maxWidth: '100%' }}>
+                      <Text
+                        wrap='pretty'
+                        style={{
+                          maxWidth: '70vw',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          whiteSpace: 'normal',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {file.name}
+                      </Text>
+                      <IconButton
+                        onClick={() => {
+                          setMultipleFiles((prevState) => prevState.filter((_, i) => i !== index));
+                          handleDeleteFile();
+                        }}
+                        ml='3'
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    </Flex>
+                  </li>
+                </Card>
+              ))}
             </ul>
           )}
         </Flex>
 
-        <input type='file' multiple onChange={handleMultipleFilesChange} />
-        {multipleFiles.length > 0 && (
-          <ul>
-            {multipleFiles.map((file, index) => (
-              <li key={index}>
-                <Text>{file.name}</Text>
-              </li>
-            ))}
-          </ul>
-        )}
+        <Button
+          mx='2'
+          mt='2'
+          size='4'
+          variant='soft'
+          className='gap-1'
+          onClick={handleAddFileClick}
+        >
+          <PlusCircledIcon width='20' height='20' />
+          Add File
+        </Button>
+        <input
+          type='file'
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={handleMultipleFilesChange}
+          multiple
+        />
 
         <Text weight='medium' mt='3' mb='1'>
           Tags

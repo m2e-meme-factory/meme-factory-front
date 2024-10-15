@@ -413,7 +413,7 @@ export default function ProfilePage() {
                     </Flex>
 
                     <Skeleton loading={userDataLoading}>
-                      <Heading>
+                      <Heading align={userDataResponse?.isVerified  ? "center" : "left"}>
                         <Flex align='center' display='inline-flex'>
                           <img
                             height='30rem'
@@ -485,21 +485,64 @@ export default function ProfilePage() {
                                     </Flex>
                                     <Grid gap='2'>
                                       <Heading mb='2' align='center'>
-                                        Benefits of verified accounts
+                                        Benefits of verified accounts:
                                       </Heading>
-                                      <Blockquote>100% chance for Airdrop claim</Blockquote>
-                                      <Blockquote>Auto approve to any project</Blockquote>
-                                      <Blockquote>
-                                        High priority for checking task completion
-                                      </Blockquote>
-                                    </Grid>
+                                      <Flex direction='column' gap='2'>
+                                        <Card>
+                                          <Flex gap='4' align='center' p='1'>
+                                            <Box>
+                                              <Text size='8' weight='bold'>
+                                                1
+                                              </Text>
+                                            </Box>
+                                            <Box>
+                                              <Box>100% chance for Airdrop claim</Box>
+                                            </Box>
+                                          </Flex>
+                                        </Card>
 
+                                        <Card>
+                                          <Flex gap='4' align='center' p='1'>
+                                            <Box>
+                                              <Text size='8' weight='bold'>
+                                                2
+                                              </Text>
+                                            </Box>
+                                            <Box>
+                                              <Box>Auto approve to any Quest</Box>
+                                            </Box>
+                                          </Flex>
+                                        </Card>
+
+                                        <Card>
+                                          <Flex gap='4' align='center' p='1'>
+                                            <Box>
+                                              <Text size='8' weight='bold'>
+                                                3
+                                              </Text>
+                                            </Box>
+                                            <Flex justify='between' width='100%' align='center'>
+                                              <Box>
+                                                <Box>High priority for checking task completion</Box>
+                                              </Box>
+                                              <img
+                                                style={{
+                                                  height: 'var(--font-size-8)',
+                                                }}
+                                                src={yeyEmoji}
+                                              />
+                                            </Flex>
+                                          </Flex>
+                                        </Card>
+                                      </Flex>
+                                    </Grid>
+                                    
                                     <GlowingButton
                                       size='4'
                                       onClick={handleVerify}
                                       style={{ width: '100%' }}
                                     >
-                                      Verify Now
+                                      Verify Now (5 USDT)
                                     </GlowingButton>
                                   </Grid>
                                 </Theme>

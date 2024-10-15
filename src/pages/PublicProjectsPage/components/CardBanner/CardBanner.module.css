@@ -1,6 +1,6 @@
 .bannerContainer {
     width: 20vh;
-    /* height: 20vh; */
+    max-height: 15vh;
     min-width: 20vh;
     display: flex;
     justify-content: center;

@@ -76,7 +76,7 @@ const ProjectDetailsPage = () => {
             </Text>
             {totalSpendingsLoading ? <Loading /> : <Heading>${totalSpendings}</Heading>}
           </Flex>
-          <Button onClick={() => navigate('/profile?tab=transactions')}>
+          <Button onClick={() => navigate('/wallet?tab=transactions')}>
             <ChevronRightIcon /> Transactions
           </Button>
         </Flex>

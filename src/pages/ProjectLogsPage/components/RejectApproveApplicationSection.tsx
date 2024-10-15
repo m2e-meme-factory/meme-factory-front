@@ -41,12 +41,12 @@ const RejectAcceptApplicationSection: FC<RejectAcceptApplicationSectionProps> = 
   };
 
   return (
-    <Flex direction='column'>
+    <Flex direction='row' justify="between">
       {!applicationAccepted && !applicationRejected && (
         <>
           <Dialog.Root>
             <Dialog.Trigger>
-              <Button variant='outline' color='green' mt='2'>
+              <Button color='green' mt='2'>
                 Accept
               </Button>
             </Dialog.Trigger>

@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import WebappBackButton from '../../shared/components/WebappBackButton';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 
 
 const ResponsibleImage = styled.img`

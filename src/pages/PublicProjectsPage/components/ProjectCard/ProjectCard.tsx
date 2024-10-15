@@ -24,7 +24,6 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
   return (
     <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
       <Flex justify='between'>
-        <CardBanner bannerUrl={project.project.bannerUrl} />
         <Flex direction='column' justify='between' m='4'>
           <Heading size='3'>{project.project.title}</Heading>
           <ProjectCardContent
@@ -33,6 +32,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
             maxPrice={project.maxPrice}
           />
         </Flex>
+        <CardBanner bannerUrl={project.project.bannerUrl} />
       </Flex>
     </StyledCard>
   );

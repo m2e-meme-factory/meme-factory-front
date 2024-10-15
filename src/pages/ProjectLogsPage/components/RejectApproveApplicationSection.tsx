@@ -41,7 +41,7 @@ const RejectAcceptApplicationSection: FC<RejectAcceptApplicationSectionProps> = 
   };
 
   return (
-    <Flex direction='row' justify="between">
+    <Flex direction='row' justify='between'>
       {!applicationAccepted && !applicationRejected && (
         <>
           <Dialog.Root>

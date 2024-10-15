@@ -413,7 +413,7 @@ export default function ProfilePage() {
                     </Flex>
 
                     <Skeleton loading={userDataLoading}>
-                      <Heading align={userDataResponse?.isVerified  ? "center" : "left"}>
+                      <Heading align={userDataResponse?.isVerified ? 'center' : 'left'}>
                         <Flex align='center' display='inline-flex'>
                           <img
                             height='30rem'
@@ -523,7 +523,9 @@ export default function ProfilePage() {
                                             </Box>
                                             <Flex justify='between' width='100%' align='center'>
                                               <Box>
-                                                <Box>High priority for checking task completion</Box>
+                                                <Box>
+                                                  High priority for checking task completion
+                                                </Box>
                                               </Box>
                                               <img
                                                 style={{
@@ -536,7 +538,7 @@ export default function ProfilePage() {
                                         </Card>
                                       </Flex>
                                     </Grid>
-                                    
+
                                     <GlowingButton
                                       size='4'
                                       onClick={handleVerify}
@@ -642,11 +644,14 @@ export default function ProfilePage() {
                       </AlertDialog.Root>
                     </Grid>
                   </Card>
-                      <button style={{opacity: 0}} onClick={() => {    
-                        localStorage.setItem('onboardCompleted', 'false');
-                      }}>
-                        tutorial
-                      </button>
+                  <button
+                    style={{ opacity: 0 }}
+                    onClick={() => {
+                      localStorage.setItem('onboardCompleted', 'false');
+                    }}
+                  >
+                    tutorial
+                  </button>
                 </ScrollArea>
               </div>
               {/* <div className='swiper-slide'>

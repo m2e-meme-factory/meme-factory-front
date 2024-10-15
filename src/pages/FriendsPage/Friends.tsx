@@ -1,14 +1,4 @@
-import {
-  Badge,
-  Box,
-  Card,
-  DataList,
-  Flex,
-  Grid,
-  Heading,
-  Skeleton,
-  Text,
-} from '@radix-ui/themes';
+import { Badge, Box, Card, DataList, Flex, Grid, Heading, Skeleton, Text } from '@radix-ui/themes';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -21,7 +11,6 @@ import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import WebappBackButton from '../../shared/components/WebappBackButton';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
-
 
 const ResponsibleImage = styled.img`
   height: 100px;
@@ -141,7 +130,7 @@ export default function Friends() {
 
             <Box asChild width='100%'>
               <Skeleton loading={refLoading}>
-                <CopyableRef refLink={refData?.refLink ?? ''}/>
+                <CopyableRef refLink={refData?.refLink ?? ''} />
               </Skeleton>
             </Box>
             <DataList.Root mt='4'>

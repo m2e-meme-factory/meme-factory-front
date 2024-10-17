@@ -110,7 +110,10 @@ export default function Friends() {
   };
 
   const handleShareClick = () => {
-    const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(refData?.refLink || '')}&text=${encodeURIComponent('Earn with me!')}`;
+    const message =
+      "\nJoin me on Meme Factory and let's earn together! \n" +
+      'Use my invite link to join the fun 👑';
+    const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(message)}&url=${encodeURIComponent(refData?.refLink || '')}`;
     webApp.openTelegramLink(shareUrl);
   };
 
@@ -197,7 +200,7 @@ export default function Friends() {
 
         <Card mt='5'>
           <Grid gap='4'>
-            <Text color='gray'>Your Ref link:</Text>
+            <Text color='gray'>Share your ref link:</Text>
 
             <Box asChild width='100%'>
               <Skeleton loading={refLoading}>

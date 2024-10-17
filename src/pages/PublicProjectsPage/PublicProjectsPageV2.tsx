@@ -245,81 +245,79 @@ export default function PublicProjectsPage() {
             <div className='swiper'>
               <div className='swiper-wrapper'>
                 <div className='swiper-slide'>
-                  <ScrollArea scrollbars='vertical'>
-                    <Flex direction='column'>
-                      <Box style={{ display: isOpened ? 'block' : 'none' }}>
-                        <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
-                          <Flex direction='column' gap='2' mb='1'>
-                            <Flex
-                              direction={isColumn ? 'column' : 'row'}
-                              gap='2'
-                              mb='1'
-                              wrap='wrap'
+                  <Flex direction='column'>
+                    <Box style={{ display: isOpened ? 'block' : 'none' }}>
+                      <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
+                        <Flex direction='column' gap='2' mb='1'>
+                          <Flex
+                            direction={isColumn ? 'column' : 'row'}
+                            gap='2'
+                            mb='1'
+                            wrap='wrap'
+                            style={{
+                              fontSize: 'var(--text-size-2)',
+                            }}
+                          >
+                            <div
                               style={{
-                                fontSize: 'var(--text-size-2)',
+                                flexGrow: 1,
+                                width: isColumn ? '100%' : 'auto',
                               }}
+                              ref={categoryRef}
+                              className='swiper-no-swiping'
                             >
-                              <div
-                                style={{
-                                  flexGrow: 1,
-                                  width: isColumn ? '100%' : 'auto',
-                                }}
-                                ref={categoryRef}
-                                className='swiper-no-swiping'
-                              >
-                                <Select
-                                  onChange={handleCategoryChange}
-                                  placeholder='Select category'
-                                  closeMenuOnSelect={true}
-                                  components={animatedComponents}
-                                  options={CATEGORIES}
-                                  styles={CUSTOM_SELECT_STYLES_SINGLE}
-                                  isMulti={false}
-                                  isSearchable={false}
-                                  isClearable={true}
-                                />
-                              </div>
-                              <div
-                                style={{
-                                  flexGrow: 1,
-                                  width: isColumn ? '100%' : 'auto',
-                                }}
-                                ref={tagsRef}
-                                className='swiper-no-swiping'
-                              >
-                                <Select
-                                  onChange={handleTagsChange}
-                                  placeholder='Select tags'
-                                  closeMenuOnSelect={false}
-                                  components={animatedComponents}
-                                  isMulti
-                                  options={TAGS}
-                                  styles={CUSTOM_SELECT_STYLES_MULTI}
-                                  isSearchable={false}
-                                  isClearable={true}
-                                />
-                              </div>
-                            </Flex>
-                            {showFindButton && (
-                              <Button variant='outline' onClick={handleFindButtonClick}>
-                                Find
-                              </Button>
-                            )}
+                              <Select
+                                onChange={handleCategoryChange}
+                                placeholder='Select category'
+                                closeMenuOnSelect={true}
+                                components={animatedComponents}
+                                options={CATEGORIES}
+                                styles={CUSTOM_SELECT_STYLES_SINGLE}
+                                isMulti={false}
+                                isSearchable={false}
+                                isClearable={true}
+                              />
+                            </div>
+                            <div
+                              style={{
+                                flexGrow: 1,
+                                width: isColumn ? '100%' : 'auto',
+                              }}
+                              ref={tagsRef}
+                              className='swiper-no-swiping'
+                            >
+                              <Select
+                                onChange={handleTagsChange}
+                                placeholder='Select tags'
+                                closeMenuOnSelect={false}
+                                components={animatedComponents}
+                                isMulti
+                                options={TAGS}
+                                styles={CUSTOM_SELECT_STYLES_MULTI}
+                                isSearchable={false}
+                                isClearable={true}
+                              />
+                            </div>
                           </Flex>
+                          {showFindButton && (
+                            <Button variant='outline' onClick={handleFindButtonClick}>
+                              Find
+                            </Button>
+                          )}
                         </Flex>
-                      </Box>
-                      <Flex m='4' mb='8' gap='3' direction='column'>
-                        <AutoTasksProjectCard />
-                        {projects.map((project, index) => (
-                          <ProjectCard key={index} project={project} />
-                        ))}
-
-                        {projects.length == 0 && !isLoading && <NothingFound />}
                       </Flex>
-                      {isLoading && <Loading />}
-                      {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
+                    </Box>
+                    <Flex m='4' mb='8' gap='3' direction='column'>
+                      <AutoTasksProjectCard />
+                      {projects.map((project, index) => (
+                        <ProjectCard key={index} project={project} />
+                      ))}
+
+                      {projects.length == 0 && !isLoading && <NothingFound />}
                     </Flex>
-                  </ScrollArea>
+                    {isLoading && <Loading />}
+                    {!isLoading && <BlockObserver ref={ref}></BlockObserver>}
+                  </Flex>
                 </div>
                 <div className='swiper-slide'>
                   <Flex direction='column' justify='center'>

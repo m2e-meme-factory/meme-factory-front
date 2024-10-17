@@ -246,14 +246,7 @@ export default function WalletPage() {
           <div className='swiper'>
             <div className='swiper-wrapper'>
               <div className='swiper-slide'>
-                <Flex
-                  direction='column'
-                  minHeight='90vh'
-                  justify='center'
-                  align='center'
-                  m='4'
-                  gap='4'
-                >
+                <Flex direction='column' justify='center' align='center' mt='8' m='4' gap='4'>
                   <WebappBackButton />
                   <ResponsibleImage src={money} />
 

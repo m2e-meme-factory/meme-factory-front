@@ -3,22 +3,34 @@ import { PropsWithChildren, useEffect } from 'react';
 import NavigationMenu from './NavigationMenu';
 import { Outlet } from 'react-router-dom';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { useTelegram } from '../hooks/useTelegram';
 
-const BasePageWrapper = (props: PropsWithChildren) => {
+const PageWrapper = (props: PropsWithChildren) => {
   const webApp = useWebApp();
 
   useEffect(() => {
-    // webApp.ready();
     if (webApp) webApp?.enableClosingConfirmation();
   }, []);
 
   return (
-    <Box minHeight='100vh' style={{ paddingBottom: '4.5em' }}>
-      <Outlet />
+    <Box
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        style={{
+          height: '90vh',
+          overflowY: 'auto',
+        }}
+      >
+        <Outlet />
+      </Box>
       <NavigationMenu />
     </Box>
   );
 };
 
-export default BasePageWrapper;
+export default PageWrapper;

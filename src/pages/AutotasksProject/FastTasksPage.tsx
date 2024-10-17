@@ -52,7 +52,7 @@ const FastTasksPage = () => {
   }
 
   return (
-    <Flex direction='column'>
+    <Flex direction='column' style={{ userSelect: 'all' }}>
       <Flex className={styles.content} direction='column'>
         <Flex m='4' direction='column' gap='2'>
           <Heading weight='bold'>Fast Tasks</Heading>

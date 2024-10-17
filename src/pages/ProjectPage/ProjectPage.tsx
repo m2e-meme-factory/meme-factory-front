@@ -207,7 +207,7 @@ const ProjectPage = () => {
     : fallbackBanner;
 
   return (
-    <Flex direction='column'>
+    <Flex direction='column' style={{ userSelect: 'text' }}>
       {/* Banner */}
       <Flex className={styles.bannerContainer}>
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />

@@ -174,7 +174,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
         <Flex>
           {icon}
 
-          <Flex direction='column'>
+          <Flex direction='column' ml='4'>
             <Text size='4' weight='medium'>
               {title}
             </Text>
@@ -231,18 +231,22 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     <Flex>
                       <Flex direction='column' gap='2'>
                         {isApplied && isClaimed ? (
-                          <div className={styles.card}>
-                            <div className={styles.cardContent}>
-                              <div className={styles.websiteInfo}>
-                                {icon}
-                                <p className={styles.socialsName}>
-                                  {/*Go to {getSocialsNameByTaskId(id)}*/}
-                                  {title}
-                                </p>
+                          <a
+                            href={url ?? ''}
+                            target='_blank'
+                            className={styles.link}
+                            onClick={handleApplyClick}
+                          >
+                            <div className={styles.card}>
+                              <div className={styles.cardContent}>
+                                <div className={styles.websiteInfo}>
+                                  {icon}
+                                  <p className={styles.socialsName}>{title}</p>
+                                </div>
+                                <CheckIcon color='#45a951' width={20} height={20} />
                               </div>
-                              <CheckIcon color='#45a951' width={20} height={20} />
                             </div>
-                          </div>
+                          </a>
                         ) : isApplied ? (
                           <div className={styles.card} onClick={handleClaimClick}>
                             <div className={styles.cardContent}>
@@ -276,10 +280,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                                   <>
                                     <div className={styles.websiteInfo}>
                                       {icon}
-                                      <p className={styles.socialsName}>
-                                        {/*Go to {getSocialsNameByTaskId(id)}*/}
-                                        {title}
-                                      </p>
+                                      <p className={styles.socialsName}>{title}</p>
                                     </div>
                                     <CaretRightIcon width={20} height={20} />
                                   </>

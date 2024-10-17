@@ -33,7 +33,6 @@ import { setUser } from '../../shared/utils/redux/user/userSlice';
 import { verifyUser } from '../../shared/utils/api/requests/user/verifyUser';
 import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
 
-import Loading from '../../shared/components/Loading';
 import CopyableCode from '../../shared/components/CopyableCode';
 import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 
@@ -56,14 +55,9 @@ const TransactionsHistoryPage = lazy(
 enum TabsOption {
   AIRDROP = 'airdrop',
   ACCOUNT = 'account',
-  // TRANSACTIONS = 'transactions',
 }
 
-const TABS = [
-  TabsOption.AIRDROP,
-  TabsOption.ACCOUNT,
-  // , TabsOption.TRANSACTIONS
-];
+const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT];
 
 const SwiperContainer = styled.div`
   .swiper {
@@ -130,9 +124,6 @@ export default function ProfilePage() {
           case 1:
             setCurrentTab(TabsOption.ACCOUNT);
             break;
-          // case 2:
-          //   setCurrentTab(TabsOption.TRANSACTIONS);
-          //   break;
         }
       });
     }
@@ -196,7 +187,6 @@ export default function ProfilePage() {
       <Tabs.List justify='center' highContrast>
         <Tabs.Trigger value='airdrop'>Airdrop</Tabs.Trigger>
         <Tabs.Trigger value='account'>Account</Tabs.Trigger>
-        {/* <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger> */}
       </Tabs.List>
 
       <Box pt='3'>
@@ -412,150 +402,150 @@ export default function ProfilePage() {
                       </Card>
                     </Flex>
 
-                    <Skeleton loading={userDataLoading}>
-                      <Heading align={userDataResponse?.isVerified ? 'center' : 'left'}>
-                        <Flex align='center' display='inline-flex'>
-                          <img
-                            height='30rem'
-                            style={{ transform: 'translateY(5px)' }}
-                            src={userDataResponse?.isVerified ? yeyEmoji : tsssEmoji}
-                            alt=''
-                          />
-                        </Flex>{' '}
-                        {userDataResponse?.isVerified ? (
-                          <>
-                            Congrats!
-                            <br />
-                            Your airdrop is 100% guaranteed!
-                          </>
-                        ) : (
-                          'Want a 100% chance to claim the airdrop?'
-                        )}
-                      </Heading>
-                    </Skeleton>
+                    {/*<Skeleton loading={userDataLoading}>*/}
+                    {/*  <Heading align={userDataResponse?.isVerified ? 'center' : 'left'}>*/}
+                    {/*    <Flex align='center' display='inline-flex'>*/}
+                    {/*      <img*/}
+                    {/*        height='30rem'*/}
+                    {/*        style={{ transform: 'translateY(5px)' }}*/}
+                    {/*        src={userDataResponse?.isVerified ? yeyEmoji : tsssEmoji}*/}
+                    {/*        alt=''*/}
+                    {/*      />*/}
+                    {/*    </Flex>{' '}*/}
+                    {/*    {userDataResponse?.isVerified ? (*/}
+                    {/*      <>*/}
+                    {/*        Congrats!*/}
+                    {/*        <br />*/}
+                    {/*        Your airdrop is 100% guaranteed!*/}
+                    {/*      </>*/}
+                    {/*    ) : (*/}
+                    {/*      'Want a 100% chance to claim the airdrop?'*/}
+                    {/*    )}*/}
+                    {/*  </Heading>*/}
+                    {/*</Skeleton>*/}
 
-                    <Skeleton loading={userDataLoading}>
-                      {userDataResponse?.isVerified ? (
-                        <Button size='4' disabled={true}>
-                          You are verified
-                        </Button>
-                      ) : (
-                        <GlowingButton size='4' onClick={handleDialogOpen}>
-                          Verify Now!
-                        </GlowingButton>
-                      )}
-                    </Skeleton>
+                    {/*<Skeleton loading={userDataLoading}>*/}
+                    {/*  {userDataResponse?.isVerified ? (*/}
+                    {/*    <Button size='4' disabled={true}>*/}
+                    {/*      You are verified*/}
+                    {/*    </Button>*/}
+                    {/*  ) : (*/}
+                    {/*    <GlowingButton size='4' onClick={handleDialogOpen}>*/}
+                    {/*      Verify Now!*/}
+                    {/*    </GlowingButton>*/}
+                    {/*  )}*/}
+                    {/*</Skeleton>*/}
                   </Flex>
                 </Box>
               </div>
               <div className='swiper-slide'>
                 <ScrollArea>
-                  {!userDataLoading && !userDataResponse?.isVerified && (
-                    <Card m='4'>
-                      <Grid gap='4'>
-                        <Heading>Verify</Heading>
-                        <Callout.Root>
-                          <Callout.Icon>
-                            <InfoCircledIcon height={20} width={20} />
-                          </Callout.Icon>
-                          <Callout.Text>
-                            Verified users have auto approve for any project apply and have 100%
-                            chance for receiving airdrop. <br />
-                            <br />
-                            Instant verification price: <br /> <Code>5 USDT</Code>
-                          </Callout.Text>
-                        </Callout.Root>
-                        <GlowingButton size='4' onClick={handleDialogOpen}>
-                          Verify
-                        </GlowingButton>
+                  {/*{!userDataLoading && !userDataResponse?.isVerified && (*/}
+                  {/*  <Card m='4'>*/}
+                  {/*    <Grid gap='4'>*/}
+                  {/*      <Heading>Verify</Heading>*/}
+                  {/*      <Callout.Root>*/}
+                  {/*        <Callout.Icon>*/}
+                  {/*          <InfoCircledIcon height={20} width={20} />*/}
+                  {/*        </Callout.Icon>*/}
+                  {/*        <Callout.Text>*/}
+                  {/*          Verified users have auto approve for any project apply and have 100%*/}
+                  {/*          chance for receiving airdrop. <br />*/}
+                  {/*          <br />*/}
+                  {/*          Instant verification price: <br /> <Code>5 USDT</Code>*/}
+                  {/*        </Callout.Text>*/}
+                  {/*      </Callout.Root>*/}
+                  {/*      <GlowingButton size='4' onClick={handleDialogOpen}>*/}
+                  {/*        Verify*/}
+                  {/*      </GlowingButton>*/}
 
-                        <Sheet
-                          isOpen={isModalVisible}
-                          onClose={() => handleDialogClose()}
-                          detent='content-height'
-                        >
-                          <Theme appearance='dark'>
-                            <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
-                              <Sheet.Header />
-                              <Sheet.Content>
-                                <Theme>
-                                  <Grid gap='8' m='4' mb='5' align='center'>
-                                    <Flex justify='center'>
-                                      <ResponsibleImage src={star} />
-                                    </Flex>
-                                    <Grid gap='2'>
-                                      <Heading mb='2' align='center'>
-                                        Benefits of verified accounts:
-                                      </Heading>
-                                      <Flex direction='column' gap='2'>
-                                        <Card>
-                                          <Flex gap='4' align='center' p='1'>
-                                            <Box>
-                                              <Text size='8' weight='bold'>
-                                                1
-                                              </Text>
-                                            </Box>
-                                            <Box>
-                                              <Box>100% chance for Airdrop claim</Box>
-                                            </Box>
-                                          </Flex>
-                                        </Card>
+                  {/*      <Sheet*/}
+                  {/*        isOpen={isModalVisible}*/}
+                  {/*        onClose={() => handleDialogClose()}*/}
+                  {/*        detent='content-height'*/}
+                  {/*      >*/}
+                  {/*        <Theme appearance='dark'>*/}
+                  {/*          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>*/}
+                  {/*            <Sheet.Header />*/}
+                  {/*            <Sheet.Content>*/}
+                  {/*              <Theme>*/}
+                  {/*                <Grid gap='8' m='4' mb='5' align='center'>*/}
+                  {/*                  <Flex justify='center'>*/}
+                  {/*                    <ResponsibleImage src={star} />*/}
+                  {/*                  </Flex>*/}
+                  {/*                  <Grid gap='2'>*/}
+                  {/*                    <Heading mb='2' align='center'>*/}
+                  {/*                      Benefits of verified accounts:*/}
+                  {/*                    </Heading>*/}
+                  {/*                    <Flex direction='column' gap='2'>*/}
+                  {/*                      <Card>*/}
+                  {/*                        <Flex gap='4' align='center' p='1'>*/}
+                  {/*                          <Box>*/}
+                  {/*                            <Text size='8' weight='bold'>*/}
+                  {/*                              1*/}
+                  {/*                            </Text>*/}
+                  {/*                          </Box>*/}
+                  {/*                          <Box>*/}
+                  {/*                            <Box>100% chance for Airdrop claim</Box>*/}
+                  {/*                          </Box>*/}
+                  {/*                        </Flex>*/}
+                  {/*                      </Card>*/}
 
-                                        <Card>
-                                          <Flex gap='4' align='center' p='1'>
-                                            <Box>
-                                              <Text size='8' weight='bold'>
-                                                2
-                                              </Text>
-                                            </Box>
-                                            <Box>
-                                              <Box>Auto approve to any Quest</Box>
-                                            </Box>
-                                          </Flex>
-                                        </Card>
+                  {/*                      <Card>*/}
+                  {/*                        <Flex gap='4' align='center' p='1'>*/}
+                  {/*                          <Box>*/}
+                  {/*                            <Text size='8' weight='bold'>*/}
+                  {/*                              2*/}
+                  {/*                            </Text>*/}
+                  {/*                          </Box>*/}
+                  {/*                          <Box>*/}
+                  {/*                            <Box>Auto approve to any Quest</Box>*/}
+                  {/*                          </Box>*/}
+                  {/*                        </Flex>*/}
+                  {/*                      </Card>*/}
 
-                                        <Card>
-                                          <Flex gap='4' align='center' p='1'>
-                                            <Box>
-                                              <Text size='8' weight='bold'>
-                                                3
-                                              </Text>
-                                            </Box>
-                                            <Flex justify='between' width='100%' align='center'>
-                                              <Box>
-                                                <Box>
-                                                  High priority for checking task completion
-                                                </Box>
-                                              </Box>
-                                              <img
-                                                style={{
-                                                  height: 'var(--font-size-8)',
-                                                }}
-                                                src={yeyEmoji}
-                                              />
-                                            </Flex>
-                                          </Flex>
-                                        </Card>
-                                      </Flex>
-                                    </Grid>
+                  {/*                      <Card>*/}
+                  {/*                        <Flex gap='4' align='center' p='1'>*/}
+                  {/*                          <Box>*/}
+                  {/*                            <Text size='8' weight='bold'>*/}
+                  {/*                              3*/}
+                  {/*                            </Text>*/}
+                  {/*                          </Box>*/}
+                  {/*                          <Flex justify='between' width='100%' align='center'>*/}
+                  {/*                            <Box>*/}
+                  {/*                              <Box>*/}
+                  {/*                                High priority for checking task completion*/}
+                  {/*                              </Box>*/}
+                  {/*                            </Box>*/}
+                  {/*                            <img*/}
+                  {/*                              style={{*/}
+                  {/*                                height: 'var(--font-size-8)',*/}
+                  {/*                              }}*/}
+                  {/*                              src={yeyEmoji}*/}
+                  {/*                            />*/}
+                  {/*                          </Flex>*/}
+                  {/*                        </Flex>*/}
+                  {/*                      </Card>*/}
+                  {/*                    </Flex>*/}
+                  {/*                  </Grid>*/}
 
-                                    <GlowingButton
-                                      size='4'
-                                      onClick={handleVerify}
-                                      style={{ width: '100%' }}
-                                    >
-                                      Verify Now (5 USDT)
-                                    </GlowingButton>
-                                  </Grid>
-                                </Theme>
-                              </Sheet.Content>
-                            </Sheet.Container>
-                            <Sheet.Backdrop onTap={() => handleDialogClose()} />
-                          </Theme>
-                        </Sheet>
-                      </Grid>
-                    </Card>
-                  )}
+                  {/*                  <GlowingButton*/}
+                  {/*                    size='4'*/}
+                  {/*                    onClick={handleVerify}*/}
+                  {/*                    style={{ width: '100%' }}*/}
+                  {/*                  >*/}
+                  {/*                    Verify Now (5 USDT)*/}
+                  {/*                  </GlowingButton>*/}
+                  {/*                </Grid>*/}
+                  {/*              </Theme>*/}
+                  {/*            </Sheet.Content>*/}
+                  {/*          </Sheet.Container>*/}
+                  {/*          <Sheet.Backdrop onTap={() => handleDialogClose()} />*/}
+                  {/*        </Theme>*/}
+                  {/*      </Sheet>*/}
+                  {/*    </Grid>*/}
+                  {/*  </Card>*/}
+                  {/*)}*/}
 
                   <Card m='4'>
                     <Grid gap='4'>
@@ -563,20 +553,20 @@ export default function ProfilePage() {
                         <Heading mr='3'>Profile</Heading>
                       </Flex>
                       <DataList.Root>
-                        <DataList.Item align='center'>
-                          <DataList.Label minWidth='88px'>Status</DataList.Label>
-                          <Skeleton loading={userDataLoading}>
-                            <DataList.Value>
-                              <Badge
-                                color={userDataResponse?.isVerified ? 'jade' : 'red'}
-                                variant='soft'
-                                radius='full'
-                              >
-                                {userDataResponse?.isVerified ? 'Verified' : 'Not Verified'}
-                              </Badge>
-                            </DataList.Value>
-                          </Skeleton>
-                        </DataList.Item>
+                        {/*<DataList.Item align='center'>*/}
+                        {/*  <DataList.Label minWidth='88px'>Status</DataList.Label>*/}
+                        {/*  <Skeleton loading={userDataLoading}>*/}
+                        {/*    <DataList.Value>*/}
+                        {/*      <Badge*/}
+                        {/*        color={userDataResponse?.isVerified ? 'jade' : 'red'}*/}
+                        {/*        variant='soft'*/}
+                        {/*        radius='full'*/}
+                        {/*      >*/}
+                        {/*        {userDataResponse?.isVerified ? 'Verified' : 'Not Verified'}*/}
+                        {/*      </Badge>*/}
+                        {/*    </DataList.Value>*/}
+                        {/*  </Skeleton>*/}
+                        {/*</DataList.Item>*/}
                         <DataList.Item>
                           <DataList.Label minWidth='88px'>ID</DataList.Label>
                           <Skeleton loading={userDataLoading}>

@@ -419,18 +419,17 @@ const ProjectPage = () => {
                           <Box>Await Approval</Box>
                           <Box>
                             <Text size='1' color='gray'>
-                              Wait until the advertiser approves{' '}
-                              <Badge color='yellow'>
-                                <Text
-                                  style={{ textDecoration: 'underline' }}
-                                  onClick={() => {
-                                    handleDialogClose();
-                                    navigate('/profile?tab=account&action=verify');
-                                  }}
-                                >
-                                  Or Verify now
-                                </Text>
-                              </Badge>
+                              Wait until the advertiser approves {/*<Badge color='yellow'>*/}
+                              {/*  <Text*/}
+                              {/*    style={{ textDecoration: 'underline' }}*/}
+                              {/*    onClick={() => {*/}
+                              {/*      handleDialogClose();*/}
+                              {/*      navigate('/profile?tab=account&action=verify');*/}
+                              {/*    }}*/}
+                              {/*  >*/}
+                              {/*    Or Verify now*/}
+                              {/*  </Text>*/}
+                              {/*</Badge>*/}
                             </Text>
                           </Box>
                         </Box>

@@ -210,7 +210,7 @@ export default function PublicProjectsPage() {
             <Flex direction='row'>
               <Tabs.Trigger value='public'>All</Tabs.Trigger>
               <Tabs.Trigger value='my'>
-                {user?.role === 'creator' ? 'Joined Quests' : 'My Quests'}
+                {user?.role === 'creator' ? 'My Quests' : 'Created Quests'}
               </Tabs.Trigger>
             </Flex>
           </Flex>
@@ -239,7 +239,7 @@ export default function PublicProjectsPage() {
                           >
                             <Select
                               onChange={handleCategoryChange}
-                              placeholder='Category'
+                              placeholder='Social'
                               closeMenuOnSelect={true}
                               components={animatedComponents}
                               options={CATEGORIES}

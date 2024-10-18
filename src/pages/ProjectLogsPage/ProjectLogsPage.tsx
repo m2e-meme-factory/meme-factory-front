@@ -202,6 +202,7 @@ const ProjectLogsPage = () => {
               onChange={handleMessageChange}
               value={message}
               style={{ width: '85%', height: '8vh' }}
+              maxLength={500}
             />
             <IconButton size='4' onClick={handleMessageSend}>
               <PaperPlaneIcon />

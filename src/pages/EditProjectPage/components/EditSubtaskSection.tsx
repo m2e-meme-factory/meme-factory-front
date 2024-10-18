@@ -94,7 +94,7 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <TextField.Root required />
+                    <TextField.Root maxLength={50} required />
                   </Form.Control>
                 </Form.Field>
 
@@ -112,7 +112,7 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <TextArea required />
+                    <TextArea required maxLength={200} />
                   </Form.Control>
                 </Form.Field>
 
@@ -133,12 +133,12 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
                     </Form.Message>
                   </div>
                   <Form.Control asChild>
-                    <TextField.Root type='number' required />
+                    <TextField.Root type='number' maxLength={50} required />
                   </Form.Control>
                 </Form.Field>
 
                 <Form.Submit asChild>
-                  <Button style={{ marginTop: 10 }}>Create subtask</Button>
+                  <Button style={{ marginTop: 10 }}>Create task</Button>
                 </Form.Submit>
               </Flex>
             </Form.Root>
@@ -152,7 +152,7 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
             (subtask) =>
               subtask.id && (
                 <EditedSubtask
-                  key={subtask.id} // Ensure to add a unique key prop
+                  key={subtask.id}
                   setTasksToDelete={setTasksToDelete}
                   id={subtask.id}
                   setSubtask={setSubtasks}

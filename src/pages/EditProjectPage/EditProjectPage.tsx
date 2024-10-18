@@ -309,7 +309,12 @@ const EditProjectPage = () => {
         <Text weight='medium' mt='3' mb='1'>
           Title
         </Text>
-        <TextField.Root value={title} placeholder='Enter a title' onChange={handleTitleChange}>
+        <TextField.Root
+          maxLength={100}
+          value={title}
+          placeholder='Enter a title'
+          onChange={handleTitleChange}
+        >
           <TextField.Slot />
         </TextField.Root>
         {formErrors.find((error) => error.field === 'title') && (
@@ -490,7 +495,7 @@ const EditProjectPage = () => {
         <Select
           defaultValue={categoryOptionSelected}
           onChange={handleCategoryChange}
-          placeholder='Select category'
+          placeholder='Select social'
           closeMenuOnSelect={true}
           components={animatedComponents}
           options={CATEGORIES}

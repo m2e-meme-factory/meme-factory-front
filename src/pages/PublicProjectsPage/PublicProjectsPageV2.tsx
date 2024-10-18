@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Flex, Button, Box, Tabs, ScrollArea } from '@radix-ui/themes';
+import { Flex, Button, Box, Tabs } from '@radix-ui/themes';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useInView } from 'react-intersection-observer';
@@ -28,6 +28,7 @@ import {
   CUSTOM_SELECT_STYLES_SINGLE,
 } from '../../styles/customSelectStyles';
 import NothingFound from '../../shared/components/NothingFound';
+import { SORTING_DIRECTIONS } from '../../shared/consts/sortingDirections';
 
 const BlockObserver = styled.div`
   height: 40px;
@@ -37,18 +38,13 @@ const BlockObserver = styled.div`
 const SwiperContainer = styled.div`
   .swiper {
     width: 100%;
-    height: calc(100vh - 100px);
+    height: 90vh;
     z-index: 0;
   }
 
   .swiper-slide {
     overflow-y: auto;
-    padding-bottom: 60px;
     z-index: 0;
-  }
-
-  .swiper-pagination {
-    bottom: 10px !important;
   }
 `;
 
@@ -63,15 +59,18 @@ export default function PublicProjectsPage() {
 
   const [tempTags, setTempTags] = useState<string[]>([]);
   const [tempCategory, setTempCategory] = useState<string | null>(null);
+  const [tempSorting, setTempSorting] = useState<string | null>(null);
 
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
+  const [sorting, setSorting] = useState<string | null>(null);
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isEnd, setIsEnd] = useState(false);
-  const [isColumn, setIsColumn] = useState(false);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const tagsRef = useRef<HTMLDivElement | null>(null);
+  const sortingRef = useRef<HTMLDivElement | null>(null);
   const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.PUBLIC);
   const [showFindButton, setShowFindButton] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
@@ -82,11 +81,14 @@ export default function PublicProjectsPage() {
 
   const previousTags = useRef<string[]>(tags);
   const previousCategory = useRef<string | null>(category);
+  const previousSorting = useRef<string | null>(sorting);
+
   const animatedComponents = makeAnimated();
 
   const { data, isLoading } = useGetPublicProjects({
     tags: tags,
     category: category ? category : '',
+    sorting: sorting ? sorting : '',
     page: currentPage,
     limit: DISPLAY_LIMIT,
   });
@@ -124,7 +126,8 @@ export default function PublicProjectsPage() {
       if (data.data.projects.length > 0) {
         if (
           JSON.stringify(previousTags.current) !== JSON.stringify(tags) ||
-          previousCategory.current !== category
+          previousCategory.current !== category ||
+          previousSorting.current !== sorting
         ) {
           setProjects(data.data.projects);
         } else {
@@ -134,6 +137,7 @@ export default function PublicProjectsPage() {
         loadedPages.current.add(currentPage);
         previousTags.current = tags;
         previousCategory.current = category;
+        previousSorting.current = sorting;
         setIsEnd(false);
       } else {
         if (currentPage === 1) {
@@ -150,19 +154,6 @@ export default function PublicProjectsPage() {
     }
   }, [inView]);
 
-  useEffect(() => {
-    if (categoryRef.current && tagsRef.current) {
-      const categoryHeight = categoryRef.current.offsetHeight;
-      const tagsHeight = tagsRef.current.offsetHeight;
-
-      if (tagsHeight > categoryHeight) {
-        setIsColumn(true);
-      } else {
-        setIsColumn(false);
-      }
-    }
-  }, [tempCategory, tempTags]);
-
   const handleTagsChange = (selectedTags: MultiValue<Option>) => {
     const tags = selectedTags.map((tag) => tag.value);
     setTempTags(tags);
@@ -175,13 +166,21 @@ export default function PublicProjectsPage() {
     setShowFindButton(true);
   };
 
+  const handleSortingChange = (selectedDirection: SingleValue<Option>) => {
+    const sortingDirection = selectedDirection ? selectedDirection.value : null;
+    setTempSorting(sortingDirection);
+    setShowFindButton(true);
+  };
+
   const handleFindButtonClick = () => {
-    if (tempTags.length === 0 && tempCategory === null) {
+    if (tempTags.length === 0 && tempCategory === null && tempSorting === null) {
       setTags([]);
       setCategory(null);
+      setSorting(null);
     } else {
       setTags(tempTags);
       setCategory(tempCategory);
+      setSorting(tempSorting);
     }
 
     setCurrentPage(1);
@@ -214,29 +213,6 @@ export default function PublicProjectsPage() {
                 {user?.role === 'creator' ? 'Joined Quests' : 'My Quests'}
               </Tabs.Trigger>
             </Flex>
-            {!(user?.role === 'advertiser' && currentTab === 'my') && (
-              <Button variant='outline' size='1' mr='3' onClick={() => setIsOpened(!isOpened)}>
-                <svg
-                  height='var(--text-size-2)'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
-                  <g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g>
-                  <g id='SVGRepo_iconCarrier'>
-                    <path
-                      d='M6 12h12M4 8h16M8 16h8'
-                      stroke='currentColor'
-                      stroke-width='1.5'
-                      stroke-miterlimit='10'
-                      stroke-linecap='round'
-                    ></path>
-                  </g>
-                </svg>
-                Filters
-              </Button>
-            )}
           </Flex>
         </Tabs.List>
 
@@ -246,67 +222,71 @@ export default function PublicProjectsPage() {
               <div className='swiper-wrapper'>
                 <div className='swiper-slide'>
                   <Flex direction='column'>
-                    <Box style={{ display: isOpened ? 'block' : 'none' }}>
-                      <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
-                        <Flex direction='column' gap='2' mb='1'>
-                          <Flex
-                            direction={isColumn ? 'column' : 'row'}
-                            gap='2'
-                            mb='1'
-                            wrap='wrap'
-                            style={{
-                              fontSize: 'var(--text-size-2)',
-                            }}
+                    <Flex justify='between' p='4' pt='0' pb='0' direction='column'>
+                      <Flex direction='column' gap='2' mb='1'>
+                        <Flex
+                          gap='2'
+                          mb='1'
+                          direction='row'
+                          style={{
+                            fontSize: 'var(--text-size-2)',
+                          }}
+                        >
+                          <div
+                            ref={categoryRef}
+                            className='swiper-no-swiping'
+                            style={{ width: '45%' }}
                           >
-                            <div
-                              style={{
-                                flexGrow: 1,
-                                width: isColumn ? '100%' : 'auto',
-                              }}
-                              ref={categoryRef}
-                              className='swiper-no-swiping'
-                            >
-                              <Select
-                                onChange={handleCategoryChange}
-                                placeholder='Select category'
-                                closeMenuOnSelect={true}
-                                components={animatedComponents}
-                                options={CATEGORIES}
-                                styles={CUSTOM_SELECT_STYLES_SINGLE}
-                                isMulti={false}
-                                isSearchable={false}
-                                isClearable={true}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                flexGrow: 1,
-                                width: isColumn ? '100%' : 'auto',
-                              }}
-                              ref={tagsRef}
-                              className='swiper-no-swiping'
-                            >
-                              <Select
-                                onChange={handleTagsChange}
-                                placeholder='Select tags'
-                                closeMenuOnSelect={false}
-                                components={animatedComponents}
-                                isMulti
-                                options={TAGS}
-                                styles={CUSTOM_SELECT_STYLES_MULTI}
-                                isSearchable={false}
-                                isClearable={true}
-                              />
-                            </div>
-                          </Flex>
-                          {showFindButton && (
-                            <Button variant='outline' onClick={handleFindButtonClick}>
-                              Find
-                            </Button>
-                          )}
+                            <Select
+                              onChange={handleCategoryChange}
+                              placeholder='Category'
+                              closeMenuOnSelect={true}
+                              components={animatedComponents}
+                              options={CATEGORIES}
+                              styles={CUSTOM_SELECT_STYLES_SINGLE}
+                              isMulti={false}
+                              isSearchable={false}
+                              isClearable={true}
+                            />
+                          </div>
+                          <div
+                            ref={sortingRef}
+                            className='swiper-no-swiping'
+                            style={{ flexGrow: 1 }}
+                          >
+                            <Select
+                              onChange={handleSortingChange}
+                              placeholder='Sorting'
+                              closeMenuOnSelect={true}
+                              components={animatedComponents}
+                              options={SORTING_DIRECTIONS}
+                              styles={CUSTOM_SELECT_STYLES_SINGLE}
+                              isSearchable={false}
+                              isClearable={true}
+                              isMulti={false}
+                            />
+                          </div>
                         </Flex>
+                        <div ref={tagsRef} className='swiper-no-swiping'>
+                          <Select
+                            onChange={handleTagsChange}
+                            placeholder='Tags'
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            isMulti
+                            options={TAGS}
+                            styles={CUSTOM_SELECT_STYLES_MULTI}
+                            isSearchable={false}
+                            isClearable={true}
+                          />
+                        </div>
+                        {showFindButton && (
+                          <Button variant='outline' onClick={handleFindButtonClick}>
+                            Find
+                          </Button>
+                        )}
                       </Flex>
-                    </Box>
+                    </Flex>
                     <Flex m='4' mb='8' gap='3' direction='column'>
                       <AutoTasksProjectCard />
                       {projects.map((project, index) => (

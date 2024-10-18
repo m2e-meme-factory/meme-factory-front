@@ -9,7 +9,7 @@ export const useGetPublicProjects = (params: GetPublicProjectsParams) => {
   const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
-    queryKey: ['getPublicProjects', params.page, params.category, params.tags],
+    queryKey: ['getPublicProjects', params.page, params.category, params.tags, params.sorting],
     queryFn: async () => {
       try {
         return await getPublicProjects({ params: params });

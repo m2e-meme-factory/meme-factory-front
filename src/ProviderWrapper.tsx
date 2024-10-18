@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './shared/utils/redux/store';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
-import { useExpand, WebAppProvider } from '@vkruglikov/react-telegram-web-app';
+import { useExpand, useWebApp, WebAppProvider } from '@vkruglikov/react-telegram-web-app';
 
 const queryClient = new QueryClient();
 const manifestUrl =
@@ -11,8 +11,13 @@ const manifestUrl =
 
 const ProviderWrapper = ({ children }: { children: ReactNode }) => {
   const [isExpanded, expand] = useExpand();
+  const WebApp = useWebApp();
+
   useEffect(() => {
     expand();
+    WebApp.setBottomBarColor('#121212');
+    WebApp.setBackgroundColor('#121212');
+    WebApp.setHeaderColor('#121212');
   }, []);
 
   return (

@@ -35,10 +35,11 @@ import { BASE_URL } from '../../shared/consts/baseURL';
 import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { DrawingPinIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import { Sheet } from 'react-modal-sheet';
 import yeyEmoji from '../../shared/imgs/yey.png';
 import styled from 'styled-components';
+import AttachmentCard from './components/AttachmentCard/AttachmentCard';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -67,6 +68,7 @@ const ProjectPage = () => {
   const [progress, setProgress] = useState<ProjectProgress>();
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [downloadSheetVisible, setDownloadSheetVisible] = useState(false);
 
   const webapp = useWebApp();
 
@@ -145,6 +147,14 @@ const ProjectPage = () => {
     setModalVisible(true);
   };
 
+  const handleDownloadSheetClose = () => {
+    setDownloadSheetVisible(false);
+  };
+
+  const handleDownloadSheetOpen = () => {
+    setDownloadSheetVisible(true);
+  };
+
   const setCurrentUserRoleFromProgress = (status: string) => {
     if (status === 'accepted') {
       setCurrentUserRole('projectMember');
@@ -161,23 +171,6 @@ const ProjectPage = () => {
 
   const handleEditClick = () => {
     navigate('edit');
-  };
-
-  const handleDownload = async () => {
-    if (!isDownloading) {
-      setIsDownloading(true);
-      if (currentProject && user) {
-        await showToastWithPromise({
-          success: 'Files are downloaded in telegram chat',
-          error: 'Error occurred while downloading files',
-          process: 'Downloading files',
-          callback: () =>
-            downloadFiles({
-              params: { projectId: currentProject.project.id, telegramId: user.telegramId },
-            }),
-        });
-      }
-    }
   };
 
   const handleApplyClick = () => {
@@ -228,20 +221,37 @@ const ProjectPage = () => {
           {/* Description */}
           <Flex mb='2' mt='2' direction='column'>
             <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
-            {currentProject && currentProject.project.files.length > 0 && (
-              <Link
-                mt='1'
-                style={{ alignSelf: 'end', cursor: 'pointer', fontSize: 'var(--font-size-2)' }}
-                onClick={handleDownload}
-              >
-                <i>Download attachments</i>
-              </Link>
-            )}
+            <Button mt='2' onClick={() => handleDownloadSheetOpen()}>
+              Download attachments
+            </Button>
+            <Sheet
+              isOpen={downloadSheetVisible}
+              onClose={() => handleDownloadSheetClose()}
+              detent='content-height'
+            >
+              <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+                <Sheet.Header />
+                <Sheet.Content>
+                  <Theme style={{ width: '100%' }}>
+                    <Flex direction='row' gap='2' mb='2' align='center'>
+                      <DrawingPinIcon width='20' height='20' />
+                      <Text size='5'>Attachments:</Text>
+                    </Flex>
+                    <Flex direction='column' gap='2' justify='center'>
+                      {currentProject?.project.files.map((file) => (
+                        <AttachmentCard name={file} key={file} />
+                      ))}
+                    </Flex>
+                  </Theme>
+                </Sheet.Content>
+              </Sheet.Container>
+              <Sheet.Backdrop onTap={() => handleDownloadSheetClose()} />
+            </Sheet>
           </Flex>
 
-          {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
+          {(currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') && (
             <AccentButton my='2' size='4' onClick={() => navigate(`logs/${user?.id}`)}>
-              Veiw History
+              View History
             </AccentButton>
           )}
 

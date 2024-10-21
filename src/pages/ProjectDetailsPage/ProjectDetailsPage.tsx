@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Button, Card, Flex, Heading, Skeleton, Text } from '@radix-ui/themes';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ChevronRightIcon, MagnifyingGlassIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -74,7 +74,9 @@ const ProjectDetailsPage = () => {
             <Text mb='2' color='gray'>
               Total spendings
             </Text>
-            {totalSpendingsLoading ? <Loading /> : <Heading>${totalSpendings}</Heading>}
+            <Skeleton loading={totalSpendingsLoading}>
+              <Heading>${totalSpendings}</Heading>
+            </Skeleton>
           </Flex>
           <Button onClick={() => navigate('/wallet?tab=transactions')}>
             <ChevronRightIcon /> Transactions

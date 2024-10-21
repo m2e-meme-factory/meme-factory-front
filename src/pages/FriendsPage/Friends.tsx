@@ -23,6 +23,7 @@ import WebappBackButton from '../../shared/components/WebappBackButton';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 import { showSuccessMessage } from '../../shared/utils/helpers/notify';
+import HandshakeAnimated from '../../shared/components/LottieIcons/Handshake/HandshakeAnimated';
 
 const ResponsibleImage = styled.img`
   height: 100px;
@@ -127,7 +128,7 @@ export default function Friends() {
     <>
       <WebappBackButton />
       <Flex m='4' justify='center'>
-        <ResponsibleImage src={handshake} />
+        <HandshakeAnimated />
       </Flex>
       <Heading mb='4' align='center' size='8'>
         Invite Friends

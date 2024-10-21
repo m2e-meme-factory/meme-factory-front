@@ -13,6 +13,7 @@ import projects from './../imgs/first_meme.png';
 import styled from 'styled-components';
 import useAnimationFrame from '../utils/animations/useAnimationFrame';
 import GlowingButton from './Buttons/GlowingButton';
+import CoinbagAnimated from './LottieIcons/Coinbag/CoinbagAnimated';
 
 const M2E = <Badge color='bronze'>M2E</Badge>;
 
@@ -201,15 +202,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               translate: '0.4s ease all',
             }}
           >
-            <img
-              src={moneybag}
-              alt='Profile illustration'
-              style={{
-                transform: 'translateY(10vh)',
-                width: '60%',
-                objectFit: 'contain',
-              }}
-            />
+            <CoinbagAnimated />
           </Flex>
           <StyledCard>
             <Box pt='2' pb='2'>

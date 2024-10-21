@@ -175,7 +175,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
           {icon}
 
           <Flex direction='column' ml='4'>
-            <Text size='4' weight='medium'>
+            <Text size='4' weight='medium' style={{ userSelect: 'text' }}>
               {title}
             </Text>
             <Text weight='medium' size='3' color='gray'>
@@ -199,7 +199,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
               <Theme>
                 <Flex m='4' gap='2' direction='column'>
                   <Flex mb='5' mt='4' direction={'column'} gap='2'>
-                    <Heading align='center'>{title}</Heading>
+                    <Heading align='center' style={{ userSelect: 'text' }}>
+                      {title}
+                    </Heading>
                     <Flex justify='center'>
                       <Badge
                         size='3'
@@ -225,7 +227,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     <Callout.Icon>
                       <InfoCircledIcon width={20} height={20} />
                     </Callout.Icon>
-                    <Callout.Text>{description}</Callout.Text>
+                    <Callout.Text style={{ userSelect: 'text' }}>{description}</Callout.Text>
                   </Callout.Root>
                   {category !== 'ref' && (
                     <Flex>

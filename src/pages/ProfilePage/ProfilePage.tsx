@@ -606,7 +606,11 @@ export default function ProfilePage() {
                           <AlertDialog.Title>Become Partner</AlertDialog.Title>
                           <AlertDialog.Description>
                             Give us some information about your project
-                            <TextArea style={{ minHeight: '100px' }} mt='4'></TextArea>
+                            <TextArea
+                              maxLength={500}
+                              style={{ minHeight: '100px' }}
+                              mt='4'
+                            ></TextArea>
                           </AlertDialog.Description>
                           <Flex gap='3' mt='4' justify='end'>
                             <AlertDialog.Cancel>

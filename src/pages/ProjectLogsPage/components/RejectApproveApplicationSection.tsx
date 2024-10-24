@@ -46,7 +46,7 @@ const RejectAcceptApplicationSection: FC<RejectAcceptApplicationSectionProps> = 
         <>
           <Dialog.Root>
             <Dialog.Trigger>
-              <Button color='green' mt='2'>
+              <Button color='green' mt='2' mx='1'>
                 Accept
               </Button>
             </Dialog.Trigger>
@@ -77,7 +77,7 @@ const RejectAcceptApplicationSection: FC<RejectAcceptApplicationSectionProps> = 
           </Dialog.Root>
           <Dialog.Root>
             <Dialog.Trigger>
-              <Button variant='outline' color='red' mt='2'>
+              <Button variant='outline' color='red' mt='2' mx='1'>
                 Reject
               </Button>
             </Dialog.Trigger>

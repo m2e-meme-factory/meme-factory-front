@@ -17,7 +17,7 @@ root.render(
     <Toaster
       position='top-center'
       containerStyle={{ zIndex: '99999 !important' }}
-      toastOptions={{ style: { zIndex: '99999 !important' }, duration: 5000 }}
+      toastOptions={{ style: { zIndex: '99999 !important' }, duration: 4000 }}
       reverseOrder={false}
     />
   </React.StrictMode>

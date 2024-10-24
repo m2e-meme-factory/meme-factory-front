@@ -56,6 +56,7 @@ const EditedSubtask: FC<SubtaskCardProps> = ({
     );
 
     setModalOpen(false);
+    setIsEditing(false);
   };
 
   return (

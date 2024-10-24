@@ -7,16 +7,16 @@ import {
   Flex,
   Heading,
   Text,
+  TextArea,
   Theme,
   Tooltip,
 } from '@radix-ui/themes';
-import { Sheet } from 'react-modal-sheet';
+import { Sheet, SheetRef } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserRoleInProject } from '../../ProjectPage';
 import { ProjectProgress } from 'api';
-import * as Form from '@radix-ui/react-form';
 import { useApplyTaskCompletion } from '../../../../shared/utils/api/hooks/task/useApplyTaskCompletion';
 import './index.css';
 
@@ -49,6 +49,10 @@ const SheetSubtaskCard = ({
   const [isModalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState<TaskStatus>('uncompleted');
   const applyTaskCompletionMutation = useApplyTaskCompletion();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [textareaValue, setTextareaValue] = useState('');
+  const ref = useRef<SheetRef>();
+  const snapTo = (i: number) => ref.current?.snapTo(i);
 
   useEffect(() => {
     if (!progress) {
@@ -72,11 +76,8 @@ const SheetSubtaskCard = ({
     setModalVisible(true);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const coverLetter = formData.get('cover-letter') as string;
-    applyTaskCompletionMutation.mutate({ params: { taskId: id, message: coverLetter } });
+  const handleSubmit = () => {
+    applyTaskCompletionMutation.mutate({ params: { taskId: id, message: textareaValue } });
     handleDialogClose();
   };
 
@@ -111,13 +112,16 @@ const SheetSubtaskCard = ({
           <Sheet
             isOpen={isModalVisible}
             onClose={() => handleDialogClose()}
-            detent='content-height'
+            detent='full-height'
+            snapPoints={[1, 0.8, 0]}
+            initialSnap={1}
+            ref={ref}
           >
             <Theme appearance='dark'>
               <Sheet.Container>
                 <Sheet.Header />
                 <Sheet.Content>
-                  <Theme style={{ width: '100%' }}>
+                  <Theme style={{ width: '100%', paddingBottom: '40px' }}>
                     <Flex m='4' gap='2' direction='column'>
                       <Flex mb='5' mt='4' direction={'column'} gap='2'>
                         <Heading align='center'>{title}</Heading>
@@ -145,55 +149,38 @@ const SheetSubtaskCard = ({
                         status === 'approved') &&
                         userRole !== 'projectOwner' &&
                         userRole !== 'guestAdvertiser' && (
-                          <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-                            <Form.Field className='FormField' name='cover-letter'>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'baseline',
-                                  justifyContent: 'space-between',
+                          <Flex direction='column' gap='5'>
+                            <Flex direction='column' gap='3'>
+                              <Text>Cover Letter</Text>
+                              <TextArea
+                                mb='10'
+                                maxLength={500}
+                                onBlur={() => snapTo(1)}
+                                onFocus={() => snapTo(0)}
+                                onChange={(e) => {
+                                  setTextareaValue(e.target.value);
                                 }}
+                              />
+                            </Flex>
+                            {userRole === 'projectMember' && (
+                              <Button
+                                onClick={() => handleSubmit()}
+                                style={{ height: '40px', fontSize: '18px' }}
                               >
-                                <Form.Label className='FormLabel'>Cover Letter</Form.Label>
-                              </div>
-                              <Form.Control asChild>
-                                <textarea className='Textarea' required />
-                              </Form.Control>
-                              <Form.Message className='FormMessage' match='valueMissing'>
-                                Please enter a cover letter
-                              </Form.Message>
-                              <Form.Message
-                                className='FormMessage'
-                                match={(value) => value.length <= 10}
-                              >
-                                Cover letter must be more than 10 characters
-                              </Form.Message>
-                            </Form.Field>
-                            <Form.Submit asChild>
-                              <Flex justify='center' style={{ width: '87vw' }}>
-                                {userRole === 'projectMember' && (
-                                  <button
-                                    className='ProposalButton'
-                                    style={{ marginTop: 10, width: '100%' }}
-                                  >
-                                    Submit
-                                  </button>
-                                )}
-                                {(userRole === 'unconfirmedMember' ||
-                                  userRole === 'guestCreator') && (
-                                  <Tooltip content='Join the project to apply for the task'>
-                                    <button
-                                      className='ProposalButtonDisabled'
-                                      style={{ marginTop: 10, width: '100%' }}
-                                      disabled={true}
-                                    >
-                                      Submit
-                                    </button>
-                                  </Tooltip>
-                                )}
-                              </Flex>
-                            </Form.Submit>
-                          </Form.Root>
+                                Submit
+                              </Button>
+                            )}
+                            {(userRole === 'unconfirmedMember' || userRole === 'guestCreator') && (
+                              <Tooltip content='Join the project to apply for the task'>
+                                <Button
+                                  disabled={true}
+                                  style={{ height: '40px', fontSize: '18px' }}
+                                >
+                                  Submit
+                                </Button>
+                              </Tooltip>
+                            )}
+                          </Flex>
                         )}
                     </Flex>
                   </Theme>

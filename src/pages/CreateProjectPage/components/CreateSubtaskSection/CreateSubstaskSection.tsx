@@ -51,7 +51,7 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
   };
 
   return (
-    <Flex mb='3' direction='column'>
+    <Flex mb='3' mt='4' direction='column'>
       <Flex align='center' mt='3'>
         <Heading size='5' mr='3'>
           Tasks Creation

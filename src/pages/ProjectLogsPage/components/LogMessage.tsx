@@ -14,7 +14,7 @@ const MessageContainer = styled.div<{ color: string; side: 'left' | 'right' }>`
   border-radius: 16px;
   padding: 12px 16px;
   max-width: 60%;
-  margin: 8px 0;
+  margin: 8px 8px;
   ${({ side }) => (side === 'left' ? 'margin-right: 20vw;' : 'margin-left: 20vw;')};
   word-wrap: break-word;
   overflow-wrap: break-word;

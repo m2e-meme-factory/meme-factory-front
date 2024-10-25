@@ -20,6 +20,9 @@ const EditProjectPage = lazy(() => import('./pages/EditProjectPage/EditProjectPa
 const FastTasksPage = lazy(() => import('./pages/AutotasksProject/FastTasksPage'));
 const PublicProjectsPage = lazy(() => import('./pages/PublicProjectsPage/PublicProjectsPageV2'));
 const TutorialPage = lazy(() => import('./pages/TutorialPage/TutorialPage'));
+const BecomeAdvertiserPage = lazy(
+  () => import('./pages/BecomeAdvertiserPage/BecomeAdvertiserPage')
+);
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +75,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <FastTasksPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: ROUTES.BECOME_ADVERTISER,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <BecomeAdvertiserPage />
           </Suspense>
         ),
       },

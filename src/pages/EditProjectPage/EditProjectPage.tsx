@@ -333,6 +333,12 @@ const EditProjectPage = () => {
           </Text>
         )}
 
+        <EditSubtaskSection
+          setSubtasks={setSubtasks}
+          subtasks={subtasks}
+          setTasksToDelete={setSubtasksToDelete}
+        />
+
         <Text weight='medium' mt='3' mb='1'>
           Banner
         </Text>
@@ -508,12 +514,6 @@ const EditProjectPage = () => {
             {formErrors.find((error) => error.field === 'category')?.message}
           </Text>
         )}
-
-        <EditSubtaskSection
-          setSubtasks={setSubtasks}
-          subtasks={subtasks}
-          setTasksToDelete={setSubtasksToDelete}
-        />
 
         <Button
           style={{ padding: '20px' }}

@@ -280,6 +280,8 @@ const CreateProjectPage = () => {
           </Text>
         )}
 
+        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
+
         <Text weight='medium' mt='3' mb='1'>
           Banner
         </Text>
@@ -413,9 +415,12 @@ const CreateProjectPage = () => {
           </Text>
         )}
 
-        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
-
-        <Button style={{ marginTop: 10 }} onClick={handleCreateProject} loading={createLoading}>
+        <Button
+          mt='5'
+          style={{ height: '40px', fontSize: '18px' }}
+          onClick={handleCreateProject}
+          loading={createLoading}
+        >
           Create Project
         </Button>
       </Flex>

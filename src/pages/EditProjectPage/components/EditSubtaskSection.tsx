@@ -1,21 +1,11 @@
-import {
-  Flex,
-  Heading,
-  IconButton,
-  Separator,
-  Button,
-  TextField,
-  TextArea,
-  Dialog,
-  Card,
-} from '@radix-ui/themes';
-import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
+import { Flex, Heading, IconButton, Separator, Button, Card } from '@radix-ui/themes';
+import { PlusIcon } from '@radix-ui/react-icons';
 import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
 import { TaskInfo, UpdateTaskDTO } from 'api';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';
-import EditedSubtask from './EditedSubtask';
 import formStyles from '../../CreateProjectPage/components/Subtask/form.module.css';
+import EditedSubtaskV2 from './EditedSubtaskV2';
 
 interface CreateSubtaskSectionProps {
   subtasks: UpdateTaskDTO[];
@@ -56,7 +46,7 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
   };
 
   return (
-    <Flex mb='3' direction='column'>
+    <Flex mb='3' mt='4' direction='column'>
       <Flex align='center' mt='3'>
         <Heading size='5' mr='3'>
           Tasks Creation
@@ -140,7 +130,7 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
           subtasks.map(
             (subtask) =>
               subtask.id && (
-                <EditedSubtask
+                <EditedSubtaskV2
                   key={subtask.id}
                   setTasksToDelete={setTasksToDelete}
                   id={subtask.id}

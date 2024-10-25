@@ -108,11 +108,7 @@ const SheetSubtaskCard = ({
               <CaretRightIcon width={20} height={20} />
             </Button>
           )}
-          <Sheet
-            isOpen={isModalVisible}
-            onClose={() => handleDialogClose()}
-            detent='content-height'
-          >
+          <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='full-height'>
             <Theme appearance='dark'>
               <Sheet.Container>
                 <Sheet.Header />

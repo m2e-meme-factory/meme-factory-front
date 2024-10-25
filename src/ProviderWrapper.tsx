@@ -18,6 +18,8 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
     WebApp.setBottomBarColor('#121212');
     WebApp.setBackgroundColor('#121212');
     WebApp.setHeaderColor('#121212');
+    WebApp.disableVerticalSwipes();
+    WebApp.enableClosingConfirmation();
   }, []);
 
   return (

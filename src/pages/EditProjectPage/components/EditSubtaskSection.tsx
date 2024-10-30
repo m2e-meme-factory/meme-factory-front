@@ -1,19 +1,11 @@
-import {
-  Flex,
-  Heading,
-  IconButton,
-  Separator,
-  Button,
-  TextField,
-  TextArea,
-  Dialog,
-} from '@radix-ui/themes';
-import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
-import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Flex, Heading, IconButton, Separator, Button, Card } from '@radix-ui/themes';
+import { PlusIcon } from '@radix-ui/react-icons';
+import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
 import { TaskInfo, UpdateTaskDTO } from 'api';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';
-import EditedSubtask from './EditedSubtask';
+import formStyles from '../../CreateProjectPage/components/Subtask/form.module.css';
+import EditedSubtaskV2 from './EditedSubtaskV2';
 
 interface CreateSubtaskSectionProps {
   subtasks: UpdateTaskDTO[];
@@ -34,6 +26,7 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
   setTasksToDelete,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,110 +42,96 @@ const EditSubtaskSection: FC<CreateSubtaskSectionProps> = ({
 
     setSubtasks((prevSubtasks) => [...prevSubtasks, data as TaskInfo]);
     setModalOpen(false);
+    formRef.current?.click();
   };
 
   return (
-    <Flex mb='3' direction='column'>
+    <Flex mb='3' mt='4' direction='column'>
       <Flex align='center' mt='3'>
         <Heading size='5' mr='3'>
           Tasks Creation
         </Heading>
 
-        <Dialog.Root open={modalOpen}>
-          <Dialog.Trigger>
-            <IconButton size='1' onClick={() => setModalOpen(true)}>
-              <PlusIcon />
-            </IconButton>
-          </Dialog.Trigger>
-          <Dialog.Content>
-            <Flex justify='between' align='center'>
-              <Dialog.Title>Create Task</Dialog.Title>
-              <Dialog.Close>
-                <Button
-                  mb='3'
-                  onClick={() => setModalOpen(false)}
-                  aria-label='Close'
-                  variant='soft'
-                >
-                  <Cross2Icon />
-                </Button>
-              </Dialog.Close>
-            </Flex>
-            <Form.Root onSubmit={handleSubmit}>
-              <Flex direction='column' gap='2'>
-                <Form.Field name='title'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label>Title</Form.Label>
-                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='valueMissing'>
-                      Please enter a title
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <TextField.Root required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Field name='description'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label>Description</Form.Label>
-                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='valueMissing'>
-                      Please enter a description
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <TextArea required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Field name='price'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label>Price</Form.Label>
-                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='valueMissing'>
-                      Please enter a price
-                    </Form.Message>
-                    <Form.Message style={{ color: 'red', fontSize: '12px' }} match='typeMismatch'>
-                      Please enter a valid price
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <TextField.Root type='number' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Submit asChild>
-                  <Button style={{ marginTop: 10 }}>Create subtask</Button>
-                </Form.Submit>
-              </Flex>
-            </Form.Root>
-          </Dialog.Content>
-        </Dialog.Root>
+        <IconButton size='1' onClick={() => setModalOpen(true)}>
+          <PlusIcon />
+        </IconButton>
       </Flex>
       <Separator my='3' size='4' />
       <Flex direction='column'>
+        <Card style={{ display: modalOpen ? 'block' : 'none' }}>
+          <Form.Root ref={formRef} className={formStyles.FormRoot} onSubmit={handleSubmit}>
+            <Form.Field className='FormField' name='title'>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Form.Label className={formStyles.FormLabel}>Title</Form.Label>
+                <Form.Message className={formStyles.FormMessage} match='valueMissing'>
+                  Please enter a title
+                </Form.Message>
+              </div>
+              <Form.Control asChild>
+                <input className={formStyles.Input} type='text' required />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Field
+              className={formStyles.FormField}
+              style={{ marginTop: '15px' }}
+              name='description'
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Form.Label className={formStyles.FormLabel}>Description</Form.Label>
+                <Form.Message className={formStyles.FormMessage} match='valueMissing'>
+                  Please enter a description
+                </Form.Message>
+              </div>
+              <Form.Control asChild>
+                <textarea className={formStyles.Textarea} required />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Field className={formStyles.FormField} name='price'>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Form.Label className={formStyles.FormLabel}>Price</Form.Label>
+                <Form.Message className={formStyles.FormMessage} match='valueMissing'>
+                  Please enter a price
+                </Form.Message>
+                <Form.Message className={formStyles.FormMessage} match='typeMismatch'>
+                  Please enter a valid price
+                </Form.Message>
+              </div>
+              <Form.Control asChild>
+                <input className={formStyles.Input} type='number' required />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Submit asChild>
+              <Button style={{ marginTop: 10, width: '100%' }}>Save changes</Button>
+            </Form.Submit>
+          </Form.Root>
+        </Card>
         {subtasks.length > 0 &&
           subtasks.map(
             (subtask) =>
               subtask.id && (
-                <EditedSubtask
-                  key={subtask.id} // Ensure to add a unique key prop
+                <EditedSubtaskV2
+                  key={subtask.id}
                   setTasksToDelete={setTasksToDelete}
                   id={subtask.id}
                   setSubtask={setSubtasks}

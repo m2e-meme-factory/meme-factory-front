@@ -19,7 +19,7 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project, minPrice, ma
   return (
     <Flex justify='between' direction='column'>
       {/* <Box> */}
-        {/* <Flex display="flex" direction="column" align="end">
+      {/* <Flex display="flex" direction="column" align="end">
           <Text mb='3' color='yellow' weight='medium'>
             {project.category}
           </Text>

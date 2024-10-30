@@ -50,7 +50,7 @@ const RejectApproveTaskSection: FC<RejectApproveSectionProps> = ({
   };
 
   return (
-    <Flex direction='row' justify="between">
+    <Flex direction='row' justify='between'>
       {!taskApproved && !taskRejected && (
         <>
           <Dialog.Root>

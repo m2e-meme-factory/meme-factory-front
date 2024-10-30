@@ -33,6 +33,7 @@ declare module 'api' {
   export interface GetPublicProjectsParams {
     tags?: string[];
     category?: string;
+    sorting?: string;
     page: number;
     limit: number;
   }

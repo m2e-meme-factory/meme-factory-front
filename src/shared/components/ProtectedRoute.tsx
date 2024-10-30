@@ -24,7 +24,6 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
 
   useEffect(() => {
     if (data) {
-      console.log("auth_token: ", data.data.token)
       dispatch(setUser(data.data.user));
       localStorage.setItem('token', data.data.token);
     }

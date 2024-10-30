@@ -1,7 +1,7 @@
 .bannerContainer {
     width: 20vh;
-    max-height: 15vh;
-    min-width: 20vh;
+    height: 15vh;
+    margin: 5px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -256,7 +256,12 @@ const CreateProjectPage = () => {
         <Text weight='medium' mt='3' mb='1'>
           Title
         </Text>
-        <TextField.Root value={title} placeholder='Enter a title' onChange={handleTitleChange}>
+        <TextField.Root
+          maxLength={100}
+          value={title}
+          placeholder='Enter a title'
+          onChange={handleTitleChange}
+        >
           <TextField.Slot />
         </TextField.Root>
         {formErrors.find((error) => error.field === 'title') && (
@@ -274,6 +279,8 @@ const CreateProjectPage = () => {
             {formErrors.find((error) => error.field === 'description')?.message}
           </Text>
         )}
+
+        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
 
         <Text weight='medium' mt='3' mb='1'>
           Banner
@@ -394,7 +401,7 @@ const CreateProjectPage = () => {
         </Text>
         <Select
           onChange={handleCategoryChange}
-          placeholder='Select category'
+          placeholder='Select social'
           closeMenuOnSelect={false}
           components={animatedComponents}
           options={CATEGORIES}
@@ -408,9 +415,12 @@ const CreateProjectPage = () => {
           </Text>
         )}
 
-        <CreateSubtaskSection setSubtasks={setSubtasks} subtasks={subtasks} />
-
-        <Button style={{ marginTop: 10 }} onClick={handleCreateProject} loading={createLoading}>
+        <Button
+          mt='5'
+          style={{ height: '40px', fontSize: '18px' }}
+          onClick={handleCreateProject}
+          loading={createLoading}
+        >
           Create Project
         </Button>
       </Flex>

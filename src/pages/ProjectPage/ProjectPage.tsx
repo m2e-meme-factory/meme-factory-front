@@ -7,11 +7,9 @@ import {
   Text,
   Dialog,
   TextArea,
-  Link,
   Separator,
   Box,
   Theme,
-  Card,
   IconButton,
 } from '@radix-ui/themes';
 import { UnorderedListOutlined } from '@ant-design/icons';
@@ -24,21 +22,22 @@ import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
 import { setProject } from '../../shared/utils/redux/project/projectSlice';
 import { Project, ProjectProgress } from 'api';
-import { downloadFiles } from '../../shared/utils/api/requests/files/downloadFile';
 import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
 import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
 import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
-import { showErrorMessage, showToastWithPromise } from '../../shared/utils/helpers/notify';
+import { showErrorMessage } from '../../shared/utils/helpers/notify';
 import { Role } from '../../shared/consts/userRoles';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
 import { BASE_URL } from '../../shared/consts/baseURL';
 import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
+import { DrawingPinIcon } from '@radix-ui/react-icons';
 import { Sheet } from 'react-modal-sheet';
-import yeyEmoji from '../../shared/imgs/yey.png';
 import styled from 'styled-components';
+import AttachmentCard from './components/AttachmentCard/AttachmentCard';
+import QuestGuide from './components/QuestGuide/QuestGuide';
+import FileSection from './components/FileSection/FileSection';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -61,12 +60,10 @@ const ProjectPage = () => {
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
-  const [isDownloading, setIsDownloading] = useState(false);
   const [isApplyLoading, setIsApplyLoading] = useState(false);
   const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
   const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
-  const [isModalVisible, setModalVisible] = useState(false);
 
   const webapp = useWebApp();
 
@@ -137,14 +134,6 @@ const ProjectPage = () => {
     }
   };
 
-  const handleDialogClose = () => {
-    setModalVisible(false);
-  };
-
-  const handleDialogOpen = () => {
-    setModalVisible(true);
-  };
-
   const setCurrentUserRoleFromProgress = (status: string) => {
     if (status === 'accepted') {
       setCurrentUserRole('projectMember');
@@ -161,23 +150,6 @@ const ProjectPage = () => {
 
   const handleEditClick = () => {
     navigate('edit');
-  };
-
-  const handleDownload = async () => {
-    if (!isDownloading) {
-      setIsDownloading(true);
-      if (currentProject && user) {
-        await showToastWithPromise({
-          success: 'Files are downloaded in telegram chat',
-          error: 'Error occurred while downloading files',
-          process: 'Downloading files',
-          callback: () =>
-            downloadFiles({
-              params: { projectId: currentProject.project.id, telegramId: user.telegramId },
-            }),
-        });
-      }
-    }
   };
 
   const handleApplyClick = () => {
@@ -207,15 +179,13 @@ const ProjectPage = () => {
     : fallbackBanner;
 
   return (
-    <Flex direction='column'>
+    <Flex direction='column' style={{ userSelect: 'text' }}>
       {/* Banner */}
       <Flex className={styles.bannerContainer}>
         <img src={bannerLink} alt='banner' className={styles.bannerImage} />
       </Flex>
       {/* Title */}
-      <FixedHelpButton size='3' onClick={handleDialogOpen}>
-        <QuestionMarkCircledIcon width='25' height='25' />
-      </FixedHelpButton>
+      <QuestGuide />
       <Flex direction='column'>
         <Flex m='4' mt='2' gap='5' direction='column'>
           <Heading weight='medium'>{currentProject?.project.title}</Heading>
@@ -228,20 +198,12 @@ const ProjectPage = () => {
           {/* Description */}
           <Flex mb='2' mt='2' direction='column'>
             <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
-            {currentProject && currentProject.project.files.length > 0 && (
-              <Link
-                mt='1'
-                style={{ alignSelf: 'end', cursor: 'pointer', fontSize: 'var(--font-size-2)' }}
-                onClick={handleDownload}
-              >
-                <i>Download attachments</i>
-              </Link>
-            )}
+            <FileSection currentProject={currentProject} />
           </Flex>
 
-          {currentUserRole !== 'projectOwner' && currentUserRole !== 'guestCreator' && (
+          {(currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') && (
             <AccentButton my='2' size='4' onClick={() => navigate(`logs/${user?.id}`)}>
-              Veiw History
+              View History
             </AccentButton>
           )}
 
@@ -377,119 +339,6 @@ const ProjectPage = () => {
           </Box>
         </Flex>
       </Flex>
-
-      <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
-        <Theme appearance='dark'>
-          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
-            <Sheet.Header />
-            <Sheet.Content>
-              <Theme>
-                <Heading mb='4' align='center' size='8'>
-                  What should I do?
-                </Heading>
-
-                <Box m='4' mb='8'>
-                  <Flex direction='column' gap='2'>
-                    <Card>
-                      <Flex gap='4' align='center' p='1'>
-                        <Box>
-                          <Text size='8' weight='bold'>
-                            1
-                          </Text>
-                        </Box>
-                        <Box>
-                          <Box>Join Quest</Box>
-                          <Box>
-                            <Text size='1' color='gray'>
-                              Join Quest with message based on requirements
-                            </Text>
-                          </Box>
-                        </Box>
-                      </Flex>
-                    </Card>
-
-                    <Card>
-                      <Flex gap='4' align='center' p='1'>
-                        <Box>
-                          <Text size='8' weight='bold'>
-                            2
-                          </Text>
-                        </Box>
-                        <Box>
-                          <Box>Await Approval</Box>
-                          <Box>
-                            <Text size='1' color='gray'>
-                              Wait until the advertiser approves{' '}
-                              <Badge color='yellow'>
-                                <Text
-                                  style={{ textDecoration: 'underline' }}
-                                  onClick={() => {
-                                    handleDialogClose();
-                                    navigate('/profile?tab=account&action=verify');
-                                  }}
-                                >
-                                  Or Verify now
-                                </Text>
-                              </Badge>
-                            </Text>
-                          </Box>
-                        </Box>
-                      </Flex>
-                    </Card>
-
-                    <Card>
-                      <Flex gap='4' align='center' p='1'>
-                        <Box>
-                          <Text size='8' weight='bold'>
-                            3
-                          </Text>
-                        </Box>
-                        <Flex justify='between' width='100%' align='center'>
-                          <Box>
-                            <Box>Complete Tasks</Box>
-                            <Box>
-                              <Text size='1' color='gray'>
-                                Complete listed tasks
-                              </Text>
-                            </Box>
-                          </Box>
-                        </Flex>
-                      </Flex>
-                    </Card>
-
-                    <Card>
-                      <Flex gap='4' align='center' p='1'>
-                        <Box>
-                          <Text size='8' weight='bold'>
-                            4
-                          </Text>
-                        </Box>
-                        <Flex justify='between' width='100%' align='center'>
-                          <Box>
-                            <Box>Get Reward</Box>
-                            <Box>
-                              <Text size='1' color='gray'>
-                                Get <Badge color='bronze'>M2E</Badge> for each completed task
-                              </Text>
-                            </Box>
-                          </Box>
-                          <img
-                            style={{
-                              height: 'var(--font-size-8)',
-                            }}
-                            src={yeyEmoji}
-                          />
-                        </Flex>
-                      </Flex>
-                    </Card>
-                  </Flex>
-                </Box>
-              </Theme>
-            </Sheet.Content>
-          </Sheet.Container>
-          <Sheet.Backdrop onTap={() => handleDialogClose()} />
-        </Theme>
-      </Sheet>
     </Flex>
   );
 };

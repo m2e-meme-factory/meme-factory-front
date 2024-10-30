@@ -15,4 +15,12 @@ export const TAGS = [
     value: 'reels',
     label: 'Reels',
   },
+  {
+    value: 'hot',
+    label: 'Hot 🔥',
+  },
+  {
+    value: 'stories',
+    label: 'Stories',
+  },
 ];

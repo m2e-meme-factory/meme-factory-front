@@ -59,7 +59,7 @@ export const getPublicProjects = (
   config: GetPublicProjectsConfig
 ): Promise<AxiosResponse<PaginatedProjects>> => {
   const newConfig = addAuthorizationHeader(config.config);
-  const { tags = [], category, page, limit } = config.params;
+  const { tags = [], category, page, limit, sorting } = config.params;
 
   const params = new URLSearchParams();
 
@@ -67,6 +67,10 @@ export const getPublicProjects = (
     tags.forEach((tag) => params.append('tags', tag));
   }
   if (category) params.append('category', category);
+  if (sorting) {
+    params.append('sortOrder', sorting);
+    params.append('sortBy', 'price');
+  }
   if (page) params.append('page', String(page));
   if (limit) params.append('limit', String(limit));
 

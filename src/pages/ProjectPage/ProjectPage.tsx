@@ -34,7 +34,7 @@ import { BASE_URL } from '../../shared/consts/baseURL';
 import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { DrawingPinIcon, InfoCircledIcon } from '@radix-ui/react-icons';
+import { DrawingPinIcon, InfoCircledIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import { Sheet } from 'react-modal-sheet';
 import styled from 'styled-components';
 import AttachmentCard from './components/AttachmentCard/AttachmentCard';
@@ -111,7 +111,7 @@ const ProjectPage = () => {
 
     if (currentUserRole === 'projectOwner') return setTabIndex(1);
     if (currentUserRole === 'projectMember') return setTabIndex(2);
-    
+
     if (seen) setTabIndex(1);
   }, [currentUserRole])
 
@@ -164,7 +164,6 @@ const ProjectPage = () => {
     }
   };
 
-
   if (isLoading || isProjectProgressLoading) {
     return <Loading />;
   }
@@ -172,54 +171,76 @@ const ProjectPage = () => {
   return (
     <>
       <SwipableTabs
-      tabs={[
-        {
-          name: (<InfoCircledIcon color="var(--accent-indicator)" width="1.25rem" height="auto" />),
-          scrollable: false,
-          slideClass: "screen-without-tabs",
-          component: (
-            <PreProjectPage projectId={currentProject?.project.id || ""} btnClickHandler={() => {
-              setShowGuide(false);
-              setTabIndex(1);
-            }} />
-          ) 
-        },
-        {
-          name: 'Overview',
-          scrollable: true,
-          slideClass: "screen-without-tabs",
-          component: (
-                <ProjectOverivew
+        tabs={[
+          {
+            name: (<InfoCircledIcon color="var(--accent-indicator)" width="1.25rem" height="auto" />),
+            scrollable: false,
+            slideClass: "screen-without-tabs",
+            component: (
+              <PreProjectPage projectId={currentProject?.project.id || ""} btnClickHandler={() => {
+                setShowGuide(false);
+                setTabIndex(1);
+              }} />
+            )
+          },
+          {
+            name: 'Overview',
+            scrollable: true,
+            slideClass: "screen-without-tabs",
+            component: (
+              <ProjectOverivew
+                currentProject={currentProject}
+                setCurrentUserRole={setCurrentUserRole}
+                btnClickHandler={() => { }}
+              />
+            ),
+          },
+          {
+            name: "Tasks",
+            scrollable: true,
+            component: <ProjectTasks
               currentProject={currentProject}
-              setCurrentUserRole={setCurrentUserRole}
-              btnClickHandler={() => {}}
-            />
-          ),
-        },
-        {
-          name: "Tasks",
-          scrollable: true,
-          component: <ProjectTasks
-            currentProject={currentProject}
-            currentUserRole={currentUserRole}
-            progress={progress}
-          />,
-        },
-        {
-          name: "History",
-          scrollable: false,
-          slideClass: "screen-without-tabs",
-          component: (currentProject) ? (
-            <ProjectHistory currentProject={currentProject} user={undefined} />
-          ) : (
-            <Loading />
+              currentUserRole={currentUserRole}
+              progress={progress}
+            />,
+          },
+          {
+            name: "History",
+            scrollable: false,
+            slideClass: "screen-without-tabs",
+            component: (currentProject) ? (
+              <ProjectHistory currentProject={currentProject} user={undefined} />
+            ) : (
+              <Loading />
+            )
+          },
+          ...(
+            currentUserRole == 'projectOwner' ?
+            [
+              {
+                name: (
+                    <Pencil2Icon 
+                      color="var(--accent-indicator)" 
+                      width="1.25rem" 
+                      height="auto"
+                      onClick={() => navigate('details')} 
+                    />
+                ),
+                scrollable: false,
+                slideClass: "screen-without-tabs",
+                component: (
+                  <></>
+                )
+              }
+            ] : []
           )
-        },
-      ]}
-      currentTabIndex={tabIndex}
-      justifyTabs="center"
-    />
-    <Button />
+        ]
+
+        }
+        currentTabIndex={tabIndex}
+        justifyTabs="center"
+      />
+      <Button />
     </>
   );
 };

@@ -31,14 +31,6 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: ROUTES.PROJECT_PAGE,
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ProjectPage />
-          </Suspense>
-        ),
-      },
-      {
         path: ROUTES.FRIENDS,
         element: (
           <Suspense fallback={<Loading />}>
@@ -118,6 +110,14 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: ROUTES.PROJECT_PAGE,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute element={<ProjectPage />} />
+      </Suspense>
+    ),
   },
   {
     path: ROUTES.LOGS,

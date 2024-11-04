@@ -11,6 +11,8 @@ import {
   Box,
   Theme,
   IconButton,
+  Callout,
+  ScrollArea,
 } from '@radix-ui/themes';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
@@ -32,12 +34,22 @@ import { BASE_URL } from '../../shared/consts/baseURL';
 import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
 import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { DrawingPinIcon } from '@radix-ui/react-icons';
+import { DrawingPinIcon, InfoCircledIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import { Sheet } from 'react-modal-sheet';
 import styled from 'styled-components';
 import AttachmentCard from './components/AttachmentCard/AttachmentCard';
 import QuestGuide from './components/QuestGuide/QuestGuide';
 import FileSection from './components/FileSection/FileSection';
+import ShibaAnimated from '../../shared/components/LottieIcons/Shiba/Shiba';
+import Lottie from 'lottie-react';
+import shiba from "../../shared/components/LottieIcons/Shiba/shiba.json";
+import PreProjectPage, { getSeenProjectGuide, setSeenProjectGuide } from './PreProjectPage';
+import ProjectOverivew from './ProjectOverivew';
+import ProjectTasks from './ProjectTasks';
+import SwipableTabs from '../../shared/components/useSwipableTabs';
+import useSwipableTabs from '../../shared/components/useSwipableTabs';
+import { GuideList } from './components/QuestGuide/GuideList';
+import ProjectHistory from '../ProjectHistory/ProjectHistory';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -53,6 +65,7 @@ const FixedHelpButton = styled(IconButton)`
   z-index: 5;
 `;
 
+
 const ProjectPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,10 +73,10 @@ const ProjectPage = () => {
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
-  const [isApplyLoading, setIsApplyLoading] = useState(false);
-  const [applicationMessage, setApplicationMessage] = useState<string>('');
   const [progress, setProgress] = useState<ProjectProgress>();
-  const [applyBlocked, setApplyBlocked] = useState<boolean>(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isShowGuide, setShowGuide] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const webapp = useWebApp();
 
@@ -90,11 +103,17 @@ const ProjectPage = () => {
     projectId: id ?? '',
     userId: user?.id,
   });
-  const { mutate: applyMutation } = useApplyForProject(
-    setIsApplyLoading,
-    setApplyBlocked,
-    setCurrentUserRole
-  );
+
+
+  useEffect(() => {
+    const seen = getSeenProjectGuide(id?.toString() ?? '');
+    setShowGuide(!seen);
+
+    if (currentUserRole === 'projectOwner') return setTabIndex(1);
+    if (currentUserRole === 'projectMember') return setTabIndex(2);
+
+    if (seen) setTabIndex(1);
+  }, [currentUserRole])
 
   useEffect(() => {
     if (projectInfoResponse) {
@@ -118,6 +137,7 @@ const ProjectPage = () => {
       determineUserRole(user, currentProject);
     }
   }, [user, currentProject]);
+
 
   const determineUserRole = (user: RootState['user']['user'] | undefined, project: Project) => {
     if (!user) return;
@@ -148,199 +168,82 @@ const ProjectPage = () => {
     return <Loading />;
   }
 
-  const handleEditClick = () => {
-    navigate('edit');
-  };
-
-  const handleApplyClick = () => {
-    setIsApplyLoading(true);
-    if (currentProject && user) {
-      if (applicationMessage.trim() === '') {
-        showErrorMessage('Application message cannot be empty or just whitespace.');
-        setIsApplyLoading(false);
-        return;
-      }
-
-      applyMutation({
-        params: {
-          projectId: currentProject.project.id,
-          message: applicationMessage,
-        },
-      });
-    }
-  };
-
-  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setApplicationMessage(event.target.value);
-  };
-
-  const bannerLink = currentProject?.project.bannerUrl
-    ? `${BASE_URL}${currentProject?.project.bannerUrl}`
-    : fallbackBanner;
-
   return (
-    <Flex direction='column' style={{ userSelect: 'text' }}>
-      {/* Banner */}
-      <Flex className={styles.bannerContainer}>
-        <img src={bannerLink} alt='banner' className={styles.bannerImage} />
-      </Flex>
-      {/* Title */}
-      <QuestGuide />
-      <Flex direction='column'>
-        <Flex m='4' mt='2' gap='5' direction='column'>
-          <Heading weight='medium'>{currentProject?.project.title}</Heading>
-          {currentUserRole === 'projectOwner' && (
-            <Button onClick={handleEditClick} my='2' size='4'>
-              Edit project
-            </Button>
-          )}
+    <>
+      <SwipableTabs
+        tabs={[
+          {
+            name: (<InfoCircledIcon color="var(--accent-indicator)" width="1.25rem" height="auto" />),
+            scrollable: false,
+            slideClass: "screen-without-tabs",
+            component: (
+              <PreProjectPage projectId={currentProject?.project.id || ""} btnClickHandler={() => {
+                setShowGuide(false);
+                setTabIndex(1);
+              }} />
+            )
+          },
+          {
+            name: 'Overview',
+            scrollable: true,
+            slideClass: "screen-without-tabs",
+            component: (
+              <ProjectOverivew
+                currentProject={currentProject}
+                setCurrentUserRole={setCurrentUserRole}
+                btnClickHandler={() => { }}
+              />
+            ),
+          },
+          {
+            name: "Tasks",
+            scrollable: true,
+            component: <ProjectTasks
+              currentProject={currentProject}
+              currentUserRole={currentUserRole}
+              progress={progress}
+            />,
+          },
+          {
+            name: "History",
+            scrollable: false,
+            slideClass: "screen-without-tabs",
+            component: (currentProject) ? (
+              <ProjectHistory currentProject={currentProject} user={undefined} />
+            ) : (
+              <Loading />
+            )
+          },
+          ...(
+            currentUserRole == 'projectOwner' ?
+            [
+              {
+                name: (
+                    <Pencil2Icon 
+                      color="var(--accent-indicator)" 
+                      width="1.25rem" 
+                      height="auto"
+                      onClick={() => navigate('details')} 
+                    />
+                ),
+                scrollable: false,
+                slideClass: "screen-without-tabs",
+                component: (
+                  <></>
+                )
+              }
+            ] : []
+          )
+        ]
 
-          {/* Description */}
-          <Flex mb='2' mt='2' direction='column'>
-            <TaskDescriptionDisplay description={currentProject?.project.description || ''} />
-            <FileSection currentProject={currentProject} />
-          </Flex>
-
-          {(currentUserRole === 'projectMember' || currentUserRole === 'unconfirmedMember') && (
-            <AccentButton my='2' size='4' onClick={() => navigate(`logs/${user?.id}`)}>
-              View History
-            </AccentButton>
-          )}
-
-          {/* Join project modal */}
-          {currentUserRole === 'guestCreator' && (
-            <Dialog.Root>
-              <Dialog.Trigger>
-                <GlowingButton
-                  size='4'
-                  style={{
-                    width: '100%',
-                    fontSize: '18px',
-                    fontWeight: 'bold',
-                    marginBottom: '10px',
-                  }}
-                  disabled={applyBlocked}
-                >
-                  Join
-                </GlowingButton>
-              </Dialog.Trigger>
-
-              <Dialog.Content maxWidth='450px'>
-                <Dialog.Title>Apply for the project</Dialog.Title>
-
-                <Flex direction='column'>
-                  <TextArea
-                    style={{ height: '20vh' }}
-                    size='2'
-                    placeholder='I have one million subscribers on my Youtube channel'
-                    value={applicationMessage}
-                    onChange={handleTextAreaChange}
-                  />
-                </Flex>
-
-                <Flex gap='3' mt='4' justify='end'>
-                  <Dialog.Close>
-                    <Button variant='soft' color='gray'>
-                      Cancel
-                    </Button>
-                  </Dialog.Close>
-                  <Dialog.Close>
-                    <Button
-                      onClick={handleApplyClick}
-                      loading={isApplyLoading}
-                      disabled={applicationMessage.length === 0}
-                    >
-                      Join
-                    </Button>
-                  </Dialog.Close>
-                </Flex>
-              </Dialog.Content>
-            </Dialog.Root>
-          )}
-
-          {/* Tasks */}
-          <Flex direction='column' mb='3'>
-            <Flex align='center' mb='2'>
-              <UnorderedListOutlined style={{ color: 'yellow', marginRight: '8px' }} />
-              <Text weight='medium' size='5'>
-                Tasks
-              </Text>
-            </Flex>
-            <Flex gap='3' direction='column'>
-              {currentProject?.project.tasks &&
-                currentProject?.project.tasks.map((subtask, index) => (
-                  <SheetSubtaskCard
-                    key={index}
-                    id={subtask.task.id}
-                    description={subtask.task.description}
-                    price={subtask.task.price}
-                    title={subtask.task.title}
-                    progress={progress}
-                    userRole={currentUserRole || 'guestCreator'}
-                  />
-                ))}
-            </Flex>
-          </Flex>
-
-          {/* Category and tags */}
-          <Box>
-            <Flex align='center' direction='row' mb='2'>
-              {currentProject?.project && (
-                <>
-                  <Text weight='medium' mr='2'>
-                    {currentProject.project.category?.toUpperCase()}
-                  </Text>
-                  <Separator mr='2' orientation='vertical' />
-                  <Text weight='medium' size='5'>
-                    {currentProject.project.tags?.map((tag, index) => (
-                      <Badge size='3' key={index} style={{ marginLeft: index > 0 ? '8px' : '0' }}>
-                        {tag.toUpperCase()}
-                      </Badge>
-                    ))}
-                  </Text>
-                </>
-              )}
-            </Flex>
-
-            {/* Host */}
-            <Flex direction='row' align='center'>
-              <Flex
-                style={{
-                  width: '2.5rem',
-                  height: '2.5rem',
-                  borderRadius: '13px',
-                  background: 'var(--gray-2)',
-                }}
-                mr='2'
-                align='center'
-                justify='center'
-              >
-                <Text weight='bold' size='5'>
-                  {shortenString(
-                    currentProject
-                      ? currentProject.project.author.username
-                        ? currentProject.project.author.username[0].toUpperCase()
-                        : `User ${currentProject.project.author.telegramId}`[0].toUpperCase()
-                      : 'Meme factory'[0].toUpperCase()
-                  )}
-                </Text>
-              </Flex>
-
-              <Text weight='medium' size='6'>
-                {shortenString(
-                  currentProject
-                    ? currentProject.project.author.username
-                      ? currentProject.project.author.username
-                      : `User ${currentProject.project.author.telegramId}`
-                    : 'Meme factory'
-                )}
-              </Text>
-            </Flex>
-          </Box>
-        </Flex>
-      </Flex>
-    </Flex>
+        }
+        currentTabIndex={tabIndex}
+        justifyTabs="center"
+      />
+      <Button />
+    </>
   );
 };
+
 
 export default ProjectPage;

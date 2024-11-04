@@ -410,3 +410,8 @@ input, textarea {
   font-style: italic;
 }
 
+
+
+.toaster-container {
+  z-index: 3;
+}

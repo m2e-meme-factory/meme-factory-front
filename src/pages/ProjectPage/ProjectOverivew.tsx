@@ -75,8 +75,9 @@ const ProjectOverivew = (props: {
             <Lottie style={{ height: "100%" }} animationData={shibStrong} loop={true} autoplay={true} />
           </ResponsibleImageBox>
           <Heading align="center">{currentProject?.project.title}</Heading>
-          { }
-          <Text align="center" size="2" color='gray'>Read the Quest Overivew to continue</Text>
+          { !progress && 
+            <Text align="center" size="2" color='gray'>Read the Quest Overivew to continue</Text>
+          }
         </Flex>
         <Flex width="100%" direction="column" gap="4">
 

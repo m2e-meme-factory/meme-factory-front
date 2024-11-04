@@ -20,7 +20,7 @@ const FileSection = ({ currentProject }: FileSectionProps) => {
     setDownloadSheetVisible(true);
   };
   return (
-    <Button variant='outline' mt='2' onClick={() => handleDownloadSheetOpen()}>
+    <Button style={{width: "100%"}} variant='outline' onClick={() => handleDownloadSheetOpen()}>
       <Text>Download attachments</Text>
       <Sheet
         isOpen={downloadSheetVisible}

@@ -146,3 +146,8 @@
 .glowing :hover {
   box-shadow: 0px 0px 20px 0px var(--brand-color);
 }
+
+
+.toaster-container {
+  z-index: 3;
+}

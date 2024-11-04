@@ -52,6 +52,10 @@ const SwiperContainer = styled.div`
   .swiper-pagination {
     bottom: 10px !important;
   }
+
+  .screen-without-tabs {
+    height: calc(100vh - 40px);
+  }
 `;
 
 export default function ProfilePage() {

@@ -205,7 +205,7 @@ export default function Friends() {
 
             <Box asChild width='100%'>
               <Skeleton loading={refLoading}>
-                <Button onClick={handleShareClick}>Share</Button>
+                <GlowingButton size="3" onClick={handleShareClick}>Share</GlowingButton>
               </Skeleton>
             </Box>
             <DataList.Root mt='4'>

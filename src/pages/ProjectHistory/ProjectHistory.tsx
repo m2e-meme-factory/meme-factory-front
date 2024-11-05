@@ -12,6 +12,7 @@ import { shortenString } from '../../shared/utils/helpers/shortenString';
 import { ResponsibleImageBox } from '../../shared/components/ResponsibleImageBox';
 import Lottie from 'lottie-react';
 import lottieAnimation from '../../shared/components/LottieIcons/Eyes/eyes.json';
+import LottieInView from '../../shared/components/LottieIcons/InView/LottieInView';
 
 const ProjectHistory = (props: {
   user?: User
@@ -100,7 +101,7 @@ const ProjectHistory = (props: {
   return (
     <Flex direction="column" justify="center" align="center" height="100%">
       <ResponsibleImageBox>
-        <Lottie style={{ height: "80%" }} animationData={lottieAnimation} loop={true} autoplay={true} />
+        <LottieInView style={{ height: "80%" }} animationData={lottieAnimation} />
         <Heading size="6" align="center">
           Looks like there is no history yet...
         </Heading>

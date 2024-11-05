@@ -1,4 +1,4 @@
-import { Flex, Heading, TextArea, Text, Button, Card } from '@radix-ui/themes';
+import { Flex, Heading, TextArea, Text, Button, Card, Box } from '@radix-ui/themes';
 import React, { useCallback, useEffect } from 'react';
 import { showSuccessMessage } from '../../shared/utils/helpers/notify';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
@@ -26,7 +26,7 @@ const BecomeAdvertiserPage = () => {
   }, [handleBack, webapp]);
 
   return (
-    <Card m='4'>
+    <Box m='4'>
       <Flex direction='column' justify='start' align='start' gap='2'>
         <Heading>
           Become <span style={{ color: '#fecf0a' }}>partner</span>
@@ -50,7 +50,7 @@ const BecomeAdvertiserPage = () => {
           Become Advertiser
         </Button>
       </Flex>
-    </Card>
+    </Box>
   );
 };
 

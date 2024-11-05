@@ -18,7 +18,7 @@ import { UnorderedListOutlined } from '@ant-design/icons';
 import styles from './ProjectPage.module.css';
 import TaskDescriptionDisplay from './components/Description/DescriptionSection';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import Loading from '../../shared/components/Loading';
@@ -71,6 +71,9 @@ const ProjectPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') || "";
+
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
   const [progress, setProgress] = useState<ProjectProgress>();
@@ -109,6 +112,11 @@ const ProjectPage = () => {
     const seen = getSeenProjectGuide(id?.toString() ?? '');
     setShowGuide(!seen);
 
+    if (defaultTab == "guide") return setTabIndex(0);
+    if (defaultTab == "overview") return setTabIndex(1);
+    if (defaultTab == "tasks") return setTabIndex(2);
+    if (defaultTab == "history") return setTabIndex(3);
+
     if (currentUserRole === 'projectOwner') return setTabIndex(1);
     if (currentUserRole === 'projectMember') return setTabIndex(2);
 
@@ -123,9 +131,13 @@ const ProjectPage = () => {
   }, [projectInfoResponse, dispatch]);
 
   useEffect(() => {
+    console.log("progressesResponse: ", progressesResponse);
     if (progressesResponse && progressesResponse.data.length === 1) {
+
+
       const userProgress = progressesResponse.data[0];
       setProgress(userProgress);
+      console.log("userProgress: ", userProgress);
       if (userProgress) {
         setCurrentUserRoleFromProgress(userProgress.status);
       }
@@ -189,6 +201,7 @@ const ProjectPage = () => {
             slideClass: "screen-without-tabs",
             component: (
               <ProjectOverivew
+                progress={progress}
                 currentProject={currentProject}
                 setCurrentUserRole={setCurrentUserRole}
                 btnClickHandler={() => { }}
@@ -209,7 +222,7 @@ const ProjectPage = () => {
             scrollable: false,
             slideClass: "screen-without-tabs",
             component: (currentProject) ? (
-              <ProjectHistory currentProject={currentProject} user={undefined} />
+              <ProjectHistory currentProject={currentProject} user={user} />
             ) : (
               <Loading />
             )

@@ -28,6 +28,8 @@ import Swiper from 'swiper';
 import 'swiper/css';
 import styled from 'styled-components';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import DeveloperMenu from '../../shared/components/DevMenu/DeveloperMenu';
+import useDeveloperMenu from '../../shared/hooks/useDeveloperMenu';
 
 enum TabsOption {
   AIRDROP = 'airdrop',
@@ -128,8 +130,18 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
+
+  const { handleClick, menuVisible, setMenuVisible, clearTutorial, clearGuides } = useDeveloperMenu();
+  
   return (
-    <div style={{ height: '300px' }}>
+    <div style={{ height: '300px' }} onClick={handleClick}>
+      {menuVisible && (
+        <DeveloperMenu
+          onClearTutorial={clearTutorial}
+          onClearGuides={clearGuides}
+          version={process.env.REACT_APP_VERSION || "none"}
+        />
+      )}
       <Tabs.Root
         defaultValue={defaultTab}
         value={currentTab}

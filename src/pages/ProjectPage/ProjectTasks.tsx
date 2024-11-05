@@ -13,6 +13,7 @@ import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import FileSection from './components/FileSection/FileSection';
 import { ResponsibleImageBox } from '../../shared/components/ResponsibleImageBox';
+import LottieInView from '../../shared/components/LottieIcons/InView/LottieInView';
 
 
 const ProjectTasks = (props: {
@@ -29,7 +30,7 @@ const ProjectTasks = (props: {
       <Flex direction='column' style={{ userSelect: 'text' }} align="center" pl="4" pr="4" pb="4" gap="4">
       <Flex justify="center" align="center" direction="column" >
           <ResponsibleImageBox>
-            <Lottie style={{ height: "100%" }} animationData={comp} loop={true} autoplay={true} />
+          <LottieInView style={{ height: "100%" }} animationData={comp} />
           </ResponsibleImageBox>
           {/* <Lottie style={{ maxHeight: "40vh" }} animationData={comp} loop={true} autoplay={true} /> */}
           {/* <Heading mt="2" align="center">{currentProject?.project.title}</Heading> */}

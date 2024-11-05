@@ -23,6 +23,7 @@ import { Sheet } from 'react-modal-sheet';
 import { ResponsibleImageBox } from '../../shared/components/ResponsibleImageBox';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { shortenString } from '../../shared/utils/helpers/shortenString';
+import LottieInView from '../../shared/components/LottieIcons/InView/LottieInView';
 
 
 const ProjectOverivew = (props: {
@@ -72,7 +73,7 @@ const ProjectOverivew = (props: {
       <Flex direction='column' style={{ userSelect: 'text', paddingBottom: '108px' }} align="center" pl="4" pr="4" gap="4">
         <Flex justify="center" align="center" direction="column" >
           <ResponsibleImageBox>
-            <Lottie style={{ height: "100%" }} animationData={shibStrong} loop={true} autoplay={true} />
+          <LottieInView style={{ height: "100%" }} animationData={shibStrong} />
           </ResponsibleImageBox>
           <Heading align="center">{currentProject?.project.title}</Heading>
           { !progress && 

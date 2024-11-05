@@ -15,6 +15,7 @@ import QuestGuide from './components/QuestGuide/QuestGuide';
 import Lottie from 'lottie-react';
 import shiba from "../../shared/components/LottieIcons/Shiba/shiba.json";
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
+import LottieInView from '../../shared/components/LottieIcons/InView/LottieInView';
 
 const FixedHelpButton = styled(IconButton)`
   position: fixed;
@@ -60,7 +61,7 @@ const PreProjectPage = (props: {
     <>
       <Flex direction='column' style={{ userSelect: 'text', paddingBottom: "108px" }} align="center" pl="6" pr="6" gap="4">
         <Flex justify="center" align="center" direction="column" >
-          <Lottie style={{ maxHeight: "40vh" }} animationData={shiba} loop={true} autoplay={true} />
+          <LottieInView style={{ maxHeight: "40vh" }} animationData={shiba} />
           <Heading align="center">Ready to earn a lot of <b>M2E</b> points?</Heading>
         </Flex>
         <Box width="100%">

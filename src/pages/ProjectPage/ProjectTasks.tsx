@@ -73,44 +73,6 @@ const ProjectTasks = (props: {
                       userRole={currentUserRole || 'guestCreator'}
                     />
                   ))}
-                  {currentProject?.project.tasks &&
-                  currentProject?.project.tasks.map((subtask, index) => (
-                    <SheetSubtaskCard
-                      key={index}
-                      id={subtask.task.id}
-                      description={subtask.task.description}
-                      price={subtask.task.price}
-                      title={subtask.task.title}
-                      progress={progress}
-                      userRole={currentUserRole || 'guestCreator'}
-                    />
-                  ))}
-                  {currentProject?.project.tasks &&
-                  currentProject?.project.tasks.map((subtask, index) => (
-                    <SheetSubtaskCard
-                      key={index}
-                      id={subtask.task.id}
-                      description={subtask.task.description}
-                      price={subtask.task.price}
-                      title={subtask.task.title}
-                      progress={progress}
-                      userRole={currentUserRole || 'guestCreator'}
-                    />
-                  ))}
-                  {currentProject?.project.tasks &&
-                  currentProject?.project.tasks.map((subtask, index) => (
-                    <SheetSubtaskCard
-                      key={index}
-                      id={subtask.task.id}
-                      description={subtask.task.description}
-                      price={subtask.task.price}
-                      title={subtask.task.title}
-                      progress={progress}
-                      userRole={currentUserRole || 'guestCreator'}
-                    />
-                  ))}
-                  
-
               </Flex>
             </Flex>
         </Flex>

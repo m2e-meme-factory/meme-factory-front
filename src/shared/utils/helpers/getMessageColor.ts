@@ -8,6 +8,6 @@ export const getColorByType = (type: 'success' | 'failure' | 'info' | 'message')
       return '#0573cf';
     case 'message':
     default:
-      return 'var(--gray-2)';
+      return 'var(--gray-1)';
   }
 };

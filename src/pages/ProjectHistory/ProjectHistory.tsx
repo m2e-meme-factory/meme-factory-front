@@ -18,8 +18,8 @@ const ProjectHistory = (props: {
   user?: User
   currentProject: Project,
 }) => {
-  
-  const { user, currentProject } = props; 
+
+  const { user, currentProject } = props;
 
   const { data, isLoading, refetch } = useGetProgress({
     projectId: currentProject.project.id ?? '',
@@ -97,79 +97,97 @@ const ProjectHistory = (props: {
     window.scrollTo(0, 0);
   };
 
-  if (events.length === 0 && !isLoading) 
-  return (
-    <Flex direction="column" justify="center" align="center" height="100%">
-      <ResponsibleImageBox>
-        <LottieInView style={{ height: "80%" }} animationData={lottieAnimation} />
-        <Heading size="6" align="center">
-          Looks like there is no history yet...
-        </Heading>
-      </ResponsibleImageBox>
-    </Flex>
-  );
+  if (events.length <= 0 && !isLoading)
+    return (
+      <Flex direction="column" justify="center" align="center" height="100%">
+        <ResponsibleImageBox>
+          <LottieInView style={{ height: "80%" }} animationData={lottieAnimation} />
+          <Heading size="6" align="center">
+            Looks like there is no history yet...
+          </Heading>
+        </ResponsibleImageBox>
+      </Flex>
+    );
 
   return (
-      <>
-      <ScrollArea style={{ height: '100%' }} ref={scrollAreaRef}>
-        <Flex
-          direction='column'
-          style={{
-            height: '100%',
-            transition: 'height 0.3s ease',
-          }}
-          justify='between'
-        >
-            {events.map((event) => (
-              <LogMessage
-                key={event.id}
-                currentUserRole={user?.role ?? Role.CREATOR}
-                event={event}
-                messageType={getEventType(event.eventType)}
-                setNewEventCreated={setNewEventCreated}
-                creatorName={
-                  userProgress?.user.username
-                    ? userProgress?.user.username
-                    : `User ${userProgress?.user.telegramId}`
-                }
-                advertiserName={shortenString(
-                  currentProject
+    <>
+     <ScrollArea style={{ height: '100%' }} scrollbars='vertical' ref={scrollAreaRef}>
+        <Box height="100%" width="100%" style={{paddingBottom: '108px'}}>
+          {events.map((event) => (
+            <LogMessage
+              key={event.id}
+              currentUserRole={user?.role ?? Role.CREATOR}
+              event={event}
+              messageType={getEventType(event.eventType)}
+              setNewEventCreated={setNewEventCreated}
+              creatorName={
+                userProgress?.user.username
+                  ? userProgress?.user.username
+                  : `User ${userProgress?.user.telegramId}`
+              }
+              advertiserName={shortenString(
+                currentProject
+                  ? currentProject.project.author.username
                     ? currentProject.project.author.username
-                      ? currentProject.project.author.username
-                      : `User ${currentProject.project.author.telegramId}`
-                    : 'Project host'
-                )}
-                allEvents={events}
-              />
-            ))}
-        </Flex>
+                    : `User ${currentProject.project.author.telegramId}`
+                  : 'Project host'
+              )}
+              allEvents={events}
+            />
+          ))}
+        </Box>
       </ScrollArea>
-          <Flex
-            p='4'
-            // align='center'
-            style={{
-              backgroundColor: '#121212',
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          >
-            <Flex width='100%' justify='between' align='center' gapX='2'>
-              <TextArea
-                placeholder='Send a message…'
-                onChange={handleMessageChange}
-                value={message}
-                style={{ width: '100%', height: "8vh"}}
-                maxLength={500}
-                onBlur={handleBlur}
-              />
-              <IconButton size='4' onClick={handleMessageSend}>
-                <PaperPlaneIcon />
-              </IconButton>
-            </Flex>
-          </Flex>
-      </>
+      {/* <ScrollArea style={{ height: '100%', paddingBottom: '108px' }} ref={scrollAreaRef}>
+          {events.map((event) => (
+            <LogMessage
+              key={event.id}
+              currentUserRole={user?.role ?? Role.CREATOR}
+              event={event}
+              messageType={getEventType(event.eventType)}
+              setNewEventCreated={setNewEventCreated}
+              creatorName={
+                userProgress?.user.username
+                  ? userProgress?.user.username
+                  : `User ${userProgress?.user.telegramId}`
+              }
+              advertiserName={shortenString(
+                currentProject
+                  ? currentProject.project.author.username
+                    ? currentProject.project.author.username
+                    : `User ${currentProject.project.author.telegramId}`
+                  : 'Project host'
+              )}
+              allEvents={events}
+            />
+          ))}
+      </ScrollArea> */}
+
+      <Flex
+        p='4'
+        // align='center'
+        style={{
+          backgroundColor: '#121212',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+        }}
+      >
+        <Flex width='100%' justify='between' align='center' gapX='2'>
+          <TextArea
+            placeholder='Send a message…'
+            onChange={handleMessageChange}
+            value={message}
+            style={{ width: '100%', height: "8vh" }}
+            maxLength={500}
+            onBlur={handleBlur}
+          />
+          <IconButton size='4' onClick={handleMessageSend}>
+            <PaperPlaneIcon />
+          </IconButton>
+        </Flex>
+      </Flex>
+    </>
   );
 };
 

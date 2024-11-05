@@ -15,9 +15,9 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     expand();
-    WebApp.setBottomBarColor('#121212');
-    WebApp.setBackgroundColor('#121212');
-    WebApp.setHeaderColor('#121212');
+    WebApp.setBottomBarColor('#000');
+    WebApp.setBackgroundColor('#000');
+    WebApp.setHeaderColor('#000');
     WebApp.disableVerticalSwipes();
     WebApp.enableClosingConfirmation();
   }, []);

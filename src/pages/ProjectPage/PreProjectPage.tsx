@@ -74,7 +74,7 @@ const PreProjectPage = (props: {
           </Callout.Root>
 
           <Box asChild p="4" position="fixed" bottom="0" left="0" right="0">
-            <Card >
+            <Card style={{ background: 'var(--gray-1)' }} >
               <GlowingButton
                 onClick={() => handleDialogOpen()}
                 size='4'

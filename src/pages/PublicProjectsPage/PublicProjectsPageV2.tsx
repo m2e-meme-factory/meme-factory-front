@@ -205,8 +205,8 @@ export default function PublicProjectsPage() {
   return (
     <div {...swipeHandlers}>
       <Tabs.Root defaultValue='public' onValueChange={handleTabChange} value={currentTab}>
-        <Tabs.List justify='start'>
-          <Flex direction='row' justify='between' align='center' style={{ width: '100%' }}>
+        <Tabs.List justify='center'>
+          <Flex direction='row' justify='center' align='center' style={{ width: '100%' }}>
             <Flex direction='row'>
               <Tabs.Trigger value='public'>All</Tabs.Trigger>
               <Tabs.Trigger value='my'>

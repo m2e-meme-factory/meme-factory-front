@@ -254,6 +254,34 @@ export default function ProfilePage() {
 
                         <Link
                           style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                          to='/wallet'
+                        >
+                          <Card>
+                            <Flex justify='between' align='center' p='1'>
+                              <Box>
+                                <Box>Connect Wallet</Box>
+                              </Box>
+                              <Box>
+                                <svg xmlns='http://www.w3.org/2000/svg' height='1.7rem' viewBox='0 0 256 256'>
+                                  <rect width='256' height='256' fill='none' />
+                                  <path
+                                    d='M40,56V184a16,16,0,0,0,16,16H216a8,8,0,0,0,8-8V80a8,8,0,0,0-8-8H56A16,16,0,0,1,40,56h0A16,16,0,0,1,56,40H192'
+                                    fill='none'
+                                    stroke='currentColor'
+                                    stroke-linecap='round'
+                                    stroke-linejoin='round'
+                                    stroke-width='16'
+                                  />
+                                  <circle cx='180' cy='132' r='12' />
+                                </svg>
+                              </Box>
+                            </Flex>
+                          </Card>
+                        </Link>
+
+                        
+                        <Link
+                          style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
                           to='/projects/autotasks'
                         >
                           <Card>
@@ -274,7 +302,6 @@ export default function ProfilePage() {
                             </Flex>
                           </Card>
                         </Link>
-
 
                         <Link
                           style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}

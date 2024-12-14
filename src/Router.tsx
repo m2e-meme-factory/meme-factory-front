@@ -8,6 +8,8 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import UnauthorizedPage from './pages/UnauthorizedPage/UnauthorizedPage';
 import Loading from './shared/components/Loading';
 import PageWrapperForTabbed from './shared/components/PageWrapperForTabbed';
+import AllTasks from './pages/ProfilePage/AllTasks';
+import PostMemePage from './pages/ProfilePage/PostMemePage';
 
 const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
 const Friends = lazy(() => import('./pages/FriendsPage/Friends'));
@@ -78,11 +80,19 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: ROUTES.ALL_TASKS,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <AllTasks />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
     path: ROUTES.HOME,
-    element: <ProtectedRoute element={<PageWrapperForTabbed />} />,
+    element: <ProtectedRoute element={<PageWrapper />} />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -115,8 +125,14 @@ export const router = createBrowserRouter([
     path: ROUTES.PROJECT_PAGE,
     element: (
       <Suspense fallback={<Loading />}>
-        <ProtectedRoute element={<ProjectPage />} />
+        ProjectPage
       </Suspense>
+    ),
+  },
+  {
+    path: ROUTES.POST_MEME,
+    element: (
+        <ProtectedRoute element={<PostMemePage />} />
     ),
   },
   {

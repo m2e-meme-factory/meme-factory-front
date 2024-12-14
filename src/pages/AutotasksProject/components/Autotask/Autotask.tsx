@@ -180,7 +180,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
             </Text>
             <Text weight='medium' size='3' color='gray'>
               <i>
-                +{price} <Badge color='gold'>M2E</Badge>
+                +{price} <Badge color='bronze'>XP-M2E</Badge>
               </i>
             </Text>
           </Flex>
@@ -213,7 +213,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     </Flex>
                     <Text align='center' color='gray'>
                       <i>
-                        +{price} <Badge color='bronze'>M2E</Badge>
+                        +{price} <Badge color='bronze'>XP-M2E</Badge>
                       </i>
                     </Text>
                   </Flex>

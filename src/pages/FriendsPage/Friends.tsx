@@ -184,7 +184,7 @@ export default function Friends() {
                   <Box>You get Reward</Box>
                   <Box>
                     <Text size='1' color='gray'>
-                      You get 1000 <Badge color='bronze'>M2E</Badge> per each friend
+                      You get 5000 <Badge color='bronze'>XP-M2E</Badge> per each friend and 10% of his income
                     </Text>
                   </Box>
                 </Box>
@@ -220,9 +220,9 @@ export default function Friends() {
                   <DataList.Label minWidth='88px'>Total profit</DataList.Label>
                   <Skeleton loading={refLoading}>
                     <DataList.Value>
-                      {(refData?.count || 0) * 1000}
+                      {(refData?.count || 0) * 5000}
                       <Badge color='bronze' ml='2'>
-                        M2E
+                        XP-M2E
                       </Badge>
                     </DataList.Value>
                   </Skeleton>

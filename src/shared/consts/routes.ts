@@ -15,4 +15,6 @@ export const ROUTES = {
   TUTORIAL: '/tutorial',
   WALLET: '/wallet',
   BECOME_ADVERTISER: '/become-partner',
+  ALL_TASKS: '/all-tasks',
+  POST_MEME: '/post-meme',
 };

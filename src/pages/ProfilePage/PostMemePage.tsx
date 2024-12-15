@@ -5,6 +5,7 @@ import { PropsWithChildren, useState } from "react";
 import GlowingButton from "../../shared/components/Buttons/GlowingButton";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { ROUTES } from "../../shared/consts/routes";
+import WebappBackButton from "../../shared/components/WebappBackButton";
 
 
 
@@ -51,6 +52,7 @@ export default function PostMemePage() {
 
     return (
         <ScrollArea style={{ maxHeight: "100vh" }}>
+            <WebappBackButton />
             <Flex asChild p="4" pt='3' pb="6" gap="6" direction="column">
                 <Box>
                     <Step

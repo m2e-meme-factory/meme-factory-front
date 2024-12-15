@@ -318,6 +318,7 @@ export default function AllTasks() {
             <Sheet.Header />
             <Sheet.Content>
               <Theme>
+              <ScrollArea>
                 <Grid gap='8' mb='5' p="4" align='center'>
                   <Flex justify='center'>
                     <CoinbagAnimated />
@@ -393,6 +394,8 @@ export default function AllTasks() {
                     Get Reward
                   </GlowingButton>
                 </Grid>
+
+                </ScrollArea>
               </Theme>
             </Sheet.Content>
           </Sheet.Container>

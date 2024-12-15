@@ -117,11 +117,20 @@ const nfts = [
     "price": 0.7,
   },
 ]
+
+const cyberNft = {
+  "name": "Investor",
+  "img": "cool.png",
+  "discount": 40,
+  "amount": 100000,
+  "price": 0.6,
+}
+
 function numberWithSpaces(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-const NftCardItem = ({ nft, handleBuy }: { nft: any, handleBuy: () => void }) => {
+const NftCardItem = ({ nft, handleBuy, style }: { nft: any, handleBuy: () => void, style?: React.CSSProperties }) => {
 
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -143,7 +152,7 @@ const NftCardItem = ({ nft, handleBuy }: { nft: any, handleBuy: () => void }) =>
   };
 
   return (
-    <NftCard onClick={handleDialogOpen} glowing={nft.name == "Gold"}>
+    <NftCard style={style} onClick={handleDialogOpen} glowing={nft.name == "Gold"}>
       <Box>
         <Heading>{nft.name}</Heading>
         {nft.discount > 0 && <Badge color='green'>-{nft.discount}% discount</Badge>}
@@ -425,6 +434,14 @@ export default function ProfilePage() {
                     ))}
 
                   </Grid>
+                  <NftCardItem style={{height: "18vh"}} nft={cyberNft} handleBuy={() => {
+                        if (walletAddress) {
+                          showSuccessMessage('NFT bought successfully!');
+                        }
+                        else {
+                          showErrorMessage('Connect wallet first!');
+                        }
+                      }} />
                 </Grid>
               </Box>
             </Flex>

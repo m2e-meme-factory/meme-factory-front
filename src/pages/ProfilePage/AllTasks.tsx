@@ -12,6 +12,8 @@ import {
   Theme,
   Badge,
   Callout,
+  SegmentedControl,
+  Select,
 } from '@radix-ui/themes';
 import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '../../shared/utils/redux/user/userSlice';
@@ -261,7 +263,27 @@ export default function AllTasks() {
         <Flex asChild p="4" gap="6" direction="column">
           <Box pt='3' pb="3" style={{ maxHeight: '100%' }}>
             <Flex direction='column' gap='5'>
-              <Heading align="center">{numberWithSpaces(user ? Number(user.balance) : 0)} <Badge size="3" color="bronze">XP-M2E</Badge></Heading>
+              <Flex justify="between" align="center">
+                <Heading align="center">{numberWithSpaces(user ? Number(user.balance) : 0)} <Badge size="3" color="bronze">XP</Badge></Heading>
+                {/* <img
+                        src={`${process.env.PUBLIC_URL}/imgs/ru.png`}
+                        style={{
+                          objectFit: 'cover',
+                          height: '100%',
+                        }}
+                      /> */}
+                <Select.Root defaultValue="en" size="2">
+                  <Select.Trigger variant="ghost" color='gray' />
+                  <Select.Content color="gray">
+                    <Select.Item value="en"><img alt="En" src={`${process.env.PUBLIC_URL}/imgs/en.png`} height="24px" style={{marginBottom: "-7px"}} /></Select.Item>
+                    <Select.Item value="ru"><img alt="Ru" src={`${process.env.PUBLIC_URL}/imgs/ru.png`} height="24px" style={{marginBottom: "-7px"}}  /></Select.Item>
+                  </Select.Content>
+                </Select.Root>
+                {/* <SegmentedControl.Root defaultValue="en">
+                  <SegmentedControl.Item value="en">🇬🇧 En</SegmentedControl.Item>
+                  <SegmentedControl.Item value="ru">🇷🇺 Ru</SegmentedControl.Item>
+                </SegmentedControl.Root> */}
+              </Flex>
               <Box>
                 <Grid gap='4'>
                   <Grid gap='4' columns="2">
@@ -283,7 +305,7 @@ export default function AllTasks() {
 
                   <NftCard onClick={handleDialogOpen} glowing={false}>
                     <Box>
-                      <Heading>Review Video</Heading>
+                      <Heading>Get Review</Heading>
                     </Box>
                     <ImgWrapper opacity={0.3}>
                       <img
@@ -296,7 +318,7 @@ export default function AllTasks() {
                     </ImgWrapper>
                     <Box pt="1">
                       <Text color='gray'>
-                        Video riched 10K views, get Reward
+                        Meme reached 10K views, get Reward
                       </Text>
                     </Box>
                   </NftCard>
@@ -324,7 +346,7 @@ export default function AllTasks() {
                     <CoinbagAnimated />
                   </Flex>
                   <Flex direction='column' gap='2'>
-          <Card onClick={() => {}}>
+          <Card onClick={() => navigate(ROUTES.POST_MEME)}>
             <Flex gap='4' align='center' p='1'>
               <Box>
                 <Text size='8' weight='bold'>
@@ -369,10 +391,10 @@ export default function AllTasks() {
               </Box>
               <Flex justify='between' width='100%' align='center'>
                 <Box>
-                  <Box>You send link to Moderation</Box>
+                  <Box>Send link to Moderation</Box>
                   <Box>
                     <Text size='1' color='gray'>
-                      Wait unitl it gets as much views as possible, because you can send video only once
+                      Wait unitl it gets as much views as possible, because you can send video on review only once
                     </Text>
                   </Box>
                 </Box>

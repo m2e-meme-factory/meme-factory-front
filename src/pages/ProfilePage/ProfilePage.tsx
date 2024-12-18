@@ -46,7 +46,7 @@ export const SolidCard = styled(Card)`
 `;
 
 const NftCard = styled(SolidCard) <{ glowing: boolean }>`
-  height: 25vh;
+  height: 12vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -80,7 +80,7 @@ const ImgWrapper = styled(Flex)`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  height: 20vh;
+  height: 15vh;
   position: absolute;
   top: -10px;
   right: -50px;
@@ -145,6 +145,7 @@ const NftCardItem = ({ nft, handleBuy, style }: { nft: any, handleBuy: () => voi
 
   const handleVerify = () => {
     // if (user) {
+    setModalVisible(false)
     handleDialogClose();
     handleBuy()
     // verify({ params: { telegramId: user.telegramId } });
@@ -168,7 +169,7 @@ const NftCardItem = ({ nft, handleBuy, style }: { nft: any, handleBuy: () => voi
       </ImgWrapper>
       <Box>
         <Text color='gray'>
-          {numberWithSpaces(nft.amount)} <Badge color='yellow'>M2E</Badge>
+          {numberWithSpaces(nft.amount)} <Badge color='gray' size="1">USDT</Badge>
         </Text>
       </Box>
 
@@ -428,18 +429,20 @@ export default function ProfilePage() {
                           showSuccessMessage('NFT bought successfully!');
                         }
                         else {
-                          showErrorMessage('Connect wallet first!');
+                          tonConnectUI.modal.open()
+                          // showErrorMessage('Connect wallet first!');
                         }
                       }} key={index} />
                     ))}
 
                   </Grid>
-                  <NftCardItem style={{height: "18vh"}} nft={cyberNft} handleBuy={() => {
+                  <NftCardItem style={{height: "12vh"}} nft={cyberNft} handleBuy={() => {
                         if (walletAddress) {
                           showSuccessMessage('NFT bought successfully!');
                         }
                         else {
-                          showErrorMessage('Connect wallet first!');
+                          tonConnectUI.modal.open()
+                          // showErrorMessage('Connect wallet first!');
                         }
                       }} />
                 </Grid>

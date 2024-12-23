@@ -44,7 +44,7 @@ export default function ConnectWallet() {
         <Box asChild width='100%'>
             <Card>
                 <Grid gap='4'>
-                    <Heading>Connect Wallet</Heading>
+                    <Box>Connect Wallet</Box>
                     {tonConnectUI.connected ? (
                         <AlertDialog.Root>
                             <AlertDialog.Trigger>

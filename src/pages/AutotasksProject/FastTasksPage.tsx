@@ -180,19 +180,6 @@ const FastTasksPage = () => {
   return (
     <Flex direction='column'>
       <Flex className={styles.content} direction='column' gap="6">
-        <Box>
-          <Heading>Post Memes - Earn Money</Heading>
-          <Flex m='4' justify='between' pt="4">
-            <Card>
-              <Text>Post Meme</Text>
-            </Card>
-            <Card>
-              <Text>
-                Earn Money
-              </Text>
-            </Card>
-          </Flex>
-        </Box>
         <Flex m='4' direction='column' gap='2'>
           <Heading weight='bold'>Fast Tasks</Heading>
 

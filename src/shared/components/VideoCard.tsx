@@ -74,6 +74,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, thumbnailSrc, altText =
             ) : (
                 // Видео создается только после клика
                 <video
+                    playsInline
                     src={videoSrc}
                     controls
                     autoPlay

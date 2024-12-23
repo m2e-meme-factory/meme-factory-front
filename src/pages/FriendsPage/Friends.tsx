@@ -24,6 +24,7 @@ import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 import { showSuccessMessage } from '../../shared/utils/helpers/notify';
 import HandshakeAnimated from '../../shared/components/LottieIcons/Handshake/HandshakeAnimated';
+import Header from '../ProfilePage/Header';
 
 const ResponsibleImage = styled.img`
   height: 100px;
@@ -126,6 +127,9 @@ export default function Friends() {
 
   return (
     <>
+      <Box p="4" pt="3">
+        <Header />
+      </Box>
       <WebappBackButton />
       <Flex m='4' justify='center'>
         <HandshakeAnimated />

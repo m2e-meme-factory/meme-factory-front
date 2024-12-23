@@ -22,7 +22,6 @@ import styled from 'styled-components';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { Sheet } from 'react-modal-sheet';
 import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
-import { SolidCard } from './ProfilePage';
 import { RootState } from '../../shared/utils/redux/store';
 import AutotaskCard from '../AutotasksProject/components/Autotask/Autotask';
 import { getIconByTaskId } from '../../shared/utils/helpers/getIconByTaskId';
@@ -31,6 +30,8 @@ import CoinbagAnimated from '../../shared/components/LottieIcons/Coinbag/Coinbag
 import { InfoCircleOutlined } from '@ant-design/icons';
 import yeyEmoji from '../../shared/imgs/yey.png';
 import { ROUTES } from '../../shared/consts/routes';
+import Header from './Header';
+import { SolidCard } from '../../shared/components/Card/SolidCard';
 
 const NftCard = styled(SolidCard) <{ glowing: boolean }>`
   height: 25vh;
@@ -75,10 +76,6 @@ const ImgWrapper = styled(Flex)<{opacity: number}>`
   right: -5px;
   opacity: ${props => props.opacity};
 `
-
-function numberWithSpaces(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
 
 const autotasksLoading = false;
   const autotasks = [
@@ -259,31 +256,11 @@ export default function AllTasks() {
 
   return (
     <Box height="90vh">
-      <ScrollArea>
+      {/* <ScrollArea> */}
         <Flex asChild p="4" gap="6" direction="column">
           <Box pt='3' pb="3" style={{ maxHeight: '100%' }}>
             <Flex direction='column' gap='5'>
-              <Flex justify="between" align="center">
-                <Heading align="center">{numberWithSpaces(user ? Number(user.balance) : 0)} <Badge size="3" color="bronze">XP</Badge></Heading>
-                {/* <img
-                        src={`${process.env.PUBLIC_URL}/imgs/ru.png`}
-                        style={{
-                          objectFit: 'cover',
-                          height: '100%',
-                        }}
-                      /> */}
-                <Select.Root defaultValue="en" size="2">
-                  <Select.Trigger variant="ghost" color='gray' />
-                  <Select.Content color="gray">
-                    <Select.Item value="en"><img alt="En" src={`${process.env.PUBLIC_URL}/imgs/en.png`} height="24px" style={{marginBottom: "-7px"}} /></Select.Item>
-                    <Select.Item value="ru"><img alt="Ru" src={`${process.env.PUBLIC_URL}/imgs/ru.png`} height="24px" style={{marginBottom: "-7px"}}  /></Select.Item>
-                  </Select.Content>
-                </Select.Root>
-                {/* <SegmentedControl.Root defaultValue="en">
-                  <SegmentedControl.Item value="en">🇬🇧 En</SegmentedControl.Item>
-                  <SegmentedControl.Item value="ru">🇷🇺 Ru</SegmentedControl.Item>
-                </SegmentedControl.Root> */}
-              </Flex>
+              <Header />
               <Box>
                 <Grid gap='4'>
                   <Grid gap='4' columns="2">
@@ -434,7 +411,7 @@ export default function AllTasks() {
                 You'll be rewarded immediately with XP-M2E after each task completion
               </Text>
             </Flex>
-            <Flex justify='center' direction='column' gap='2'>
+            <Flex justify='center' direction='column' gap='3'>
               {autotasks?.map((task) => (
                 <AutotaskCard
                   key={task.id}
@@ -478,7 +455,7 @@ export default function AllTasks() {
             </Card> */}
           </Box>
         </Flex>
-      </ScrollArea>
+      {/* </ScrollArea> */}
     </Box>
   );
 }

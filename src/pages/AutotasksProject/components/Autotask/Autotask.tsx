@@ -13,6 +13,7 @@ import styles from '../../../../shared/components/SocialsLink/SocialsLink.module
 import { UNSUBSCRIBE_WARNING } from '../../../../shared/consts/strings';
 import { getSocialsNameByTaskId } from '../../../../shared/utils/helpers/getSocialsNameByTaskId';
 import { AxiosError } from 'axios';
+import { SolidCard } from '../../../../shared/components/Card/SolidCard';
 
 interface AutotaskProps {
   id: number;
@@ -169,7 +170,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   };
 
   return (
-    <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
+    <SolidCard className='SubtaskCard'  style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between' pl='2' pr='2'>
         <Flex>
           {icon}
@@ -302,7 +303,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
           <Sheet.Backdrop onTap={() => handleDialogClose()} />
         </Sheet>
       </Flex>
-    </Card>
+    </SolidCard>
   );
 };
 

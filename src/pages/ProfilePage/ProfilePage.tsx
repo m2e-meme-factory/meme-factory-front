@@ -32,6 +32,7 @@ import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import Header from './Header';
 import { SolidCard } from '../../shared/components/Card/SolidCard';
+import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 
 enum TabsOption {
   AIRDROP = 'airdrop',
@@ -305,19 +306,29 @@ export default function ProfilePage() {
 
 
   const [tonConnectUI] = useTonConnectUI();
-  const [walletAddress, setWalletAddress] = useState<string>();
-
-  useEffect(() => {
-    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-      if (wallet) {
-        setWalletAddress(wallet.account.address);
-      } else {
-        setWalletAddress('');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [tonConnectUI]);
+      const [walletAddress, setWalletAddress] = useState<string>();
+  
+      useEffect(() => {
+          const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
+              if (wallet) {
+                  setWalletAddress(wallet.account.address);
+              } else {
+                  setWalletAddress('');
+              }
+          });
+  
+          return () => unsubscribe();
+      }, [tonConnectUI]);
+  
+      useEffect(() => {
+          const connect = async (wallet: string) => {
+              await connectWallet({ params: { tonWalletAddress: wallet } });
+          };
+  
+          if (walletAddress) {
+              connect(walletAddress);
+          }
+      }, [walletAddress]);
 
   return (
     <Box height="90vh" onClick={handleClick}>

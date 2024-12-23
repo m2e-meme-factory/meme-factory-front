@@ -387,7 +387,9 @@ export default function AllTasks() {
         </Flex>
                   <GlowingButton
                     size='4'
-                    onClick={handleSendVideoURL}
+                    onClick={() => {
+                      webapp.openLink('https://t.me/EniseevE');
+                  }}
                     style={{ width: '100%' }}
                   >
                     Get Reward

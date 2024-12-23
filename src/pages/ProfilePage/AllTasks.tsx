@@ -388,7 +388,7 @@ export default function AllTasks() {
                   <GlowingButton
                     size='4'
                     onClick={() => {
-                      webapp.openLink('https://t.me/EniseevE');
+                      webapp.openLink('https://t.me/mf_sup_bot');
                   }}
                     style={{ width: '100%' }}
                   >

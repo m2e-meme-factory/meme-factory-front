@@ -556,7 +556,7 @@ export default function PostMemePage() {
                   <GlowingButton
                     size='4'
                     onClick={() => {
-                        WebApp.openLink('https://t.me/EniseevE');
+                        WebApp.openLink('https://t.me/mf_sup_bot');
                     }}
                     style={{ width: '100%' }}
                   >

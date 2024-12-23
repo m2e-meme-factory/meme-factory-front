@@ -221,7 +221,7 @@ const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: (
                       }}
                       style={{ width: '100%' }}
                     >
-                      ConnectWallet
+                      Connect Wallet
                     </GlowingButton>
                   ) : (
                     <GlowingButton
@@ -346,7 +346,7 @@ export default function ProfilePage() {
                   <Grid gap='4' columns="2">
                     {nfts.map((nft, index) => (
                       <NftCardItem wallet={{
-                        isWallet: walletAddress != '',
+                        isWallet: tonConnectUI.connected,
                         onConnect: () => {
                           tonConnectUI.modal.open()
                         }
@@ -363,7 +363,7 @@ export default function ProfilePage() {
 
                   </Grid>
                   <NftCardItem wallet={{
-                        isWallet: walletAddress != null,
+                        isWallet: tonConnectUI.connected,
                         onConnect: () => {
                           tonConnectUI.modal.open()
                         }

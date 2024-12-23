@@ -556,7 +556,7 @@ export default function PostMemePage() {
                   <GlowingButton
                     size='4'
                     onClick={() => {
-                        WebApp.openTelegramLink('https://t.me/EniseevE');
+                        WebApp.openLink('https://t.me/EniseevE');
                     }}
                     style={{ width: '100%' }}
                   >

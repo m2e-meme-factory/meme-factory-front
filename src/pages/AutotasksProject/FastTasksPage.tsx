@@ -41,14 +41,14 @@ const FastTasksPage = () => {
   const { data: refData, isLoading: refLoading } = useGetRefData(user?.telegramId);
 
   //Fetching tasks
-  // const { data: autotasks, isLoading: autotasksLoading } = useQuery({
-  //   queryFn: () => getAllAutotasks({}),
-  //   queryKey: ['autotasks', user?.id],
-  //   select: (data) => data.data,
-  // });
+  const { data: autotasks, isLoading: autotasksLoading } = useQuery({
+    queryFn: () => getAllAutotasks({}),
+    queryKey: ['autotasks', user?.id],
+    select: (data) => data.data,
+  });
 
-  const autotasksLoading = false;
-  const autotasks = [
+  const autotasksLoading1 = false;
+  const autotasks1 = [
     {
         "id": 21,
         "title": "Invite Friends",

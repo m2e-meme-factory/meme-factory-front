@@ -74,19 +74,22 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, thumbnailSrc, altText =
             ) : (
                 // Видео создается только после клика
                 <video
-                    playsInline={true}
-                    controls={true}
-                    autoPlay={true}
+                    playsInline
+                    controls
+                    autoPlay
                     loop={false}
-                    muted={false}
-                    onEnded={() => setIsPlaying(false)}
+                    muted={true}
+                    src={videoSrc}
+                    onEnded={() => {
+                        console.log("Video ended");
+                        setIsPlaying(false);
+                    }}
                     style={{
                         width: "100%",
                         display: "block",
                     }}
-                >
-                    <source src={videoSrc} type="video/mp4" />
-                </video>
+                />
+
             )}
         </Card>
     );

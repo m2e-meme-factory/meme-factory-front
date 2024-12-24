@@ -79,13 +79,14 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, thumbnailSrc, altText =
                     autoPlay={true}
                     loop={false}
                     muted={false}
-                    src={videoSrc}
                     onEnded={() => setIsPlaying(false)}
                     style={{
                         width: "100%",
                         display: "block",
                     }}
-                />
+                >
+                    <source src={videoSrc} type="video/mp4" />
+                </video>
             )}
         </Card>
     );

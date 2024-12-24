@@ -2,6 +2,7 @@ import { Flex, Heading, Badge, Select } from "@radix-ui/themes";
 import { useSelector } from "react-redux";
 import { RootState } from "../../shared/utils/redux/store";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function numberWithSpaces(x: number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -12,6 +13,20 @@ function numberWithSpaces(x: number) {
 export default function Header() {
 
     const user = useSelector((state: RootState) => state.user.user);
+    const [lang, setLang] = useState("en")
+
+    const handleChangeLanguage = (lang: string) => {
+        localStorage.setItem('lang', lang);
+        setLang(lang)
+    }
+
+    useEffect(() => {
+        const l = localStorage.getItem('lang')
+        if (l) {
+            handleChangeLanguage(l)
+        }
+        console.log(l)
+    }, [])
 
     return (
         <Flex justify="between" align="center">
@@ -29,7 +44,7 @@ export default function Header() {
                   height: '100%',
                 }}
               /> */}
-            <Select.Root defaultValue="en" size="2">
+            <Select.Root onValueChange={(l) => handleChangeLanguage(l)} value={lang} size="2">
                 <Select.Trigger variant="ghost" color='gray' />
                 <Select.Content color="gray">
                     <Select.Item value="en"><img alt="En" src={`${process.env.PUBLIC_URL}/imgs/en.png`} height="24px" style={{ marginBottom: "-7px" }} /></Select.Item>

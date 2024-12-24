@@ -74,10 +74,12 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, thumbnailSrc, altText =
             ) : (
                 // Видео создается только после клика
                 <video
-                    playsInline
+                    playsInline={true}
+                    controls={true}
+                    autoPlay={true}
+                    loop={false}
+                    muted={false}
                     src={videoSrc}
-                    controls
-                    autoPlay
                     onEnded={() => setIsPlaying(false)}
                     style={{
                         width: "100%",

@@ -14,7 +14,7 @@ import {
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 
 
-export default function ConnectWallet() {
+export default function ConnectWallet({onSuccess}: {onSuccess?: (value: string) => void}) {
     const [tonConnectUI] = useTonConnectUI();
     const [walletAddress, setWalletAddress] = useState<string>();
 
@@ -33,6 +33,10 @@ export default function ConnectWallet() {
     useEffect(() => {
         const connect = async (wallet: string) => {
             await connectWallet({ params: { tonWalletAddress: wallet } });
+            
+            if (onSuccess) {
+                onSuccess(wallet);
+            }
         };
 
         if (walletAddress) {

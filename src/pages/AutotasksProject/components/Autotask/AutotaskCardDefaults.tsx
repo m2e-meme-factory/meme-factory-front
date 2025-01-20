@@ -1,38 +1,97 @@
-import { Badge, Box, Callout, Card, Flex, Heading, Spinner, Text, Theme } from '@radix-ui/themes';
+import { Badge, Box, Callout, Card, Flex, Heading, Spinner, Text, TextField, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { showErrorMessage, showSuccessMessage } from '../../../../shared/utils/helpers/notify';
 import { Sheet } from 'react-modal-sheet';
 import '../../../../styles/CustomSheetsStyles.css';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import CopyableRef from '../CopyableField/CopyableRef';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getAutotaskApplications } from '../../../../shared/utils/api/requests/autotask/getAutotaskApplications';
-import { applyAutotaskCompletion } from '../../../../shared/utils/api/requests/autotask/applyForAutotaskCompletion';
-import { claimAutotaskReward } from '../../../../shared/utils/api/requests/autotask/claimAutotaskReward';
 import styles from '../../../../shared/components/SocialsLink/SocialsLink.module.css';
 import { UNSUBSCRIBE_WARNING } from '../../../../shared/consts/strings';
-import { getSocialsNameByTaskId } from '../../../../shared/utils/helpers/getSocialsNameByTaskId';
 import { AxiosError } from 'axios';
-import { SolidCard } from '../../../../shared/components/Card/SolidCard';
+
+import { getIconByTaskСategory } from "../../../../shared/utils/helpers/getIconByTaskCategory";
+import { getAutotaskDefautsApplications } from '../../../../shared/utils/api/requests/autotask/getAutotaskDefautsApplications';
+import { applyForAutotaskDefaultsCompletion } from '../../../../shared/utils/api/requests/autotask/applyForAutotaskDefaultsCompletion';
+import { claimAutotaskDefaultsReward } from '../../../../shared/utils/api/requests/autotask/claimAutotaskDefaultsReward';
+import { formatNumberWithSpaces } from '../../../../shared/utils/helpers/formatNumbers';
+import { AccentButton } from '../../../../shared/components/Buttons/GlowingButton';
+import ConnectWallet from '../../../WalletPage/ConnectWallet';
+import CopyableRef from '../CopyableField/CopyableRef';
+import { authMe } from '../../../../shared/utils/api/requests/auth/me';
+
+type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio';
 
 interface AutotaskProps {
-  id: number;
   title: string;
   description: string;
   price: string;
-  createdAt?: string;
   children?: ReactNode;
-  url: string | null;
-  icon?: ReactNode;
   userId: number;
   claimed: boolean;
   applied: boolean;
   refLink?: string;
-  category: 'ref' | 'default';
+  markTaskCompleted: (c: AutotaskCateory) => void
+  category: AutotaskCateory;
+  walletAddress?: string
 }
 
-const AutotaskCard: FC<AutotaskProps> = ({
-  id,
+
+const getCardContent = (category: string, isClaimed: boolean = false, otherProps?: {
+  onClick?: () => void, 
+  setTextValue?: (v: string) => void
+  refLink?: string,
+}) => {
+  switch (category) {
+    case 'wallet':
+      return isClaimed ? "" : (
+        <ConnectWallet onSuccess={() => otherProps?.onClick ? otherProps?.onClick() : null} />
+      )
+    case 'checkin':
+      return isClaimed ? "Come Back Tomorrow" : 
+      (
+        <AccentButton onClick={otherProps?.onClick} size="4">Claim 1 Day</AccentButton>
+      )
+    case 'welcome-bonus':
+      return isClaimed ? "Thanks For Joining!)" : 
+      (
+        <AccentButton onClick={otherProps?.onClick} size="4">Claim</AccentButton>
+      )
+    case 'shere-in-stories':
+      return isClaimed ? "Thanks For Joining!)" : 
+      (
+        <Flex direction="column" gap="2">
+          <Flex justify="between" align="center">
+            <Text>Shere a story in your instagram account with your invite link</Text>
+            <CopyableRef refLink={otherProps?.refLink || "https://t.me/autotasks_bot"} />
+          </Flex>
+          <TextField.Root size="3" mt="2" placeholder='Instagram url' onChange={(e) => {
+            if (otherProps?.setTextValue) {
+              otherProps.setTextValue(e.currentTarget.value.toString())
+            }
+          }
+            } />
+          <AccentButton onClick={otherProps?.onClick} size="4">Claim</AccentButton>
+        </Flex>
+      )
+    case 'account-bio':
+      return isClaimed ? "Thanks For Joining!)" : 
+      (
+        <Flex direction="column" gap="2">
+          <Flex justify="between" align="center">
+            <Text>Put your invite link in instagram account bio</Text>
+            <CopyableRef refLink="https://t.me/autotasks_bot" />
+          </Flex>
+          <TextField.Root size="3" mt="2" placeholder='Instagram url' />
+          <AccentButton onClick={otherProps?.onClick} size="4">Claim</AccentButton>
+        </Flex>
+      )
+    default:
+      return null;
+  }
+}
+
+// const AutotaskCardDefaults = () => {
+const AutotaskCardDefaults: FC<AutotaskProps> = ({
   title,
   description,
   price,
@@ -40,12 +99,11 @@ const AutotaskCard: FC<AutotaskProps> = ({
   userId,
   applied,
   claimed,
-  icon,
-  url,
-  refLink,
   category,
+  refLink,
+  markTaskCompleted
 }) => {
-  //State of autotask
+//   //State of autotask
   type ApplicationStatus = 'applied' | 'claimed' | 'unstarted';
   const [isApplied, setIsApplied] = useState(applied);
   const [isClaimed, setIsClaimed] = useState(claimed);
@@ -57,25 +115,34 @@ const AutotaskCard: FC<AutotaskProps> = ({
     setApplicationStatus(isApplied ? (isClaimed ? 'claimed' : 'applied') : 'unstarted');
   }, [isApplied, isClaimed]);
 
-  //Card styles
+  useEffect(() => {
+    setIsClaimed(claimed)
+  }, [claimed])
+
+  useEffect(() => {
+    setIsApplied(applied)
+  }, [applied])
+
+//   //Card styles
   type CardStyles = Record<'applied' | 'claimed' | 'unstarted', string>;
   const cardStyles: CardStyles = {
-    applied: '2px solid #e8c020',
-    claimed: '2px solid #45a951',
-    unstarted: '2px solid var(--gray-10)',
+    applied: 'none',
+    claimed: 'none',
+    unstarted: '1px solid #1C1C1E',
   };
 
   const [cardStyle, setCardStyle] = useState<React.CSSProperties>({
     border: cardStyles[applicationStatus as ApplicationStatus],
-    borderRadius: '20px',
-    padding: '10px 7px',
+    borderRadius: '12px',
+    padding: '8px',
+    backgroundColor: '#0B0B0B',
   });
 
   useEffect(() => {
     setCardStyle({
       border: cardStyles[applicationStatus as ApplicationStatus],
-      borderRadius: '20px',
-      padding: '10px 7px',
+      borderRadius: '12px',
+      padding: '8px',
     });
   }, [applicationStatus]);
 
@@ -87,21 +154,23 @@ const AutotaskCard: FC<AutotaskProps> = ({
   };
 
   const handleDialogOpen = () => {
-    setModalVisible(true);
+    if (!claimed)
+      setModalVisible(true);
   };
 
-  // Autotask application
+
   const {
     data: application,
     isLoading: applicationLoading,
     refetch: refetchApplication,
   } = useQuery({
-    queryFn: () => getAutotaskApplications({ params: { userId: userId, taskId: id } }),
-    queryKey: ['autotaskApplication', userId, id],
+    queryFn: () => getAutotaskDefautsApplications({ params: { userId: userId, taskCategory: category } }),
+    queryKey: ['autotaskApplication', userId, category],
     enabled: applied,
     select: (data) => data.data[0],
   });
 
+  
   useEffect(() => {
     if (application) {
       const status: ApplicationStatus = application.isConfirmed ? 'claimed' : 'applied';
@@ -113,28 +182,30 @@ const AutotaskCard: FC<AutotaskProps> = ({
 
   //Apply for autotask
   const { mutate: apply, isPending: isApplying } = useMutation({
-    mutationFn: applyAutotaskCompletion,
+    mutationFn: applyForAutotaskDefaultsCompletion,
     onError: () => {
       showErrorMessage('Error occurred while applying autotask completion');
       setSubmitting(false);
     },
     onSuccess: () => {
-      setTimeout(() => {
-        setSubmitting(false);
-        setIsApplied(true);
-      }, 11000);
+      showSuccessMessage('Successfully claimed!');
+      markTaskCompleted(category)
+      // setTimeout(() => {
+      //   setSubmitting(false);
+      //   setIsApplied(true);
+      // }, 11000);
     },
     onSettled: () => {
-      setTimeout(() => {
-        setSubmitting(false);
-        refetchApplication();
-      }, 11000);
+      // setTimeout(() => {
+      //   setSubmitting(false);
+      //   refetchApplication();
+      // }, 11000);
     },
   });
 
   //Claim reward
   const { mutate: claim, isPending: isClaiming } = useMutation({
-    mutationFn: claimAutotaskReward,
+    mutationFn: claimAutotaskDefaultsReward,
     onError: (error: AxiosError) => {
       const response = error.response?.data as {
         error: string;
@@ -159,29 +230,33 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const handleApplyClick = () => {
     if (applicationStatus === 'unstarted' && !submitting) {
       setSubmitting(true);
-      apply({ params: { taskId: id } });
+      // apply({ params: { taskCategory: category } });
+      apply({ params: { amount: price } });
     }
   };
 
   const handleClaimClick = () => {
     if (isClaiming && applicationStatus === 'applied') return;
 
-    claim({ params: { taskId: id } });
+    claim({ params: { taskCategory: category } });
   };
 
   return (
-    <SolidCard className='SubtaskCard'  style={cardStyle} onClick={handleDialogOpen}>
+    <Box className='SubtaskCard'  style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between' pl='2' pr='2'>
-        <Flex>
-          {icon}
+        <Flex align={'center'}>
+
+          <Box style={{backgroundColor: "#181818", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center", color: "#A8A8A8"}} >
+            {getIconByTaskСategory(category)}
+          </Box>
 
           <Flex direction='column' ml='4'>
-            <Text size='4' weight='medium' style={{ userSelect: 'text' }}>
+            <Text size='4' weight='bold' style={{ userSelect: 'text' }}>
               {title}
             </Text>
             <Text weight='medium' size='3' color='gray'>
               <i>
-                +{price} <Badge color='bronze'>XP</Badge>
+                +{formatNumberWithSpaces(price)} <Badge color='bronze'>XP</Badge>
               </i>
             </Text>
           </Flex>
@@ -190,66 +265,69 @@ const AutotaskCard: FC<AutotaskProps> = ({
         {isClaimed ? (
           <CheckIcon color='#45a951' width={20} height={20} />
         ) : (
-          <CaretRightIcon width={20} height={20} />
+          <CaretRightIcon width={24} height={24} color='#A8A8A8' />
         )}
 
-        <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'>
-          <Sheet.Container>
+        <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'  style={{zIndex: 2}}>
+          <Sheet.Container style={{background: "radial-gradient(circle at 50% -21%, #716946, rgb(28, 28, 30), rgb(30, 28, 30))"}}>
             <Sheet.Header />
             <Sheet.Content>
-              <Theme>
+              <Theme style={{ width: '100%' }}>
                 <Flex m='4' gap='2' direction='column'>
+
+                  <Flex justify="center">
+                    <img 
+                    width={"40%"}
+                    src={`${process.env.PUBLIC_URL}/imgs/hands_v2.png`}
+                    />
+                  </Flex>                
                   <Flex mb='5' mt='4' direction={'column'} gap='2'>
                     <Heading align='center' style={{ userSelect: 'text' }}>
                       {title}
                     </Heading>
+                    <Text align='center' color='gray'>
+                      <i>
+                        +{formatNumberWithSpaces(price)} <Badge color='bronze'>XP</Badge>
+                      </i>
+                    </Text>
                     <Flex justify='center'>
                       <Badge
                         size='3'
                         color={isApplied ? (isClaimed ? 'green' : 'yellow') : 'gray'}
                         variant='soft'
                       >
-                        {applicationStatus}
+                        {applicationStatus[0].toUpperCase() + applicationStatus.slice(1)}
                       </Badge>
                     </Flex>
-                    <Text align='center' color='gray'>
-                      <i>
-                        +{price} <Badge color='bronze'>XP</Badge>
-                      </i>
-                    </Text>
                   </Flex>
-                  {category === 'ref' && (
-                    <Box mb='4'>
-                      <CopyableRef refLink={refLink || 'test'} />
-                    </Box>
-                  )}
+                  <Flex direction="column" gap="2">
+                    {
+                      getCardContent(category, claimed, {
+                        onClick: handleApplyClick,
+                        refLink,
+                      })
+                    }
+                    <p className={styles.warning}>{description}</p>
+                  </Flex>
+                  
 
-                  <Callout.Root color='gray' mb={category === 'ref' ? '8' : '4'}>
-                    <Callout.Icon>
-                      <InfoCircledIcon width={20} height={20} />
-                    </Callout.Icon>
-                    <Callout.Text style={{ userSelect: 'text' }}>{description}</Callout.Text>
-                  </Callout.Root>
-                  {category !== 'ref' && (
-                    <Flex>
+                    {/* <Flex>
                       <Flex direction='column' gap='2'>
                         {isApplied && isClaimed ? (
-                          <a
-                            href={url ?? ''}
-                            target='_blank'
+                          <div
                             className={styles.link}
                             onClick={handleApplyClick}
                           >
                             <div className={styles.card}>
                               <div className={styles.cardContent}>
                                 <div className={styles.websiteInfo}>
-                                  {icon}
+                                  {getIconByTaskСategory(category)}
                                   <p className={styles.socialsName}>{title}</p>
                                 </div>
                                 <CheckIcon color='#45a951' width={20} height={20} />
                               </div>
                             </div>
-                          </a>
+                          </div>
                         ) : isApplied ? (
                           <div className={styles.card} onClick={handleClaimClick}>
                             <div className={styles.cardContent}>
@@ -259,9 +337,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                             </div>
                           </div>
                         ) : (
-                          <a
-                            href={url ?? ''}
-                            target='_blank'
+                          <div
                             className={styles.link}
                             onClick={handleApplyClick}
                           >
@@ -282,7 +358,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                                 ) : (
                                   <>
                                     <div className={styles.websiteInfo}>
-                                      {icon}
+                                      {getIconByTaskСategory(category)}
                                       <p className={styles.socialsName}>{title}</p>
                                     </div>
                                     <CaretRightIcon width={20} height={20} />
@@ -290,12 +366,11 @@ const AutotaskCard: FC<AutotaskProps> = ({
                                 )}
                               </div>
                             </div>
-                          </a>
+                          </div>
                         )}
-                        <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
+                        <p className={styles.warning}>{description}</p>
                       </Flex>
-                    </Flex>
-                  )}
+                    </Flex> */}
                 </Flex>
               </Theme>
             </Sheet.Content>
@@ -303,8 +378,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
           <Sheet.Backdrop onTap={() => handleDialogClose()} />
         </Sheet>
       </Flex>
-    </SolidCard>
+    </Box>
   );
 };
 
-export default AutotaskCard;
+
+export default AutotaskCardDefaults;

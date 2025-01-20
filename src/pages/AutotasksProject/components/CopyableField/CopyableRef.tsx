@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Box, Button } from '@radix-ui/themes';
+import { AccentButton } from '../../../../shared/components/Buttons/GlowingButton';
 
 const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   const [copyButtonText, setCopyButtonText] = React.useState<string>('Copy');
@@ -48,10 +49,10 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   };
 
   return (
-    <Box asChild width='100%'>
-      <Button onClick={handleCopyText} size='4'>
+    <Box asChild>
+      <AccentButton onClick={handleCopyText} size='4'>
         {copyButtonText}
-      </Button>
+      </AccentButton>
     </Box>
   );
 };

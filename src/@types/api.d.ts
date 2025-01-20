@@ -325,6 +325,12 @@ declare module 'api' {
     taskId?: number;
   }
 
+  
+  export interface GetAutotaskDefaultsApplicationsParams {
+    userId?: number;
+    taskCategory?: string;
+  }
+
   export interface Project {
     project: ProjectData;
     maxPrice: string | null;

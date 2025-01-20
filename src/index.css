@@ -418,3 +418,8 @@ input, textarea {
 .toaster-container {
   z-index: 3;
 }
+
+
+.rt-Badge {
+  font-weight: 100 !important;
+}

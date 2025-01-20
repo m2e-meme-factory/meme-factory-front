@@ -520,7 +520,7 @@ export default function PostMemePage() {
                 <Box>Your Meme gets {">"}10K views</Box>
                 <Box>
                   <Text size='1' color='gray'>
-                    You get 1 <Badge color='bronze'>XP-M2E</Badge> for each 1 view as reward
+                    You get 1 <Badge color='bronze'>XP</Badge> for each 1 view as reward
                   </Text>
                 </Box>
               </Box>

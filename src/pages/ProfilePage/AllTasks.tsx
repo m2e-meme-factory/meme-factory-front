@@ -33,20 +33,24 @@ import Header from './Header';
 import { SolidCard } from '../../shared/components/Card/SolidCard';
 import AutotaskCardDefaults from '../AutotasksProject/components/Autotask/AutotaskCardDefaults';
 import { useTonConnectUI } from '@tonconnect/ui-react';
+import BorderButton from '../../shared/components/Buttons/BorderButton';
+import YellowBorderButton from '../../shared/components/Buttons/YellowBorderButton';
 
 const NftCard = styled(SolidCard) <{ glowing: boolean }>`
   height: 25vh;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: space-between; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: ease .2s;
+  --card-border-width: 0;
 
   &:active {
     cursor: pointer;
     transform: scale(0.8)
   }
   color: ${(props) => props.glowing ? "black" : "auto"};
-  background: ${(props) => props.glowing ? "var(--brand-color)" : "auto"};
+  background: ${(props) => props.glowing ? "var(--brand-color)" : "#1c1c1e url(../imgs/ellipse.svg) no-repeat top right / cover"};
+  filter: ${(props) => props.glowing ? "" : "filter: blur(119.19999694824219px);"};
   animation: ${(props) => props.glowing ? 'glow 3s ease-in-out infinite alternate' : 'none'};
   
 
@@ -68,14 +72,8 @@ const NftCard = styled(SolidCard) <{ glowing: boolean }>`
 
 const ImgWrapper = styled(Flex) <{ opacity: number }>`
   display: flex;
-  justify-content: center;
   align-items: center;
-  overflow: hidden;
-  height: 17vh;
-  position: absolute;
-  bottom: -10px;
-  right: -5px;
-  opacity: ${props => props.opacity};
+  margin-bottom: 8px;
 `
 
 const autotasksLoading = false;
@@ -310,7 +308,6 @@ export default function AllTasks() {
     )
     
     setTasks(newtasks)
-
       
     localStorage.setItem('tasks', JSON.stringify(newtasks));
   };
@@ -329,38 +326,42 @@ export default function AllTasks() {
                 <Grid gap='4' columns="2">
                   <NftCard onClick={() => navigate(ROUTES.POST_MEME)} glowing={true}>
                     <Box>
-                      <Heading>Post Meme</Heading>
+                      <ImgWrapper opacity={1}>
+                        <img
+                          src={`${process.env.PUBLIC_URL}/imgs/posting.png`}
+                          style={{
+                            width: '32px',
+                            height: '35px',
+                          }}
+                        />
+                      </ImgWrapper>
+                      <Heading size={'4'}>Post Meme</Heading>
                       <Text>Earn Money</Text>
                     </Box>
-                    <ImgWrapper opacity={0.92}>
-                      <img
-                        src={`${process.env.PUBLIC_URL}/imgs/black-huynya.png`}
-                        style={{
-                          objectFit: 'cover',
-                          height: '100%',
-                        }}
-                      />
-                    </ImgWrapper>
+                    <BorderButton size='4' >
+                      start posting
+                    </BorderButton>
                   </NftCard>
 
                   <NftCard onClick={handleDialogOpen} glowing={false}>
                     <Box>
-                      <Heading>Get Review</Heading>
-                    </Box>
-                    <ImgWrapper opacity={0.3}>
-                      <img
-                        src={`${process.env.PUBLIC_URL}/imgs/rocket.png`}
-                        style={{
-                          objectFit: 'cover',
-                          height: '100%',
-                        }}
-                      />
-                    </ImgWrapper>
-                    <Box pt="1">
-                      <Text color='gray'>
+                      <ImgWrapper opacity={1}>
+                        <img
+                          src={`${process.env.PUBLIC_URL}/imgs/review.svg`}
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                          }}
+                        />
+                      </ImgWrapper>
+                      <Heading size='4'>Get Review</Heading>
+                      <Text color='gray' size='2'>
                         Meme reached 10K views, get Reward
                       </Text>
                     </Box>
+                    <YellowBorderButton size='4' >
+                      get
+                    </YellowBorderButton>
                   </NftCard>
 
                 </Grid>

@@ -335,7 +335,7 @@ export default function AllTasks() {
                           }}
                         />
                       </ImgWrapper>
-                      <Heading size={'4'}>Post Meme</Heading>
+                      <Heading size='3'>Post Meme</Heading>
                       <Text>Earn Money</Text>
                     </Box>
                     <BorderButton size='4' >
@@ -354,7 +354,7 @@ export default function AllTasks() {
                           }}
                         />
                       </ImgWrapper>
-                      <Heading size='4'>Get Review</Heading>
+                      <Heading size='3'>Get Review</Heading>
                       <Text color='gray' size='2'>
                         Meme reached 10K views, get Reward
                       </Text>

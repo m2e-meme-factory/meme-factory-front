@@ -293,6 +293,25 @@
   font-family: "ME";   /*Can be any text*/
   src: local("MonumentExtended"),
     url("./shared/fonts/MonumentExtended-Ult.woff") format("woff");
+    font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "ME";   /*Can be any text*/
+  src: local("MonumentExtended"),
+    url("./shared/fonts/MonumentExtended-Reg.woff") format("woff");
+    font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SF";   /*Can be any text*/
+  src: local("SF Pro Text"),
+    url("./shared/fonts/SF-Pro-Text-Regular.woff2") format("woff2");
+    font-weight: 400;
+  font-display: swap;
+  font-style: normal;
 }
 
 html, body {
@@ -332,6 +351,7 @@ code {
 }
 
 .radix-themes {
+  --heading-font-family: "ME";
   --my-brand-color: #fecf0a;
 
   /* Backgrounds */

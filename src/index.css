@@ -370,6 +370,15 @@ code {
   --heading-font-family: "ME";
   --heading-letter-spacing: 1px;
 
+  --navmenu-padding: 20px;
+  --navmenu-width: calc(100% - var(--navmenu-padding) * 2);
+  
+  --navmenu-btn-count: 5;
+  --navmenu-indicator-x: var(--navmenu-padding);
+  --navmenu-btn-width: 13.3vw;
+  --navmenu-gap: calc((var(--navmenu-width) - (var(--navmenu-btn-width) * 5)) / 4);
+  --navmenu-indicator-steps: calc(var(--navmenu-btn-width) + var(--navmenu-gap)) ;
+
   --my-brand-color: #fecf0a;
 
   /* Backgrounds */
@@ -463,6 +472,52 @@ input, textarea {
 .navigation-menu::before,
 .navigation-menu::after {
   --card-border-radius: 0;
+  --card-border-width: 0;
   border-radius: 0;
   background: transparent;
 }
+
+.navigation-menu {
+
+}
+
+.navigation-menu > div > a {
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  width: var(--navmenu-btn-width);
+}
+
+.navigation-menu::before {
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, #0b0b0b 0%, #4b4b4b 50%, #0b0b0b 100%);
+}
+
+.navigation-menu::after {
+  left: 0;
+  top: 0;
+  width: var(--navmenu-btn-width);
+  height: 64px;
+  background: url(shared/imgs/spotlight.svg) no-repeat 50% 0;
+  outline: none;
+  box-shadow: none;
+  transition: translate 300ms ease-in-out;
+  translate: var(--navmenu-indicator-x);
+  z-index: -1;
+}
+
+.navigation-menu:has(div a:nth-child(2) > button[data-accent-color="amber"]) {
+  --navmenu-indicator-x: calc(var(--navmenu-padding) + 19vw);
+}
+.navigation-menu:has(div a:nth-child(3) > button[data-accent-color="amber"]) {
+  --navmenu-indicator-x: calc(var(--navmenu-padding) + 37vw);
+}
+.navigation-menu:has(div a:nth-child(4) > button[data-accent-color="amber"]) {
+  --navmenu-indicator-x: calc(var(--navmenu-padding) + 57vw);
+}
+.navigation-menu:has(div a:nth-child(5) > button[data-accent-color="amber"]) {
+  --navmenu-indicator-x: calc(var(--navmenu-padding) + 75.8vw);
+}
+

@@ -34,7 +34,7 @@ export const navigationRoutes = [
   {
     title: 'Earn',
     path: '/post-meme',
-    isMain: true,
+    isMain: false,
     icon: (
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12.3333 18.4445C12.3333 20.4697 15.6161 22.1112 19.6666 22.1112C23.717 22.1112 26.9999 20.4697 26.9999 18.4445C26.9999 16.4193 23.717 14.7778 19.6666 14.7778C15.6161 14.7778 12.3333 16.4193 12.3333 18.4445Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />

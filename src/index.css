@@ -369,7 +369,7 @@ code {
 .radix-themes {
   --heading-font-family: "ME";
   --heading-letter-spacing: 1px;
-  
+
   --my-brand-color: #fecf0a;
 
   /* Backgrounds */
@@ -451,13 +451,18 @@ input, textarea {
   font-style: italic;
 }
 
-
-
 .toaster-container {
   z-index: 3;
 }
 
-
 .rt-Badge {
   font-weight: 100 !important;
+}
+
+.navigation-menu,
+.navigation-menu::before,
+.navigation-menu::after {
+  --card-border-radius: 0;
+  border-radius: 0;
+  background: transparent;
 }

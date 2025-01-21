@@ -8,8 +8,6 @@ function numberWithSpaces(x: number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-
-
 export default function Header() {
 
     const user = useSelector((state: RootState) => state.user.user);
@@ -38,13 +36,6 @@ export default function Header() {
                 <Badge size="3" color="gold" variant="soft" radius="full">XP</Badge>
 
             </Link>
-            {/* <img
-                src={`${process.env.PUBLIC_URL}/imgs/ru.png`}
-                style={{
-                  objectFit: 'cover',
-                  height: '100%',
-                }}
-              /> */}
             <Select.Root onValueChange={(l) => handleChangeLanguage(l)} value={lang} size="2">
                 <Select.Trigger variant="soft" color='bronze' radius="full" />
                 <Select.Content color="gray">
@@ -52,10 +43,7 @@ export default function Header() {
                     <Select.Item value="ru">RU</Select.Item>
                 </Select.Content>
             </Select.Root>
-            {/* <SegmentedControl.Root defaultValue="en">
-          <SegmentedControl.Item value="en">🇬🇧 En</SegmentedControl.Item>
-          <SegmentedControl.Item value="ru">🇷🇺 Ru</SegmentedControl.Item>
-        </SegmentedControl.Root> */}
+
         </Flex>
     );
 }

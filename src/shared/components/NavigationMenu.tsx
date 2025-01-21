@@ -8,10 +8,10 @@ const NavigationMenu = () => {
   const location = useLocation();
 
   return (
-    <Box style={{ position: 'fixed', bottom: '0', width: '100%', height: '10vh' }}>
+    <Box style={{ position: 'fixed', bottom: '0', width: '100%', height: '10vh', borderRadius: '0' }}>
       <Flex asChild width='100%' justify='center'>
-        <Card style={{ background: 'var(--gray-1)', height: '100%' }}>
-          <Flex gap='4' align='center' justify='center'>
+        <Card className='navigation-menu' style={{  height: '100%', paddingLeft: '5vw', paddingRight: '5vw' }}>
+          <Flex gap='4' align='center' justify='between' >
             {navigationRoutes.map((route, key) => (
               <React.Fragment key={key}>
                 <Link to={route.path}>
@@ -27,7 +27,7 @@ const NavigationMenu = () => {
                     <Button
                       size='3'
                       variant={'ghost'}
-                      style={{background: 'var(--gray-2)'}}
+                      style={{background: 'transparent'}}
                       color={location.pathname === route.path ? 'amber' : 'gray'} // Изменено здесь
                     >
                       <Flex direction='column' align='center' justify='center'>
@@ -38,9 +38,9 @@ const NavigationMenu = () => {
                   )
                 }
                 </Link>
-                {key !== navigationRoutes.length - 1 && (
+                {/* {key !== navigationRoutes.length - 1 && (
                   <Separator size='2' orientation='vertical' />
-                )}
+                )} */}
               </React.Fragment>
             ))}
           </Flex>

@@ -35,7 +35,7 @@ export default function Header() {
                 to='/wallet'
             >
                 <Heading align="center">{numberWithSpaces(user ? Number(user.balance) : 0)}</Heading>
-                <Badge size="3" color="gold" variant="outline" radius="full">XP</Badge>
+                <Badge size="3" color="gold" variant="soft" radius="full">XP</Badge>
 
             </Link>
             {/* <img
@@ -46,7 +46,7 @@ export default function Header() {
                 }}
               /> */}
             <Select.Root onValueChange={(l) => handleChangeLanguage(l)} value={lang} size="2">
-                <Select.Trigger variant="surface" color='gray' radius="full" />
+                <Select.Trigger variant="soft" color='bronze' radius="full" />
                 <Select.Content color="gray">
                     <Select.Item value="en">EN</Select.Item>
                     <Select.Item value="ru">RU</Select.Item>

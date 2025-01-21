@@ -359,7 +359,7 @@ export default function AllTasks() {
                         Meme reached 10K views, get Reward
                       </Text>
                     </Box>
-                    <YellowBorderButton size='4' >
+                    <YellowBorderButton size='4' style={{ height: '32px'}}>
                       get
                     </YellowBorderButton>
                   </NftCard>

@@ -178,7 +178,7 @@ const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: (
             {numberWithSpaces(nft.amount)} USDT = {numberWithSpaces(nft.amount)} MF
           </Text>
         </Box>
-        <YellowBorderButton size='4' style={{ marginTop: 'auto'}}>
+        <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px'}}>
           BUY
         </YellowBorderButton>
         </Flex>
@@ -413,7 +413,7 @@ export default function ProfilePage() {
                 </Popover.Root> */}
               </Heading>
             </Flex>
-            <Flex direction='column' gap='2'>
+            <Flex direction='column' gap='3'>
               <Link
                 style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
                 to='/friends'
@@ -486,19 +486,17 @@ export default function ProfilePage() {
                   </Flex>
                 </SolidCard>
               </Link>
-    <ConnectWallet />
+              <ConnectWallet />
             </Flex>
 
-            <Box pb="3">
-              <SolidCard>
+            <Box pb="5">
                 <Grid gap='4'>
-                  <Heading mr='3'>More</Heading>
-
-                  <AccentButton onClick={() => navigate('/become-partner')} size='4'>
+                  <Heading mr='3' size='4'>More</Heading>
+                  <YellowBorderButton size='4' onClick={() => navigate('/become-partner')} style={{ fontSize: '15px', fontWeight: '500', textTransform: 'uppercase' }}>
                     Become Advertiser
-                  </AccentButton>
+                  </YellowBorderButton>
                 </Grid>
-              </SolidCard>
+
             </Box>
           </Box>
         </Flex>

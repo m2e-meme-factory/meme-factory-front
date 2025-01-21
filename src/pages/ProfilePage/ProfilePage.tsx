@@ -34,6 +34,8 @@ import Header from './Header';
 import { SolidCard } from '../../shared/components/Card/SolidCard';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 import YellowBorderButton from '../../shared/components/Buttons/YellowBorderButton';
+import Slideshow from '../../shared/components/Slideshow/Slideshow';
+
 
 enum TabsOption {
   AIRDROP = 'airdrop',
@@ -41,6 +43,7 @@ enum TabsOption {
 }
 
 const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT];
+
 
 const NftCard = styled(SolidCard) <{ glowing: boolean, bronzes: boolean, silvers: boolean, dimonds: boolean, investors: boolean }>`
   /* min-height: 12vh; */
@@ -354,9 +357,12 @@ export default function ProfilePage() {
 
             <Flex direction='column' gap='3'>
               <Heading weight="regular" size='4'>Join our whitelist</Heading>
+
+              <Slideshow />
+
               <Box>
-                <Grid gap='4'>
-                  <Grid gap='3' columns="2">
+                <Grid gap='4' style={{ overflowX: 'hidden'}}>
+                  <Flex gap='4' className='scroll-container' style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory'}}>
                     {nfts.map((nft, index) => (
                       <NftCardItem wallet={{
                         isWallet: tonConnectUI.connected,
@@ -371,10 +377,9 @@ export default function ProfilePage() {
                           tonConnectUI.modal.open()
                           // showErrorMessage('Connect wallet first!');
                         }
-                      }} key={index} />
+                      }} key={index} style={{ minWidth: '92vw', scrollSnapAlign: 'center' }} />
                     ))}
 
-                  </Grid>
                   <NftCardItem wallet={{
                         isWallet: tonConnectUI.connected,
                         onConnect: () => {
@@ -389,7 +394,18 @@ export default function ProfilePage() {
                           tonConnectUI.modal.open()
                           // showErrorMessage('Connect wallet first!');
                         }
-                      }} />
+                      }} style={{ minWidth: '92vw', scrollSnapAlign: 'center' }} />
+                  </Flex>
+                  <Flex>
+                    {nfts.map((nft, index) => (
+                      <button className='whitelist-btn'>
+                        {nft.name}
+                      </button>
+                    ))}
+                    <button className='whitelist-btn'>
+                      {cyberNft.name}
+                    </button>
+                  </Flex>
                 </Grid>
               </Box>
             </Flex>
@@ -397,20 +413,6 @@ export default function ProfilePage() {
             <Flex justify='center' align='center' gap='2' direction='column'>
               <Heading size='3'>
                 Other ways increase Airdrop chance?
-                {/* <Popover.Root>
-                  <Popover.Trigger>
-                    <Flex align='center' display='inline-flex'>
-                      <IconButton size='4' color='gray' variant='ghost' radius='full'>
-                        <InfoCircledIcon />
-                      </IconButton>
-                    </Flex>
-                  </Popover.Trigger>
-                  <Popover.Content size='1' maxWidth='300px'>
-                    <Text size='2'>
-                      <b>Airdrop</b> is gift in real tokens for active users
-                    </Text>
-                  </Popover.Content>
-                </Popover.Root> */}
               </Heading>
             </Flex>
             <Flex direction='column' gap='3'>

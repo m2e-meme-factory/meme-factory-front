@@ -329,6 +329,14 @@
   font-display: swap;
   font-style: normal;
 }
+@font-face {
+  font-family: "Abel";   /*Can be any text*/
+  src: local("Abel"),
+    url("./shared/fonts/Abel-Regular.woff2") format("woff2");
+    font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
 
 html, body {
   margin: 0;
@@ -519,4 +527,33 @@ input, textarea {
 }
 .navigation-menu:has(div a:nth-child(5) > button[data-accent-color="amber"]) {
   --navmenu-indicator-x: calc(var(--navmenu-padding) + 76.5vw);
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.whitelist-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 19px;
+  border: 0;
+  border-top: 1px solid #1c1c1e;
+  border-bottom: 1px solid #1c1c1e;
+    font-size: 14px;
+    font-family: Abel;
+    flex: 1 1 auto;
+    background: #0b0b0b;
+}
+
+.whitelist-btn:first-of-type {
+  border-left: 1px solid #1c1c1e;
+  border-top-left-radius: 3rem;
+  border-bottom-left-radius: 3rem;
+}
+.whitelist-btn:last-of-type {
+  border-right: 1px solid #1c1c1e;
+  border-top-right-radius: 3rem;
+  border-bottom-right-radius: 3rem;
 }

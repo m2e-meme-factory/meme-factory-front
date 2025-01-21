@@ -319,11 +319,11 @@ export default function AllTasks() {
       {/* <ScrollArea> */}
       <Flex asChild p="4" gap="6" direction="column">
         <Box pt='3' pb="3" style={{ maxHeight: '100%' }}>
-          <Flex direction='column' gap='5'>
+          <Flex direction='column' gap='4'>
             <Header />
             <Box>
               <Grid gap='4'>
-                <Grid gap='4' columns="2">
+                <Grid gap='3' columns="2">
                   <NftCard onClick={() => navigate(ROUTES.POST_MEME)} glowing={true}>
                     <Box>
                       <ImgWrapper opacity={1}>
@@ -469,7 +469,7 @@ export default function AllTasks() {
           </Sheet>
 
           <Flex direction='column' gap='2'>
-            <Heading weight='bold'>Fast Tasks</Heading>
+            <Heading weight='bold' size='4'>Fast Tasks</Heading>
 
             <Flex direction='column' mb='5'>
               <Flex align='center' mb='4'>
@@ -539,48 +539,10 @@ export default function AllTasks() {
                   </>
                 )}
 
-
-                {/* {autotasks?.map((task) => (
-                <AutotaskCard
-                  key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  description={task.description}
-                  price={task.reward}
-                  url={task.url}
-                  userId={Number(user?.id)}
-                  applied={
-                    task.autoTaskApplication &&
-                    task.autoTaskApplication.some(
-                      (application) => application.userId === Number(user?.id)
-                    )
-                  }
-                  claimed={
-                    task.autoTaskApplication &&
-                    task.autoTaskApplication.some(
-                      (application) =>
-                        application.userId === Number(user?.id) && application.isConfirmed
-                    )
-                  }
-                  createdAt={task.createdAt}
-                  icon={getIconByTaskId(task.id)}
-                  category={task.isIntegrated ? 'ref' : 'default'}
-                  refLink={refData?.refLink}
-                />
-              ))} */}
               </Flex>
             </Flex>
           </Flex>
 
-          {/* <Card >
-              <Grid gap='4'>
-                <Heading mr='3'>More</Heading>
-
-                <AccentButton onClick={() => navigate('/become-partner')} size='4'>
-                  Become Advertiser
-                </AccentButton>
-              </Grid>
-            </Card> */}
         </Box>
       </Flex>
       {/* </ScrollArea> */}

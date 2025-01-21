@@ -313,6 +313,22 @@
   font-display: swap;
   font-style: normal;
 }
+@font-face {
+  font-family: "SF";   /*Can be any text*/
+  src: local("SF Pro Text"),
+    url("./shared/fonts/SF-Pro-Text-Semibold.woff2") format("woff2");
+    font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SF";   /*Can be any text*/
+  src: local("SF Pro Text"),
+    url("./shared/fonts/SF-Pro-Text-Bold.woff2") format("woff2");
+    font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
 
 html, body {
   margin: 0;
@@ -352,6 +368,8 @@ code {
 
 .radix-themes {
   --heading-font-family: "ME";
+  --heading-letter-spacing: 1px;
+  
   --my-brand-color: #fecf0a;
 
   /* Backgrounds */

@@ -48,7 +48,7 @@ export default function ConnectWallet({onSuccess}: {onSuccess?: (value: string) 
         <Box asChild width='100%'>
             <Card>
                 <Grid gap='4'>
-                    <Box>Connect Wallet</Box>
+                    {/* <Box>Connect Wallet</Box> */}
                     {tonConnectUI.connected ? (
                         <AlertDialog.Root>
                             <AlertDialog.Trigger>
@@ -90,7 +90,7 @@ export default function ConnectWallet({onSuccess}: {onSuccess?: (value: string) 
                         </AlertDialog.Root>
                     ) : (
                         <GlowingButton size='4' onClick={() => tonConnectUI.modal.open()}>
-                            Connect
+                            CONNECT WALLET
                         </GlowingButton>
                     )}
                 </Grid>

@@ -520,4 +520,3 @@ input, textarea {
 .navigation-menu:has(div a:nth-child(5) > button[data-accent-color="amber"]) {
   --navmenu-indicator-x: calc(var(--navmenu-padding) + 76.5vw);
 }
-

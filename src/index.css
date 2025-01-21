@@ -371,7 +371,7 @@ code {
   --heading-letter-spacing: 1px;
 
   --navmenu-padding: 20px;
-  --navmenu-width: calc(100% - var(--navmenu-padding) * 2);
+  --navmenu-width: calc(100мц - var(--navmenu-padding) * 2);
   
   --navmenu-btn-count: 5;
   --navmenu-indicator-x: var(--navmenu-padding);
@@ -512,12 +512,12 @@ input, textarea {
   --navmenu-indicator-x: calc(var(--navmenu-padding) + 19vw);
 }
 .navigation-menu:has(div a:nth-child(3) > button[data-accent-color="amber"]) {
-  --navmenu-indicator-x: calc(var(--navmenu-padding) + 37vw);
+  --navmenu-indicator-x: calc(var(--navmenu-padding) + 38.2vw);
 }
 .navigation-menu:has(div a:nth-child(4) > button[data-accent-color="amber"]) {
   --navmenu-indicator-x: calc(var(--navmenu-padding) + 57vw);
 }
 .navigation-menu:has(div a:nth-child(5) > button[data-accent-color="amber"]) {
-  --navmenu-indicator-x: calc(var(--navmenu-padding) + 75.8vw);
+  --navmenu-indicator-x: calc(var(--navmenu-padding) + 76.5vw);
 }
 

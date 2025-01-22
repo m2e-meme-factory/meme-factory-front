@@ -280,6 +280,7 @@ export default function ProfilePage() {
   const defaultTab = searchParams.get('tab') || 'airdrop';
   const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
   const navigate = useNavigate();
+  const [indexSlideshow, setIndexSlideshow] = useState(0);
 
   const webapp = useWebApp();
 
@@ -358,9 +359,75 @@ export default function ProfilePage() {
             <Flex direction='column' gap='3'>
               <Heading weight="regular" size='4'>Join our whitelist</Heading>
 
-              <Slideshow />
+              <div className="slideshow">
+                <div className="slideshowSlider"
+                  style={{ transform: `translate3d(${-indexSlideshow * 100}%, 0, 0)` }}
+                >
+                  {nfts.map((nft, index) => (
+                    <NftCardItem 
+                      style={{
+                        width: '100%',
+                        display: 'inline-block'
+                      }}
+                      wallet={{
+                      isWallet: tonConnectUI.connected,
+                      onConnect: () => {
+                        tonConnectUI.modal.open()
+                      }
+                    }} nft={nft} handleBuy={() => {
+                      if (walletAddress) {
+                        showSuccessMessage('NFT bought successfully!');
+                      }
+                      else {
+                        tonConnectUI.modal.open()
+                        // showErrorMessage('Connect wallet first!');
+                      }
+                    }} key={index} />
+                  ))}
+                  <NftCardItem wallet={{
+                        isWallet: tonConnectUI.connected,
+                        onConnect: () => {
+                          tonConnectUI.modal.open()
+                        }
+                      }}  
+                      nft={cyberNft} handleBuy={() => {
+                        if (walletAddress) {
+                          showSuccessMessage('NFT bought successfully!');
+                        }
+                        else {
+                          tonConnectUI.modal.open()
+                          // showErrorMessage('Connect wallet first!');
+                        }
+                      }} style={{
+                        width: '100%',
+                        display: 'inline-block'
+                      }} />
+                </div>
 
-              <Box>
+                <div className="slideshowDots">
+                  {nfts.map((nft, idx) => (
+                    <div
+                      key={idx}
+                      className={`slideshowDot${indexSlideshow === idx ? " active" : ""}`}
+                      onClick={() => {
+                        setIndexSlideshow(idx);
+                      }}
+                    >
+                      {nft.name}
+                    </div>
+                  ))}
+                  <div 
+                    className={`slideshowDot${indexSlideshow === 4 ? " active" : ""}`}
+                    onClick={() => {
+                      setIndexSlideshow(4);
+                    }}
+                  >
+                      {cyberNft.name}
+                    </div>
+                </div>
+              </div>
+
+              {/* <Box>
                 <Grid gap='4' style={{ overflowX: 'hidden'}}>
                   <Flex gap='4' className='scroll-container' style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory'}}>
                     {nfts.map((nft, index) => (
@@ -380,7 +447,7 @@ export default function ProfilePage() {
                       }} key={index} style={{ minWidth: '92vw', scrollSnapAlign: 'center' }} />
                     ))}
 
-                  <NftCardItem wallet={{
+                    <NftCardItem wallet={{
                         isWallet: tonConnectUI.connected,
                         onConnect: () => {
                           tonConnectUI.modal.open()
@@ -407,7 +474,7 @@ export default function ProfilePage() {
                     </button>
                   </Flex>
                 </Grid>
-              </Box>
+              </Box> */}
             </Flex>
 
             <Flex justify='center' align='center' gap='2' direction='column'>

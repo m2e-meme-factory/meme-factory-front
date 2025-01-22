@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '@radix-ui/themes/styles.css';
 import './index.css';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import ProviderWrapper from './ProviderWrapper';
 import { Toaster } from 'react-hot-toast';
 

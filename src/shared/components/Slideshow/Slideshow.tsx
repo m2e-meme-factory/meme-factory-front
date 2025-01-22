@@ -1,11 +1,9 @@
 import React from 'react';
 import styles from './Slideshow.module.css'
 
-
-const colors = ["#0088FE", "#00C49F", "#FFBB28"];
 const delay = 8500;
 
-export default function Slideshow() {
+export default function Slideshow({ nft } : { nft: any, style?: React.CSSProperties }) {
   const [index, setIndex] = React.useState(0);
   const timeoutRef = React.useRef(null);
 
@@ -37,17 +35,17 @@ export default function Slideshow() {
         className={styles.slideshowSlider}
         style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
       >
-        {colors.map((backgroundColor, index) => (
+        {nft.map((item: any, index: any) => (
           <div
             className={styles.slide}
             key={index}
-            style={{ backgroundColor }}
-          >{index}</div>
+            style={{  }}
+          >{item.name}</div>
         ))}
       </div>
 
       <div className={styles.slideshowDots}>
-        {colors.map((_, idx) => (
+        {nft.map((item: any, idx: any) => (
           <div
             key={idx}
             className={`${styles.slideshowDot} ${index === idx ? styles.active : styles.slideshowDot}`}
@@ -55,7 +53,7 @@ export default function Slideshow() {
               setIndex(idx);
             }}
           >
-            {idx + 1}
+            {item.name}
           </div>
         ))}
       </div>

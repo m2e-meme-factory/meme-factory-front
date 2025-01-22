@@ -14,6 +14,18 @@ const BorderButton = styled(Button)`
     text-transform: uppercase;
     text-align: center;
     height: 32px;
+
+    &:disabled {
+    animation: none;
+    box-shadow: none;
+    opacity: 0.5;
+  }
+
+  &:where("data-disabled") {
+    animation: none;
+    box-shadow: none;
+    opacity: 0.5;
+  }
 `;
 
 export default BorderButton;

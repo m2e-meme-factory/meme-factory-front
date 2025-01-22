@@ -14,6 +14,23 @@ const YellowBorderButton = styled(Button)`
     text-transform: uppercase;
     text-align: center;
     // height: 32px;
+
+    &:hover {
+    box-shadow: 0px 0px 0px 0px var(--brand-color);
+  }
+  &:disabled {
+    color: #ffcf0b;
+    animation: none;
+    box-shadow: none;
+    opacity: 0.5;
+  }
+
+  &:where("data-disabled") {
+    color: #ffcf0b;
+    animation: none;
+    box-shadow: none;
+    opacity: 0.5;
+  }
 `;
 
 export default YellowBorderButton;

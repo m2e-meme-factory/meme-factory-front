@@ -426,55 +426,6 @@ export default function ProfilePage() {
                     </div>
                 </div>
               </div>
-
-              {/* <Box>
-                <Grid gap='4' style={{ overflowX: 'hidden'}}>
-                  <Flex gap='4' className='scroll-container' style={{ overflowX: 'scroll', scrollSnapType: 'x mandatory'}}>
-                    {nfts.map((nft, index) => (
-                      <NftCardItem wallet={{
-                        isWallet: tonConnectUI.connected,
-                        onConnect: () => {
-                          tonConnectUI.modal.open()
-                        }
-                      }} nft={nft} handleBuy={() => {
-                        if (walletAddress) {
-                          showSuccessMessage('NFT bought successfully!');
-                        }
-                        else {
-                          tonConnectUI.modal.open()
-                          // showErrorMessage('Connect wallet first!');
-                        }
-                      }} key={index} style={{ minWidth: '92vw', scrollSnapAlign: 'center' }} />
-                    ))}
-
-                    <NftCardItem wallet={{
-                        isWallet: tonConnectUI.connected,
-                        onConnect: () => {
-                          tonConnectUI.modal.open()
-                        }
-                      }}  
-                      nft={cyberNft} handleBuy={() => {
-                        if (walletAddress) {
-                          showSuccessMessage('NFT bought successfully!');
-                        }
-                        else {
-                          tonConnectUI.modal.open()
-                          // showErrorMessage('Connect wallet first!');
-                        }
-                      }} style={{ minWidth: '92vw', scrollSnapAlign: 'center' }} />
-                  </Flex>
-                  <Flex>
-                    {nfts.map((nft, index) => (
-                      <button className='whitelist-btn'>
-                        {nft.name}
-                      </button>
-                    ))}
-                    <button className='whitelist-btn'>
-                      {cyberNft.name}
-                    </button>
-                  </Flex>
-                </Grid>
-              </Box> */}
             </Flex>
 
             <Flex justify='center' align='center' gap='2' direction='column'>

@@ -350,7 +350,7 @@ html, body {
 body {
   background-color: #000000;
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'SF', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

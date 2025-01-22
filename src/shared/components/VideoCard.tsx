@@ -13,9 +13,9 @@ const BoucingButton = styled.button`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 12px 18px;
+    padding: 12px 15px;
     background: rgba(0, 0, 0, 0.7);
-    color: white;
+    color: #fecf0a;
     border: none;
     border-radius: 50%;
     cursor: pointer;

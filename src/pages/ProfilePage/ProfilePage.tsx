@@ -29,10 +29,13 @@ import ConnectWallet from '../WalletPage/ConnectWallet';
 import VideoCard from '../../shared/components/VideoCard';
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { CaretRightIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import Header from './Header';
 import { SolidCard } from '../../shared/components/Card/SolidCard';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
+import YellowBorderButton from '../../shared/components/Buttons/YellowBorderButton';
+import Slideshow from '../../shared/components/Slideshow/Slideshow';
+
 
 enum TabsOption {
   AIRDROP = 'airdrop',
@@ -41,12 +44,18 @@ enum TabsOption {
 
 const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT];
 
-const NftCard = styled(SolidCard) <{ glowing: boolean }>`
+
+const NftCard = styled(SolidCard) <{ glowing: boolean, bronzes: boolean, silvers: boolean, dimonds: boolean, investors: boolean }>`
   /* min-height: 12vh; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: ease .2s;
+   ${(props) => props.glowing ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #908a73 0%, #1c1c1e 100%);' : ''};
+   ${(props) => props.bronzes ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #7b675b 0%, #1c1c1e 100%);' : ''};
+   ${(props) => props.silvers ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #848484 0%, #1c1c1e 100%);' : ''};
+   ${(props) => props.dimonds ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #738e91 0%, #1c1c1e 100%);' : ''};
+   ${(props) => props.investors ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #7a6c84 0%, #1c1c1e 100%);' : ''};
 
   &:active {
     cursor: pointer;
@@ -86,28 +95,28 @@ const ImgWrapper = styled(Flex)`
 const nfts = [
   {
     "name": "Bronze",
-    "img": "bronze.png",
+    "img": "bronze.svg",
     "discount": 0,
     "amount": 10,
     "price": 1,
   },
   {
     "name": "Silver",
-    "img": "silver.png",
+    "img": "silver.svg",
     "discount": 10,
     "amount": 100,
     "price": 0.9,
   },
   {
     "name": "Gold",
-    "img": "gold.png",
+    "img": "gold.svg",
     "discount": 20,
     "amount": 1000,
     "price": 0.8,
   },
   {
     "name": "Dimond",
-    "img": "dimond.png",
+    "img": "dimond.svg",
     "discount": 30,
     "amount": 10000,
     "price": 0.7,
@@ -116,7 +125,7 @@ const nfts = [
 
 const cyberNft = {
   "name": "Investor",
-  "img": "cool.png",
+  "img": "cool.svg",
   "discount": 40,
   "amount": 100000,
   "price": 0.6,
@@ -154,26 +163,28 @@ const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: (
 
   return (
     <>
-      <NftCard style={style} onClick={handleDialogOpen} glowing={nft.name == "Gold"}>
+      <NftCard style={style} onClick={handleDialogOpen} glowing={nft.name == "Gold"} bronzes={nft.name == "Bronze"} silvers={nft.name == "Silver"} dimonds={nft.name == "Dimond"} investors={nft.name == "Investor"}>
+        <Flex direction='column' minHeight='10vh'>
         <Box>
-          <Heading>{nft.name}</Heading>
-          {nft.discount > 0 && <Badge color='green'>-{nft.discount}% discount</Badge>}
+          <Flex gap="3" justify='between' align='center'>
+            <Flex gap='1'>
+              <Heading size='2'>{nft.name}</Heading>
+              <img src={`${process.env.PUBLIC_URL}/imgs/${nft.img}`} style={{
+                width: '18px', height: '17px'
+              }}/>
+            </Flex>
+            {nft.discount > 0 && <Badge color='gray'>-{nft.discount}%</Badge>}
+          </Flex>
         </Box>
-        <ImgWrapper>
-          <img
-            src={`${process.env.PUBLIC_URL}/imgs/${nft.img}`}
-            style={{
-              objectFit: 'cover',
-              height: '100%',
-            }}
-          />
-        </ImgWrapper>
         <Box>
-          <Text color='gray'>
-            {numberWithSpaces(nft.amount)} <Badge color='gray' size="1">USDT</Badge>
+          <Text color='gray' style={{ fontSize: '11px', lineHeight: '145%', letterSpacing: '0.03em'}} weight='regular'>
+            {numberWithSpaces(nft.amount)} USDT = {numberWithSpaces(nft.amount)} MF
           </Text>
         </Box>
-
+        <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px'}}>
+          BUY
+        </YellowBorderButton>
+        </Flex>
       </NftCard>
     
       <Sheet
@@ -182,7 +193,7 @@ const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: (
         detent='content-height'
       >
         <Theme appearance='dark'>
-          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+          <Sheet.Container style={{ overflowY: 'auto', background: '#121113 url(/imgs/modal-ellipse.svg) no-repeat 50% 0' }}>
             <Sheet.Header />
             <Sheet.Content>
               <Theme>
@@ -195,7 +206,6 @@ const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: (
                       {nft.name}
                     </Heading>
                     <Text size="4" align="center">
-                      
                       Get 100% chance for <b>{numberWithSpaces(nft.amount + nft.amount * (nft.discount / 100))}</b> <Badge color='yellow' size="3">M2E</Badge> tokens Airdrop
                     </Text>
                     <Callout.Root color='green' mt="2">
@@ -205,11 +215,6 @@ const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: (
                         <Text weight="bold">M2E/USDT {nft.price}$ </Text>
                       </Callout.Text>
                     </Callout.Root>
-
-                    {/* <Text mb='2' align='center'>
-
-                          You will get {numberWithSpaces(nft.amount)} after airdrop with 100% chance
-                          </Text> */}
                   </Grid>
 
                   {wallet.isWallet ? (
@@ -275,6 +280,7 @@ export default function ProfilePage() {
   const defaultTab = searchParams.get('tab') || 'airdrop';
   const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
   const navigate = useNavigate();
+  const [indexSlideshow, setIndexSlideshow] = useState(0);
 
   const webapp = useWebApp();
 
@@ -342,37 +348,42 @@ export default function ProfilePage() {
           version={process.env.REACT_APP_VERSION || "none"}
         />
       )}
-        <Flex asChild p="4" gap="6" direction="column">
+        <Flex asChild p="4" gap="5" direction="column">
           <Box pt='3' pb="3" style={{ maxHeight: '100%' }}>
             <Flex direction='column' gap='5'>
-              <Heading weight="bold" >What is Meme Factory?</Heading>
+              <Heading weight="regular" size='4' >What is Meme Factory?</Heading>
               <VideoCard videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'} thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'} altText='Tutorial' />
             </Flex>
 
 
-            <Flex direction='column' gap='5'>
-              <Heading weight="bold" >Buy <i>WhiteList NFTs</i> to get 100% airdrop chance</Heading>
-              <Box>
-                <Grid gap='4'>
-                  <Grid gap='4' columns="2">
-                    {nfts.map((nft, index) => (
-                      <NftCardItem wallet={{
-                        isWallet: tonConnectUI.connected,
-                        onConnect: () => {
-                          tonConnectUI.modal.open()
-                        }
-                      }} nft={nft} handleBuy={() => {
-                        if (walletAddress) {
-                          showSuccessMessage('NFT bought successfully!');
-                        }
-                        else {
-                          tonConnectUI.modal.open()
-                          // showErrorMessage('Connect wallet first!');
-                        }
-                      }} key={index} />
-                    ))}
+            <Flex direction='column' gap='3'>
+              <Heading weight="regular" size='4'>Join our whitelist</Heading>
 
-                  </Grid>
+              <div className="slideshow">
+                <div className="slideshowSlider"
+                  style={{ transform: `translate3d(${-indexSlideshow * 100}%, 0, 0)` }}
+                >
+                  {nfts.map((nft, index) => (
+                    <NftCardItem 
+                      style={{
+                        width: '100%',
+                        display: 'inline-block'
+                      }}
+                      wallet={{
+                      isWallet: tonConnectUI.connected,
+                      onConnect: () => {
+                        tonConnectUI.modal.open()
+                      }
+                    }} nft={nft} handleBuy={() => {
+                      if (walletAddress) {
+                        showSuccessMessage('NFT bought successfully!');
+                      }
+                      else {
+                        tonConnectUI.modal.open()
+                        // showErrorMessage('Connect wallet first!');
+                      }
+                    }} key={index} />
+                  ))}
                   <NftCardItem wallet={{
                         isWallet: tonConnectUI.connected,
                         onConnect: () => {
@@ -387,234 +398,125 @@ export default function ProfilePage() {
                           tonConnectUI.modal.open()
                           // showErrorMessage('Connect wallet first!');
                         }
+                      }} style={{
+                        width: '100%',
+                        display: 'inline-block'
                       }} />
-                </Grid>
-              </Box>
+                </div>
+
+                <div className="slideshowDots">
+                  {nfts.map((nft, idx) => (
+                    <div
+                      key={idx}
+                      className={`slideshowDot${indexSlideshow === idx ? " active" : ""}`}
+                      onClick={() => {
+                        setIndexSlideshow(idx);
+                      }}
+                    >
+                      {nft.name}
+                    </div>
+                  ))}
+                  <div 
+                    className={`slideshowDot${indexSlideshow === 4 ? " active" : ""}`}
+                    onClick={() => {
+                      setIndexSlideshow(4);
+                    }}
+                  >
+                      {cyberNft.name}
+                    </div>
+                </div>
+              </div>
             </Flex>
 
             <Flex justify='center' align='center' gap='2' direction='column'>
-                      <Heading>
-                        Other ways increase Airdrop chance?{' '}
-                        <Popover.Root>
-                          <Popover.Trigger>
-                            <Flex align='center' display='inline-flex'>
-                              <IconButton size='4' color='gray' variant='ghost' radius='full'>
-                                <InfoCircledIcon />
-                              </IconButton>
-                            </Flex>
-                          </Popover.Trigger>
-                          <Popover.Content size='1' maxWidth='300px'>
-                            <Text size='2'>
-                              <b>Airdrop</b> is gift in real tokens for active users
-                            </Text>
-                          </Popover.Content>
-                        </Popover.Root>
-                      </Heading>
+              <Heading size='3'>
+                Other ways increase Airdrop chance?
+              </Heading>
+            </Flex>
+            <Flex direction='column' gap='3'>
+              <Link
+                style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                to='/friends'
+              >
+                <SolidCard>
+                  <Flex justify='between' align='center'>
+                    <Flex gap='3' align='center'>
+                      <Box style={{backgroundColor: "#181818", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center", color: "#A8A8A8"}} >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M21.5 12H17.5M19.5 14L19.5 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                          <path d="M3.5 19.1115C3.5 16.6984 5.19732 14.643 7.50404 14.2627L7.71182 14.2284C9.55892 13.9239 11.4411 13.9239 13.2882 14.2284L13.496 14.2627C15.8027 14.643 17.5 16.6984 17.5 19.1115C17.5 20.1545 16.6815 21 15.6719 21H5.32813C4.31848 21 3.5 20.1545 3.5 19.1115Z" stroke="currentColor" stroke-width="1.2" />
+                          <path d="M14.5834 6.9375C14.5834 9.11212 12.7552 10.875 10.5 10.875C8.24486 10.875 6.41669 9.11212 6.41669 6.9375C6.41669 4.76288 8.24486 3 10.5 3C12.7552 3 14.5834 4.76288 14.5834 6.9375Z" stroke="currentColor" stroke-width="1.2" />
+                        </svg>
+                      </Box>
+                      <Box>
+                        <Box style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}>Invite friends</Box>
+                      </Box>
                     </Flex>
-                    <Flex direction='column' gap='2'>
-                      <Link
-                        style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
-                        to='/friends'
-                      >
-                        <SolidCard>
-                          <Flex justify='between' align='center' p='1'>
-                            <Box>
-                              <Box>Invite friends</Box>
-                            </Box>
-                            <Box>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                height='1.75rem'
-                                viewBox='0 0 256 256'
-                              >
-                                <rect width='256' height='256' fill='none' />
-                                <path
-                                  d='M192,120a59.91,59.91,0,0,1,48,24'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M16,144a59.91,59.91,0,0,1,48-24'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <circle
-                                  cx='128'
-                                  cy='144'
-                                  r='40'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M72,216a65,65,0,0,1,112,0'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M161,80a32,32,0,1,1,31,40'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M64,120A32,32,0,1,1,95,80'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                              </svg>
-                            </Box>
-                          </Flex>
-                        </SolidCard>
-                      </Link>
+                    <CaretRightIcon width={24} height={24} color='#A8A8A8' />
+                  </Flex>
+                </SolidCard>
+              </Link>
 
-                      <Link
-                        style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
-                        to='/all-tasks'
-                      >
-                        <SolidCard>
-                          <Flex justify='between' align='center' p='1'>
-                            <Box>
-                              <Box>Complete Fast Tasks</Box>
-                            </Box>
-                            <Box>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                height='1.75rem'
-                                fill='currentColor'
-                                viewBox='0 0 256 256'
-                              >
-                                <path d='M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z'></path>
-                              </svg>
-                            </Box>
-                          </Flex>
-                        </SolidCard>
-                      </Link>
-
-                      <Link
-                        style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
-                        to='/post-meme'
-                      >
-                        <SolidCard >
-                          <Flex justify='between' align='center' p='1'>
-                            <Box>
-                              <Box>Post Memes</Box>
-                              <Box>
-                                <Text size='1' color='gray'>
-                                  The most valuable type of activity
-                                </Text>
-                              </Box>
-                            </Box>
-                            <Box>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                height='1.75rem'
-                                viewBox='0 0 256 256'
-                                color='var(--brand-color)'
-                              >
-                                <rect width='256' height='256' fill='none' />
-                                <ellipse
-                                  cx='96'
-                                  cy='84'
-                                  rx='80'
-                                  ry='36'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M16,84v40c0,19.88,35.82,36,80,36s80-16.12,80-36V84'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <line
-                                  x1='64'
-                                  y1='117'
-                                  x2='64'
-                                  y2='157'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M176,96.72c36.52,3.34,64,17.86,64,35.28,0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <path
-                                  d='M80,159.28V172c0,19.88,35.82,36,80,36s80-16.12,80-36V132'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <line
-                                  x1='192'
-                                  y1='165'
-                                  x2='192'
-                                  y2='205'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                                <line
-                                  x1='128'
-                                  y1='117'
-                                  x2='128'
-                                  y2='205'
-                                  fill='none'
-                                  stroke='currentColor'
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth='16'
-                                />
-                              </svg>
-                            </Box>
-                          </Flex>
-                        </SolidCard>
-                      </Link>
-            <ConnectWallet />
+              <Link
+                style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                to='/all-tasks'
+              >
+                <SolidCard>
+                  <Flex justify='between' align='center'>
+                    <Flex gap='3' align='center'>
+                      <Box style={{backgroundColor: "#181818", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center", color: "#A8A8A8"}} >
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          height='1.75rem'
+                          fill='currentColor'
+                          viewBox='0 0 256 256'
+                        >
+                          <path d='M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z'></path>
+                        </svg>
+                      </Box>
+                      <Box>
+                        <Box style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px', fontWeight: '400' }}>Complete Fast Tasks</Box>
+                      </Box>
                     </Flex>
+                    <CaretRightIcon width={24} height={24} color='#A8A8A8' />
+                  </Flex>
+                </SolidCard>
+              </Link>
 
-            <Box pb="3">
-              <SolidCard>
+              <Link
+                style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                to='/post-meme'
+              >
+                <SolidCard >
+                  <Flex justify='between' align='center'>
+                    <Flex gap='3' align='center'>
+                      <Box style={{backgroundColor: "#181818", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center", color: "#A8A8A8"}} >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9.25 13.8333C9.25 15.3522 11.7122 16.5833 14.75 16.5833C17.7878 16.5833 20.25 15.3522 20.25 13.8333C20.25 12.3143 17.7878 11.0833 14.75 11.0833C11.7122 11.0833 9.25 12.3143 9.25 13.8333Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M9.25 13.8333V17.5C9.25 19.018 11.7122 20.25 14.75 20.25C17.7878 20.25 20.25 19.018 20.25 17.5V13.8333M3.75 6.5C3.75 7.48267 4.79867 8.39017 6.5 8.8815C8.20133 9.37283 10.2987 9.37283 12 8.8815C13.7013 8.39017 14.75 7.48267 14.75 6.5C14.75 5.51733 13.7013 4.60983 12 4.1185C10.2987 3.62717 8.20133 3.62717 6.5 4.1185C4.79867 4.60983 3.75 5.51733 3.75 6.5Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M3.75 6.5V15.6667C3.75 16.4807 4.45767 16.9958 5.58333 17.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M3.75 11.0833C3.75 11.8973 4.45767 12.4124 5.58333 12.9166" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </Box>
+                      <Box>
+                        <Box style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}>Post Memes</Box>
+                      </Box>
+                    </Flex>
+                    <CaretRightIcon width={24} height={24} color='#A8A8A8' />
+                  </Flex>
+                </SolidCard>
+              </Link>
+              <ConnectWallet />
+            </Flex>
+
+            <Box pb="5">
                 <Grid gap='4'>
-                  <Heading mr='3'>More</Heading>
-
-                  <AccentButton onClick={() => navigate('/become-partner')} size='4'>
+                  <Heading mr='3' size='4'>More</Heading>
+                  <YellowBorderButton size='4' onClick={() => navigate('/become-partner')} style={{ fontSize: '15px', fontWeight: '500', textTransform: 'uppercase' }}>
                     Become Advertiser
-                  </AccentButton>
+                  </YellowBorderButton>
                 </Grid>
-              </SolidCard>
+
             </Box>
           </Box>
         </Flex>

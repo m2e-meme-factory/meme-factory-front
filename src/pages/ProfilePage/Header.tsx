@@ -8,8 +8,6 @@ function numberWithSpaces(x: number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-
-
 export default function Header() {
 
     const user = useSelector((state: RootState) => state.user.user);
@@ -31,30 +29,21 @@ export default function Header() {
     return (
         <Flex justify="between" align="center">
             <Link
-                style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit', display: 'flex', gap: '5px' }}
                 to='/wallet'
             >
-                <Heading align="center">{numberWithSpaces(user ? Number(user.balance) : 0)} <Badge size="3" color="bronze">XP</Badge></Heading>
+                <Heading align="center">{numberWithSpaces(user ? Number(user.balance) : 0)}</Heading>
+                <Badge size="3" color="gold" variant="soft" radius="full">XP</Badge>
 
             </Link>
-            {/* <img
-                src={`${process.env.PUBLIC_URL}/imgs/ru.png`}
-                style={{
-                  objectFit: 'cover',
-                  height: '100%',
-                }}
-              /> */}
             <Select.Root onValueChange={(l) => handleChangeLanguage(l)} value={lang} size="2">
-                <Select.Trigger variant="ghost" color='gray' />
+                <Select.Trigger variant="soft" color='bronze' radius="full" />
                 <Select.Content color="gray">
-                    <Select.Item value="en"><img alt="En" src={`${process.env.PUBLIC_URL}/imgs/en.png`} height="24px" style={{ marginBottom: "-7px" }} /></Select.Item>
-                    <Select.Item value="ru"><img alt="Ru" src={`${process.env.PUBLIC_URL}/imgs/ru.png`} height="24px" style={{ marginBottom: "-7px" }} /></Select.Item>
+                    <Select.Item value="en">EN</Select.Item>
+                    <Select.Item value="ru">RU</Select.Item>
                 </Select.Content>
             </Select.Root>
-            {/* <SegmentedControl.Root defaultValue="en">
-          <SegmentedControl.Item value="en">🇬🇧 En</SegmentedControl.Item>
-          <SegmentedControl.Item value="ru">🇷🇺 Ru</SegmentedControl.Item>
-        </SegmentedControl.Root> */}
+
         </Flex>
     );
 }

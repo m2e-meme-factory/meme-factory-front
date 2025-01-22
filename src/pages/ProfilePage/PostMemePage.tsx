@@ -16,6 +16,7 @@ import CoinbagAnimated from "../../shared/components/LottieIcons/Coinbag/Coinbag
 import yeyEmoji from '../../shared/imgs/yey.png';
 import styled from "styled-components";
 import { SolidCard } from "../../shared/components/Card/SolidCard";
+import YellowBorderButton from "../../shared/components/Buttons/YellowBorderButton";
 
 const VIDEO_OVERLAY_API_URL = "https://video-api.egor-jan.tech"
 // const VIDEO_OVERLAY_API_URL = "http://127.0.0.1:8000"
@@ -89,9 +90,15 @@ const Step = ({ children, text, step, currentStep, handleDone, isProgress, btnTe
     isProgress?: boolean,
     btnText?: string
 }>) => <>
-        <Box>
+        <Box style={{ 
+            padding: '12px', 
+            borderRadius: '10px', 
+            border: '1px solid #1c1c1e', 
+            backgroundColor: currentStep == step ? '#202020' : '',
+            
+            }}>
             <Flex direction='column' gap='4'>
-                <Heading weight="bold" style={{ color: currentStep == step ? '#fff' : 'var(--gray-10)' }} >{text}</Heading>
+                <Heading weight="regular" size='3' style={{ color: currentStep == step ? '#fff' : 'var(--gray-10)' }} >{text}</Heading>
                 {currentStep >= step && (
                     <>
                         {children}
@@ -296,22 +303,17 @@ export default function PostMemePage() {
     return (
         // <ScrollArea style={{ maxHeight: "100vh" }}>
             <>
-            {/* <GlowingButton onClick={() => WebApp.downloadFile({
-                url: "https://video-api.egor-jan.tech/download-video/overlayed_c0852770-394b-4d0e-babf-89dabcda7933.mp4",
-                file_name: "hi"
-            })}>hey</GlowingButton> */}
                 <WebappBackButton />
-                <Flex asChild p="4" pt='3' pb="6" gap="6" direction="column">
+                <Flex asChild p="4" pt='3' pb="6" gap="3" direction="column">
                     <Box>
                         <Header />
-               
-
+                
                         <Step
                             text="1. Watch guide"
                             step={0}
                             currentStep={currentStep}
                             handleDone={() => setCurrentStep(1)}
-                            btnText={"Begin earning"}
+                            btnText={"DONE"}
                         >
                             <VideoCard videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'} thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'} altText='Tutorial' />
                         </Step>
@@ -323,35 +325,32 @@ export default function PostMemePage() {
                             isProgress={isSubmitedVideo}
                         >
                             {!isSubmitedVideo ? (
-                                <Card>
-                                    <Tabs.Root defaultValue="web">
-                                        <Tabs.List>
-                                            <Tabs.Trigger value="web">From Link</Tabs.Trigger>
-                                            <Tabs.Trigger value="local">Upload Local</Tabs.Trigger>
-                                        </Tabs.List>
+                                <Tabs.Root defaultValue="web">
+                                    <Tabs.List>
+                                        <Tabs.Trigger style={{ fontSize: '16px', }} value="web">From Link</Tabs.Trigger>
+                                        <Tabs.Trigger style={{ fontSize: '16px', }} value="local">Upload Local</Tabs.Trigger>
+                                    </Tabs.List>
 
-                                        <Box pt="3">
-                                            <Tabs.Content value="web">
-                                                <Flex direction="column" gap="2">
-                                                    <TextField.Root size="3" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="Paste Meme URL" />
+                                    <Box pt="3">
+                                        <Tabs.Content value="web">
+                                            <Flex direction="column" gap="2">
+                                                <TextField.Root size="3" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="Paste Meme URL" />
+                                                <YellowBorderButton onClick={handleUploadVideoUrl} size="4" style={{ fontSize: '15px'}} disabled={loading}>PROCEED VIDEO</YellowBorderButton>
+                                            </Flex>
+                                        </Tabs.Content>
 
-                                                    <Button color="amber" onClick={handleUploadVideoUrl} size="3" disabled={loading}>Proceed</Button>
-                                                </Flex>
-                                            </Tabs.Content>
-
-                                            <Tabs.Content value="local">
-                                                <Flex direction="column" gap="2">
-                                                    <FileUpload onChange={handleFileChange} />
-                                                    {
-                                                        (file != null) && (
-                                                            <Button color="amber" onClick={handleUploadVideoFile} size="3" disabled={loading}>Upload</Button>
-                                                        )
-                                                    }
-                                                </Flex>
-                                            </Tabs.Content>
-                                        </Box>
-                                    </Tabs.Root>
-                                </Card>
+                                        <Tabs.Content value="local">
+                                            <Flex direction="column" gap="2">
+                                                <FileUpload onChange={handleFileChange} />
+                                                {
+                                                    (file != null) && (
+                                                        <Button color="amber" onClick={handleUploadVideoFile} size="3" disabled={loading}>UPLOAD</Button>
+                                                    )
+                                                }
+                                            </Flex>
+                                        </Tabs.Content>
+                                    </Box>
+                                </Tabs.Root>
                             ) : (
                                 <Callout.Root color="green">
                                     <Callout.Icon>
@@ -378,7 +377,7 @@ export default function PostMemePage() {
                                     const response1 = await axios.get(overlyedVideoUrl, {
                                         responseType: 'blob',  // Важное изменение: ожидаем получение файла как Blob
                                     });
-    
+
                                     const downloadUrl = URL.createObjectURL(response1.data);
                                     const link = document.createElement('a');
                                     link.href = downloadUrl;
@@ -392,26 +391,19 @@ export default function PostMemePage() {
                             isProgress={overlyedVideoUrl.length > 1 && !loading}
                             btnText={loading ? 'Downloading...' : 'Download'}
                         >
-                            <Card>
-                                <Flex direction="column" gap="4">
-                                    <Text>Select language</Text>
+                            <Flex direction="column" gap="4">
+                                <Text>Select language</Text>
 
-                                    <Select.Root defaultValue="en">
-                                        <Select.Trigger />
-                                        <Select.Content>
-                                            <Select.Item value="en">English</Select.Item>
-                                            <Select.Item value="ru">Russian</Select.Item>
-                                        </Select.Content>
-                                    </Select.Root>
+                                <Select.Root defaultValue="en">
+                                    <Select.Trigger />
+                                    <Select.Content>
+                                        <Select.Item value="en">English</Select.Item>
+                                        <Select.Item value="ru">Russian</Select.Item>
+                                    </Select.Content>
+                                </Select.Root>
+                                <YellowBorderButton onClick={handleOverlayVideo} size="3" style={{ fontSize: '15px'}} disabled={loading}>{loading ? 'Processing Video...' : 'PROCEED VIDEO'}</YellowBorderButton>
+                            </Flex>
 
-                                    <AccentButton style={{ width: "100%", color: "#000" }} onClick={handleOverlayVideo} size="3" disabled={loading}>
-                                        {loading ? 'Processing Video...' : 'Proceed Video'}
-                                    </AccentButton>
-                                </Flex>
-                            </Card>
-                            {/* {(overlyedVideoUrl.length > 0)  ? (
-                                    <VideoCard videoSrc={overlyedVideoUrl} thumbnailSrc={overlyedVideoUrl} altText='Tutorial' />
-                                ) : ("") } */}
                         </Step>
                         <Step
                             text="4. Upload to Instagram"
@@ -420,15 +412,13 @@ export default function PostMemePage() {
                             handleDone={() => setCurrentStep(4)}
                         >
                             {fileId && !loading && (
-                                <Card>
-                                    <Flex direction="column" gap="4">
-                                        <Text>Copy this description and upload video to your Instagram account</Text>
-                                        <Callout.Root color="gray">
-                                            Join Meme to Earn - link in account bio
-                                        </Callout.Root>
-                                        <Button onClick={() => handleCopyText("Join Meme to Earn - link in account bio")} color="gray" size="3">{copyText}</Button>
-                                    </Flex>
-                                </Card>
+                                <Flex direction="column" gap="4">
+                                    <Text>Copy this description and upload video to your Instagram account</Text>
+                                    <Callout.Root color="gray">
+                                        Join Meme to Earn - link in account bio
+                                    </Callout.Root>
+                                    <Button onClick={() => handleCopyText("Join Meme to Earn - link in account bio")} color="gray" size="3">{copyText}</Button>
+                                </Flex>
                             )}
                         </Step>
                         <Step
@@ -438,42 +428,50 @@ export default function PostMemePage() {
                             handleDone={() => {}}
                             isProgress={false}
                         >
-                            <Card>
-                                <Flex direction="column" gap="4">
-                                    <Callout.Root color="gray">
-                                        Now Just Wait until your Meme reach {">"}10K views and <b>send video on Review</b>
-                                    </Callout.Root>
+                            <Flex direction="column" gap="4">
+                                <Callout.Root color="gray">
+                                    Now Just Wait until your Meme reach {">"}10K views and <b>send video on Review</b>
+                                </Callout.Root>
 
-                                    <Callout.Root color="red">
-                                        <Callout.Icon>
-                                            <InfoCircleOutlined />
-                                        </Callout.Icon>
-                                        <Callout.Text>
-                                            Wait until it gets as many views as possible, because you can send video only once.
-                                        </Callout.Text>
-                                    </Callout.Root>
-                                </Flex>
-                            </Card>
+                                <Callout.Root color="red">
+                                    <Callout.Icon>
+                                        <InfoCircleOutlined />
+                                    </Callout.Icon>
+                                    <Callout.Text>
+                                        Wait until it gets as many views as possible, because you can send video only once.
+                                    </Callout.Text>
+                                </Callout.Root>
+                            </Flex>
                         </Step>
                         
-                        <NftCard onClick={handleDialogOpen} glowing={false}>
-                        <Box>
-                            <Heading>Get Review</Heading>
-                        </Box>
-                        <ImgWrapper opacity={0.3}>
-                            <img
-                            src={`${process.env.PUBLIC_URL}/imgs/rocket.png`}
-                            style={{
-                                objectFit: 'cover',
-                                height: '100%',
-                            }}
-                            />
-                        </ImgWrapper>
-                        <Box pt="1">
-                            <Text color='gray'>
-                            Meme reached 10K views, get Reward
-                            </Text>
-                        </Box>
+                        <NftCard onClick={handleDialogOpen} glowing={false}
+                            style={{ background: '#1c1c1e url(imgs/earn.svg) no-repeat top right', height: '14vh' }}
+                        >
+                            <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                <Flex direction='row' gap='4'>
+                                    <img
+                                        src={`${process.env.PUBLIC_URL}/imgs/review.svg`}
+                                        style={{
+                                            width: '36px',
+                                            height: '36px',
+                                        }}
+                                    />
+
+                                    <Flex direction='column'>
+                                        <Heading size='3' weight='regular' style={{ lineHeight: '1.1'}}>Get Review</Heading>
+                                        <Box >
+                                            <Text color='gray' weight='regular' style={{ fontSize: '12px'}}>
+                                            Meme reached 10K views, get Reward
+                                            </Text>
+                                        </Box>
+                                    </Flex>
+                                </Flex>
+                                <YellowBorderButton size='4' style={{ display: 'flex', marginTop: 'auto', height: '32px'}}>
+                                    get
+                                </YellowBorderButton>
+                            </Box>
+                            
+                            
                         </NftCard>             
       <Sheet
         isOpen={isModalVisible}

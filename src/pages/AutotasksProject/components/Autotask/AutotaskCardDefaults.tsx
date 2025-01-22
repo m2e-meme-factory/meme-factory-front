@@ -251,13 +251,11 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
           </Box>
 
           <Flex direction='column' ml='4'>
-            <Text size='4' weight='bold' style={{ userSelect: 'text' }}>
+            <Text size='4' weight='bold' style={{ userSelect: 'text', textTransform: 'uppercase' }}>
               {title}
             </Text>
-            <Text weight='medium' size='3' color='gray'>
-              <i>
-                +{formatNumberWithSpaces(price)} <Badge color='bronze'>XP</Badge>
-              </i>
+            <Text weight='regular' size='3' color='gray' >
+                +{formatNumberWithSpaces(price)} <Badge color='gold' radius='full'>XP-M2E</Badge>
             </Text>
           </Flex>
         </Flex>

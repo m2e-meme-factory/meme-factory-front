@@ -1,8 +1,9 @@
-import { Flex, Heading, TextArea, Text, Button, Card, Box } from '@radix-ui/themes';
 import React, { useCallback, useEffect } from 'react';
-import { showSuccessMessage } from '../../shared/utils/helpers/notify';
+import { Flex, Heading, TextArea, Text, Button, Box } from '@radix-ui/themes';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useNavigate } from 'react-router-dom';
+
+import { showSuccessMessage } from '@shared/utils/helpers/notify';
 
 const BecomeAdvertiserPage = () => {
   const [textareaInput, setTextareaInput] = React.useState('');

@@ -8,6 +8,7 @@ module.exports = function override(config, env) {
     '@pages': path.resolve(__dirname, 'src/pages'),
     '@shared': path.resolve(__dirname, 'src/shared'),
     '@styles': path.resolve(__dirname, 'src/styles'),
+    '@widgets': path.resolve(__dirname, 'src/widgets'),
   };
 
   return config;

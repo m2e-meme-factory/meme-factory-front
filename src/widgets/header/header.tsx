@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flex, Heading, Badge, Select } from '@radix-ui/themes';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,12 +8,17 @@ import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { RootState } from '@shared/utils/redux/store';
 import { getLocalStorage, setLocalStorage } from '@shared/utils/helpers/local-storage';
 import { LOCAL_STORAGE_CONSTANTS } from '@shared/consts/local-storage-constants';
+import { LOCAL_TEXT } from '@shared/consts/local-text';
 
 function numberWithSpaces(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-export default function Header() {
+export const Header = () => {
+  const { t, i18n } = useTranslation();
+
+  console.log('i18n', t(LOCAL_TEXT.ADDRESS));
+
   const { user: userWeb } = useWebApp();
   const userLanguage = userWeb?.language_code;
 
@@ -22,6 +28,7 @@ export default function Header() {
   const [lang, setLang] = useState(initialLang);
 
   const handleChangeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
     setLocalStorage(LOCAL_STORAGE_CONSTANTS.LANG, lang);
     setLang(lang);
   };
@@ -56,4 +63,4 @@ export default function Header() {
       </Select.Root>
     </Flex>
   );
-}
+};

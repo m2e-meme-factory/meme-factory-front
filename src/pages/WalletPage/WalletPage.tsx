@@ -1,35 +1,28 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-
 import { useTonConnectUI } from '@tonconnect/ui-react';
-import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
-import WebappBackButton from '../../shared/components/WebappBackButton';
-
 import {
   Grid,
   Text,
-  Card,
   Badge,
   Heading,
   Flex,
   Button,
   Box,
-  Tabs,
   Skeleton,
   AlertDialog,
 } from '@radix-ui/themes';
 
-import { RootState } from '../../shared/utils/redux/store';
+import { Header } from '@widgets/header';
 
-import Loading from '../../shared/components/Loading';
+import { connectWallet } from '@shared/utils/api/requests/ton/connect';
+import WebappBackButton from '@shared/components/WebappBackButton';
+import { RootState } from '@shared/utils/redux/store';
+import GlowingButton from '@shared/components/Buttons/GlowingButton';
 
-import Swiper from 'swiper';
 import 'swiper/css';
 import styled from 'styled-components';
-import GlowingButton from '../../shared/components/Buttons/GlowingButton';
-import CoinbagAnimated from '../../shared/components/LottieIcons/Coinbag/CoinbagAnimated';
-import Header from '../ProfilePage/Header';
 
 const TransactionsHistoryPage = lazy(
   () => import('../TransactionsHistoryPage/TransactionsHistoryPage')
@@ -144,33 +137,50 @@ export default function WalletPage() {
     //         <div className='swiper-wrapper'>
     //           <div className='swiper-slide'>
     <>
-    <Box p="4" pt="3">
-      <Header />
-    </Box>
+      <Box p='4' pt='3'>
+        <Header />
+      </Box>
 
-      <Flex direction='column' justify='center' ml='4' mr='4' gap='4' height='100%' style={{ paddingBottom: '12vh'}}>
+      <Flex
+        direction='column'
+        justify='center'
+        ml='4'
+        mr='4'
+        gap='4'
+        height='100%'
+        style={{ paddingBottom: '12vh' }}
+      >
         <WebappBackButton />
         {/* <CoinbagAnimated /> */}
-        <Box style={{ borderRadius: '10px', background: ' url(imgs/ellipse-wall-1.svg) no-repeat top left, url(imgs/ellipse-wall-2.svg) no-repeat top right, linear-gradient(#1c1c1e, #1c1c1e)', padding: '24px'}}>
+        <Box
+          style={{
+            borderRadius: '10px',
+            background:
+              ' url(imgs/ellipse-wall-1.svg) no-repeat top left, url(imgs/ellipse-wall-2.svg) no-repeat top right, linear-gradient(#1c1c1e, #1c1c1e)',
+            padding: '24px',
+          }}
+        >
           <Flex direction='column' align='center' gap='2'>
-            <img src="imgs/wallet.svg" width='168' height='168' alt="" />
+            <img src='imgs/wallet.svg' width='168' height='168' alt='' />
             <Box>
               <Flex direction='column' align='center'>
-                <Heading align='center' style={{ fontSize: '23px'}}>
+                <Heading align='center' style={{ fontSize: '23px' }}>
                   Connect Wallet
                 </Heading>
-                <Text style={{ fontSize: '16px', }}>
-                  Text info
-                </Text>
+                <Text style={{ fontSize: '16px' }}>Text info</Text>
               </Flex>
             </Box>
           </Flex>
         </Box>
 
-        <Box asChild width='100%'  style={{ borderRadius: '10px', background: '#202020', padding: '12px'}}>
+        <Box
+          asChild
+          width='100%'
+          style={{ borderRadius: '10px', background: '#202020', padding: '12px' }}
+        >
           <Grid gap='4'>
             <Flex direction='column'>
-              <Heading style={{ fontSize: '18px'}}>Available Balance</Heading>
+              <Heading style={{ fontSize: '18px' }}>Available Balance</Heading>
               <Skeleton width='8' loading={!user}>
                 <Flex
                   gapX='3'
@@ -210,11 +220,7 @@ export default function WalletPage() {
                       </Button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                      <Button
-                        variant='solid'
-                        color='red'
-                        onClick={() => tonConnectUI.disconnect()}
-                      >
+                      <Button variant='solid' color='red' onClick={() => tonConnectUI.disconnect()}>
                         Disconnect
                       </Button>
                     </AlertDialog.Action>
@@ -222,32 +228,36 @@ export default function WalletPage() {
                 </AlertDialog.Content>
               </AlertDialog.Root>
             ) : (
-              <GlowingButton size='4' onClick={() => tonConnectUI.modal.open()} style={{ textTransform: 'uppercase', fontSize: '15px', fontWeight: 'bold'}}>
+              <GlowingButton
+                size='4'
+                onClick={() => tonConnectUI.modal.open()}
+                style={{ textTransform: 'uppercase', fontSize: '15px', fontWeight: 'bold' }}
+              >
                 Connect Wallet
               </GlowingButton>
             )}
           </Grid>
         </Box>
       </Flex>
-    </>            
-  //             </div>
-  //             <div className='swiper-slide'>
-  //               <Flex direction='column' justify='center'>
-  //                 <Suspense
-  //                   fallback={
-  //                     <Flex justify='center' align='center' style={{ height: '100vh' }}>
-  //                       <Loading />
-  //                     </Flex>
-  //                   }
-  //                 >
-  //                   <TransactionsHistoryPage />
-  //                 </Suspense>
-  //               </Flex>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </SwiperContainer>
-  //     </Box>
-  //   </Tabs.Root>
+    </>
+    //             </div>
+    //             <div className='swiper-slide'>
+    //               <Flex direction='column' justify='center'>
+    //                 <Suspense
+    //                   fallback={
+    //                     <Flex justify='center' align='center' style={{ height: '100vh' }}>
+    //                       <Loading />
+    //                     </Flex>
+    //                   }
+    //                 >
+    //                   <TransactionsHistoryPage />
+    //                 </Suspense>
+    //               </Flex>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </SwiperContainer>
+    //     </Box>
+    //   </Tabs.Root>
   );
 }

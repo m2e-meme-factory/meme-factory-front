@@ -198,6 +198,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             align='center'
             ml='16px'
             mr='16px'
+            overflowX='hidden'
             style={{
               transformStyle: 'preserve-3d',
               // transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
@@ -206,20 +207,41 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             }}
           >
             {/* <CoinbagAnimated /> */}
-            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-1.svg) no-repeat top left / cover'}}>
-              <img src="imgs/tutorial.svg" width='358' height='262' alt="" />
-              <Box mt='-15px'>
-                <Flex direction='column' align='center'>
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-1.svg) no-repeat top left / cover', minHeight: 'clamp(15.625rem, 4.716rem + 54.55vw, 19.375rem)', display: 'flex', alignItems: 'end', justifyContent: 'center', overflow: 'hidden'}}>
+              <img src="imgs/6-01.png" width='233' height='233' alt="" style={{
+                position: 'absolute',
+                width: 'clamp(7.5rem, -13.045rem + 102.73vw, 14.563rem)',
+                height: 'clamp(7.5rem, -13.045rem + 102.73vw, 14.563rem)',
+                top: '4%',
+                right: '-15%',
+              }}/>
+              <img src="imgs/8-01.png" width='134' height='135' alt="" style={{
+                position: 'absolute',
+                width: 'clamp(6.25rem, 0.068rem + 30.91vw, 8.375rem)',
+                height: 'clamp(6.25rem, 0.068rem + 30.91vw, 8.375rem)',
+                top: '-8%',
+                left: '25vw',
+              }}/>
+              <img src="imgs/10-01.png" width='164' height='164' alt="" style={{
+                position: 'absolute',
+                width: 'clamp(7.5rem, -0.5rem + 40vw, 10.25rem)',
+                height: 'clamp(7.5rem, -0.5rem + 40vw, 10.25rem)',
+                top: '15%',
+                left: '-9%',
+                rotate: '12deg'
+              }}/>
+              <Flex direction='column' align='center'>
+                <Box style={{ marginTop: 'auto'}}>
                   <svg width="68" height="18" viewBox="0 0 68 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M67.4469 5.32384H55.3068V6.97173H67.4469V11.2816H55.3068V12.9295H67.4469V17.9999H48.731V0.253418H67.4469V5.32384Z" fill="#FFCF0B" />
                     <path d="M47.9611 5.57747C47.9611 11.3324 39.286 10.4451 38.0214 12.4225H47.7082V18H27.8794V14.9577C27.8794 8.31549 41.3852 8.9493 41.3852 6.46479C41.3852 5.70422 40.7529 5.57747 38.5525 5.57747C36.2257 5.57747 34.7082 5.57747 34.7082 7.22535H28.1323C28.1323 1.1662 32.2802 0 38.2996 0C44.3949 0 47.9611 1.1662 47.9611 5.57747Z" fill="#FFCF0B" />
                     <path d="M27.1128 0.253418V17.9999H20.537V9.55764L15.7062 17.9999H11.4066L6.57587 9.55764V17.9999H0V0.253418H8.09338L13.5564 10.3943L19.0194 0.253418H27.1128Z" fill="#FFCF0B" />
                   </svg>
-                  <Text mb='17px' style={{ color: 'var(--accent-1)' }}>
-                    Meme-To-Earn
-                  </Text>
-                </Flex>
-              </Box>
+                </Box>
+                <Text mb='17px' style={{ color: 'var(--accent-1)' }}>
+                  Meme-To-Earn
+                </Text>
+              </Flex>
             </Box>
           
             <Box pt='8' pb='2' style={{ textAlign: 'center'}}>
@@ -252,20 +274,22 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
         </div>
         <div className='swiper-slide'>
           <Flex
+            height='100%'
             direction='column'
+            justify='center'
             align='center'
             ml='16px'
             mr='16px'
             style={{
               transformStyle: 'preserve-3d',
               // transform: `perspective(1200px) rotateX(${slideNormalizedOffset2 * 10 + 10}deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(10vh)`,
-              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(-2vh)`,
               translate: '0.4s ease all',
             }}
           >
 
-            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-2.svg) no-repeat top left / cover', padding: '24px 12px'}}>
-              <Flex direction='column' align='center' gap='1'>
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-2.svg) no-repeat top left / cover', padding: '24px 12px', minHeight: '19.375rem'}}>
+              <Flex direction='column' align='center' justify='center' gap='1' height='100%'>
                 <img src="imgs/step2.png" width='325' height='248' alt="" />
               </Flex>
             </Box>
@@ -300,19 +324,21 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
         </div>
         <div className='swiper-slide'>
           <Flex
+            height='100%'
             direction='column'
+            justify='center'
             align='center'
             ml='16px'
             mr='16px'
             style={{
               transformStyle: 'preserve-3d',
               // transform: `perspective(1200px) rotateX(${slideNormalizedOffset3 * 10 + 10}deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(10vh)`,
-              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(-2vh)`,
               translate: '0.4s ease all',
             }}
           >
-            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-2.svg) no-repeat top left / cover', padding: '24px 12px'}}>
-              <Flex direction='column' align='center' gap='1'>
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-2.svg) no-repeat top left / cover', padding: '24px 12px', minHeight: '19.375rem'}}>
+              <Flex direction='column' align='center' justify='center' gap='1' height='100%'>
                 <img src="imgs/step3.png" width='323' height='262' alt="" />
               </Flex>
             </Box>
@@ -345,27 +371,33 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
             Alright
           </Button>
         </div>
-        <div className='swiper-slide'>
+        <div className='swiper-slide' style={{ overflowX: 'hidden'}}>
           <Flex
+            height='100%'
             direction='column'
+            justify='center'
             align='center'
             ml='16px'
             mr='16px'
             style={{
               transformStyle: 'preserve-3d',
               // transform: `perspective(1200px) rotateX(${slideNormalizedOffset4 * 10 + 10}deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
-              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(0vh)`,
               translate: '0.4s ease all',
+              overflowX: 'hidden'
             }}
           >
-            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-4.svg) no-repeat top left / cover', padding: '12px 0px 12px 12px'}}>
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-4.svg) no-repeat top left / cover', padding: '12px 0px 12px 12px', minHeight: '19.375rem'}}>
               <Flex direction='column' align='start' justify='between' gap='3'>
                 <Heading size='3'>Airdrop tasks</Heading>
-                <img src="imgs/step4.png" width='346' height='243' alt="" />
+                <Flex gap='2'>
+                  <img src="imgs/step4-1.png" width='236' height='243' alt="" />
+                  <img src="imgs/step4-2.png" width='236' height='243' alt="" />
+                </Flex>
               </Flex>
             </Box>
 
-            <Box pt='8' pb='2' style={{ textAlign: 'center'}}>
+            <Box pt='7' pb='2' style={{ textAlign: 'center'}}>
               <Flex direction='column' align='center' gap='1'>
                 <Heading size='4'>Create content!</Heading>
                 <Box style={{ maxWidth: '28ch'}}>

@@ -4,7 +4,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Badge, Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Badge, Box, Button, Card, DataList, Flex, Heading, Text, TextField } from '@radix-ui/themes';
 import { Link, useNavigate } from 'react-router-dom';
 import refs from './../imgs/refs_v2.png';
 import airdrop from './../imgs/airdrop-green.png';
@@ -196,30 +196,54 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           <Flex
             direction='column'
             align='center'
+            ml='16px'
+            mr='16px'
             style={{
               transformStyle: 'preserve-3d',
-              transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
+              // transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
               translate: '0.4s ease all',
             }}
           >
-            <CoinbagAnimated />
-          </Flex>
-          <StyledCard>
-            <Box pt='2' pb='2'>
-              <Heading size='5'>How to Earn With Us?</Heading>
-              <Text size={{ xs: '2', sm: '4' }}>
-                The more {M2E} points you get - the more your Airdrop chances.
-              </Text>
+            {/* <CoinbagAnimated /> */}
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-1.svg) no-repeat top left / cover'}}>
+              <img src="imgs/tutorial.svg" width='358' height='262' alt="" />
+              <Box mt='-15px'>
+                <Flex direction='column' align='center'>
+                  <svg width="68" height="18" viewBox="0 0 68 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M67.4469 5.32384H55.3068V6.97173H67.4469V11.2816H55.3068V12.9295H67.4469V17.9999H48.731V0.253418H67.4469V5.32384Z" fill="#FFCF0B" />
+                    <path d="M47.9611 5.57747C47.9611 11.3324 39.286 10.4451 38.0214 12.4225H47.7082V18H27.8794V14.9577C27.8794 8.31549 41.3852 8.9493 41.3852 6.46479C41.3852 5.70422 40.7529 5.57747 38.5525 5.57747C36.2257 5.57747 34.7082 5.57747 34.7082 7.22535H28.1323C28.1323 1.1662 32.2802 0 38.2996 0C44.3949 0 47.9611 1.1662 47.9611 5.57747Z" fill="#FFCF0B" />
+                    <path d="M27.1128 0.253418V17.9999H20.537V9.55764L15.7062 17.9999H11.4066L6.57587 9.55764V17.9999H0V0.253418H8.09338L13.5564 10.3943L19.0194 0.253418H27.1128Z" fill="#FFCF0B" />
+                  </svg>
+                  <Text mb='17px' style={{ color: 'var(--accent-1)' }}>
+                    Meme-To-Earn
+                  </Text>
+                </Flex>
+              </Box>
             </Box>
-          </StyledCard>
+          
+            <Box pt='8' pb='2' style={{ textAlign: 'center'}}>
+              <Flex direction='column' align='center' gap='1'>
+                <Heading size='4'>How to Earn With Us?</Heading>
+                <Box style={{ maxWidth: '25ch' }}>
+                  <Text size={{ xs: '2', sm: '3' }} >
+                    The more M2E points you get - the more your Airdrop chances.
+                  </Text>
+                </Box>
+              </Flex>
+            </Box>
+          </Flex>
           <Button
             size='3'
             onClick={handleNextSlide}
             style={{
               position: 'absolute',
+              width: 'calc(100% - 32px)',
               bottom: '20px',
               right: '50%',
               transform: 'translateX(50%)',
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
               zIndex: '9999',
             }}
           >
@@ -230,43 +254,44 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           <Flex
             direction='column'
             align='center'
+            ml='16px'
+            mr='16px'
             style={{
               transformStyle: 'preserve-3d',
-              transform: `perspective(1200px) rotateX(${slideNormalizedOffset2 * 10 + 10}deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(10vh)`,
+              // transform: `perspective(1200px) rotateX(${slideNormalizedOffset2 * 10 + 10}deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(10vh)`,
               translate: '0.4s ease all',
             }}
           >
-            <Iphone>
-              <Notch />
-              <Screen>
-                <img
-                  src={refs}
-                  alt='Profile illustration'
-                  style={{
-                    width: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </Screen>
-            </Iphone>
+
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-2.svg) no-repeat top left / cover', padding: '24px 12px'}}>
+              <Flex direction='column' align='center' gap='1'>
+                <img src="imgs/step2.png" width='325' height='248' alt="" />
+              </Flex>
+            </Box>
+
+            <Box pt='8' pb='2' style={{ textAlign: 'center'}}>
+              <Flex direction='column' align='center' gap='1'>
+                <Heading size='4'>Invite Friends!</Heading>
+                <Text size={{ xs: '2', sm: '4' }}>
+                  Earn up to 1000 M2E for each tasks.
+                </Text>
+              </Flex>
+            </Box>
+
           </Flex>
 
-          <StyledCard>
-            <Box pt='2' pb='2'>
-              <Heading size='5'>Invite Friends!</Heading>
-              <Text size={{ xs: '2', sm: '4' }}>
-                Earn <b>1000</b> {M2E} for each friend.
-              </Text>
-            </Box>
-          </StyledCard>
           <Button
             size='3'
             onClick={handleNextSlide}
             style={{
               position: 'absolute',
+              width: 'calc(100% - 32px)',
               bottom: '20px',
               right: '50%',
               transform: 'translateX(50%)',
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
               zIndex: '9999',
             }}
           >
@@ -277,42 +302,43 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           <Flex
             direction='column'
             align='center'
+            ml='16px'
+            mr='16px'
             style={{
               transformStyle: 'preserve-3d',
-              transform: `perspective(1200px) rotateX(${slideNormalizedOffset3 * 10 + 10}deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(10vh)`,
+              // transform: `perspective(1200px) rotateX(${slideNormalizedOffset3 * 10 + 10}deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(10vh)`,
               translate: '0.4s ease all',
             }}
           >
-            <Iphone>
-              <Notch />
-              <Screen>
-                <img
-                  src={airdrop}
-                  alt='Profile illustration'
-                  style={{
-                    width: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </Screen>
-            </Iphone>
-          </Flex>
-          <StyledCard>
-            <Box pt='2' pb='2'>
-              <Heading size='5'>Complete Fast tasks!</Heading>
-              <Text size={{ xs: '2', sm: '4' }}>
-                Earn up to <b>1000</b> {M2E} for each task
-              </Text>
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-2.svg) no-repeat top left / cover', padding: '24px 12px'}}>
+              <Flex direction='column' align='center' gap='1'>
+                <img src="imgs/step3.png" width='323' height='262' alt="" />
+              </Flex>
             </Box>
-          </StyledCard>
+
+            <Box pt='8' pb='2' style={{ textAlign: 'center'}}>
+              <Flex direction='column' align='center' gap='1'>
+                <Heading size='4'>Complete Fast tasks!</Heading>
+                <Text size={{ xs: '2', sm: '4' }}>
+                  Earn up to 1000 M2E for each tasks
+                </Text>
+              </Flex>
+            </Box>
+
+          </Flex>
+
           <Button
             size='3'
             onClick={handleNextSlide}
             style={{
               position: 'absolute',
+              width: 'calc(100% - 32px)',
               bottom: '20px',
               right: '50%',
               transform: 'translateX(50%)',
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
               zIndex: '9999',
             }}
           >
@@ -323,42 +349,45 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
           <Flex
             direction='column'
             align='center'
+            ml='16px'
+            mr='16px'
             style={{
               transformStyle: 'preserve-3d',
-              transform: `perspective(1200px) rotateX(${slideNormalizedOffset4 * 10 + 10}deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
+              // transform: `perspective(1200px) rotateX(${slideNormalizedOffset4 * 10 + 10}deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
+              transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
               translate: '0.4s ease all',
             }}
           >
-            <Iphone>
-              <Notch />
-              <Screen>
-                <img
-                  src={projects}
-                  alt='Profile illustration'
-                  style={{
-                    width: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              </Screen>
-            </Iphone>
-          </Flex>
-          <StyledCard>
-            <Box pt='2' pb='2'>
-              <Heading size='5'>Create content!</Heading>
-              <Text size={{ xs: '2', sm: '4' }}>
-                You will post content in socials and earn more than <b>10 000</b> {M2E} daily
-              </Text>
+            <Box width='100%' style={{ borderRadius: '10px', background: '#191919 url(imgs/ellipse-tutorial-4.svg) no-repeat top left / cover', padding: '12px 0px 12px 12px'}}>
+              <Flex direction='column' align='start' justify='between' gap='3'>
+                <Heading size='3'>Airdrop tasks</Heading>
+                <img src="imgs/step4.png" width='346' height='243' alt="" />
+              </Flex>
             </Box>
-          </StyledCard>
+
+            <Box pt='8' pb='2' style={{ textAlign: 'center'}}>
+              <Flex direction='column' align='center' gap='1'>
+                <Heading size='4'>Create content!</Heading>
+                <Box style={{ maxWidth: '28ch'}}>
+                  <Text size={{ xs: '2', sm: '4' }}>
+                    You will post content in socials and earn more than 10 000 M2E daily
+                  </Text>
+                </Box>
+              </Flex>
+            </Box>
+          </Flex>
+
           <GlowingButton
             size='3'
             onClick={handleTutorialCompleted}
             style={{
               position: 'absolute',
+              width: 'calc(100% - 32px)',
               bottom: '20px',
               right: '50%',
               transform: 'translateX(50%)',
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
               zIndex: '9999',
             }}
           >

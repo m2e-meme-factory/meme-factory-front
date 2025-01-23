@@ -44,9 +44,9 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ element }) => {
   //   );
   // }
 
-  if (error) {
-    return <Navigate to='/unauthorized' state={{ from: location }} />;
-  }
+  // if (error) {
+  //   return <Navigate to='/unauthorized' state={{ from: location }} />;
+  // }
 
   return element;
 };

@@ -29,7 +29,7 @@ const swiperBackgroundColors = [
 ];
 
 const SwiperDiv = styled.div`
-  height: 90vh;
+  height: 92vh;
   width: 100vw;
   background: #00000000;
 `;
@@ -207,7 +207,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               style={{
                 transformStyle: 'preserve-3d',
                 // transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
-                transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
+                transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(15.5vh)`,
                 translate: '0.4s ease all',
               }}
             >

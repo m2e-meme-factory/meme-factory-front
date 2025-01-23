@@ -75,7 +75,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange }) => {
   return (
     <FileInputContainer>
         <Flex direction="column" gap="2">
-            <FileInputButton size="3" className={fileName ? 'file-selected' : ''} onClick={handleButtonClick}>
+            <FileInputButton size="3" style={{ textTransform: 'uppercase', fontWeight: 'bold' }} className={fileName ? 'file-selected' : ''} onClick={handleButtonClick}>
                 {fileName ? (
                     "Select Another"
                 ) : (

@@ -389,7 +389,7 @@ export default function AllTasks() {
                         <Flex direction='column' gap='2'>
                           <Card onClick={() => navigate(ROUTES.POST_MEME)}>
                             <Flex gap='4' align='center' p='1'>
-                              <Box>
+                              <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
                                 <Text size='8' weight='bold'>
                                   1
                                 </Text>

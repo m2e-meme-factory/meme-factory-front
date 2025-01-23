@@ -147,7 +147,8 @@ export default function WalletPage() {
     <Box p="4" pt="3">
       <Header />
     </Box>
-      <Flex direction='column' justify='center' mt='8' m='4' gap='4'>
+
+      <Flex direction='column' justify='center' ml='4' mr='4' gap='4' height='100%' style={{ paddingBottom: '12vh'}}>
         <WebappBackButton />
         {/* <CoinbagAnimated /> */}
         <Box style={{ borderRadius: '10px', background: ' url(imgs/ellipse-wall-1.svg) no-repeat top left, url(imgs/ellipse-wall-2.svg) no-repeat top right, linear-gradient(#1c1c1e, #1c1c1e)', padding: '24px'}}>

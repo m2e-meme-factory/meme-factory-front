@@ -1,4 +1,4 @@
-import { ScrollArea, Flex, Box, Heading, Card, Button, TextField, Text, Callout, Tabs, Select, Badge, Grid, Theme } from "@radix-ui/themes";
+import { ScrollArea, Flex, Box, Heading, Card, Button, TextField, Text, Callout, Tabs, Select, Badge, Grid, Theme, ThickCheckIcon } from "@radix-ui/themes";
 import VideoCard from "../../shared/components/VideoCard";
 import { useNavigate } from 'react-router-dom';
 import { PropsWithChildren, useState } from "react";
@@ -102,7 +102,7 @@ const Step = ({ children, text, step, currentStep, handleDone, isProgress, btnTe
                 {currentStep >= step && (
                     <>
                         {children}
-                            <ChangableButton disabled={isProgress == false} glow={currentStep == step} onClick={handleDone} text={btnText || "Done"} />
+                            <ChangableButton disabled={isProgress == false} glow={currentStep == step} onClick={handleDone} text={btnText || "Done"}/>
                         {/* {`${isProgress}`} */}
                     </>
                 )}
@@ -352,14 +352,22 @@ export default function PostMemePage() {
                                     </Box>
                                 </Tabs.Root>
                             ) : (
-                                <Callout.Root color="green">
-                                    <Callout.Icon>
-                                        <InfoCircleOutlined />
-                                    </Callout.Icon>
-                                    <Callout.Text>
-                                        Video was uploaded
-                                    </Callout.Text>
-                                </Callout.Root>
+                                <Flex direction="column" gap="2">
+                                    <Callout.Root>
+                                        <Callout.Text style={{ color: 'white'}}>
+                                            {'Meme.mp4'}
+                                        </Callout.Text>
+                                    </Callout.Root>
+
+                                    <Callout.Root color="green" variant="outline" style={{ padding: '0', border: '0', boxShadow: 'none' }}>
+                                        <Callout.Icon>
+                                            <ThickCheckIcon />
+                                        </Callout.Icon>
+                                        <Callout.Text>
+                                            Video was uploaded
+                                        </Callout.Text>
+                                    </Callout.Root>
+                                </Flex>
                             )}
                         </Step>
                         <Step
@@ -389,7 +397,7 @@ export default function PostMemePage() {
                                 setCurrentStep(3)
                             }}
                             isProgress={overlyedVideoUrl.length > 1 && !loading}
-                            btnText={loading ? 'Downloading...' : 'Download'}
+                            btnText={loading ? 'DOWNLOADING...' : 'DOWNLOAD'}
                         >
                             <Flex direction="column" gap="4">
                                 <Text>Select language</Text>
@@ -401,7 +409,7 @@ export default function PostMemePage() {
                                         <Select.Item value="ru">Russian</Select.Item>
                                     </Select.Content>
                                 </Select.Root>
-                                <YellowBorderButton onClick={handleOverlayVideo} size="3" style={{ fontSize: '15px'}} disabled={loading}>{loading ? 'Processing Video...' : 'PROCEED VIDEO'}</YellowBorderButton>
+                                <YellowBorderButton onClick={handleOverlayVideo} size="3" style={{ fontSize: '15px', textTransform: 'uppercase'}} disabled={loading}>{loading ? 'Processing Video...' : 'PROCEED VIDEO'}</YellowBorderButton>
                             </Flex>
 
                         </Step>
@@ -466,7 +474,7 @@ export default function PostMemePage() {
                                         </Box>
                                     </Flex>
                                 </Flex>
-                                <YellowBorderButton size='4' style={{ display: 'flex', marginTop: 'auto', height: '32px'}}>
+                                <YellowBorderButton size='4' style={{ display: 'flex', marginTop: 'auto', height: '32px', textTransform: 'uppercase'}}>
                                     get
                                 </YellowBorderButton>
                             </Box>

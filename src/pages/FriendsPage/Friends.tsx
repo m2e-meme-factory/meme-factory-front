@@ -128,12 +128,14 @@ export default function Friends() {
 
   return (
     <>
-      <Box p="4" pt="3">
-        <Header />
+      <Flex direction='column' gap='4'>
+        <Box p="4" pt="3">
+              <Header />
+            </Box>
       
         <WebappBackButton />
-        <Flex direction='column' gap='5'>
-          <Box pb='2' style={{ background: '#1c1c1e url(imgs/frends.svg) no-repeat top center', borderRadius: '10px'}}>
+        <Flex direction='column' gap='5' pl='4' pr='4' pb='8'>
+          <Box pb='2' style={{ background: '#1c1c1e url(imgs/frends.svg) no-repeat top center / cover', borderRadius: '10px'}}>
             <Flex m='4' justify='center'>
               <HandshakeAnimated />
             </Flex>
@@ -146,8 +148,8 @@ export default function Friends() {
               <Flex direction='column' gap='2'>
                 <Card onClick={handleInviteClick} style={{ padding: '14px 12px'}}>
                   <Flex gap='4' align='center'>
-                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
-                      <Text size='3' weight='regular' style={{ fontFamily: "ME"}}>
+                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "7px 0 4px", width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
+                      <Text size='3' weight='regular' style={{ fontFamily: "ME", lineHeight: '1'}}>
                         1
                       </Text>
                     </Box>
@@ -165,7 +167,7 @@ export default function Friends() {
 
                 <Card  style={{ padding: '14px 12px'}}>
                   <Flex gap='4' align='center'>
-                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
+                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "7px 0 4px", width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
                       <Text size='3' weight='regular' style={{ fontFamily: "ME"}}>
                         2
                       </Text>
@@ -183,7 +185,7 @@ export default function Friends() {
 
                 <Card>
                   <Flex gap='4' align='center'>
-                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
+                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "7px 0 4px", width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
                       <Text size='3' weight='regular' style={{ fontFamily: "ME"}}>
                         3
                       </Text>
@@ -238,7 +240,7 @@ export default function Friends() {
             </Flex>
           </Box>
         </Flex>
-      </Box>
+      </Flex>
     </>
   );
 }

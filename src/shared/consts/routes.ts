@@ -14,4 +14,7 @@ export const ROUTES = {
   UNAUTHORIZED: '/unauthorized',
   TUTORIAL: '/tutorial',
   WALLET: '/wallet',
+  BECOME_ADVERTISER: '/become-partner',
+  ALL_TASKS: '/all-tasks',
+  POST_MEME: '/post-meme',
 };

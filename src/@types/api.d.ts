@@ -33,6 +33,7 @@ declare module 'api' {
   export interface GetPublicProjectsParams {
     tags?: string[];
     category?: string;
+    sorting?: string;
     page: number;
     limit: number;
   }
@@ -322,6 +323,12 @@ declare module 'api' {
   export interface GetAutotaskApplicationsParams {
     userId?: number;
     taskId?: number;
+  }
+
+  
+  export interface GetAutotaskDefaultsApplicationsParams {
+    userId?: number;
+    taskCategory?: string;
   }
 
   export interface Project {

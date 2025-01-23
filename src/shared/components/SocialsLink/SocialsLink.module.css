@@ -11,6 +11,10 @@
     cursor: pointer
 }
 
+.rt-Badge {
+    font-weight: 100 !important;
+}
+
 .cardContent {
     display: flex;
     flex-direction: row;
@@ -29,7 +33,7 @@
     font-weight: bold;
     font-size: 1.5rem;
     color: white;
-    margin: 0;
+    margin: 0 0 0 1rem;
 }
 
 .warning {
@@ -38,4 +42,5 @@
     color: dimgray;
     text-align: justify;
     margin: 0 0 10px;
+    text-align: center;
 }

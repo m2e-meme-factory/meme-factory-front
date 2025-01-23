@@ -17,9 +17,9 @@ const SecondaryHeading = styled(Heading)`
 
 const ProjectCardContent: FC<ProjectCardContentProps> = ({ project, minPrice, maxPrice }) => {
   return (
-    <Flex justify='between' direction='column'>
+    <Flex justify='end' direction='column'>
       {/* <Box> */}
-        {/* <Flex display="flex" direction="column" align="end">
+      {/* <Flex display="flex" direction="column" align="end">
           <Text mb='3' color='yellow' weight='medium'>
             {project.category}
           </Text>
@@ -37,7 +37,7 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project, minPrice, ma
 
       <Box>
         {minPrice && maxPrice && (
-          <Box>
+          <Flex justify="end">
             {/* <Text size="1" color='gray'>
             Reward:
             </Text> */}
@@ -61,7 +61,7 @@ const ProjectCardContent: FC<ProjectCardContentProps> = ({ project, minPrice, ma
                 M2E
               </Badge>
             </Box>
-          </Box>
+          </Flex>
         )}
       </Box>
     </Flex>

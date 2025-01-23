@@ -13,6 +13,7 @@ import styles from '../../../../shared/components/SocialsLink/SocialsLink.module
 import { UNSUBSCRIBE_WARNING } from '../../../../shared/consts/strings';
 import { getSocialsNameByTaskId } from '../../../../shared/utils/helpers/getSocialsNameByTaskId';
 import { AxiosError } from 'axios';
+import { SolidCard } from '../../../../shared/components/Card/SolidCard';
 
 interface AutotaskProps {
   id: number;
@@ -169,18 +170,18 @@ const AutotaskCard: FC<AutotaskProps> = ({
   };
 
   return (
-    <Card className='SubtaskCard' mb='3' style={cardStyle} onClick={handleDialogOpen}>
+    <SolidCard className='SubtaskCard'  style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between' pl='2' pr='2'>
         <Flex>
           {icon}
 
-          <Flex direction='column'>
-            <Text size='4' weight='medium'>
+          <Flex direction='column' ml='4'>
+            <Text size='4' weight='medium' style={{ userSelect: 'text' }}>
               {title}
             </Text>
             <Text weight='medium' size='3' color='gray'>
               <i>
-                +{price} <Badge color='gold'>M2E</Badge>
+                +{price} <Badge color='bronze'>XP</Badge>
               </i>
             </Text>
           </Flex>
@@ -199,7 +200,9 @@ const AutotaskCard: FC<AutotaskProps> = ({
               <Theme>
                 <Flex m='4' gap='2' direction='column'>
                   <Flex mb='5' mt='4' direction={'column'} gap='2'>
-                    <Heading align='center'>{title}</Heading>
+                    <Heading align='center' style={{ userSelect: 'text' }}>
+                      {title}
+                    </Heading>
                     <Flex justify='center'>
                       <Badge
                         size='3'
@@ -211,7 +214,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     </Flex>
                     <Text align='center' color='gray'>
                       <i>
-                        +{price} <Badge color='bronze'>M2E</Badge>
+                        +{price} <Badge color='bronze'>XP</Badge>
                       </i>
                     </Text>
                   </Flex>
@@ -225,24 +228,28 @@ const AutotaskCard: FC<AutotaskProps> = ({
                     <Callout.Icon>
                       <InfoCircledIcon width={20} height={20} />
                     </Callout.Icon>
-                    <Callout.Text>{description}</Callout.Text>
+                    <Callout.Text style={{ userSelect: 'text' }}>{description}</Callout.Text>
                   </Callout.Root>
                   {category !== 'ref' && (
                     <Flex>
                       <Flex direction='column' gap='2'>
                         {isApplied && isClaimed ? (
-                          <div className={styles.card}>
-                            <div className={styles.cardContent}>
-                              <div className={styles.websiteInfo}>
-                                {icon}
-                                <p className={styles.socialsName}>
-                                  {/*Go to {getSocialsNameByTaskId(id)}*/}
-                                  {title}
-                                </p>
+                          <a
+                            href={url ?? ''}
+                            target='_blank'
+                            className={styles.link}
+                            onClick={handleApplyClick}
+                          >
+                            <div className={styles.card}>
+                              <div className={styles.cardContent}>
+                                <div className={styles.websiteInfo}>
+                                  {icon}
+                                  <p className={styles.socialsName}>{title}</p>
+                                </div>
+                                <CheckIcon color='#45a951' width={20} height={20} />
                               </div>
-                              <CheckIcon color='#45a951' width={20} height={20} />
                             </div>
-                          </div>
+                          </a>
                         ) : isApplied ? (
                           <div className={styles.card} onClick={handleClaimClick}>
                             <div className={styles.cardContent}>
@@ -276,10 +283,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                                   <>
                                     <div className={styles.websiteInfo}>
                                       {icon}
-                                      <p className={styles.socialsName}>
-                                        {/*Go to {getSocialsNameByTaskId(id)}*/}
-                                        {title}
-                                      </p>
+                                      <p className={styles.socialsName}>{title}</p>
                                     </div>
                                     <CaretRightIcon width={20} height={20} />
                                   </>
@@ -299,7 +303,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
           <Sheet.Backdrop onTap={() => handleDialogClose()} />
         </Sheet>
       </Flex>
-    </Card>
+    </SolidCard>
   );
 };
 

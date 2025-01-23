@@ -23,16 +23,16 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
   // if (project.maxPrice === null && project.minPrice === null) {
   return (
     <StyledCard onClick={() => navigate(`/projects/${project.project.id}`)}>
-      <Flex justify='between'>
-        <Flex direction='column' justify='between' m='4'>
-          <Heading size='3'>{project.project.title}</Heading>
+      <Flex justify='between'm='4'>
+          <Heading style={{width: '70%'}} size='3'>{project.project.title}</Heading>
+        <Flex direction='column' justify='center' align='end' >
+          <CardBanner bannerUrl={project.project.bannerUrl} />
           <ProjectCardContent
             project={project.project}
             minPrice={project.minPrice}
             maxPrice={project.maxPrice}
           />
         </Flex>
-        <CardBanner bannerUrl={project.project.bannerUrl} />
       </Flex>
     </StyledCard>
   );

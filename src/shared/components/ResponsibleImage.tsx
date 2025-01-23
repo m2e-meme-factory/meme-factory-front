@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const ResponsibleImage = styled.img`
   height: 100px;
-  width: fit-content;
 
   @media (min-height: 600px) {
     height: 100px;

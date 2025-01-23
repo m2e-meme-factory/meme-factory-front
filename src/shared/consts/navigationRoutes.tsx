@@ -1,175 +1,69 @@
-import { AvatarIcon, HomeIcon, PersonIcon } from '@radix-ui/react-icons';
-
 export const navigationRoutes = [
   {
-    title: 'Home',
+    title: 'Airdrop',
     path: '/profile',
     icon: (
-      <svg xmlns='http://www.w3.org/2000/svg' height='1.75rem' viewBox='0 0 256 256'>
-        <rect width='256' height='256' fill='none' />
-        <path
-          d='M104,216V152h48v64h64V120a8,8,0,0,0-2.34-5.66l-80-80a8,8,0,0,0-11.32,0l-80,80A8,8,0,0,0,40,120v96Z'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_2004_1865)">
+          <path d="M5.33325 17.3333C7.71071 17.6158 9.92398 18.69 11.6169 20.3829C13.3099 22.0759 14.384 24.2891 14.6666 26.6666C15.8451 25.9871 16.831 25.0184 17.5309 23.8518C18.2308 22.6853 18.6217 21.3596 18.6666 19.9999C20.9054 19.2123 22.8604 17.7786 24.2844 15.8799C25.7084 13.9813 26.5374 11.703 26.6666 9.33325C26.6666 8.27239 26.2452 7.25497 25.495 6.50482C24.7449 5.75468 23.7275 5.33325 22.6666 5.33325C20.2968 5.46246 18.0185 6.29147 16.1199 7.71545C14.2213 9.13944 12.7875 11.0944 11.9999 13.3333C10.6403 13.3782 9.31453 13.769 8.148 14.4689C6.98148 15.1689 6.01271 16.1547 5.33325 17.3333Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M9.3334 18.6667C7.94571 19.4502 6.82361 20.6302 6.11095 22.0555C5.39828 23.4808 5.12753 25.0865 5.3334 26.6667C6.91362 26.8726 8.51931 26.6019 9.94463 25.8892C11.37 25.1765 12.55 24.0544 13.3334 22.6667" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M18.6667 12.0001C18.6667 12.3537 18.8072 12.6928 19.0573 12.9429C19.3073 13.1929 19.6465 13.3334 20.0001 13.3334C20.3537 13.3334 20.6928 13.1929 20.9429 12.9429C21.1929 12.6928 21.3334 12.3537 21.3334 12.0001C21.3334 11.6465 21.1929 11.3073 20.9429 11.0573C20.6928 10.8072 20.3537 10.6667 20.0001 10.6667C19.6465 10.6667 19.3073 10.8072 19.0573 11.0573C18.8072 11.3073 18.6667 11.6465 18.6667 12.0001Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <defs>
+          <clipPath id="clip0_2004_1865">
+            <rect width="32" height="32" fill="white" />
+          </clipPath>
+        </defs>
       </svg>
     ),
   },
   {
-    title: 'Quests',
-    path: '/projects',
+    title: 'Tasks',
+    path: '/all-tasks',
     icon: (
-      <svg xmlns='http://www.w3.org/2000/svg' height='1.75rem' viewBox='0 0 256 256'>
-        <rect width='256' height='256' fill='none' />
-        <ellipse
-          cx='96'
-          cy='84'
-          rx='80'
-          ry='36'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M16,84v40c0,19.88,35.82,36,80,36s80-16.12,80-36V84'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <line
-          x1='64'
-          y1='117'
-          x2='64'
-          y2='157'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M176,96.72c36.52,3.34,64,17.86,64,35.28,0,19.88-35.82,36-80,36-19.6,0-37.56-3.17-51.47-8.44'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M80,159.28V172c0,19.88,35.82,36,80,36s80-16.12,80-36V132'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <line
-          x1='192'
-          y1='165'
-          x2='192'
-          y2='205'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <line
-          x1='128'
-          y1='117'
-          x2='128'
-          y2='205'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        height='2rem'
+        fill='currentColor'
+        viewBox='0 0 256 256'
+      >
+        <path d='M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z'></path>
       </svg>
     ),
   },
   {
-    title: 'Frens',
+    title: 'Earn',
+    path: '/post-meme',
+    isMain: false,
+    icon: (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.3333 18.4445C12.3333 20.4697 15.6161 22.1112 19.6666 22.1112C23.717 22.1112 26.9999 20.4697 26.9999 18.4445C26.9999 16.4193 23.717 14.7778 19.6666 14.7778C15.6161 14.7778 12.3333 16.4193 12.3333 18.4445Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12.3333 18.4444V23.3333C12.3333 25.3573 15.6162 27 19.6667 27C23.7171 27 27 25.3573 27 23.3333V18.4444M5 8.66667C5 9.97689 6.39822 11.1869 8.66667 11.842C10.9351 12.4971 13.7316 12.4971 16 11.842C18.2684 11.1869 19.6667 9.97689 19.6667 8.66667C19.6667 7.35644 18.2684 6.14644 16 5.49133C13.7316 4.83622 10.9351 4.83622 8.66667 5.49133C6.39822 6.14644 5 7.35644 5 8.66667Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 8.66675V20.889C5 21.9743 5.94356 22.6612 7.44444 23.3334" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 14.7778C5 15.8632 5.94356 16.5501 7.44444 17.2223" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    )
+  },
+  {
+    title: 'Friends',
     path: '/friends',
     icon: (
-      <svg xmlns='http://www.w3.org/2000/svg' height='1.75rem' viewBox='0 0 256 256'>
-        <rect width='256' height='256' fill='none' />
-        <path
-          d='M192,120a59.91,59.91,0,0,1,48,24'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M16,144a59.91,59.91,0,0,1,48-24'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <circle
-          cx='128'
-          cy='144'
-          r='40'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M72,216a65,65,0,0,1,112,0'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M161,80a32,32,0,1,1,31,40'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <path
-          d='M64,120A32,32,0,1,1,95,80'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
+      <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.5 23.2372C7.5 20.9847 9.07609 19.0661 11.218 18.7111L11.411 18.6791C13.1261 18.3948 14.8739 18.3948 16.589 18.6791L16.782 18.7111C18.9239 19.0661 20.5 20.9847 20.5 23.2372C20.5 24.2108 19.74 25 18.8025 25H9.19755C8.26002 25 7.5 24.2108 7.5 23.2372Z" stroke="currentColor" stroke-width="1.2" />
+        <path d="M17.7917 10.9375C17.7917 13.1121 16.0941 14.875 14 14.875C11.9059 14.875 10.2083 13.1121 10.2083 10.9375C10.2083 8.76288 11.9059 7 14 7C16.0941 7 17.7917 8.76288 17.7917 10.9375Z" stroke="currentColor" stroke-width="1.2" />
+        <path d="M18.5 14.875C20.7552 14.875 22.5833 13.1121 22.5833 10.9375C22.5833 8.76288 20.7552 7 18.5 7M21.2882 25H23.6719C24.6815 25 25.5 24.2107 25.5 23.2372C25.5 20.9847 23.8027 19.0661 21.496 18.7111V18.7111C21.3576 18.6898 21.2176 18.6791 21.0777 18.6791C20.7045 18.6791 20.5887 18.6791 19.948 18.6791" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
       </svg>
-    ),
+    )
   },
   {
     title: 'Wallet',
     path: '/wallet',
     icon: (
-      <svg xmlns='http://www.w3.org/2000/svg' height='1.7rem' viewBox='0 0 256 256'>
-        <rect width='256' height='256' fill='none' />
-        <path
-          d='M40,56V184a16,16,0,0,0,16,16H216a8,8,0,0,0,8-8V80a8,8,0,0,0-8-8H56A16,16,0,0,1,40,56h0A16,16,0,0,1,56,40H192'
-          fill='none'
-          stroke='currentColor'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          stroke-width='16'
-        />
-        <circle cx='180' cy='132' r='12' />
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.25 9.25V9.25C20.25 8.7857 20.25 8.55355 20.2346 8.3577C20.0416 5.90582 18.0942 3.95838 15.6423 3.76541C15.4465 3.75 15.2143 3.75 14.75 3.75H12C8.96351 3.75 7.44527 3.75 6.30689 4.38752C5.50235 4.83808 4.83808 5.50235 4.38752 6.30689C3.75 7.44527 3.75 8.96351 3.75 12V12C3.75 15.0365 3.75 16.5547 4.38752 17.6931C4.83808 18.4976 5.50235 19.1619 6.30689 19.6125C7.44527 20.25 8.96351 20.25 12 20.25H14.75C15.2143 20.25 15.4465 20.25 15.6423 20.2346C18.0942 20.0416 20.0416 18.0942 20.2346 15.6423C20.25 15.4465 20.25 15.2143 20.25 14.75V14.75M20.25 9.25H14.75C13.2312 9.25 12 10.4812 12 12V12C12 13.5188 13.2312 14.75 14.75 14.75H20.25M20.25 9.25V14.75" stroke="currentColor" stroke-width="1.2"></path>
+        <path d="M6.95825 7.41666H8.79159" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
+        <circle cx="14.7499" cy="12" r="0.916667" fill="currentColor"></circle>
+        </svg>
     ),
-  },
+  }
 ];

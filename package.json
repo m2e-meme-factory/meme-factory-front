@@ -28,6 +28,7 @@
     "buffer": "^6.0.3",
     "framer-motion": "^11.5.2",
     "html-react-parser": "^5.1.12",
+    "lottie-react": "^2.4.0",
     "match-sorter": "^6.3.4",
     "process": "^0.11.10",
     "react": "^18.2.0",
@@ -43,7 +44,7 @@
     "react-select": "^5.8.0",
     "react-swipeable": "^7.0.1",
     "styled-components": "^6.1.12",
-    "swiper": "^11.1.12",
+    "swiper": "^11.2.1",
     "ton": "^13.9.0",
     "ton-core": "^0.53.0",
     "ton-crypto": "^3.2.0",
@@ -78,6 +79,7 @@
     ]
   },
   "devDependencies": {
+    "@types/swiper": "^6.0.0",
     "@types/uuid": "^10.0.0",
     "prettier": "^3.3.3"
   }

@@ -1,11 +1,22 @@
-import { Flex, Heading, IconButton, Separator } from '@radix-ui/themes';
+import {
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Separator,
+  TextArea,
+  TextField,
+  Dialog,
+  Card,
+} from '@radix-ui/themes';
 import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
-import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
 import CreatedSubtask from '../Subtask/CreatedSubtask';
 import { TaskInfo } from 'api';
-import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';
+import CreatedSubtaskV2 from '../Subtask/CreatedSubtaskV2';
+import formStyles from '../Subtask/form.module.css';
 
 interface CreateSubtaskSectionProps {
   subtasks: TaskInfo[];
@@ -21,7 +32,7 @@ type FormData = {
 
 const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubtasks }) => {
   const [modalOpen, setModalOpen] = useState(false);
-
+  const formRef = useRef<HTMLFormElement | null>(null);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -36,107 +47,95 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
 
     setSubtasks((prevSubtasks) => [...prevSubtasks, data as TaskInfo]);
     setModalOpen(false);
+    formRef.current?.reset();
   };
 
   return (
-    <Flex mb='3' direction='column'>
+    <Flex mb='3' mt='4' direction='column'>
       <Flex align='center' mt='3'>
         <Heading size='5' mr='3'>
-          Subtasks Creation
+          Tasks Creation
         </Heading>
 
-        <Dialog.Root open={modalOpen}>
-          <Dialog.Trigger asChild>
-            <IconButton size='1' onClick={() => setModalOpen(true)}>
-              <PlusIcon />
-            </IconButton>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className='DialogOverlay' />
-            <Dialog.Content className='DialogContent'>
-              <Dialog.Title className='DialogTitle Accent'>Create Subtask</Dialog.Title>
-              <Form.Root className='FormRoot' onSubmit={handleSubmit}>
-                <Form.Field className='FormField' name='title'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label className='FormLabel'>Title</Form.Label>
-                    <Form.Message className='FormMessage' match='valueMissing'>
-                      Please enter a title
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <input className='Input' type='text' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Field className='FormField' name='description'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label className='FormLabel'>Description</Form.Label>
-                    <Form.Message className='FormMessage' match='valueMissing'>
-                      Please enter a description
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <textarea className='Textarea' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Field className='FormField' name='price'>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Form.Label className='FormLabel'>Price</Form.Label>
-                    <Form.Message className='FormMessage' match='valueMissing'>
-                      Please enter a price
-                    </Form.Message>
-                    <Form.Message className='FormMessage' match='typeMismatch'>
-                      Please enter a valid price
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <input className='Input' type='number' required />
-                  </Form.Control>
-                </Form.Field>
-
-                <Form.Submit asChild>
-                  <button className='Button' style={{ marginTop: 10 }}>
-                    Create subtask
-                  </button>
-                </Form.Submit>
-              </Form.Root>
-              <Dialog.Close asChild>
-                <button
-                  className='IconButton'
-                  onClick={() => setModalOpen(false)}
-                  aria-label='Close'
-                >
-                  <Cross2Icon />
-                </button>
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+        <IconButton loading={modalOpen} size='1' onClick={() => setModalOpen(true)}>
+          <PlusIcon />
+        </IconButton>
       </Flex>
       <Separator my='3' size='4' />
-      <Flex direction='column'>
+      <Flex direction='column' gap='2'>
+        <Card style={{ display: modalOpen ? 'block' : 'none' }}>
+          <Form.Root ref={formRef} className={formStyles.FormRoot} onSubmit={handleSubmit}>
+            <Form.Field className='FormField' name='title'>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Form.Label className={formStyles.FormLabel}>Title</Form.Label>
+                <Form.Message className={formStyles.FormMessage} match='valueMissing'>
+                  Please enter a title
+                </Form.Message>
+              </div>
+              <Form.Control asChild>
+                <input className={formStyles.Input} type='text' required />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Field
+              className={formStyles.FormField}
+              style={{ marginTop: '15px' }}
+              name='description'
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Form.Label className={formStyles.FormLabel}>Description</Form.Label>
+                <Form.Message className={formStyles.FormMessage} match='valueMissing'>
+                  Please enter a description
+                </Form.Message>
+              </div>
+              <Form.Control asChild>
+                <textarea className={formStyles.Textarea} required />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Field className={formStyles.FormField} name='price'>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Form.Label className={formStyles.FormLabel}>Price</Form.Label>
+                <Form.Message className={formStyles.FormMessage} match='valueMissing'>
+                  Please enter a price
+                </Form.Message>
+                <Form.Message className={formStyles.FormMessage} match='typeMismatch'>
+                  Please enter a valid price
+                </Form.Message>
+              </div>
+              <Form.Control asChild>
+                <input className={formStyles.Input} type='number' required />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Submit asChild>
+              <Button style={{ marginTop: 10, width: '100%' }}>Save changes</Button>
+            </Form.Submit>
+          </Form.Root>
+        </Card>
+
         {subtasks.length > 0 &&
-          subtasks.map((subtask, index) => (
-            <CreatedSubtask
+          subtasks.map((subtask) => (
+            <CreatedSubtaskV2
+              key={subtask.id}
               id={subtask.id}
               setSubtask={setSubtasks}
               title={subtask.title}

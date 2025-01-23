@@ -9,7 +9,7 @@ import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProje
 import { useCreateEvent } from '../../shared/utils/api/hooks/event/useCreateEvent';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
-import { showErrorMessage } from '../../shared/utils/helpers/notify';
+import { showErrorMessage, showMessage } from '../../shared/utils/helpers/notify';
 import Loading from '../../shared/components/Loading';
 import { Role } from '../../shared/consts/userRoles';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
@@ -36,7 +36,6 @@ const ProjectLogsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-
   const webapp = useWebApp();
 
   const handleBack = useCallback(() => {
@@ -93,13 +92,8 @@ const ProjectLogsPage = () => {
     }
   }, [error, navigate]);
 
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
-  }, [events]);
-
   const handleMessageSend = () => {
+    window.scrollTo(0, 0);
     if (userProgress && user) {
       const newEvent: CreateEventDto = {
         projectId: userProgress.projectId,
@@ -112,6 +106,9 @@ const ProjectLogsPage = () => {
       createEventMutation.mutate({ params: newEvent });
       setMessage('');
       setNewEventCreated(true);
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTo(0, scrollAreaRef.current.scrollHeight);
+      }
     } else {
       showErrorMessage('Something went wrong!');
     }
@@ -121,15 +118,8 @@ const ProjectLogsPage = () => {
     setMessage(event.target.value);
   };
 
-  const handleBackClick = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const fromTab = searchParams.get('fromTab');
-
-    if (fromTab) {
-      navigate(`/projects`);
-    } else {
-      navigate(-1);
-    }
+  const handleBlur = () => {
+    window.scrollTo(0, 0);
   };
 
   if (isLoading || isProjectLoading) {
@@ -137,79 +127,68 @@ const ProjectLogsPage = () => {
   }
 
   return (
-    <>
-      <Flex height='100vh' position='relative' direction='column'>
-        <Flex
-          p='4'
-          align='center'
-          style={{
-            position: 'sticky',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 2,
-            backgroundColor: 'var(--gray-2)',
-          }}
-          justify='between'
-        >
-          <Flex align='center'>
-            {/* <IconButton onClick={handleBackClick} size='3'>
-              <ArrowLeftIcon />
-            </IconButton> */}
-            <Heading>{shortenString(currentProject?.project.title, 20)}</Heading>
-          </Flex>
-          <Button onClick={() => navigate(`/projects/${projectId}`)}>VIEW</Button>
+    <Flex
+      direction='column'
+      style={{
+        height: '100vh',
+        transition: 'height 0.3s ease',
+      }}
+      justify='between'
+    >
+      <Flex p='4' align='center' justify='between' style={{ backgroundColor: '#121212' }}>
+        <Flex align='center'>
+          <Heading>{shortenString(currentProject?.project.title, 20)}</Heading>
         </Flex>
-        <Box p='4' asChild>
-          <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
-            {events.map((event) => (
-              <LogMessage
-                key={event.id}
-                currentUserRole={user?.role ?? Role.CREATOR}
-                event={event}
-                messageType={getEventType(event.eventType)}
-                setNewEventCreated={setNewEventCreated}
-                creatorName={
-                  userProgress?.user.username
-                    ? userProgress?.user.username
-                    : `User ${userProgress?.user.telegramId}`
-                }
-                advertiserName={shortenString(
-                  currentProject
-                    ? currentProject.project.author.username
-                      ? currentProject.project.author.username
-                      : `User ${currentProject.project.author.telegramId}`
-                    : 'Project host'
-                )}
-                allEvents={events}
-              />
-            ))}
-          </ScrollArea>
-        </Box>
-        <Flex
-          p='4'
-          align='center'
-          style={{
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 1000,
-            backgroundColor: 'var(--gray-2)',
-          }}
-        >
-          <Flex width='100%' justify='between' align='center'>
-            <TextArea
-              placeholder='Send a message…'
-              onChange={handleMessageChange}
-              value={message}
-              style={{ width: '85%', height: '8vh' }}
-            />
-            <IconButton size='4' onClick={handleMessageSend}>
-              <PaperPlaneIcon />
-            </IconButton>
-          </Flex>
+        <Button onClick={() => navigate(`/projects/${projectId}`)}>VIEW</Button>
+      </Flex>
+      <ScrollArea scrollbars='vertical' ref={scrollAreaRef}>
+        {events.map((event) => (
+          <LogMessage
+            key={event.id}
+            currentUserRole={user?.role ?? Role.CREATOR}
+            event={event}
+            messageType={getEventType(event.eventType)}
+            setNewEventCreated={setNewEventCreated}
+            creatorName={
+              userProgress?.user.username
+                ? userProgress?.user.username
+                : `User ${userProgress?.user.telegramId}`
+            }
+            advertiserName={shortenString(
+              currentProject
+                ? currentProject.project.author.username
+                  ? currentProject.project.author.username
+                  : `User ${currentProject.project.author.telegramId}`
+                : 'Project host'
+            )}
+            allEvents={events}
+          />
+        ))}
+      </ScrollArea>
+      <Flex
+        p='4'
+        align='center'
+        style={{
+          backgroundColor: '#121212',
+          position: 'sticky',
+          bottom: 0,
+        }}
+      >
+        <Flex width='100%' justify='between' align='center' gapX='2'>
+          <TextArea
+            placeholder='Send a message…'
+            onChange={handleMessageChange}
+            value={message}
+            style={{ width: '100%', height: '8vh' }}
+            maxLength={500}
+            onBlur={handleBlur}
+          />
+          <IconButton size='4' onClick={handleMessageSend}>
+            <PaperPlaneIcon />
+          </IconButton>
         </Flex>
       </Flex>
-    </>
+    </Flex>
   );
 };
 

@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '@radix-ui/themes/styles.css';
 import './index.css';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import ProviderWrapper from './ProviderWrapper';
 import { Toaster } from 'react-hot-toast';
 
@@ -16,8 +19,9 @@ root.render(
     </ProviderWrapper>
     <Toaster
       position='top-center'
-      containerStyle={{ zIndex: '99999 !important' }}
-      toastOptions={{ style: { zIndex: '99999 !important' } }}
+      containerClassName='toaster-container'
+      containerStyle={{ zIndex: '3 !important' }}
+      toastOptions={{ style: { zIndex: '3 !important', backgroundColor: '#333' }, duration: 5000 }}
       reverseOrder={false}
     />
   </React.StrictMode>

@@ -1,11 +1,11 @@
 .bannerContainer {
-    width: 20vh;
-    max-height: 15vh;
-    min-width: 20vh;
+    /* width: 100%; */
+    height: 10vh;
+    width: 10vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     background-color: var(--gray-2);
 }

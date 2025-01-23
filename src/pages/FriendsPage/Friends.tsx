@@ -128,11 +128,13 @@ export default function Friends() {
 
   return (
     <>
-      <Box p="4" pt="3">
-        <Header />
+      <Flex direction='column' gap='4'>
+        <Box p="4" pt="3">
+              <Header />
+            </Box>
       
         <WebappBackButton />
-        <Flex direction='column' gap='5'>
+        <Flex direction='column' gap='5' pl='4' pr='4' pb='8'>
           <Box pb='2' style={{ background: '#1c1c1e url(imgs/frends.svg) no-repeat top center / cover', borderRadius: '10px'}}>
             <Flex m='4' justify='center'>
               <HandshakeAnimated />
@@ -238,7 +240,7 @@ export default function Friends() {
             </Flex>
           </Box>
         </Flex>
-      </Box>
+      </Flex>
     </>
   );
 }

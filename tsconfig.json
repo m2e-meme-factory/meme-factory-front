@@ -18,6 +18,7 @@
     "downlevelIteration": true,
     "typeRoots": ["./src/@types"],
     "paths": {
+      "@providers/*": ["./src/providers/*"],
       "@public/*": ["./public/*"],
       "@pages/*": ["./src/pages/*"],
       "@shared/*": ["./src/shared/*"],

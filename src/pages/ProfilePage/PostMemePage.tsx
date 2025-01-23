@@ -473,102 +473,96 @@ export default function PostMemePage() {
                             
                             
                         </NftCard>             
-      <Sheet
-        isOpen={isModalVisible}
-        onClose={() => handleDialogClose()}
-        detent='content-height'
-      >
-        <Theme appearance='dark'>
-          <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
-            <Sheet.Header />
-            <Sheet.Content>
-              <Theme>
-              <ScrollArea>
-                <Grid gap='8' mb='5' p="4" align='center'>
-                  <Flex justify='center'>
-                    <CoinbagAnimated />
-                  </Flex>
-                  <Flex direction='column' gap='2'>
-          <Card onClick={() => navigate(ROUTES.POST_MEME)}>
-            <Flex gap='4' align='center' p='1'>
-              <Box>
-                <Text size='8' weight='bold'>
-                  1
-                </Text>
-              </Box>
-              <Box>
-                <Box>Post Meme</Box>
-                <Box>
-                  <Text size='1' color='gray'>
-                    follow the instructions 
-                  </Text>
-                </Box>
-              </Box>
-            </Flex>
-          </Card>
+            <Sheet
+                isOpen={isModalVisible}
+                onClose={() => handleDialogClose()}
+                detent='content-height'
+            >
+                <Theme appearance='dark'>
+                <Sheet.Container style={{ overflowY: 'auto', background: '#121113' }}>
+                    <Sheet.Header />
+                    <Sheet.Content>
+                    <Theme>
+                    <ScrollArea>
+                        <Grid gap='8' mb='5' p="4" pl='2' pr='2' align='center'>
+                        <Flex justify='center'>
+                            <CoinbagAnimated />
+                        </Flex>
+                        <Flex direction='column' gap='3'>
+                            <Card onClick={() => navigate(ROUTES.POST_MEME)}>
+                                <Flex gap='4' align='center'>
+                                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
+                                        <Text size='4' weight='regular' style={{ fontFamily: "ME"}}>
+                                        1
+                                        </Text>
+                                    </Box>
+                                    <Box>
+                                        <Heading size='1' weight='regular' style={{ lineHeight: '1.1'}}>Post Meme</Heading>
+                                        <Box>
+                                        <Text size='1' color='gray'>
+                                            follow the instructions 
+                                        </Text>
+                                        </Box>
+                                    </Box>
+                                </Flex>
+                            </Card>
 
-          <Card>
-            <Flex gap='4' align='center' p='1'>
-              <Box>
-                <Text size='8' weight='bold'>
-                  2
-                </Text>
-              </Box>
-              <Box>
-                <Box>Your Meme gets {">"}10K views</Box>
-                <Box>
-                  <Text size='1' color='gray'>
-                    You get 1 <Badge color='bronze'>XP</Badge> for each 1 view as reward
-                  </Text>
-                </Box>
-              </Box>
-            </Flex>
-          </Card>
+                            <Card>
+                                <Flex gap='4' align='center'>
+                                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
+                                        <Text size='4' weight='regular' style={{ fontFamily: "ME"}}>
+                                        2
+                                        </Text>
+                                    </Box>
+                                    <Box>
+                                        <Heading size='1' weight='regular' style={{ lineHeight: '1.1'}}>Your Meme gets {">"} 10K views</Heading>
+                                        <Box>
+                                        <Text size='1' color='gray'>
+                                            You get 1 <Badge color='bronze'>XP</Badge> for each 1 view as reward
+                                        </Text>
+                                        </Box>
+                                    </Box>
+                                </Flex>
+                            </Card>
 
-          <Card>
-            <Flex gap='4' align='center' p='1'>
-              <Box>
-                <Text size='8' weight='bold'>
-                  3
-                </Text>
-              </Box>
-              <Flex justify='between' width='100%' align='center'>
-                <Box>
-                  <Box>Send link to Moderation</Box>
-                  <Box>
-                    <Text size='1' color='gray'>
-                      Wait unitl it gets as much views as possible, because you can send video on review only once
-                    </Text>
-                  </Box>
-                </Box>
-                <img
-                  style={{
-                    height: 'var(--font-size-8)',
-                  }}
-                  src={yeyEmoji}
-                />
-              </Flex>
-            </Flex>
-          </Card>
-        </Flex>
-                  <GlowingButton
-                    size='4'
-                    onClick={() => {
-                        WebApp.openLink('https://t.me/mf_sup_bot');
-                    }}
-                    style={{ width: '100%' }}
-                  >
-                    Get Reward
-                  </GlowingButton>
-                </Grid>
+                            <Card>
+                                <Flex gap='4' align='center'>
+                                    <Box style={{backgroundColor: "#2b2b2b", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center",}} >
+                                        <Text size='4' weight='regular' style={{ fontFamily: "ME"}}>
+                                        3
+                                        </Text>
+                                    </Box>
+                                    <Flex justify='between' width='100%' align='center'>
+                                        <Box>
+                                        <Heading size='1' weight='regular' style={{ lineHeight: '1.1'}}>Send link to Moderation</Heading>
+                                        <Box style={{ lineHeight: '1.1'}}>
+                                            <Text size='1' color='gray'>
+                                            Wait unitl it gets as much views as possible, because you can send video on review only once
+                                            </Text>
+                                        </Box>
+                                        </Box>
+                                    </Flex>
+                                </Flex>
+                            </Card>
+                        </Flex>
+                        <GlowingButton
+                            size='4'
+                            onClick={() => {
+                                WebApp.openLink('https://t.me/mf_sup_bot');
+                            }}
+                            style={{ width: '100%', textTransform: 'uppercase' }}
+                        >
+                            Get Reward
+                        </GlowingButton>
+                        </Grid>
 
-                </ScrollArea>
-              </Theme>
-            </Sheet.Content>
-          </Sheet.Container>
-          <Sheet.Backdrop onTap={() => handleDialogClose()} />
-        </Theme>
-      </Sheet>
+                        </ScrollArea>
+                    </Theme>
+                    </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop onTap={() => handleDialogClose()} />
+                </Theme>
+            </Sheet>
                     </Box>
                 </Flex>
             </>

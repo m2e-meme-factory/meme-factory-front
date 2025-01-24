@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Badge, Box, Callout, Flex, Heading, Spinner, Text, Theme } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
 import { Sheet } from 'react-modal-sheet';
 import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
 import { AxiosError } from 'axios';
@@ -10,7 +11,7 @@ import CopyableRef from '../CopyableField/CopyableRef';
 import { showErrorMessage, showSuccessMessage } from '@shared/utils/helpers/notify';
 import { applyAutotaskCompletion } from '@shared/utils/api/requests/autotask/applyForAutotaskCompletion';
 import { claimAutotaskReward } from '@shared/utils/api/requests/autotask/claimAutotaskReward';
-import { UNSUBSCRIBE_WARNING } from '@shared/consts/strings';
+import { LOCAL_TEXT } from '@shared/consts';
 import { SolidCard } from '@shared/components/Card/SolidCard';
 import { getAutotaskApplications } from '@shared/utils/api/requests/autotask/getAutotaskApplications';
 
@@ -47,6 +48,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   refLink,
   category,
 }) => {
+  const { t } = useTranslation();
   //State of autotask
   type ApplicationStatus = 'applied' | 'claimed' | 'unstarted';
   const [isApplied, setIsApplied] = useState(applied);
@@ -117,7 +119,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const { mutate: apply, isPending: isApplying } = useMutation({
     mutationFn: applyAutotaskCompletion,
     onError: () => {
-      showErrorMessage('Error occurred while applying autotask completion');
+      showErrorMessage(t(LOCAL_TEXT.ERROR_WHILE_OCCURRED_APPLYING_AUTOTASK_COMPLETION));
       setSubmitting(false);
     },
     onSuccess: () => {
@@ -144,14 +146,14 @@ const AutotaskCard: FC<AutotaskProps> = ({
         statusCode: number;
       };
       if (response) {
-        showErrorMessage(response.message || 'An unknown error occurred');
+        showErrorMessage(response.message || t(LOCAL_TEXT.AN_UNKNOWN_ERROR_OCCURRED));
       } else {
-        showErrorMessage('An unknown error occurred');
+        showErrorMessage(t(LOCAL_TEXT.AN_UNKNOWN_ERROR_OCCURRED));
       }
     },
     onSuccess: () => {
       setIsClaimed(true);
-      showSuccessMessage('Reward claimed successfully!');
+      showSuccessMessage(t(LOCAL_TEXT.REWARD_CLAIMED_SUCCESSFULLY));
     },
     onSettled: () => {
       refetchApplication();
@@ -257,7 +259,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                           <div className={styles.card} onClick={handleClaimClick}>
                             <div className={styles.cardContent}>
                               <Flex justify='center' align='center' style={{ width: '100%' }}>
-                                <p className={styles.socialsName}>Claim</p>
+                                <p className={styles.socialsName}>{t(LOCAL_TEXT.CLAIM)}</p>
                               </Flex>
                             </div>
                           </div>
@@ -279,7 +281,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                                         align='center'
                                         style={{ width: '100%' }}
                                       >
-                                        <Spinner></Spinner>
+                                        <Spinner />
                                       </Flex>
                                     </div>
                                   </div>
@@ -296,7 +298,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
                             </div>
                           </a>
                         )}
-                        <p className={styles.warning}>{UNSUBSCRIBE_WARNING}</p>
+                        <p className={styles.warning}>{t(LOCAL_TEXT.UNSUBSCRIBE_WARNING)}</p>
                       </Flex>
                     </Flex>
                   )}

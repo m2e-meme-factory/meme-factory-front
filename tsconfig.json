@@ -22,7 +22,8 @@
       "@public/*": ["./public/*"],
       "@pages/*": ["./src/pages/*"],
       "@shared/*": ["./src/shared/*"],
-      "@styles/*": ["./src/styles/*"]
+      "@styles/*": ["./src/styles/*"],
+      "@widgets/*": ["./src/widgets/*"],
     }
   },
   "include": ["src"]

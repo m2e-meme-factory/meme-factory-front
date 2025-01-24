@@ -1,16 +1,20 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import { Badge, Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
 
 import { Header } from '@widgets/header';
 
 import styled from 'styled-components';
 import useAnimationFrame from '../utils/animations/useAnimationFrame';
 import GlowingButton from './Buttons/GlowingButton';
+
+import { LOCAL_TEXT } from '@shared/consts';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const M2E = <Badge color='bronze'>M2E</Badge>;
 
@@ -107,6 +111,7 @@ const StyledCard = styled(Card)`
   width: 80%;
 `;
 const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const swiperRef = useRef<Swiper | null>(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [slideNormalizedOffset1, setSlideNormalizedOffset1] = useState(0);
@@ -202,7 +207,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               overflowX='hidden'
               style={{
                 transformStyle: 'preserve-3d',
-                // transform: `perspective(1200px) rotateX(${slideNormalizedOffset1 * 10 + 10}deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(20vh)`,
                 transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset1 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset1 / 1.5, 1)}) translateY(15.5vh)`,
                 translate: '0.4s ease all',
               }}
@@ -284,17 +288,17 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                     </svg>
                   </Box>
                   <Text mb='17px' style={{ color: 'var(--accent-1)' }}>
-                    Meme-To-Earn
+                    {t(LOCAL_TEXT.MEME_TO_EARN)}
                   </Text>
                 </Flex>
               </Box>
 
               <Box pt='8' pb='2' style={{ textAlign: 'center' }}>
                 <Flex direction='column' align='center' gap='1'>
-                  <Heading size='4'>How to Earn With Us?</Heading>
+                  <Heading size='4'>{t(LOCAL_TEXT.HOW_TO_EARN_WITH_US)}</Heading>
                   <Box style={{ maxWidth: '25ch' }}>
                     <Text size={{ xs: '2', sm: '3' }}>
-                      The more M2E points you get - the more your Airdrop chances.
+                      {t(LOCAL_TEXT.MORE_M2E_POINTS_YOU_GET_MORE_YOUR_AIRDROP_CHANCES)}
                     </Text>
                   </Box>
                 </Flex>
@@ -314,7 +318,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                 zIndex: '9999',
               }}
             >
-              Learn
+              {t(LOCAL_TEXT.LEARN)}
             </Button>
           </div>
           <div className='swiper-slide'>
@@ -327,7 +331,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               mr='16px'
               style={{
                 transformStyle: 'preserve-3d',
-                // transform: `perspective(1200px) rotateX(${slideNormalizedOffset2 * 10 + 10}deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(10vh)`,
                 transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset2 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset2 / 1.5, 1)}) translateY(-2vh)`,
                 translate: '0.4s ease all',
               }}
@@ -348,8 +351,10 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
 
               <Box pt='8' pb='2' style={{ textAlign: 'center' }}>
                 <Flex direction='column' align='center' gap='1'>
-                  <Heading size='4'>Invite Friends!</Heading>
-                  <Text size={{ xs: '2', sm: '4' }}>Earn up to 1000 M2E for each tasks.</Text>
+                  <Heading size='4'>{t(LOCAL_TEXT.INVITE_FRIENDS)}</Heading>
+                  <Text size={{ xs: '2', sm: '4' }}>
+                    {t(LOCAL_TEXT.EARN_UP_TO_M2E_FOR_EACH_TASKS)}
+                  </Text>
                 </Flex>
               </Box>
             </Flex>
@@ -368,7 +373,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                 zIndex: '9999',
               }}
             >
-              Alright
+              {t(LOCAL_TEXT.ALRIGHT)}
             </Button>
           </div>
           <div className='swiper-slide'>
@@ -381,7 +386,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               mr='16px'
               style={{
                 transformStyle: 'preserve-3d',
-                // transform: `perspective(1200px) rotateX(${slideNormalizedOffset3 * 10 + 10}deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(10vh)`,
                 transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset3 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset3 / 1.5, 1)}) translateY(-2vh)`,
                 translate: '0.4s ease all',
               }}
@@ -402,8 +406,10 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
 
               <Box pt='8' pb='2' style={{ textAlign: 'center' }}>
                 <Flex direction='column' align='center' gap='1'>
-                  <Heading size='4'>Complete Fast tasks!</Heading>
-                  <Text size={{ xs: '2', sm: '4' }}>Earn up to 1000 M2E for each tasks</Text>
+                  <Heading size='4'>{t(LOCAL_TEXT.COMPLETE_FAST_TASKS)}</Heading>
+                  <Text size={{ xs: '2', sm: '4' }}>
+                    {t(LOCAL_TEXT.EARN_UP_TO_M2E_FOR_EACH_TASKS)}
+                  </Text>
                 </Flex>
               </Box>
             </Flex>
@@ -422,7 +428,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                 zIndex: '9999',
               }}
             >
-              Alright
+              {t(LOCAL_TEXT.ALRIGHT)}
             </Button>
           </div>
           <div className='swiper-slide' style={{ overflowX: 'hidden' }}>
@@ -435,7 +441,6 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
               mr='16px'
               style={{
                 transformStyle: 'preserve-3d',
-                // transform: `perspective(1200px) rotateX(${slideNormalizedOffset4 * 10 + 10}deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(10vh)`,
                 transform: `perspective(1200px) rotateX(0deg) rotateY(${slideNormalizedOffset4 * 70}deg) scale(${Math.min(1 + slideNormalizedOffset4 / 1.5, 1)}) translateY(0vh)`,
                 translate: '0.4s ease all',
                 overflowX: 'hidden',
@@ -451,7 +456,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                 }}
               >
                 <Flex direction='column' align='start' justify='between' gap='3'>
-                  <Heading size='3'>Airdrop tasks</Heading>
+                  <Heading size='3'>{t(LOCAL_TEXT.AIRDROP_TASKS)}</Heading>
                   <Flex gap='2'>
                     <img src='imgs/step4-1.png' width='236' height='243' alt='' />
                     <img src='imgs/step4-2.png' width='236' height='243' alt='' />
@@ -461,10 +466,10 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
 
               <Box pt='7' pb='2' style={{ textAlign: 'center' }}>
                 <Flex direction='column' align='center' gap='1'>
-                  <Heading size='4'>Create content!</Heading>
+                  <Heading size='4'>{t(LOCAL_TEXT.CREATE_CONTENT)}</Heading>
                   <Box style={{ maxWidth: '28ch' }}>
                     <Text size={{ xs: '2', sm: '4' }}>
-                      You will post content in socials and earn more than 10 000 M2E daily
+                      {t(LOCAL_TEXT.YOU_WILL_POST_CONTENT_IN_SOCIALS_AND_EARN_MORE_THAN_M2E_DAILY)}
                     </Text>
                   </Box>
                 </Flex>
@@ -485,7 +490,7 @@ const Tutorial: FC<TutorialProps> = ({ onComplete }) => {
                 zIndex: '9999',
               }}
             >
-              Make Money
+              {t(LOCAL_TEXT.MAKE_MONEY)}
             </GlowingButton>
           </div>
         </div>

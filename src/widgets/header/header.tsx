@@ -8,19 +8,16 @@ import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { RootState } from '@shared/utils/redux/store';
 import { getLocalStorage, setLocalStorage } from '@shared/utils/helpers/local-storage';
 import { LOCAL_STORAGE_CONSTANTS } from '@shared/consts/local-storage-constants';
-import { LOCAL_TEXT } from '@shared/consts/local-text';
 
 function numberWithSpaces(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 export const Header = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
-  console.log('i18n', t(LOCAL_TEXT.ADDRESS));
-
-  const { user: userWeb } = useWebApp();
-  const userLanguage = userWeb?.language_code;
+  const webApp = useWebApp();
+  const userLanguage = webApp?.initDataUnsafe?.user?.language_code;
 
   const user = useSelector((state: RootState) => state.user.user);
 

@@ -1,7 +1,7 @@
 import React from 'react';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCube, Pagination } from 'swiper/modules';
-import styled, { createGlobalStyle } from 'styled-components';
 
 // Import Swiper styles
 import 'swiper/css';

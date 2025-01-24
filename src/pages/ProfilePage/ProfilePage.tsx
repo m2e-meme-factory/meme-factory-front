@@ -6,6 +6,7 @@ import { Grid, Text, Card, Heading, Flex, Box, Theme, Badge, Callout } from '@ra
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { Sheet } from 'react-modal-sheet';
 import { useTonConnectUI } from '@tonconnect/ui-react';
+import { useTranslation } from 'react-i18next';
 
 import { Header } from '@widgets/header';
 
@@ -14,10 +15,9 @@ import ConnectWallet from '../WalletPage/ConnectWallet';
 import { useAuthMe } from '@shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '@shared/utils/redux/user/userSlice';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
-
+import { LOCAL_TEXT } from '@shared/consts/local-text';
 import DeveloperMenu from '@shared/components/DevMenu/DeveloperMenu';
 import useDeveloperMenu from '@shared/hooks/useDeveloperMenu';
-
 import { ResponsibleImage } from '@shared/components/ResponsibleImage';
 import VideoCard from '@shared/components/VideoCard';
 import { showSuccessMessage } from '@shared/utils/helpers/notify';
@@ -96,28 +96,28 @@ const ImgWrapper = styled(Flex)`
 
 const nfts = [
   {
-    name: 'Bronze',
+    name: LOCAL_TEXT.BRONZE,
     img: 'bronze.svg',
     discount: 0,
     amount: 10,
     price: 1,
   },
   {
-    name: 'Silver',
+    name: LOCAL_TEXT.SILVER,
     img: 'silver.svg',
     discount: 10,
     amount: 100,
     price: 0.9,
   },
   {
-    name: 'Gold',
+    name: LOCAL_TEXT.GOLD,
     img: 'gold.svg',
     discount: 20,
     amount: 1000,
     price: 0.8,
   },
   {
-    name: 'Dimond',
+    name: LOCAL_TEXT.DIAMOND,
     img: 'dimond.svg',
     discount: 30,
     amount: 10000,
@@ -126,7 +126,7 @@ const nfts = [
 ];
 
 const cyberNft = {
-  name: 'Investor',
+  name: LOCAL_TEXT.INVESTOR,
   img: 'cool.svg',
   discount: 40,
   amount: 100000,
@@ -151,6 +151,7 @@ const NftCardItem = ({
   };
   style?: React.CSSProperties;
 }) => {
+  const { t } = useTranslation();
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleDialogClose = () => {
@@ -158,17 +159,12 @@ const NftCardItem = ({
   };
 
   const handleDialogOpen = () => {
-    console.log('open');
     setModalVisible(true);
   };
 
   const handleVerify = () => {
-    // if (user) {
     handleDialogClose();
     handleBuy();
-    console.log(isModalVisible);
-    // verify({ params: { telegramId: user.telegramId } });
-    // }
   };
 
   return (
@@ -176,23 +172,24 @@ const NftCardItem = ({
       <NftCard
         style={style}
         onClick={handleDialogOpen}
-        glowing={nft.name == 'Gold'}
-        bronzes={nft.name == 'Bronze'}
-        silvers={nft.name == 'Silver'}
-        dimonds={nft.name == 'Dimond'}
-        investors={nft.name == 'Investor'}
+        glowing={nft.name === LOCAL_TEXT.GOLD}
+        bronzes={nft.name === LOCAL_TEXT.BRONZE}
+        silvers={nft.name === LOCAL_TEXT.SILVER}
+        dimonds={nft.name === LOCAL_TEXT.DIAMOND}
+        investors={nft.name === LOCAL_TEXT.INVESTOR}
       >
         <Flex direction='column' minHeight='10vh'>
           <Box>
             <Flex gap='3' justify='between' align='center'>
               <Flex gap='1'>
-                <Heading size='2'>{nft.name}</Heading>
+                <Heading size='2'>{t(nft.name)}</Heading>
                 <img
                   src={`${process.env.PUBLIC_URL}/imgs/${nft.img}`}
                   style={{
                     width: '18px',
                     height: '17px',
                   }}
+                  alt=''
                 />
               </Flex>
               {nft.discount > 0 && <Badge color='gray'>-{nft.discount}%</Badge>}
@@ -208,7 +205,7 @@ const NftCardItem = ({
             </Text>
           </Box>
           <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px' }}>
-            BUY
+            {t(LOCAL_TEXT.BUY)}
           </YellowBorderButton>
         </Flex>
       </NftCard>
@@ -230,19 +227,19 @@ const NftCardItem = ({
                   </Flex>
                   <Grid gap='2'>
                     <Heading mb='2' align='center'>
-                      {nft.name}
+                      {t(nft.name)}
                     </Heading>
                     <Text size='4' align='center'>
-                      Get 100% chance for{' '}
+                      {t(LOCAL_TEXT.GET)} 100% {t(LOCAL_TEXT.CHANCE_FOR)}{' '}
                       <b>{numberWithSpaces(nft.amount + nft.amount * (nft.discount / 100))}</b>{' '}
                       <Badge color='yellow' size='3'>
                         M2E
                       </Badge>{' '}
-                      tokens Airdrop
+                      {t(LOCAL_TEXT.TOKENS)} Airdrop
                     </Text>
                     <Callout.Root color='green' mt='2'>
                       <Callout.Text size='4'>
-                        Price Discount: {nft.discount}%
+                        {t(LOCAL_TEXT.PRICE_DISCOUNT)}: {nft.discount}%
                         <br />
                         <Text weight='bold'>M2E/USDT {nft.price}$ </Text>
                       </Callout.Text>
@@ -259,11 +256,11 @@ const NftCardItem = ({
                       }}
                       style={{ width: '100%' }}
                     >
-                      Connect Wallet
+                      {t(LOCAL_TEXT.CONNECT_WALLET)}
                     </GlowingButton>
                   ) : (
                     <GlowingButton size='4' onClick={handleVerify} style={{ width: '100%' }}>
-                      Pay {nft.amount} USDT
+                      {t(LOCAL_TEXT.PAY)} {nft.amount} USDT
                     </GlowingButton>
                   )}
                 </Grid>
@@ -301,6 +298,7 @@ const GlowingCard = styled(Card)`
 `;
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'airdrop';
@@ -376,7 +374,7 @@ export default function ProfilePage() {
         <Box pt='3' pb='3' style={{ maxHeight: '100%' }}>
           <Flex direction='column' gap='5'>
             <Heading weight='regular' size='4'>
-              What is Meme Factory?
+              {t(LOCAL_TEXT.WHAT_MEMO_FACTORY)}
             </Heading>
             <VideoCard
               videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'}
@@ -387,7 +385,7 @@ export default function ProfilePage() {
 
           <Flex direction='column' gap='3'>
             <Heading weight='regular' size='4'>
-              Join our whitelist
+              {t(LOCAL_TEXT.JOIN_OUR_WHITELIST)}
             </Heading>
 
             <div className='slideshow'>
@@ -410,10 +408,9 @@ export default function ProfilePage() {
                     nft={nft}
                     handleBuy={() => {
                       if (walletAddress) {
-                        showSuccessMessage('NFT bought successfully!');
+                        showSuccessMessage(t(LOCAL_TEXT.NTF_BOUGHT_SUCCESSFULLY));
                       } else {
                         tonConnectUI.modal.open();
-                        // showErrorMessage('Connect wallet first!');
                       }
                     }}
                     key={index}
@@ -429,10 +426,9 @@ export default function ProfilePage() {
                   nft={cyberNft}
                   handleBuy={() => {
                     if (walletAddress) {
-                      showSuccessMessage('NFT bought successfully!');
+                      showSuccessMessage(t(LOCAL_TEXT.NTF_BOUGHT_SUCCESSFULLY));
                     } else {
                       tonConnectUI.modal.open();
-                      // showErrorMessage('Connect wallet first!');
                     }
                   }}
                   style={{
@@ -451,7 +447,7 @@ export default function ProfilePage() {
                       setIndexSlideshow(idx);
                     }}
                   >
-                    {nft.name}
+                    {t(nft.name)}
                   </div>
                 ))}
                 <div
@@ -460,14 +456,14 @@ export default function ProfilePage() {
                     setIndexSlideshow(4);
                   }}
                 >
-                  {cyberNft.name}
+                  {t(cyberNft.name)}
                 </div>
               </div>
             </div>
           </Flex>
 
           <Flex justify='center' align='center' gap='2' direction='column'>
-            <Heading size='3'>Other ways increase Airdrop chance?</Heading>
+            <Heading size='3'>{t(LOCAL_TEXT.OTHER_WAYS_INCREASE_AIRDROP_CHANCE)}</Heading>
           </Flex>
           <Flex direction='column' gap='3'>
             <Link
@@ -519,7 +515,7 @@ export default function ProfilePage() {
                       <Box
                         style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}
                       >
-                        Invite friends
+                        {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER)}
                       </Box>
                     </Box>
                   </Flex>
@@ -566,7 +562,7 @@ export default function ProfilePage() {
                           fontWeight: '400',
                         }}
                       >
-                        Complete Fast Tasks
+                        {t(LOCAL_TEXT.COMPLETE_FAST_TASKS_SIMPLE)}
                       </Box>
                     </Box>
                   </Flex>
@@ -636,7 +632,7 @@ export default function ProfilePage() {
                       <Box
                         style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}
                       >
-                        Post Memes
+                        {t(LOCAL_TEXT.POST_MEMES)}
                       </Box>
                     </Box>
                   </Flex>
@@ -650,20 +646,19 @@ export default function ProfilePage() {
           <Box pb='5'>
             <Grid gap='4'>
               <Heading mr='3' size='4'>
-                More
+                {t(LOCAL_TEXT.MORE)}
               </Heading>
               <YellowBorderButton
                 size='4'
                 onClick={() => navigate('/become-partner')}
                 style={{ fontSize: '15px', fontWeight: '500', textTransform: 'uppercase' }}
               >
-                Become Advertiser
+                {t(LOCAL_TEXT.BECOME_ADVERTISER)}
               </YellowBorderButton>
             </Grid>
           </Box>
         </Box>
       </Flex>
-      {/* </ScrollArea> */}
     </Box>
   );
 }

@@ -15,8 +15,6 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
   const [isExpanded, expand] = useExpand();
   const WebApp = useWebApp();
 
-  console.log('WebApp', WebApp);
-
   useEffect(() => {
     expand();
     WebApp.setBottomBarColor('#000');

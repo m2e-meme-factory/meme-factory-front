@@ -5,6 +5,7 @@ import { Grid, Text, Card, Heading, Flex, Box, ScrollArea, Theme, Badge } from '
 import { Sheet } from 'react-modal-sheet';
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { useTranslation } from 'react-i18next';
 
 import AutotaskCardDefaults from '../AutotasksProject/components/Autotask/AutotaskCardDefaults';
 
@@ -21,6 +22,7 @@ import { ROUTES } from '@shared/consts/routes';
 import { SolidCard } from '@shared/components/Card/SolidCard';
 import BorderButton from '@shared/components/Buttons/BorderButton';
 import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
+import { LOCAL_TEXT } from '@shared/consts';
 
 import styled from 'styled-components';
 
@@ -199,10 +201,11 @@ interface Task {
 }
 
 export default function AllTasks() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
-  const { data: refData, isLoading: refLoading } = useGetRefData(user?.telegramId);
-  const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
+  const { data: refData } = useGetRefData(user?.telegramId);
+  const { data: userDataResponse } = useAuthMe();
   const navigate = useNavigate();
 
   const [tonConnectUI] = useTonConnectUI();
@@ -260,10 +263,8 @@ export default function AllTasks() {
   useEffect(() => {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks && savedTasks?.length > 0) {
-      console.log('load tasks');
       setTasks(JSON.parse(savedTasks));
     } else {
-      console.log('new tasks');
       setTasks([
         { category: 'wallet', completed: tonConnectUI.connected },
         { category: 'checkin', completed: false },
@@ -314,12 +315,13 @@ export default function AllTasks() {
                             width: '32px',
                             height: '35px',
                           }}
+                          alt=''
                         />
                       </ImgWrapper>
-                      <Heading size='3'>Post Meme</Heading>
-                      <Text>Earn Money</Text>
+                      <Heading size='3'>{t(LOCAL_TEXT.POST_MEME)}</Heading>
+                      <Text>{t(LOCAL_TEXT.EARN_MONEY)}</Text>
                     </Box>
-                    <BorderButton size='4'>start posting</BorderButton>
+                    <BorderButton size='4'>{t(LOCAL_TEXT.START_POSTING)}</BorderButton>
                   </NftCard>
 
                   <NftCard onClick={handleDialogOpen} glowing={false}>
@@ -331,15 +333,16 @@ export default function AllTasks() {
                             width: '36px',
                             height: '36px',
                           }}
+                          alt=''
                         />
                       </ImgWrapper>
-                      <Heading size='3'>Get Review</Heading>
+                      <Heading size='3'>{t(LOCAL_TEXT.GET_REWIEV)}</Heading>
                       <Text color='gray' size='2'>
-                        Meme reached 10K views, get Reward
+                        {t(LOCAL_TEXT.MEME_REACHED_VIEWS_GET_REWARD)}
                       </Text>
                     </Box>
                     <YellowBorderButton size='4' style={{ height: '32px' }}>
-                      get
+                      {t(LOCAL_TEXT.GET)}
                     </YellowBorderButton>
                   </NftCard>
                 </Grid>
@@ -382,10 +385,10 @@ export default function AllTasks() {
                                 </Text>
                               </Box>
                               <Box>
-                                <Box>Post Meme</Box>
+                                <Box>{t(LOCAL_TEXT.POST_MEME)}</Box>
                                 <Box>
                                   <Text size='1' color='gray'>
-                                    follow the instructions
+                                    {t(LOCAL_TEXT.FOLLOW_INSTRUCTIONS)}
                                   </Text>
                                 </Box>
                               </Box>
@@ -400,11 +403,11 @@ export default function AllTasks() {
                                 </Text>
                               </Box>
                               <Box>
-                                <Box>Your Meme gets {'>'}10K views</Box>
+                                <Box>{t(LOCAL_TEXT.YOUR_MEME_GETS_VIEWS)}</Box>
                                 <Box>
                                   <Text size='1' color='gray'>
-                                    You get 1 <Badge color='bronze'>XP</Badge> for each 1 view as
-                                    reward
+                                    {t(LOCAL_TEXT.YOU_GET)} 1 <Badge color='bronze'>XP</Badge>{' '}
+                                    {t(LOCAL_TEXT.FOR_EACH_VIEW_AS_REWARD)}
                                   </Text>
                                 </Box>
                               </Box>
@@ -420,11 +423,12 @@ export default function AllTasks() {
                               </Box>
                               <Flex justify='between' width='100%' align='center'>
                                 <Box>
-                                  <Box>Send link to Moderation</Box>
+                                  <Box>{t(LOCAL_TEXT.SEND_LINK_MODERATION)}</Box>
                                   <Box>
                                     <Text size='1' color='gray'>
-                                      Wait unitl it gets as much views as possible, because you can
-                                      send video on review only once
+                                      {t(
+                                        LOCAL_TEXT.WAIT_UNTIL_GETS_MANY_VIEWS_POSSIBLE_BECAUSE_YOU_CAN_SEND_VIDEO_ONLY
+                                      )}
                                     </Text>
                                   </Box>
                                 </Box>
@@ -433,6 +437,7 @@ export default function AllTasks() {
                                     height: 'var(--font-size-8)',
                                   }}
                                   src={yeyEmoji}
+                                  alt=''
                                 />
                               </Flex>
                             </Flex>
@@ -445,7 +450,7 @@ export default function AllTasks() {
                           }}
                           style={{ width: '100%' }}
                         >
-                          Get Reward
+                          {t(LOCAL_TEXT.GET_REWARD)}
                         </GlowingButton>
                       </Grid>
                     </ScrollArea>
@@ -458,13 +463,13 @@ export default function AllTasks() {
 
           <Flex direction='column' gap='2'>
             <Heading weight='bold' size='4'>
-              Fast Tasks
+              {t(LOCAL_TEXT.FAST_TASKS)}
             </Heading>
 
             <Flex direction='column' mb='5'>
               <Flex align='center' mb='4'>
                 <Text weight='light' size='3' color='gray'>
-                  You'll be rewarded immediately with XP after each task completion
+                  {t(LOCAL_TEXT.YOU_REWARDED_IMMEDIATELY_WITH_XP_AFTER_EACH_TASK_COMPLETION)}
                 </Text>
               </Flex>
               <Flex justify='center' direction='column' gap='3'>
@@ -472,9 +477,8 @@ export default function AllTasks() {
                   <>
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
-                      title={'Welcome bonus'}
+                      title={t(LOCAL_TEXT.WELCOME_BONUS)}
                       description={''}
-                      // description={"Thanks for joining Meme Factory"}
                       price={'5000'}
                       userId={Number(user?.id)}
                       applied={tasks[2].completed}
@@ -483,10 +487,10 @@ export default function AllTasks() {
                     />
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
-                      title={'Connect Wallet'}
-                      description={
-                        'Secure your account by connecting your wallet to start earning rewards.'
-                      }
+                      title={t(LOCAL_TEXT.CONNECT_WALLET)}
+                      description={t(
+                        LOCAL_TEXT.SECURE_YOUR_ACCOUNT_CONNECTING_YOUR_WALLET_START_EARNING_REWARDS
+                      )}
                       price={'5000'}
                       userId={Number(user?.id)}
                       applied={tasks[0].completed}
@@ -495,10 +499,10 @@ export default function AllTasks() {
                     />
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
-                      title={'Daily check-in'}
-                      description={
-                        'Log in every day to claim your reward and keep your streak alive.'
-                      }
+                      title={t(LOCAL_TEXT.DAILY_CHECK_IN)}
+                      description={t(
+                        LOCAL_TEXT.LOG_IN_EVERY_DAY_CLAIM_YOUR_REWARD_AND_KEEP_YOUR_STREAK_ALIVE
+                      )}
                       price={'1000'}
                       userId={Number(user?.id)}
                       applied={tasks[1].completed}
@@ -508,9 +512,8 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       refLink={refData?.refLink}
-                      title={'Share in Stories'}
+                      title={t(LOCAL_TEXT.SHARE_IN_STORIES)}
                       description={''}
-                      // description={"Share your invite link in your instagram stories to spread the word and earn rewards."}
                       price={'10000'}
                       userId={Number(user?.id)}
                       applied={tasks[3].completed}
@@ -520,9 +523,8 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       refLink={refData?.refLink}
-                      title={'Edit account info'}
+                      title={t(LOCAL_TEXT.EDIT_ACCOUNT_INFO)}
                       description={''}
-                      // description={"Update your instagram account information to keep your profile current and earn rewards."}
                       price={'10000'}
                       userId={Number(user?.id)}
                       applied={tasks[4].completed}
@@ -536,7 +538,6 @@ export default function AllTasks() {
           </Flex>
         </Box>
       </Flex>
-      {/* </ScrollArea> */}
     </Box>
   );
 }

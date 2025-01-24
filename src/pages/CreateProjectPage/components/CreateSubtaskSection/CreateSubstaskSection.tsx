@@ -1,22 +1,15 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  Separator,
-  TextArea,
-  TextField,
-  Dialog,
-  Card,
-} from '@radix-ui/themes';
-import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
-import CreatedSubtask from '../Subtask/CreatedSubtask';
+import { Button, Flex, Heading, IconButton, Separator, Card } from '@radix-ui/themes';
+import { PlusIcon } from '@radix-ui/react-icons';
 import { TaskInfo } from 'api';
 import * as Form from '@radix-ui/react-form';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next';
+
 import CreatedSubtaskV2 from '../Subtask/CreatedSubtaskV2';
 import formStyles from '../Subtask/form.module.css';
+
+import { LOCAL_TEXT } from '@shared/consts';
 
 interface CreateSubtaskSectionProps {
   subtasks: TaskInfo[];
@@ -31,6 +24,7 @@ type FormData = {
 };
 
 const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubtasks }) => {
+  const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +48,7 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
     <Flex mb='3' mt='4' direction='column'>
       <Flex align='center' mt='3'>
         <Heading size='5' mr='3'>
-          Tasks Creation
+          {t(LOCAL_TEXT.TASKS_CREATION)}
         </Heading>
 
         <IconButton loading={modalOpen} size='1' onClick={() => setModalOpen(true)}>
@@ -73,9 +67,9 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
                   justifyContent: 'space-between',
                 }}
               >
-                <Form.Label className={formStyles.FormLabel}>Title</Form.Label>
+                <Form.Label className={formStyles.FormLabel}>{t(LOCAL_TEXT.TITLE)}</Form.Label>
                 <Form.Message className={formStyles.FormMessage} match='valueMissing'>
-                  Please enter a title
+                  {t(LOCAL_TEXT.PLEASE_ENTER_TITLE)}
                 </Form.Message>
               </div>
               <Form.Control asChild>
@@ -95,9 +89,11 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
                   justifyContent: 'space-between',
                 }}
               >
-                <Form.Label className={formStyles.FormLabel}>Description</Form.Label>
+                <Form.Label className={formStyles.FormLabel}>
+                  {t(LOCAL_TEXT.DESCRIPTION)}
+                </Form.Label>
                 <Form.Message className={formStyles.FormMessage} match='valueMissing'>
-                  Please enter a description
+                  {t(LOCAL_TEXT.PLEASE_ENTER_DESCRIPTION)}
                 </Form.Message>
               </div>
               <Form.Control asChild>
@@ -113,12 +109,12 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
                   justifyContent: 'space-between',
                 }}
               >
-                <Form.Label className={formStyles.FormLabel}>Price</Form.Label>
+                <Form.Label className={formStyles.FormLabel}>{t(LOCAL_TEXT.PRICE)}</Form.Label>
                 <Form.Message className={formStyles.FormMessage} match='valueMissing'>
-                  Please enter a price
+                  {t(LOCAL_TEXT.PLEASE_ENTER_PRICE)}
                 </Form.Message>
                 <Form.Message className={formStyles.FormMessage} match='typeMismatch'>
-                  Please enter a valid price
+                  {t(LOCAL_TEXT.PLEASE_ENTER_VALID_PRICE)}
                 </Form.Message>
               </div>
               <Form.Control asChild>
@@ -127,7 +123,7 @@ const CreateSubtaskSection: FC<CreateSubtaskSectionProps> = ({ subtasks, setSubt
             </Form.Field>
 
             <Form.Submit asChild>
-              <Button style={{ marginTop: 10, width: '100%' }}>Save changes</Button>
+              <Button style={{ marginTop: 10, width: '100%' }}>{t(LOCAL_TEXT.SAVE_CHANGES)}</Button>
             </Form.Submit>
           </Form.Root>
         </Card>

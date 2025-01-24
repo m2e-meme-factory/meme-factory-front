@@ -1,22 +1,25 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Box, Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
+import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
-import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
+import { EventType, getEventType } from '@shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
-import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
-import { useCreateEvent } from '../../shared/utils/api/hooks/event/useCreateEvent';
+import { useGetProgress } from '@shared/utils/api/hooks/project/useGetProjectProgress';
+import { useCreateEvent } from '@shared/utils/api/hooks/event/useCreateEvent';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../shared/utils/redux/store';
-import { showErrorMessage, showMessage } from '../../shared/utils/helpers/notify';
-import Loading from '../../shared/components/Loading';
-import { Role } from '../../shared/consts/userRoles';
-import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
-import { shortenString } from '../../shared/utils/helpers/shortenString';
+import { RootState } from '@shared/utils/redux/store';
+import { showErrorMessage } from '@shared/utils/helpers/notify';
+import Loading from '@shared/components/Loading';
+import { Role } from '@shared/consts/userRoles';
+import { useGetProject } from '@shared/utils/api/hooks/project/useGetProject';
+import { shortenString } from '@shared/utils/helpers/shortenString';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { useTranslation } from 'react-i18next';
+import { LOCAL_TEXT } from '@shared/consts';
 
 const ProjectLogsPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
   const { projectId, userId } = useParams();
@@ -67,7 +70,7 @@ const ProjectLogsPage = () => {
         setUserProgress(progress);
         setEvents(progress.events);
       } else {
-        setError('Error. No events found');
+        setError(t(LOCAL_TEXT.ERROR_NO_EVENTS_FOUND));
       }
     }
   }, [data]);
@@ -110,7 +113,7 @@ const ProjectLogsPage = () => {
         scrollAreaRef.current.scrollTo(0, scrollAreaRef.current.scrollHeight);
       }
     } else {
-      showErrorMessage('Something went wrong!');
+      showErrorMessage(t(LOCAL_TEXT.SOMETHIMG_WENT_WRONG));
     }
   };
 

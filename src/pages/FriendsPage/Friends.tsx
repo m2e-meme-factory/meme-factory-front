@@ -12,6 +12,7 @@ import {
 } from '@radix-ui/themes';
 import { useSelector } from 'react-redux';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+import { useTranslation } from 'react-i18next';
 
 import { RefDataResponse } from 'api';
 
@@ -23,6 +24,7 @@ import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import WebappBackButton from '@shared/components/WebappBackButton';
 import { showSuccessMessage } from '@shared/utils/helpers/notify';
 import HandshakeAnimated from '@shared/components/LottieIcons/Handshake/HandshakeAnimated';
+import { LOCAL_TEXT } from '@shared/consts';
 
 import styled from 'styled-components';
 
@@ -50,6 +52,7 @@ const ResponsibleImage = styled.img`
 `;
 
 export default function Friends() {
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.user);
   const { data, isLoading: refLoading } = useGetRefData(user?.telegramId);
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
@@ -65,7 +68,7 @@ export default function Friends() {
       navigator.clipboard
         .writeText(textToCopy)
         .then(() => {
-          showSuccessMessage('Copied');
+          showSuccessMessage(t(LOCAL_TEXT.COPIED));
           setCopyText('copied');
           setCopied(true);
 
@@ -75,7 +78,7 @@ export default function Friends() {
           }, 5000);
         })
         .catch(() => {
-          console.error('Clipboard copy failed, using fallback method.');
+          console.error(t(LOCAL_TEXT.CLIPBOARD_COPY_FAILED_USING_FALLBACK_METHOD));
           copyFallback(textToCopy);
         });
     } else if (!copied) {
@@ -92,7 +95,7 @@ export default function Friends() {
 
     try {
       document.execCommand('copy');
-      showSuccessMessage('Copied!');
+      showSuccessMessage(t(LOCAL_TEXT.COPIED));
       setCopyText('copied');
       setCopied(true);
 
@@ -101,7 +104,7 @@ export default function Friends() {
         setCopyText('click on me');
       }, 5000);
     } catch (error) {
-      console.error('Fallback copy failed.', error);
+      console.error(t(LOCAL_TEXT.FALLBACK_COPY_FAILED), error);
     }
 
     document.body.removeChild(tempInput);
@@ -113,8 +116,8 @@ export default function Friends() {
 
   const handleShareClick = () => {
     const message =
-      "\nJoin me on Meme Factory and let's earn together! \n" +
-      'Use my invite link to join the fun 👑';
+      t(LOCAL_TEXT.JOIN_ME_ON_MEME_FACTORY_EARN_TOGETHER) +
+      t(LOCAL_TEXT.USE_MY_INVITE_LINK_JOIN_FUN);
     const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(message)}&url=${encodeURIComponent(refData?.refLink || '')}`;
     webApp.openTelegramLink(shareUrl);
   };
@@ -146,7 +149,7 @@ export default function Friends() {
             </Flex>
 
             <Heading mb='4' align='center' size='6'>
-              Invite Friends
+              {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER)}
             </Heading>
 
             <Box m='4'>
@@ -170,13 +173,12 @@ export default function Friends() {
                       </Text>
                     </Box>
                     <Box>
-                      {/* <Box>Invite friend ({copyText})</Box> */}
                       <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                        Invite friends
+                        {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER)}
                       </Heading>
                       <Box>
                         <Text size='1' color='gray'>
-                          Copy Link and send it to your friend
+                          {t(LOCAL_TEXT.COPY_LINK_SEND_YOUR_FRIEND)}
                         </Text>
                       </Box>
                     </Box>
@@ -203,11 +205,11 @@ export default function Friends() {
                     </Box>
                     <Box>
                       <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                        Your Friend Join
+                        {t(LOCAL_TEXT.YOUR_FRIEND_JOIN)}
                       </Heading>
                       <Box>
                         <Text size='1' color='gray'>
-                          Your friend join Meme Factory
+                          {t(LOCAL_TEXT.YOUR_FRIEND_JOIN_MEME_FACTORY)}
                         </Text>
                       </Box>
                     </Box>
@@ -235,13 +237,13 @@ export default function Friends() {
                     <Flex justify='between' width='100%' align='center'>
                       <Box>
                         <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                          You get Reward
+                          {t(LOCAL_TEXT.YOU_GET_REWARD)}
                         </Heading>
                         <Box
                           style={{ maxWidth: '24ch', lineHeight: '133%', letterSpacing: '0.03em' }}
                         >
                           <Text color='gray' style={{ fontSize: '12px' }}>
-                            You get 5000 XP-M2F per each friend and 10% of his income
+                            {t(LOCAL_TEXT.YOU_GET_PER_EACH_FRIEND_HIS_INCOME)}
                           </Text>
                         </Box>
                       </Box>
@@ -255,20 +257,20 @@ export default function Friends() {
           <Box style={{ padding: '12px', background: '#1c1c1e', borderRadius: '10px' }}>
             <Flex direction='column' gap='2'>
               <Heading size='3' weight='regular'>
-                Share your ref link
+                {t(LOCAL_TEXT.SHARE_YOUR_REF_LINK)}
               </Heading>
               <TextField.Root size='3' placeholder='https://' />
               <DataList.Root mt='2' style={{ gap: '6px' }}>
                 <DataList.Item align='center'>
                   <DataList.Item>
-                    <DataList.Label minWidth='50px'>Total Count:</DataList.Label>
+                    <DataList.Label minWidth='50px'>{t(LOCAL_TEXT.TOTAL_COUNT)}</DataList.Label>
                     <Skeleton loading={refLoading}>
                       <DataList.Value>{refData?.count}</DataList.Value>
                     </Skeleton>
                   </DataList.Item>
                   <DataList.Item>
                     <DataList.Label minWidth='50px' width='auto'>
-                      Total profit:
+                      {t(LOCAL_TEXT.TOTAL_PROFIT)}
                     </DataList.Label>
                     <Skeleton loading={refLoading}>
                       <DataList.Value>
@@ -284,7 +286,7 @@ export default function Friends() {
               <Box asChild width='100%'>
                 <Skeleton loading={refLoading}>
                   <GlowingButton size='3' mt='2' onClick={handleShareClick}>
-                    SHARE
+                    {t(LOCAL_TEXT.SHARE)}
                   </GlowingButton>
                 </Skeleton>
               </Box>

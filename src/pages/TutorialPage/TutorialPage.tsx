@@ -1,6 +1,7 @@
-import Tutorial from '../../shared/components/Tutorial';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import Tutorial from '@shared/components/Tutorial';
 
 export default function TutorialPage() {
   const navigate = useNavigate();

@@ -62,7 +62,7 @@ const ChangableButton = ({
 };
 
 const NftCard = styled(SolidCard)<{ glowing: boolean }>`
-  height: 15vh;
+  min-height: 15vh;
   /* display: flex; */
   /* flex-direction: column; */
   /* justify-content: space-between; */
@@ -511,7 +511,7 @@ export default function PostMemePage() {
           <NftCard
             onClick={handleDialogOpen}
             glowing={false}
-            style={{ background: '#1c1c1e url(imgs/earn.svg) no-repeat top right', height: '14vh' }}
+            style={{ background: '#1c1c1e url(imgs/earn.svg) no-repeat top right', minHeight: '14vh' }}
           >
             <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Flex direction='row' gap='4'>
@@ -526,7 +526,7 @@ export default function PostMemePage() {
 
                 <Flex direction='column'>
                   <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                    {t(LOCAL_TEXT.GET_REWIEV)}
+                    {t(LOCAL_TEXT.GET_REVIEW)}
                   </Heading>
                   <Box>
                     <Text color='gray' weight='regular' style={{ fontSize: '12px' }}>

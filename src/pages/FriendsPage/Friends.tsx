@@ -140,7 +140,7 @@ export default function Friends() {
           <Box
             pb='2'
             style={{
-              background: '#1c1c1e url(imgs/frends.svg) no-repeat top center / cover',
+              background: 'url("imgs/frends.svg") center -50px/ 100% no-repeat rgb(28, 28, 30) ',
               borderRadius: '10px',
             }}
           >

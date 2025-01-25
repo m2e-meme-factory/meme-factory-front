@@ -27,7 +27,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 import styled from 'styled-components';
 
 const NftCard = styled(SolidCard)<{ glowing: boolean }>`
-  height: 25vh;
+  min-height: 25vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -336,7 +336,7 @@ export default function AllTasks() {
                           alt=''
                         />
                       </ImgWrapper>
-                      <Heading size='3'>{t(LOCAL_TEXT.GET_REWIEV)}</Heading>
+                      <Heading size='3'>{t(LOCAL_TEXT.GET_REVIEW)}</Heading>
                       <Text color='gray' size='2'>
                         {t(LOCAL_TEXT.MEME_REACHED_VIEWS_GET_REWARD)}
                       </Text>

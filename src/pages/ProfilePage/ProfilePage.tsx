@@ -515,7 +515,7 @@ export default function ProfilePage() {
                       <Box
                         style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}
                       >
-                        {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER)}
+                        {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER_IMPERATIVE)}
                       </Box>
                     </Box>
                   </Flex>

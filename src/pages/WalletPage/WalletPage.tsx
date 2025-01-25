@@ -1,113 +1,35 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-
 import { useTonConnectUI } from '@tonconnect/ui-react';
-import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
-import WebappBackButton from '../../shared/components/WebappBackButton';
-
 import {
   Grid,
   Text,
-  Card,
   Badge,
   Heading,
   Flex,
   Button,
   Box,
-  Tabs,
   Skeleton,
   AlertDialog,
 } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
 
-import { RootState } from '../../shared/utils/redux/store';
+import { Header } from '@widgets/header';
 
-import Loading from '../../shared/components/Loading';
+import { connectWallet } from '@shared/utils/api/requests/ton/connect';
+import WebappBackButton from '@shared/components/WebappBackButton';
+import { RootState } from '@shared/utils/redux/store';
+import GlowingButton from '@shared/components/Buttons/GlowingButton';
+import { LOCAL_TEXT } from '@shared/consts';
 
-import Swiper from 'swiper';
 import 'swiper/css';
-import styled from 'styled-components';
-import GlowingButton from '../../shared/components/Buttons/GlowingButton';
-import CoinbagAnimated from '../../shared/components/LottieIcons/Coinbag/CoinbagAnimated';
-import Header from '../ProfilePage/Header';
-
-const TransactionsHistoryPage = lazy(
-  () => import('../TransactionsHistoryPage/TransactionsHistoryPage')
-);
-
-enum TabsOption {
-  WALLET = 'wallet',
-  TRANSACTIONS = 'transactions',
-}
-
-const TABS = [TabsOption.WALLET, TabsOption.TRANSACTIONS];
-
-const SwiperContainer = styled.div`
-  .swiper {
-    width: 100%;
-    height: calc(100vh - 120px);
-    z-index: 0;
-  }
-
-  .swiper-slide {
-    overflow-y: auto;
-    padding-bottom: 60px;
-    z-index: 0;
-  }
-
-  .swiper-pagination {
-    bottom: 10px !important;
-  }
-`;
 
 export default function WalletPage() {
-  const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.user);
-
-  // const defaultTab = searchParams.get('tab') || 'wallet';
-  // const action = searchParams.get('action');
-  // const swiperRef = useRef<Swiper | null>(null);
-
-  const [currentTab, setCurrentTab] = useState<TabsOption>(TabsOption.WALLET);
 
   const [tonConnectUI] = useTonConnectUI();
   const [walletAddress, setWalletAddress] = useState<string>();
-
-  // useEffect(() => {
-  //   swiperRef.current = new Swiper('.swiper', {
-  //     direction: 'horizontal',
-  //   });
-
-  //   if (swiperRef.current) {
-  //     swiperRef.current.on('slideChange', () => {
-  //       switch (swiperRef.current!.activeIndex) {
-  //         case 0:
-  //           setCurrentTab(TabsOption.WALLET);
-  //           break;
-  //         case 1:
-  //           setCurrentTab(TabsOption.TRANSACTIONS);
-  //           break;
-  //       }
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (swiperRef.current) {
-  //       swiperRef.current.destroy(true, true);
-  //     }
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   handleTabChange(defaultTab);
-  // }, [defaultTab]);
-
-  // const handleTabChange = (value: string) => {
-  //   const newTab = value as TabsOption;
-  //   if (swiperRef.current) {
-  //     swiperRef.current.slideTo(TABS.indexOf(newTab));
-  //   }
-  // };
 
   useEffect(() => {
     const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
@@ -132,45 +54,51 @@ export default function WalletPage() {
   }, [walletAddress]);
 
   return (
-    // <Tabs.Root defaultValue={defaultTab} value={currentTab} onValueChange={handleTabChange}>
-    //   <Tabs.List justify='center' highContrast>
-    //     <Tabs.Trigger value='wallet'>Wallet</Tabs.Trigger>
-    //     <Tabs.Trigger value='transactions'>Transactions</Tabs.Trigger>
-    //   </Tabs.List>
-
-    //   <Box pt='3'>
-    //     <SwiperContainer>
-    //       <div className='swiper'>
-    //         <div className='swiper-wrapper'>
-    //           <div className='swiper-slide'>
     <>
-    <Box p="4" pt="3">
-      <Header />
-    </Box>
+      <Box p='4' pt='3'>
+        <Header />
+      </Box>
 
-      <Flex direction='column' justify='center' ml='4' mr='4' gap='4' height='100%' style={{ paddingBottom: '12vh'}}>
+      <Flex
+        direction='column'
+        justify='center'
+        ml='4'
+        mr='4'
+        gap='4'
+        height='100%'
+        style={{ paddingBottom: '12vh' }}
+      >
         <WebappBackButton />
-        {/* <CoinbagAnimated /> */}
-        <Box style={{ borderRadius: '10px', background: ' url(imgs/ellipse-wall-1.svg) no-repeat top left, url(imgs/ellipse-wall-2.svg) no-repeat top right, linear-gradient(#1c1c1e, #1c1c1e)', padding: '24px'}}>
+
+        <Box
+          style={{
+            borderRadius: '10px',
+            background:
+              ' url(imgs/ellipse-wall-1.svg) no-repeat top left, url(imgs/ellipse-wall-2.svg) no-repeat top right, linear-gradient(#1c1c1e, #1c1c1e)',
+            padding: '24px',
+          }}
+        >
           <Flex direction='column' align='center' gap='2'>
-            <img src="imgs/wallet.svg" width='168' height='168' alt="" />
+            <img src='imgs/wallet.svg' width='168' height='168' alt='' />
             <Box>
               <Flex direction='column' align='center'>
-                <Heading align='center' style={{ fontSize: '23px'}}>
-                  Connect Wallet
+                <Heading align='center' style={{ fontSize: '23px' }}>
+                  {t(LOCAL_TEXT.CONNECT_WALLET)}
                 </Heading>
-                <Text style={{ fontSize: '16px', }}>
-                  Text info
-                </Text>
+                <Text style={{ fontSize: '16px' }}>{t(LOCAL_TEXT.TEXT_INFO)}</Text>
               </Flex>
             </Box>
           </Flex>
         </Box>
 
-        <Box asChild width='100%'  style={{ borderRadius: '10px', background: '#202020', padding: '12px'}}>
+        <Box
+          asChild
+          width='100%'
+          style={{ borderRadius: '10px', background: '#202020', padding: '12px' }}
+        >
           <Grid gap='4'>
             <Flex direction='column'>
-              <Heading style={{ fontSize: '18px'}}>Available Balance</Heading>
+              <Heading style={{ fontSize: '18px' }}>{t(LOCAL_TEXT.AVALIABLE_BALANCE)}</Heading>
               <Skeleton width='8' loading={!user}>
                 <Flex
                   gapX='3'
@@ -192,62 +120,43 @@ export default function WalletPage() {
                       color: 'var(--gray-11)',
                     }}
                   >
-                    {'Connected: ' +
+                    {`${t(LOCAL_TEXT.CONNECTED)}: ` +
                       tonConnectUI.account?.address.slice(0, 3) +
                       '...' +
                       tonConnectUI.account?.address.slice(
                         tonConnectUI.account?.address.length - 3,
                         tonConnectUI.account?.address.length
-                      ) || 'Disconnect'}
+                      ) || t(LOCAL_TEXT.DISCONNECT)}
                   </Button>
                 </AlertDialog.Trigger>
                 <AlertDialog.Content maxWidth='450px'>
-                  <AlertDialog.Title>Diconnect Wallet?</AlertDialog.Title>
+                  <AlertDialog.Title>{t(LOCAL_TEXT.DISCONNECT_WALLET)}</AlertDialog.Title>
                   <Flex gap='3' mt='4' justify='end'>
                     <AlertDialog.Cancel>
                       <Button variant='soft' color='gray'>
-                        Cancel
+                        {t(LOCAL_TEXT.CANCEL)}
                       </Button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                      <Button
-                        variant='solid'
-                        color='red'
-                        onClick={() => tonConnectUI.disconnect()}
-                      >
-                        Disconnect
+                      <Button variant='solid' color='red' onClick={() => tonConnectUI.disconnect()}>
+                        {t(LOCAL_TEXT.DISCONNECT)}
                       </Button>
                     </AlertDialog.Action>
                   </Flex>
                 </AlertDialog.Content>
               </AlertDialog.Root>
             ) : (
-              <GlowingButton size='4' onClick={() => tonConnectUI.modal.open()} style={{ textTransform: 'uppercase', fontSize: '15px', fontWeight: 'bold'}}>
-                Connect Wallet
+              <GlowingButton
+                size='4'
+                onClick={() => tonConnectUI.modal.open()}
+                style={{ textTransform: 'uppercase', fontSize: '15px', fontWeight: 'bold' }}
+              >
+                {t(LOCAL_TEXT.CONNECT_WALLET)}
               </GlowingButton>
             )}
           </Grid>
         </Box>
       </Flex>
-    </>            
-  //             </div>
-  //             <div className='swiper-slide'>
-  //               <Flex direction='column' justify='center'>
-  //                 <Suspense
-  //                   fallback={
-  //                     <Flex justify='center' align='center' style={{ height: '100vh' }}>
-  //                       <Loading />
-  //                     </Flex>
-  //                   }
-  //                 >
-  //                   <TransactionsHistoryPage />
-  //                 </Suspense>
-  //               </Flex>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </SwiperContainer>
-  //     </Box>
-  //   </Tabs.Root>
+    </>
   );
 }

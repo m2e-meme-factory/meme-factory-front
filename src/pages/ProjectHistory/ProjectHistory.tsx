@@ -1,24 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
+import { Box, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
 import { CreateEventDto, Event, Project, ProjectProgress, User } from 'api';
-import { EventType, getEventType } from '../../shared/utils/helpers/getEventType';
+
 import LogMessage from './components/LogMessage';
-import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
-import { useCreateEvent } from '../../shared/utils/api/hooks/event/useCreateEvent';
-import { showErrorMessage } from '../../shared/utils/helpers/notify';
-import { Role } from '../../shared/consts/userRoles';
-import { shortenString } from '../../shared/utils/helpers/shortenString';
-import { ResponsibleImageBox } from '../../shared/components/ResponsibleImageBox';
-import Lottie from 'lottie-react';
-import lottieAnimation from '../../shared/components/LottieIcons/Eyes/eyes.json';
-import LottieInView from '../../shared/components/LottieIcons/InView/LottieInView';
 
-const ProjectHistory = (props: {
-  user?: User
-  currentProject: Project,
-}) => {
+import { EventType, getEventType } from '@shared/utils/helpers/getEventType';
+import { useGetProgress } from '@shared/utils/api/hooks/project/useGetProjectProgress';
+import { useCreateEvent } from '@shared/utils/api/hooks/event/useCreateEvent';
+import { showErrorMessage } from '@shared/utils/helpers/notify';
+import { Role } from '@shared/consts/userRoles';
+import { shortenString } from '@shared/utils/helpers/shortenString';
+import { ResponsibleImageBox } from '@shared/components/ResponsibleImageBox';
+import lottieAnimation from '@shared/components/LottieIcons/Eyes/eyes.json';
+import LottieInView from '@shared/components/LottieIcons/InView/LottieInView';
+import { LOCAL_TEXT } from '@shared/consts';
 
+const ProjectHistory = (props: { user?: User; currentProject: Project }) => {
+  const { t } = useTranslation();
   const { user, currentProject } = props;
 
   const { data, isLoading, refetch } = useGetProgress({
@@ -43,7 +43,7 @@ const ProjectHistory = (props: {
         setUserProgress(progress);
         setEvents(progress.events);
       } else {
-        setError('Error. No events found');
+        setError(t(LOCAL_TEXT.ERROR_NO_EVENTS_FOUND));
       }
     }
   }, [data]);
@@ -79,7 +79,7 @@ const ProjectHistory = (props: {
         scrollAreaRef.current.scrollTo(0, scrollAreaRef.current.scrollHeight);
       }
     } else {
-      showErrorMessage('Something went wrong!');
+      showErrorMessage(t(LOCAL_TEXT.SOMETHIMG_WENT_WRONG));
     }
   };
 
@@ -87,7 +87,7 @@ const ProjectHistory = (props: {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo(0, scrollAreaRef.current.scrollHeight);
     }
-  }, [events])
+  }, [events]);
 
   const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);
@@ -99,11 +99,11 @@ const ProjectHistory = (props: {
 
   if (events.length <= 0 && !isLoading)
     return (
-      <Flex direction="column" justify="center" align="center" height="100%">
+      <Flex direction='column' justify='center' align='center' height='100%'>
         <ResponsibleImageBox>
-          <LottieInView style={{ height: "80%" }} animationData={lottieAnimation} />
-          <Heading size="6" align="center">
-            Looks like there is no history yet...
+          <LottieInView style={{ height: '80%' }} animationData={lottieAnimation} />
+          <Heading size='6' align='center'>
+            {t(LOCAL_TEXT.LOOKS_LIKE_THERE_HISTORY_YET)}
           </Heading>
         </ResponsibleImageBox>
       </Flex>
@@ -111,8 +111,8 @@ const ProjectHistory = (props: {
 
   return (
     <>
-     <ScrollArea style={{ height: '100%' }} scrollbars='vertical' ref={scrollAreaRef}>
-        <Box height="100%" width="100%" style={{paddingBottom: '108px'}}>
+      <ScrollArea style={{ height: '100%' }} scrollbars='vertical' ref={scrollAreaRef}>
+        <Box height='100%' width='100%' style={{ paddingBottom: '108px' }}>
           {events.map((event) => (
             <LogMessage
               key={event.id}
@@ -137,34 +137,9 @@ const ProjectHistory = (props: {
           ))}
         </Box>
       </ScrollArea>
-      {/* <ScrollArea style={{ height: '100%', paddingBottom: '108px' }} ref={scrollAreaRef}>
-          {events.map((event) => (
-            <LogMessage
-              key={event.id}
-              currentUserRole={user?.role ?? Role.CREATOR}
-              event={event}
-              messageType={getEventType(event.eventType)}
-              setNewEventCreated={setNewEventCreated}
-              creatorName={
-                userProgress?.user.username
-                  ? userProgress?.user.username
-                  : `User ${userProgress?.user.telegramId}`
-              }
-              advertiserName={shortenString(
-                currentProject
-                  ? currentProject.project.author.username
-                    ? currentProject.project.author.username
-                    : `User ${currentProject.project.author.telegramId}`
-                  : 'Project host'
-              )}
-              allEvents={events}
-            />
-          ))}
-      </ScrollArea> */}
 
       <Flex
         p='4'
-        // align='center'
         style={{
           backgroundColor: '#121212',
           position: 'fixed',
@@ -178,7 +153,7 @@ const ProjectHistory = (props: {
             placeholder='Send a message…'
             onChange={handleMessageChange}
             value={message}
-            style={{ width: '100%', height: "8vh" }}
+            style={{ width: '100%', height: '8vh' }}
             maxLength={500}
             onBlur={handleBlur}
           />

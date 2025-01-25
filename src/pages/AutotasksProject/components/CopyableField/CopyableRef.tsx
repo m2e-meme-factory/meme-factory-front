@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
-import { Box, Button } from '@radix-ui/themes';
-import { AccentButton } from '../../../../shared/components/Buttons/GlowingButton';
+import { Box } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
+
+import { AccentButton } from '@shared/components/Buttons/GlowingButton';
+import { LOCAL_TEXT } from '@shared/consts';
 
 const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
+  const { t } = useTranslation();
   const [copyButtonText, setCopyButtonText] = React.useState<string>('Copy');
 
   const handleCopyText = () => {
@@ -12,14 +16,14 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
       navigator.clipboard
         .writeText(textToCopy)
         .then(() => {
-          setCopyButtonText('Copied');
+          setCopyButtonText(t(LOCAL_TEXT.COPIED));
 
           setTimeout(() => {
-            setCopyButtonText('Copy');
+            setCopyButtonText(t(LOCAL_TEXT.COPY));
           }, 2000);
         })
         .catch(() => {
-          console.error('Clipboard copy failed, using fallback method.');
+          console.error(t(LOCAL_TEXT.CLIPBOARD_COPY_FAILED_USING_FALLBACK_METHOD));
           copyFallback(textToCopy);
         });
     } else {
@@ -36,13 +40,13 @@ const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
 
     try {
       document.execCommand('copy');
-      setCopyButtonText('Copied');
+      setCopyButtonText(t(LOCAL_TEXT.COPIED));
 
       setTimeout(() => {
-        setCopyButtonText('Copy');
+        setCopyButtonText(t(LOCAL_TEXT.COPY));
       }, 2000);
     } catch (error) {
-      console.error('Fallback copy failed.', error);
+      console.error(t(LOCAL_TEXT.FALLBACK_COPY_FAILED), error);
     }
 
     document.body.removeChild(tempInput);

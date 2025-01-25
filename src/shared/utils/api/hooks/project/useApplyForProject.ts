@@ -10,12 +10,15 @@ import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 import { UserRoleInProject } from '../../../../../pages/ProjectPage/ProjectPage';
 import { useInitData } from '@vkruglikov/react-telegram-web-app';
+import { useTranslation } from 'react-i18next';
+import { LOCAL_TEXT } from '@shared/consts';
 
 export const useApplyForProject = (
   setApplyLoading: Dispatch<SetStateAction<boolean>>,
   setButtonDisabled: Dispatch<SetStateAction<boolean>>,
   setRole: Dispatch<SetStateAction<UserRoleInProject>>
 ) => {
+  const { t } = useTranslation();
   const [_initDataUnsafe, initData] = useInitData();
   const [savedVariables, setSavedVariables] = useState<ApplyForProjectConfig | null>(null);
 
@@ -25,7 +28,7 @@ export const useApplyForProject = (
       setApplyLoading(false);
       setButtonDisabled(true);
       setRole('unconfirmedMember');
-      showSuccessMessage('Application submitted successfully');
+      showSuccessMessage(t(LOCAL_TEXT.APPLICATION_SUBMITTED_SUCCESSFULLY));
     },
     onMutate: (variables) => {
       setSavedVariables(variables);
@@ -41,9 +44,9 @@ export const useApplyForProject = (
           const response = await toast.promise(
             login(loginConfig),
             {
-              success: 'Logged in successfully',
-              error: 'Failed to sign in',
-              loading: 'Logging in',
+              success: t(LOCAL_TEXT.LOGGED_IN_SUCCESSFULLY),
+              error: t(LOCAL_TEXT.FAILED_TO_SING_IN),
+              loading: t(LOCAL_TEXT.LOGGING_IN),
             },
             {
               style: {
@@ -58,17 +61,17 @@ export const useApplyForProject = (
 
           if (savedVariables) {
             await showToastWithPromise({
-              success: 'Application submitted successfully',
-              error: 'Error while submitting application',
-              process: 'Submitting an application',
+              success: t(LOCAL_TEXT.APPLICATION_SUBMITTED_SUCCESSFULLY),
+              error: t(LOCAL_TEXT.ERROR_SUBMITTING_APPLICATION),
+              process: t(LOCAL_TEXT.SUBMITTING_APPLICATION),
               callback: () => applyForProject(savedVariables),
             });
           }
         } catch (loginError) {
-          showErrorMessage('Failed to submit application due to authorization issue!');
+          showErrorMessage(t(LOCAL_TEXT.FAILED_SUBMIT_APPLICATION_AUTHORIZATION_ISSUE));
         }
       } else {
-        showErrorMessage('Something went wrong!');
+        showErrorMessage(t(LOCAL_TEXT.SOMETHIMG_WENT_WRONG));
       }
     },
   });

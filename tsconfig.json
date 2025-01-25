@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -20,9 +16,15 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "downlevelIteration": true,
-    "typeRoots": ["./src/@types"]
+    "typeRoots": ["./src/@types"],
+    "paths": {
+      "@providers/*": ["./src/providers/*"],
+      "@public/*": ["./public/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@widgets/*": ["./src/widgets/*"],
+    }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

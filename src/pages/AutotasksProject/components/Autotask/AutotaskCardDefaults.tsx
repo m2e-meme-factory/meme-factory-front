@@ -1,23 +1,25 @@
-import { Badge, Box, Callout, Card, Flex, Heading, Spinner, Text, TextField, Theme } from '@radix-ui/themes';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { showErrorMessage, showSuccessMessage } from '../../../../shared/utils/helpers/notify';
+import { Badge, Box, Flex, Heading, Text, TextField, Theme } from '@radix-ui/themes';
+import { showErrorMessage, showSuccessMessage } from '@shared/utils/helpers/notify';
 import { Sheet } from 'react-modal-sheet';
-import '../../../../styles/CustomSheetsStyles.css';
-import { CaretRightIcon, CheckIcon, InfoCircledIcon } from '@radix-ui/react-icons';
+import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import styles from '../../../../shared/components/SocialsLink/SocialsLink.module.css';
-import { UNSUBSCRIBE_WARNING } from '../../../../shared/consts/strings';
 import { AxiosError } from 'axios';
+import { useTranslation } from 'react-i18next';
 
-import { getIconByTaskСategory } from "../../../../shared/utils/helpers/getIconByTaskCategory";
-import { getAutotaskDefautsApplications } from '../../../../shared/utils/api/requests/autotask/getAutotaskDefautsApplications';
-import { applyForAutotaskDefaultsCompletion } from '../../../../shared/utils/api/requests/autotask/applyForAutotaskDefaultsCompletion';
-import { claimAutotaskDefaultsReward } from '../../../../shared/utils/api/requests/autotask/claimAutotaskDefaultsReward';
-import { formatNumberWithSpaces } from '../../../../shared/utils/helpers/formatNumbers';
-import { AccentButton } from '../../../../shared/components/Buttons/GlowingButton';
 import ConnectWallet from '../../../WalletPage/ConnectWallet';
 import CopyableRef from '../CopyableField/CopyableRef';
-import { authMe } from '../../../../shared/utils/api/requests/auth/me';
+
+import { getIconByTaskСategory } from '@shared/utils/helpers/getIconByTaskCategory';
+import { getAutotaskDefautsApplications } from '@shared/utils/api/requests/autotask/getAutotaskDefautsApplications';
+import { applyForAutotaskDefaultsCompletion } from '@shared/utils/api/requests/autotask/applyForAutotaskDefaultsCompletion';
+import { claimAutotaskDefaultsReward } from '@shared/utils/api/requests/autotask/claimAutotaskDefaultsReward';
+import { formatNumberWithSpaces } from '@shared/utils/helpers/formatNumbers';
+import { AccentButton } from '@shared/components/Buttons/GlowingButton';
+import { LOCAL_TEXT } from '@shared/consts';
+
+import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
+import '@styles/CustomSheetsStyles.css';
 
 type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio';
 
@@ -30,65 +32,86 @@ interface AutotaskProps {
   claimed: boolean;
   applied: boolean;
   refLink?: string;
-  markTaskCompleted: (c: AutotaskCateory) => void
+  markTaskCompleted: (c: AutotaskCateory) => void;
   category: AutotaskCateory;
-  walletAddress?: string
+  walletAddress?: string;
 }
 
-
-const getCardContent = (category: string, isClaimed: boolean = false, otherProps?: {
-  onClick?: () => void, 
-  setTextValue?: (v: string) => void
-  refLink?: string,
-}) => {
+const getCardContent = (
+  category: string,
+  isClaimed: boolean = false,
+  otherProps?: {
+    onClick?: () => void;
+    setTextValue?: (v: string) => void;
+    refLink?: string;
+  }
+) => {
   switch (category) {
     case 'wallet':
-      return isClaimed ? "" : (
-        <ConnectWallet onSuccess={() => otherProps?.onClick ? otherProps?.onClick() : null} />
-      )
+      return isClaimed ? (
+        ''
+      ) : (
+        <ConnectWallet onSuccess={() => (otherProps?.onClick ? otherProps?.onClick() : null)} />
+      );
     case 'checkin':
-      return isClaimed ? "Come Back Tomorrow" : 
-      (
-        <AccentButton onClick={otherProps?.onClick} size="4">Claim 1 Day</AccentButton>
-      )
+      return isClaimed ? (
+        'Come Back Tomorrow'
+      ) : (
+        <AccentButton onClick={otherProps?.onClick} size='4'>
+          Claim 1 Day
+        </AccentButton>
+      );
     case 'welcome-bonus':
-      return isClaimed ? "Thanks For Joining!)" : 
-      (
-        <AccentButton onClick={otherProps?.onClick} size="4">Claim</AccentButton>
-      )
+      return isClaimed ? (
+        'Thanks For Joining!)'
+      ) : (
+        <AccentButton onClick={otherProps?.onClick} size='4'>
+          Claim
+        </AccentButton>
+      );
     case 'shere-in-stories':
-      return isClaimed ? "Thanks For Joining!)" : 
-      (
-        <Flex direction="column" gap="2">
-          <Flex justify="between" align="center">
+      return isClaimed ? (
+        'Thanks For Joining!)'
+      ) : (
+        <Flex direction='column' gap='2'>
+          <Flex justify='between' align='center'>
             <Text>Shere a story in your instagram account with your invite link</Text>
-            <CopyableRef refLink={otherProps?.refLink || "https://t.me/autotasks_bot"} />
+            <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
           </Flex>
-          <TextField.Root size="3" mt="2" placeholder='Instagram url' onChange={(e) => {
-            if (otherProps?.setTextValue) {
-              otherProps.setTextValue(e.currentTarget.value.toString())
-            }
-          }
-            } />
-          <AccentButton onClick={otherProps?.onClick} size="4">Claim</AccentButton>
+          <TextField.Root
+            size='3'
+            mt='2'
+            placeholder='Instagram url'
+            onChange={(e) => {
+              if (otherProps?.setTextValue) {
+                otherProps.setTextValue(e.currentTarget.value.toString());
+              }
+            }}
+          />
+          <AccentButton onClick={otherProps?.onClick} size='4'>
+            Claim
+          </AccentButton>
         </Flex>
-      )
+      );
     case 'account-bio':
-      return isClaimed ? "Thanks For Joining!)" : 
-      (
-        <Flex direction="column" gap="2">
-          <Flex justify="between" align="center">
+      return isClaimed ? (
+        'Thanks For Joining!)'
+      ) : (
+        <Flex direction='column' gap='2'>
+          <Flex justify='between' align='center'>
             <Text>Put your invite link in instagram account bio</Text>
-            <CopyableRef refLink="https://t.me/autotasks_bot" />
+            <CopyableRef refLink='https://t.me/autotasks_bot' />
           </Flex>
-          <TextField.Root size="3" mt="2" placeholder='Instagram url' />
-          <AccentButton onClick={otherProps?.onClick} size="4">Claim</AccentButton>
+          <TextField.Root size='3' mt='2' placeholder='Instagram url' />
+          <AccentButton onClick={otherProps?.onClick} size='4'>
+            Claim
+          </AccentButton>
         </Flex>
-      )
+      );
     default:
       return null;
   }
-}
+};
 
 // const AutotaskCardDefaults = () => {
 const AutotaskCardDefaults: FC<AutotaskProps> = ({
@@ -101,9 +124,10 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   claimed,
   category,
   refLink,
-  markTaskCompleted
+  markTaskCompleted,
 }) => {
-//   //State of autotask
+  const { t } = useTranslation();
+  //   //State of autotask
   type ApplicationStatus = 'applied' | 'claimed' | 'unstarted';
   const [isApplied, setIsApplied] = useState(applied);
   const [isClaimed, setIsClaimed] = useState(claimed);
@@ -116,14 +140,14 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   }, [isApplied, isClaimed]);
 
   useEffect(() => {
-    setIsClaimed(claimed)
-  }, [claimed])
+    setIsClaimed(claimed);
+  }, [claimed]);
 
   useEffect(() => {
-    setIsApplied(applied)
-  }, [applied])
+    setIsApplied(applied);
+  }, [applied]);
 
-//   //Card styles
+  //   //Card styles
   type CardStyles = Record<'applied' | 'claimed' | 'unstarted', string>;
   const cardStyles: CardStyles = {
     applied: 'none',
@@ -154,23 +178,17 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   };
 
   const handleDialogOpen = () => {
-    if (!claimed)
-      setModalVisible(true);
+    if (!claimed) setModalVisible(true);
   };
 
-
-  const {
-    data: application,
-    isLoading: applicationLoading,
-    refetch: refetchApplication,
-  } = useQuery({
-    queryFn: () => getAutotaskDefautsApplications({ params: { userId: userId, taskCategory: category } }),
+  const { data: application, refetch: refetchApplication } = useQuery({
+    queryFn: () =>
+      getAutotaskDefautsApplications({ params: { userId: userId, taskCategory: category } }),
     queryKey: ['autotaskApplication', userId, category],
     enabled: applied,
     select: (data) => data.data[0],
   });
 
-  
   useEffect(() => {
     if (application) {
       const status: ApplicationStatus = application.isConfirmed ? 'claimed' : 'applied';
@@ -181,25 +199,15 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   const [submitting, setSubmitting] = useState(false);
 
   //Apply for autotask
-  const { mutate: apply, isPending: isApplying } = useMutation({
+  const { mutate: apply } = useMutation({
     mutationFn: applyForAutotaskDefaultsCompletion,
     onError: () => {
-      showErrorMessage('Error occurred while applying autotask completion');
+      showErrorMessage(t(LOCAL_TEXT.ERROR_WHILE_OCCURRED_APPLYING_AUTOTASK_COMPLETION));
       setSubmitting(false);
     },
     onSuccess: () => {
-      showSuccessMessage('Successfully claimed!');
-      markTaskCompleted(category)
-      // setTimeout(() => {
-      //   setSubmitting(false);
-      //   setIsApplied(true);
-      // }, 11000);
-    },
-    onSettled: () => {
-      // setTimeout(() => {
-      //   setSubmitting(false);
-      //   refetchApplication();
-      // }, 11000);
+      showSuccessMessage(t(LOCAL_TEXT.SUCCESSFULLY_CLAIMED));
+      markTaskCompleted(category);
     },
   });
 
@@ -213,14 +221,14 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
         statusCode: number;
       };
       if (response) {
-        showErrorMessage(response.message || 'An unknown error occurred');
+        showErrorMessage(response.message || t(LOCAL_TEXT.AN_UNKNOWN_ERROR_OCCURRED));
       } else {
-        showErrorMessage('An unknown error occurred');
+        showErrorMessage(t(LOCAL_TEXT.AN_UNKNOWN_ERROR_OCCURRED));
       }
     },
     onSuccess: () => {
       setIsClaimed(true);
-      showSuccessMessage('Reward claimed successfully!');
+      showSuccessMessage(t(LOCAL_TEXT.REWARD_CLAIMED_SUCCESSFULLY));
     },
     onSettled: () => {
       refetchApplication();
@@ -230,7 +238,6 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   const handleApplyClick = () => {
     if (applicationStatus === 'unstarted' && !submitting) {
       setSubmitting(true);
-      // apply({ params: { taskCategory: category } });
       apply({ params: { amount: price } });
     }
   };
@@ -242,11 +249,22 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   };
 
   return (
-    <Box className='SubtaskCard'  style={cardStyle} onClick={handleDialogOpen}>
+    <Box className='SubtaskCard' style={cardStyle} onClick={handleDialogOpen}>
       <Flex align='center' justify='between' pl='2' pr='2'>
         <Flex align={'center'}>
-
-          <Box style={{backgroundColor: "#181818", borderRadius: "8px", padding: "6px",width: "36px", height: "36px", display: "flex", justifyContent: "center", alignItems: "center", color: "#A8A8A8"}} >
+          <Box
+            style={{
+              backgroundColor: '#181818',
+              borderRadius: '8px',
+              padding: '6px',
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: '#A8A8A8',
+            }}
+          >
             {getIconByTaskСategory(category)}
           </Box>
 
@@ -254,8 +272,11 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
             <Text size='4' weight='bold' style={{ userSelect: 'text', textTransform: 'uppercase' }}>
               {title}
             </Text>
-            <Text weight='regular' size='3' color='gray' >
-                +{formatNumberWithSpaces(price)} <Badge color='gold' radius='full'>XP-M2E</Badge>
+            <Text weight='regular' size='3' color='gray'>
+              +{formatNumberWithSpaces(price)}{' '}
+              <Badge color='gold' radius='full'>
+                XP-M2E
+              </Badge>
             </Text>
           </Flex>
         </Flex>
@@ -266,19 +287,25 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
           <CaretRightIcon width={24} height={24} color='#A8A8A8' />
         )}
 
-        <Sheet isOpen={isModalVisible} onClose={() => handleDialogClose()} detent='content-height'  style={{zIndex: 2}}>
-          <Sheet.Container style={{background: "radial-gradient(circle at 50% -21%, #716946, rgb(28, 28, 30), rgb(30, 28, 30))"}}>
+        <Sheet
+          isOpen={isModalVisible}
+          onClose={() => handleDialogClose()}
+          detent='content-height'
+          style={{ zIndex: 2 }}
+        >
+          <Sheet.Container
+            style={{
+              background:
+                'radial-gradient(circle at 50% -21%, #716946, rgb(28, 28, 30), rgb(30, 28, 30))',
+            }}
+          >
             <Sheet.Header />
             <Sheet.Content>
               <Theme style={{ width: '100%' }}>
                 <Flex m='4' gap='2' direction='column'>
-
-                  <Flex justify="center">
-                    <img 
-                    width={"40%"}
-                    src={`${process.env.PUBLIC_URL}/imgs/hands_v2.png`}
-                    />
-                  </Flex>                
+                  <Flex justify='center'>
+                    <img width={'40%'} src={`${process.env.PUBLIC_URL}/imgs/hands_v2.png`} alt='' />
+                  </Flex>
                   <Flex mb='5' mt='4' direction={'column'} gap='2'>
                     <Heading align='center' style={{ userSelect: 'text' }}>
                       {title}
@@ -298,18 +325,15 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                       </Badge>
                     </Flex>
                   </Flex>
-                  <Flex direction="column" gap="2">
-                    {
-                      getCardContent(category, claimed, {
-                        onClick: handleApplyClick,
-                        refLink,
-                      })
-                    }
+                  <Flex direction='column' gap='2'>
+                    {getCardContent(category, claimed, {
+                      onClick: handleApplyClick,
+                      refLink,
+                    })}
                     <p className={styles.warning}>{description}</p>
                   </Flex>
-                  
 
-                    {/* <Flex>
+                  {/* <Flex>
                       <Flex direction='column' gap='2'>
                         {isApplied && isClaimed ? (
                           <div
@@ -379,6 +403,5 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
     </Box>
   );
 };
-
 
 export default AutotaskCardDefaults;

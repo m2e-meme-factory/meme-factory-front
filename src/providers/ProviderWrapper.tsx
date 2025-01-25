@@ -1,9 +1,11 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { store } from './shared/utils/redux/store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { useExpand, useWebApp, WebAppProvider } from '@vkruglikov/react-telegram-web-app';
+
+import { store } from '@shared/utils/redux/store';
+import './with-i18n';
 
 const queryClient = new QueryClient();
 const manifestUrl =

@@ -443,6 +443,9 @@ export default function ProfilePage() {
                   <div
                     key={idx}
                     className={`slideshowDot${indexSlideshow === idx ? ' active' : ''}`}
+                    style={{
+                      padding: '6px 2px',
+                    }}
                     onClick={() => {
                       setIndexSlideshow(idx);
                     }}
@@ -452,6 +455,9 @@ export default function ProfilePage() {
                 ))}
                 <div
                   className={`slideshowDot${indexSlideshow === 4 ? ' active' : ''}`}
+                  style={{
+                    padding: '6px 2px',
+                  }}
                   onClick={() => {
                     setIndexSlideshow(4);
                   }}

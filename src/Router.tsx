@@ -20,11 +20,10 @@ import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
 import ProjectLogsPage from './pages/ProjectLogsPage/ProjectLogsPage';
 import PublicProjectsPage from './pages/PublicProjectsPage/PublicProjectsPageV2';
 import TutorialPage from './pages/TutorialPage/TutorialPage';
-import WalletPage from './pages/WalletPage/WalletPage';
 
 // const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
 // const Friends = lazy(() => import('./pages/FriendsPage/Friends'));
-// const WalletPage = lazy(() => import('./pages/WalletPage/WalletPage'));
+const WalletPage = lazy(() => import('./pages/WalletPage/WalletPage'));
 // const CreateProjectPage = lazy(() => import('./pages/CreateProjectPage/CreateProjectPage'));
 // const ProjectDetailsPage = lazy(() => import('./pages/ProjectDetailsPage/ProjectDetailsPage'));
 // const ProjectLogsPage = lazy(() => import('./pages/ProjectLogsPage/ProjectLogsPage'));

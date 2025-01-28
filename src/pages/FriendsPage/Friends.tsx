@@ -1,54 +1,26 @@
 import {
   Badge,
   Box,
-  Button,
   Card,
   DataList,
   Flex,
-  Grid,
-  Heading,
+  Heading, IconButton,
   Skeleton,
   Text,
   TextField,
 } from '@radix-ui/themes';
 import { useGetRefData } from '../../shared/utils/api/hooks/user/useGetRefData';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../shared/utils/redux/store';
 import { RefDataResponse } from 'api';
-import handshake from '../../shared/imgs/handshake.webp';
-import yeyEmoji from '../../shared/imgs/yey.png';
-import styled from 'styled-components';
 import GlowingButton from '../../shared/components/Buttons/GlowingButton';
 import WebappBackButton from '../../shared/components/WebappBackButton';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import CopyableRef from '../AutotasksProject/components/CopyableField/CopyableRef';
 import { showSuccessMessage } from '../../shared/utils/helpers/notify';
 import HandshakeAnimated from '../../shared/components/LottieIcons/Handshake/HandshakeAnimated';
 import Header from '../ProfilePage/Header';
-
-const ResponsibleImage = styled.img`
-  height: 100px;
-
-  @media (min-height: 600px) {
-    height: 100px;
-  }
-  @media (min-height: 800px) {
-    height: 200px;
-  }
-  @media (min-width: 641px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-  }
-  @media (min-width: 961px) {
-    /* tablet, landscape iPad, lo-res laptops ands desktops */
-  }
-  @media (min-width: 1025px) {
-    /* big landscape tablets, laptops, and desktops */
-  }
-  @media (min-width: 1281px) {
-    /* hi-res laptops and desktops */
-  }
-`;
+import { CopyIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 
 export default function Friends() {
   const user = useSelector((state: RootState) => state.user.user);
@@ -56,8 +28,6 @@ export default function Friends() {
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
   const webApp = useWebApp();
   const [copied, setCopied] = useState(false);
-  const [copyText, setCopyText] = useState<'copied' | 'click on me'>('click on me');
-  const copyableFieldRef = useRef<HTMLDivElement | null>(null);
 
   const handleCopyText = (text: string) => {
     const textToCopy = text;
@@ -67,12 +37,10 @@ export default function Friends() {
         .writeText(textToCopy)
         .then(() => {
           showSuccessMessage('Copied');
-          setCopyText('copied');
           setCopied(true);
 
           setTimeout(() => {
             setCopied(false);
-            setCopyText('click on me');
           }, 5000);
         })
         .catch(() => {
@@ -94,12 +62,10 @@ export default function Friends() {
     try {
       document.execCommand('copy');
       showSuccessMessage('Copied!');
-      setCopyText('copied');
       setCopied(true);
 
       setTimeout(() => {
         setCopied(false);
-        setCopyText('click on me');
       }, 5000);
     } catch (error) {
       console.error('Fallback copy failed.', error);
@@ -154,7 +120,6 @@ export default function Friends() {
                       </Text>
                     </Box>
                     <Box>
-                      {/* <Box>Invite friend ({copyText})</Box> */}
                       <Heading size='3' weight='regular' style={{ lineHeight: '1.1'}}>Invite friends</Heading>
                       <Box>
                         <Text size='1' color='gray'>
@@ -209,7 +174,12 @@ export default function Friends() {
           <Box style={{ padding: '12px', background: '#1c1c1e', borderRadius: '10px'}}>
             <Flex direction='column' gap='2'>
               <Heading size='3' weight='regular'>Share your ref link</Heading>
-              <TextField.Root size="3" placeholder="https://" />
+              <Flex direction='row' align='center' justify='between' style={{width: '100%'}} gap='2'>
+                <TextField.Root size="3" placeholder="https://" defaultValue={refData?.refLink || ''} style={{width: '90%'}} disabled={true}/>
+                <IconButton size="3" variant="classic" onClick={() => handleCopyText(refData?.refLink || '')}>
+                  <CopyIcon height="16" width="16" />
+                </IconButton>
+              </Flex>
               <DataList.Root mt='2' style={{ gap: '6px'}}>
                 <DataList.Item align='center'>
                   <DataList.Item>

@@ -1,285 +1,37 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Grid,
-  Text,
-  Card,
   Heading,
   Flex,
   Box,
-  ScrollArea,
-  Blockquote,
-  Theme,
-  Badge,
-  Callout,
-  Popover,
-  IconButton,
 } from '@radix-ui/themes';
 import { useAuthMe } from '../../shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '../../shared/utils/redux/user/userSlice';
-import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
-import styled from 'styled-components';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import DeveloperMenu from '../../shared/components/DevMenu/DeveloperMenu';
 import useDeveloperMenu from '../../shared/hooks/useDeveloperMenu';
-import { Sheet } from 'react-modal-sheet';
-import { ResponsibleImage } from '../../shared/components/ResponsibleImage';
 import ConnectWallet from '../WalletPage/ConnectWallet';
 import VideoCard from '../../shared/components/VideoCard';
 import { useTonConnectUI } from '@tonconnect/ui-react';
-import { showErrorMessage, showSuccessMessage } from '../../shared/utils/helpers/notify';
-import { CaretRightIcon, InfoCircledIcon } from '@radix-ui/react-icons';
+import {showSuccessMessage } from '../../shared/utils/helpers/notify';
+import { CaretRightIcon } from '@radix-ui/react-icons';
 import Header from './Header';
 import { SolidCard } from '../../shared/components/Card/SolidCard';
 import { connectWallet } from '../../shared/utils/api/requests/ton/connect';
 import YellowBorderButton from '../../shared/components/Buttons/YellowBorderButton';
-import Slideshow from '../../shared/components/Slideshow/Slideshow';
-
-
-enum TabsOption {
-  AIRDROP = 'airdrop',
-  ACCOUNT = 'account',
-}
-
-const TABS = [TabsOption.AIRDROP, TabsOption.ACCOUNT];
-
-
-const NftCard = styled(SolidCard) <{ glowing: boolean, bronzes: boolean, silvers: boolean, dimonds: boolean, investors: boolean }>`
-  /* min-height: 12vh; */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: ease .2s;
-   ${(props) => props.glowing ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #908a73 0%, #1c1c1e 100%);' : ''};
-   ${(props) => props.bronzes ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #7b675b 0%, #1c1c1e 100%);' : ''};
-   ${(props) => props.silvers ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #848484 0%, #1c1c1e 100%);' : ''};
-   ${(props) => props.dimonds ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #738e91 0%, #1c1c1e 100%);' : ''};
-   ${(props) => props.investors ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #7a6c84 0%, #1c1c1e 100%);' : ''};
-
-  &:active {
-    cursor: pointer;
-    transform: scale(0.8)
-  }
-
-  animation: ${(props) => props.glowing ? 'glow 3s ease-in-out infinite alternate' : 'none'};
-
-  @keyframes glow {
-    0% {
-      border: 1px solid var(--brand-color);
-    }
-
-    50% {
-      border: 1px solid transparent;
-    }
-
-    100% {
-      border: 1px solid var(--brand-color);
-    }
-  }
-`;
-
-
-const ImgWrapper = styled(Flex)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  height: 15vh;
-  position: absolute;
-  top: -10px;
-  right: -50px;
-  opacity: 0.3;
-`
-
-const nfts = [
-  {
-    "name": "Bronze",
-    "img": "bronze.svg",
-    "discount": 0,
-    "amount": 10,
-    "price": 1,
-  },
-  {
-    "name": "Silver",
-    "img": "silver.svg",
-    "discount": 10,
-    "amount": 100,
-    "price": 0.9,
-  },
-  {
-    "name": "Gold",
-    "img": "gold.svg",
-    "discount": 20,
-    "amount": 1000,
-    "price": 0.8,
-  },
-  {
-    "name": "Dimond",
-    "img": "dimond.svg",
-    "discount": 30,
-    "amount": 10000,
-    "price": 0.7,
-  },
-]
-
-const cyberNft = {
-  "name": "Investor",
-  "img": "cool.svg",
-  "discount": 40,
-  "amount": 100000,
-  "price": 0.6,
-}
-
-function numberWithSpaces(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
-
-const NftCardItem = ({ nft, handleBuy, wallet, style }: { nft: any, handleBuy: () => void, wallet: {
-  isWallet: boolean
-  onConnect: () => void
-}, style?: React.CSSProperties }) => {
-
-
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const handleDialogClose = () => {
-    setModalVisible(false);
-  };
-
-  const handleDialogOpen = () => {
-    console.log("open")
-    setModalVisible(true);
-  };
-
-  const handleVerify = () => {
-    // if (user) {
-    handleDialogClose();
-    handleBuy()
-    console.log(isModalVisible)
-    // verify({ params: { telegramId: user.telegramId } });
-    // }
-  };
-
-  return (
-    <>
-      <NftCard style={style} onClick={handleDialogOpen} glowing={nft.name == "Gold"} bronzes={nft.name == "Bronze"} silvers={nft.name == "Silver"} dimonds={nft.name == "Dimond"} investors={nft.name == "Investor"}>
-        <Flex direction='column' minHeight='10vh'>
-        <Box>
-          <Flex gap="3" justify='between' align='center'>
-            <Flex gap='1'>
-              <Heading size='2'>{nft.name}</Heading>
-              <img src={`${process.env.PUBLIC_URL}/imgs/${nft.img}`} style={{
-                width: '18px', height: '17px'
-              }}/>
-            </Flex>
-            {nft.discount > 0 && <Badge color='gray'>-{nft.discount}%</Badge>}
-          </Flex>
-        </Box>
-        <Box>
-          <Text color='gray' style={{ fontSize: '11px', lineHeight: '145%', letterSpacing: '0.03em'}} weight='regular'>
-            {numberWithSpaces(nft.amount)} USDT = {numberWithSpaces(nft.amount)} MF
-          </Text>
-        </Box>
-        <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px'}}>
-          BUY
-        </YellowBorderButton>
-        </Flex>
-      </NftCard>
-    
-      <Sheet
-        isOpen={isModalVisible}
-        onClose={() => handleDialogClose()}
-        detent='content-height'
-      >
-        <Theme appearance='dark'>
-          <Sheet.Container style={{ overflowY: 'auto', background: '#121113 url(/imgs/modal-ellipse.svg) no-repeat 50% 0' }}>
-            <Sheet.Header />
-            <Sheet.Content>
-              <Theme>
-                <Grid gap='8' mb='5' p="4" align='center'>
-                  <Flex justify='center'>
-                    <ResponsibleImage src={`${process.env.PUBLIC_URL}/imgs/${nft.img}`} />
-                  </Flex>
-                  <Grid gap='2'>
-                    <Heading mb='2' align='center'>
-                      {nft.name}
-                    </Heading>
-                    <Text size="4" align="center">
-                      Get 100% chance for <b>{numberWithSpaces(nft.amount + nft.amount * (nft.discount / 100))}</b> <Badge color='yellow' size="3">M2E</Badge> tokens Airdrop
-                    </Text>
-                    <Callout.Root color='green' mt="2">
-                      <Callout.Text size="4">
-                        Price Discount: {nft.discount}%
-                        <br />
-                        <Text weight="bold">M2E/USDT {nft.price}$ </Text>
-                      </Callout.Text>
-                    </Callout.Root>
-                  </Grid>
-
-                  {wallet.isWallet ? (
-                    <GlowingButton
-                      size='4'
-                      onClick={() => {
-                        handleDialogClose();
-                        console.log(isModalVisible)
-                        wallet.onConnect()
-                      }}
-                      style={{ width: '100%' }}
-                    >
-                      Connect Wallet
-                    </GlowingButton>
-                  ) : (
-                    <GlowingButton
-                      size='4'
-                      onClick={handleVerify}
-                      style={{ width: '100%' }}
-                    >
-                      Pay {nft.amount} USDT
-                    </GlowingButton>
-                  )}
-                </Grid>
-              </Theme>
-            </Sheet.Content>
-          </Sheet.Container>
-          <Sheet.Backdrop onTap={() => handleDialogClose()} />
-        </Theme>
-      </Sheet>
-    </>
-
-  )
-}
-
-const GlowingCard = styled(Card)`
-  
-  &:active {
-    cursor: pointer;
-    transform: scale(0.8)
-  }
-
-  animation: 'glow 3s ease-in-out infinite alternate';
-
-  @keyframes glow {
-    0% {
-      border: 1px solid var(--brand-color);
-    }
-
-    50% {
-      border: 1px solid transparent;
-    }
-
-    100% {
-      border: 1px solid var(--brand-color);
-    }
-  }
-`
+import { cyberNft, nfts } from './ProfilePage.consts';
+import { NftCardItem } from './NftCardItem';
+import { Swiper, SwiperClass, SwiperSlide, useSwiper } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
-  const defaultTab = searchParams.get('tab') || 'airdrop';
   const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
   const navigate = useNavigate();
+  const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
   const [indexSlideshow, setIndexSlideshow] = useState(0);
 
   const webapp = useWebApp();
@@ -307,34 +59,40 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
-
   const { handleClick, menuVisible, setMenuVisible, clearTutorial, clearGuides } = useDeveloperMenu();
 
 
   const [tonConnectUI] = useTonConnectUI();
-      const [walletAddress, setWalletAddress] = useState<string>();
-  
-      useEffect(() => {
-          const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-              if (wallet) {
-                  setWalletAddress(wallet.account.address);
-              } else {
-                  setWalletAddress('');
-              }
-          });
-  
-          return () => unsubscribe();
-      }, [tonConnectUI]);
-  
-      useEffect(() => {
-          const connect = async (wallet: string) => {
-              await connectWallet({ params: { tonWalletAddress: wallet } });
-          };
-  
-          if (walletAddress) {
-              connect(walletAddress);
-          }
-      }, [walletAddress]);
+  const [walletAddress, setWalletAddress] = useState<string>();
+
+  useEffect(() => {
+    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
+      if (wallet) {
+        setWalletAddress(wallet.account.address);
+      } else {
+        setWalletAddress('');
+      }
+    });
+
+    return () => unsubscribe();
+    }, [tonConnectUI]);
+
+  useEffect(() => {
+    const connect = async (wallet: string) => {
+      await connectWallet({ params: { tonWalletAddress: wallet } });
+    };
+
+    if (walletAddress) {
+      connect(walletAddress);
+    }
+  }, [walletAddress]);
+
+  const handlePaginationClick = (index: number) => {
+    setIndexSlideshow(index);
+    if (swiperInstance) {
+      swiperInstance.slideTo(index);
+    }
+  };
 
   return (
     <Box height="90vh" onClick={handleClick}>
@@ -359,50 +117,49 @@ export default function ProfilePage() {
             <Flex direction='column' gap='3'>
               <Heading weight="regular" size='4'>Join our whitelist</Heading>
 
-              <div className="slideshow">
-                <div className="slideshowSlider"
-                  style={{ transform: `translate3d(${-indexSlideshow * 100}%, 0, 0)` }}
+              <div>
+                <Swiper
+                  modules={[Autoplay]}
+                  autoplay={{ delay: 3000 }}
+                  onSwiper={(swiper: SwiperClass) => setSwiperInstance(swiper)}
+                  onSlideChange={(swiper: SwiperClass) => setIndexSlideshow(swiper.activeIndex)}
                 >
                   {nfts.map((nft, index) => (
-                    <NftCardItem 
-                      style={{
-                        width: '100%',
-                        display: 'inline-block'
-                      }}
-                      wallet={{
-                      isWallet: tonConnectUI.connected,
-                      onConnect: () => {
-                        tonConnectUI.modal.open()
-                      }
-                    }} nft={nft} handleBuy={() => {
-                      if (walletAddress) {
-                        showSuccessMessage('NFT bought successfully!');
-                      }
-                      else {
-                        tonConnectUI.modal.open()
-                        // showErrorMessage('Connect wallet first!');
-                      }
-                    }} key={index} />
-                  ))}
-                  <NftCardItem wallet={{
-                        isWallet: tonConnectUI.connected,
-                        onConnect: () => {
-                          tonConnectUI.modal.open()
-                        }
-                      }}  
-                      nft={cyberNft} handleBuy={() => {
+                    <SwiperSlide>
+                      <NftCardItem
+                        style={{marginRight: '5px', marginLeft: '5px'}}
+                        wallet={{
+                          isWallet: tonConnectUI.connected,
+                          onConnect: () => {
+                            tonConnectUI.modal.open()
+                          }
+                        }} nft={nft} handleBuy={() => {
                         if (walletAddress) {
                           showSuccessMessage('NFT bought successfully!');
                         }
                         else {
                           tonConnectUI.modal.open()
-                          // showErrorMessage('Connect wallet first!');
                         }
-                      }} style={{
-                        width: '100%',
-                        display: 'inline-block'
-                      }} />
-                </div>
+                      }} key={index} /></SwiperSlide>
+                  ))}
+                  <SwiperSlide>
+                    <NftCardItem wallet={{
+                      isWallet: tonConnectUI.connected,
+                      onConnect: () => {
+                        tonConnectUI.modal.open()
+                      }
+                    }}
+                                 nft={cyberNft} handleBuy={() => {
+                      if (walletAddress) {
+                        showSuccessMessage('NFT bought successfully!');
+                      }
+                      else {
+                        tonConnectUI.modal.open()
+                      }
+                    }}/>
+                    </SwiperSlide>
+                </Swiper>
+              </div>
 
                 <div className="slideshowDots">
                   {nfts.map((nft, idx) => (
@@ -410,22 +167,21 @@ export default function ProfilePage() {
                       key={idx}
                       className={`slideshowDot${indexSlideshow === idx ? " active" : ""}`}
                       onClick={() => {
-                        setIndexSlideshow(idx);
+                        handlePaginationClick(idx);
                       }}
                     >
                       {nft.name}
                     </div>
                   ))}
-                  <div 
+                  <div
                     className={`slideshowDot${indexSlideshow === 4 ? " active" : ""}`}
                     onClick={() => {
-                      setIndexSlideshow(4);
+                      handlePaginationClick(4);
                     }}
                   >
                       {cyberNft.name}
                     </div>
                 </div>
-              </div>
             </Flex>
 
             <Flex justify='center' align='center' gap='2' direction='column'>

@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { CaretRightIcon } from '@radix-ui/react-icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { Grid, Heading, Flex, Box } from '@radix-ui/themes';
+import { Grid, Heading, Flex, Box, Text } from '@radix-ui/themes';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ import 'swiper/css';
 import { cyberNft, nfts } from '@pages/ProfilePage/ProfilePage.consts';
 import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
 import DeveloperMenu from '@shared/components/DevMenu/DeveloperMenu';
-import { showSuccessMessage } from '@shared/utils/helpers/notify';
+import { showSuccessMessage } from '@shared/utils/helpers/notify'
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -180,7 +180,7 @@ export default function ProfilePage() {
                         padding: '6px 2px',
                       }}
                     >
-                      {t(nft.name)}
+                      <Text>{t(nft.name)}</Text>
                     </div>
                   ))}
                   <div
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                       padding: '6px 2px',
                     }}
                   >
-                    {t(cyberNft.name)}
+                    <Text>{t(cyberNft.name)}</Text>
                     </div>
                 </div>
             </Flex>
@@ -250,7 +250,7 @@ export default function ProfilePage() {
                       <Box
                         style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}
                       >
-                        {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER_IMPERATIVE)}
+                        <Text>{t(LOCAL_TEXT.INVITE_FRIENDS_LOWER_IMPERATIVE)}</Text>
                       </Box>
                     </Box>
                   </Flex>
@@ -297,7 +297,7 @@ export default function ProfilePage() {
                           fontWeight: '400',
                         }}
                       >
-                        {t(LOCAL_TEXT.COMPLETE_FAST_TASKS_SIMPLE)}
+                        <Text>{t(LOCAL_TEXT.COMPLETE_FAST_TASKS_SIMPLE)}</Text>
                       </Box>
                     </Box>
                   </Flex>
@@ -367,7 +367,7 @@ export default function ProfilePage() {
                       <Box
                         style={{ textTransform: 'uppercase', fontFamily: 'ME', fontSize: '15px' }}
                       >
-                        {t(LOCAL_TEXT.POST_MEMES)}
+                        <Text>{t(LOCAL_TEXT.POST_MEMES)}</Text>
                       </Box>
                     </Box>
                   </Flex>

@@ -1,15 +1,18 @@
-import './shared/consts/polyfills.ts';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Toaster } from 'react-hot-toast';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import '@shared/consts/polyfills.ts';
+
 import '@radix-ui/themes/styles.css';
 import './index.css';
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import ProviderWrapper from './ProviderWrapper';
-import { Toaster } from 'react-hot-toast';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import ProviderWrapper from '@providers/ProviderWrapper';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

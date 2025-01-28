@@ -6,8 +6,11 @@ import { login, LoginConfig } from '../../requests/auth/login';
 import toast from 'react-hot-toast';
 import { showErrorMessage, showToastWithPromise } from '../../../helpers/notify';
 import { useInitData } from '@vkruglikov/react-telegram-web-app';
+import { useTranslation } from 'react-i18next';
+import { LOCAL_TEXT } from '@shared/consts';
 
 export const useCreateEvent = (setEventCreated?: Dispatch<SetStateAction<boolean>>) => {
+  const { t } = useTranslation();
   const [savedVariables, setSavedVariables] = useState<CreateEventConfig | null>(null);
   const [_initDataUnsafe, initData] = useInitData();
 
@@ -31,9 +34,9 @@ export const useCreateEvent = (setEventCreated?: Dispatch<SetStateAction<boolean
           const response = await toast.promise(
             login(loginConfig),
             {
-              success: 'Logged in successfully',
-              error: 'Failed to sign in',
-              loading: 'Logging in',
+              success: t(LOCAL_TEXT.LOGGED_IN_SUCCESSFULLY),
+              error: t(LOCAL_TEXT.FAILED_TO_SING_IN),
+              loading: t(LOCAL_TEXT.LOGGING_IN),
             },
             {
               style: {
@@ -48,9 +51,9 @@ export const useCreateEvent = (setEventCreated?: Dispatch<SetStateAction<boolean
 
           if (savedVariables) {
             await showToastWithPromise({
-              success: 'Event created successfully',
-              error: 'Error while creating event',
-              process: 'Re-creating the event',
+              success: t(LOCAL_TEXT.EVENT_CREATED_SUCCESSFULLY),
+              error: t(LOCAL_TEXT.ERROR_CREATED_EVENT),
+              process: t(LOCAL_TEXT.RE_CREATING_EVENT),
               callback: () => createEvent(savedVariables),
             });
             if (setEventCreated) {
@@ -58,10 +61,10 @@ export const useCreateEvent = (setEventCreated?: Dispatch<SetStateAction<boolean
             }
           }
         } catch (loginError) {
-          showErrorMessage('Failed to create the event due to authorization issue!');
+          showErrorMessage(t(LOCAL_TEXT.FAILED_CREATE_EVENT_AUTHORIZATION_ISSUE));
         }
       } else {
-        showErrorMessage('Something went wrong!');
+        showErrorMessage(t(LOCAL_TEXT.SOMETHIMG_WENT_WRONG));
       }
     },
   });

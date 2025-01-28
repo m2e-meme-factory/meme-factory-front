@@ -5,8 +5,11 @@ import { showErrorMessage } from '../../../helpers/notify';
 import { AxiosError } from 'axios';
 import { login, LoginConfig } from '../../requests/auth/login';
 import { useInitData } from '@vkruglikov/react-telegram-web-app';
+import { useTranslation } from 'react-i18next';
+import { LOCAL_TEXT } from '@shared/consts';
 
 export const useAuthMe = () => {
+  const { t } = useTranslation();
   const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
@@ -27,12 +30,12 @@ export const useAuthMe = () => {
 
               return await authMe();
             } catch (loginError) {
-              showErrorMessage('Authentication failed');
+              showErrorMessage(t(LOCAL_TEXT.AUTHENTICATION_FAILED));
             }
           }
-          showErrorMessage('Authentication error');
+          showErrorMessage(t(LOCAL_TEXT.AUTHENTICATION_ERROR));
         }
-        showErrorMessage('Something went wrong');
+        showErrorMessage(t(LOCAL_TEXT.SOMETHIMG_WENT_WRONG));
       }
     },
     select: (data) => (data ? data.data : null),

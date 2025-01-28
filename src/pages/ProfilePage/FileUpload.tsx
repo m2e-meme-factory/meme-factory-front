@@ -1,7 +1,11 @@
-import React, { useState, useRef } from "react";
-import styled from "styled-components";
-import { AccentButton } from "../../shared/components/Buttons/GlowingButton";
-import { Callout, Flex } from "@radix-ui/themes";
+import React, { useState, useRef } from 'react';
+import { Callout, Flex } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
+
+import { AccentButton } from '@shared/components/Buttons/GlowingButton';
+import { LOCAL_TEXT } from '@shared/consts';
+
+import styled from 'styled-components';
 
 // Стили для контейнера
 const FileInputContainer = styled.div`
@@ -13,7 +17,6 @@ const FileInputContainer = styled.div`
 const FileInputButton = styled(AccentButton)`
   text-overflow: ellipsis;
   width: 100%;
-
 
   &:hover {
     background: #e0e0e0;
@@ -57,6 +60,7 @@ interface FileUploadProps {
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onChange }) => {
+  const { t } = useTranslation();
   const [fileName, setFileName] = useState<string | null>(null); // Состояние для хранения имени файла
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -69,33 +73,32 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange }) => {
   };
 
   const handleButtonClick = () => {
-    fileInputRef.current?.click();  // Симулируем клик по скрытому input
+    fileInputRef.current?.click(); // Симулируем клик по скрытому input
   };
 
   return (
     <FileInputContainer>
-        <Flex direction="column" gap="2">
-            <FileInputButton size="3" style={{ textTransform: 'uppercase', fontWeight: 'bold' }} className={fileName ? 'file-selected' : ''} onClick={handleButtonClick}>
-                {fileName ? (
-                    "Select Another"
-                ) : (
-                "Select Video"
-                )}
-            </FileInputButton>
-            {fileName && (
-                <Callout.Root color="gray">
-                    <Callout.Text>
-                        {fileName}
-                    </Callout.Text>
-                </Callout.Root>
-            )}
-            <HiddenFileInput
-                ref={fileInputRef}
-                type="file"
-                accept=".mp4" // Ограничиваем выбор только файлами mp4
-                onChange={handleFileChange}
-            />
-        </Flex>
+      <Flex direction='column' gap='2'>
+        <FileInputButton
+          size='3'
+          style={{ textTransform: 'uppercase', fontWeight: 'bold' }}
+          className={fileName ? 'file-selected' : ''}
+          onClick={handleButtonClick}
+        >
+          {fileName ? t(LOCAL_TEXT.SELECT_ANOTHER) : t(LOCAL_TEXT.SELECT_VIDEO)}
+        </FileInputButton>
+        {fileName && (
+          <Callout.Root color='gray'>
+            <Callout.Text>{fileName}</Callout.Text>
+          </Callout.Root>
+        )}
+        <HiddenFileInput
+          ref={fileInputRef}
+          type='file'
+          accept='.mp4' // Ограничиваем выбор только файлами mp4
+          onChange={handleFileChange}
+        />
+      </Flex>
     </FileInputContainer>
   );
 };

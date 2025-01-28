@@ -1,55 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
 import {
   Badge,
   Box,
   Card,
   DataList,
   Flex,
-  Heading,
+  Heading, IconButton,
   Skeleton,
   Text,
   TextField,
 } from '@radix-ui/themes';
+import { useGetRefData } from '@shared/utils/api/hooks/user/useGetRefData';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useTranslation } from 'react-i18next';
 
 import { RefDataResponse } from 'api';
-
-import { Header } from '@widgets/header';
-
-import { useGetRefData } from '@shared/utils/api/hooks/user/useGetRefData';
-import { RootState } from '@shared/utils/redux/store';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import WebappBackButton from '@shared/components/WebappBackButton';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { showSuccessMessage } from '@shared/utils/helpers/notify';
 import HandshakeAnimated from '@shared/components/LottieIcons/Handshake/HandshakeAnimated';
+import { CopyIcon } from '@radix-ui/react-icons';
 import { LOCAL_TEXT } from '@shared/consts';
-
-import styled from 'styled-components';
-
-const ResponsibleImage = styled.img`
-  height: 100px;
-
-  @media (min-height: 600px) {
-    height: 100px;
-  }
-  @media (min-height: 800px) {
-    height: 200px;
-  }
-  @media (min-width: 641px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-  }
-  @media (min-width: 961px) {
-    /* tablet, landscape iPad, lo-res laptops ands desktops */
-  }
-  @media (min-width: 1025px) {
-    /* big landscape tablets, laptops, and desktops */
-  }
-  @media (min-width: 1281px) {
-    /* hi-res laptops and desktops */
-  }
-`;
+import { RootState } from '@shared/utils/redux/store';
+import { Header } from '@widgets/header';
 
 export default function Friends() {
   const { t } = useTranslation();
@@ -58,8 +32,6 @@ export default function Friends() {
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
   const webApp = useWebApp();
   const [copied, setCopied] = useState(false);
-  const [copyText, setCopyText] = useState<'copied' | 'click on me'>('click on me');
-  const copyableFieldRef = useRef<HTMLDivElement | null>(null);
 
   const handleCopyText = (text: string) => {
     const textToCopy = text;
@@ -69,12 +41,10 @@ export default function Friends() {
         .writeText(textToCopy)
         .then(() => {
           showSuccessMessage(t(LOCAL_TEXT.COPIED));
-          setCopyText('copied');
           setCopied(true);
 
           setTimeout(() => {
             setCopied(false);
-            setCopyText('click on me');
           }, 5000);
         })
         .catch(() => {
@@ -96,12 +66,10 @@ export default function Friends() {
     try {
       document.execCommand('copy');
       showSuccessMessage(t(LOCAL_TEXT.COPIED));
-      setCopyText('copied');
       setCopied(true);
 
       setTimeout(() => {
         setCopied(false);
-        setCopyText('click on me');
       }, 5000);
     } catch (error) {
       console.error(t(LOCAL_TEXT.FALLBACK_COPY_FAILED), error);
@@ -256,11 +224,14 @@ export default function Friends() {
 
           <Box style={{ padding: '12px', background: '#1c1c1e', borderRadius: '10px' }}>
             <Flex direction='column' gap='2'>
-              <Heading size='3' weight='regular'>
-                {t(LOCAL_TEXT.SHARE_YOUR_REF_LINK)}
-              </Heading>
-              <TextField.Root size='3' placeholder='https://' />
-              <DataList.Root mt='2' style={{ gap: '6px' }}>
+              <Heading size='3' weight='regular'>{t(LOCAL_TEXT.SHARE_YOUR_REF_LINK)}</Heading>
+              <Flex direction='row' align='center' justify='between' style={{width: '100%'}} gap='2'>
+                <TextField.Root size="3" placeholder="https://" defaultValue={refData?.refLink || ''} style={{width: '90%'}} disabled={true}/>
+                <IconButton size="3" variant="classic" onClick={() => handleCopyText(refData?.refLink || '')}>
+                  <CopyIcon height="16" width="16" />
+                </IconButton>
+              </Flex>
+              <DataList.Root mt='2' style={{ gap: '6px'}}>
                 <DataList.Item align='center'>
                   <DataList.Item>
                     <DataList.Label minWidth='50px'>{t(LOCAL_TEXT.TOTAL_COUNT)}</DataList.Label>
@@ -290,6 +261,7 @@ export default function Friends() {
                   </GlowingButton>
                 </Skeleton>
               </Box>
+              
             </Flex>
           </Box>
         </Flex>

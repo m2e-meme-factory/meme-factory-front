@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
 
-import ProviderWrapper from '@providers/ProviderWrapper';
-
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -14,6 +12,7 @@ import './index.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import ProviderWrapper from '@providers/ProviderWrapper';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

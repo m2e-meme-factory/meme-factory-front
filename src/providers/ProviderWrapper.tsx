@@ -15,8 +15,13 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
   const [isExpanded, expand] = useExpand();
   const WebApp = useWebApp();
 
+
   useEffect(() => {
     expand();
+    try{
+      WebApp.requestFullscreen()
+    }
+    catch(err){}
     WebApp.setBottomBarColor('#000');
     WebApp.setBackgroundColor('#000');
     WebApp.setHeaderColor('#000');

@@ -176,6 +176,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
     borderRadius: '12px',
     padding: '8px',
     backgroundColor: '#0B0B0B',
+    cursor: "pointer"
   });
 
   useEffect(() => {
@@ -183,6 +184,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
       border: cardStyles[applicationStatus as ApplicationStatus],
       borderRadius: '12px',
       padding: '8px',
+      cursor: "pointer"
     });
   }, [applicationStatus]);
 

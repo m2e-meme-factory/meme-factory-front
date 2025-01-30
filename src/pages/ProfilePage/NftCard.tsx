@@ -38,20 +38,4 @@ export const NftCard = styled(SolidCard)<{
       cursor: pointer;
       transform: scale(0.8);
    }
-
-   animation: ${(props) => (props.glowing ? 'glow 3s ease-in-out infinite alternate' : 'none')};
-
-   @keyframes glow {
-      0% {
-         border: 1px solid var(--brand-color);
-      }
-
-      50% {
-         border: 1px solid transparent;
-      }
-
-      100% {
-         border: 1px solid var(--brand-color);
-      }
-   }
 `;

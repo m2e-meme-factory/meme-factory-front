@@ -21,7 +21,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
 import '@styles/CustomSheetsStyles.css';
 
-type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio';
+type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio' | 'web-url';
 
 interface AutotaskProps {
   title: string;
@@ -61,6 +61,14 @@ const getCardContent = (
           Claim 1 Day
         </AccentButton>
       );
+    case "web-url":
+      return isClaimed ? (
+        ''
+      ) :  (
+        <AccentButton onClick={otherProps?.onClick} size='4'>
+          Open
+        </AccentButton>
+      )
     case 'welcome-bonus':
       return isClaimed ? (
         'Thanks For Joining!)'
@@ -275,7 +283,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
             <Text weight='regular' size='3' color='gray'>
               +{formatNumberWithSpaces(price)}{' '}
               <Badge color='gold' radius='full'>
-                XP-M2E
+                XP
               </Badge>
             </Text>
           </Flex>

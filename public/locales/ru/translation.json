@@ -71,7 +71,8 @@
   "invite_friends_lower_imperaive": "Приглашай друзей",
   "join_meme_to_earn_link_in_account_bio": "Присоединяйтесь к Meme, чтобы зарабатывать - ссылка в биографии аккаунта",
   "join_me_on_meme_factory_earn_together": "\"Присоединяйтесь ко мне на Meme Factory и давайте зарабатывать вместе!\"",
-  "join_our_whitelist": "Присоединяйтесь к нашему белому списку",
+  "join_our_whitelist": "Купите M2E токены на пресейле",
+  "whitelist_description": "Покупка любого пакета на пресейле даёт 100% гарантию Airdrop",
   "learn": "Узнать",
   "log_in_every_day_claim_your_reward_and_keep_your_streak_alive": "Входите каждый день, чтобы получить вознаграждение и поддерживать свою серию.",
   "logged_in_successfully": "Авторизация выполнена успешно",
@@ -140,7 +141,7 @@
   "wallet": "Кошелёк",
   "watch_guide": "Смотреть руководство",
   "welcome_bonus": "Приветственный бонус",
-  "what_meme_factory": "Что такое Фабрика мемов?",
+  "what_meme_factory": "Посмотрите видео о мем фактори",
   "your_meme_gets_views": "Ваш мем получает >10K просмотров",
   "you_get": "Вы получаете",
   "you_get_reward": "Получите вознаграждение",
@@ -149,5 +150,7 @@
   "you_rewarded_immediately_with_XP_after_each_task_completion": "Вы будете вознаграждены сразу же XP после завершения каждой задачи",
   "you_will_post_content_in_socials_and_earn_more_than_M2E_daily": "Вы будете публиковать контент в соцсетях и зарабатывать более 10 000 M2E ежедневно",
   "your_friend_join": "Ваш друг присоединяется",
-  "your_friend_join_meme_factory": "Ваш друг присоединился к Фабрике мемов"
+  "your_friend_join_meme_factory": "Ваш друг присоединился к Фабрике мемов",
+  "read_pitchdech": "Прочитайте Питчдек",
+  "read_whitepaper": "Прочитайте WhitePaper"
 }

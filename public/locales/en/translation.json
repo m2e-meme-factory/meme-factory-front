@@ -71,7 +71,8 @@
   "invite_friends_lower_imperaive": "Invite friends",
   "join_meme_to_earn_link_in_account_bio": "Join Meme to Earn - link in account bio",
   "join_me_on_meme_factory_earn_together": "\"\nJoin me on Meme Factory and let's earn together! \n\"",
-  "join_our_whitelist": "Join our whitelist",
+  "join_our_whitelist": "Buy M2E tokens on Presale",
+  "whitelist_description": "Purchasing any package at the presale gives a 100% Airdrop guarantee",
   "learn": "Learn",
   "log_in_every_day_claim_your_reward_and_keep_your_streak_alive": "Log in every day to claim your reward and keep your streak alive.",
   "logged_in_successfully": "Logged in successfully",
@@ -149,5 +150,8 @@
   "you_rewarded_immediately_with_XP_after_each_task_completion": "You'll be rewarded immediately with XP after each task completion",
   "you_will_post_content_in_socials_and_earn_more_than_M2E_daily": "You will post content in socials and earn more than 10 000 M2E daily",
   "your_friend_join": "Your Friend Join",
-  "your_friend_join_meme_factory": "Your friend join Meme Factory"
+  "your_friend_join_meme_factory": "Your friend join Meme Factory",
+  "read_pitchdech": "Read Pitchdeck",
+  "read_whitepaper": "Read Whitepaper",
+  "weburl_task_description": "Open the link to get your reward"
 }

@@ -15,7 +15,7 @@ export const NftCard = styled(SolidCard)<{
    transition: ease 0.2s;
    ${(props) =>
      props.glowing
-       ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #908a73 0%, #1c1c1e 100%);'
+       ? 'background: radial-gradient(118.04% 180.26% at 12% -43.46%, #d2bd6f 0%, #1c1c1e 100%);'
        : ''};
    ${(props) =>
      props.bronzes

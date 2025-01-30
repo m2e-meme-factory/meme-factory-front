@@ -26,6 +26,16 @@ import { cyberNft, nfts } from '@pages/ProfilePage/ProfilePage.consts';
 import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
 import DeveloperMenu from '@shared/components/DevMenu/DeveloperMenu';
 import { showSuccessMessage } from '@shared/utils/helpers/notify'
+import AutotaskCardDefaults from '@pages/AutotasksProject/components/Autotask/AutotaskCardDefaults';
+// import { Address, beginCell, toNano } from "ton-core";
+
+
+// const USDT_MASTER_CONTRACT = "EQDIkHWnkZoZpG2dKQUjPzL5Ly1L9tUXT57T992X2aWoS3Zi"; // USDT master contract
+
+// const getJettonWallet = async (userAddress: string) => {
+//   // Пример функции для поиска jetton wallet
+//   return Address.parse(userAddress).toString({ bounceable: false });
+// };
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -94,6 +104,61 @@ export default function ProfilePage() {
     }
   };
 
+  // const { connected, connector, sendTransaction, account } = tonConnectUI;
+  // const [loading, setLoading] = useState(false);
+
+  // const handleBuyTokens = async () => {
+  //   if (!connected) {
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   try {
+  //     const planSeqno = 1; // Укажите актуальный seqno
+  //     const receiverAddress = Address.parse(account.address).toString({ bounceable: false }); // Адрес подключенного кошелька
+  //     const senderUsdtWallet = await getJettonWallet(receiverAddress); // Определяем Jetton Wallet
+  //     const presaleMaster = Address.parse("EQB...").toString({ bounceable: false }); // Адрес пресейла в V4 формате
+
+  //     let buyForwardPayload = beginCell()
+  //       .store(storeBuyTokens({
+  //         $$type: "BuyTokens",
+  //         plan_seqno: planSeqno,
+  //         receiver: Address.parse(receiverAddress),
+  //       }))
+  //       .endCell()
+  //       .asSlice();
+
+  //     const amountToSend = toNano(10); // Покупаем 10 токенов
+
+  //     const transaction = {
+  //       to: senderUsdtWallet,
+  //       value: toNano("0.2"),
+  //       body: beginCell()
+  //         .store(
+  //           storeTokenTransfer({
+  //             $$type: "TokenTransfer",
+  //             query_id: 0n,
+  //             amount: amountToSend,
+  //             sender: Address.parse(presaleMaster),
+  //             response_destination: Address.parse(presaleMaster),
+  //             custom_payload: null,
+  //             forward_payload: buyForwardPayload,
+  //             forward_ton_amount: toNano("0.1"),
+  //           })
+  //         )
+  //         .endCell().toBoc().toString("base64"),
+  //     };
+
+  //     await sendTransaction(transaction);
+  //     alert("Транзакция отправлена!");
+  //   } catch (error) {
+  //     console.error("Ошибка покупки токенов:", error);
+  //     alert("Ошибка при совершении транзакции");
+  //   }
+  //   setLoading(false);
+  // };
+
+
   return (
     <Box height='90vh' onClick={handleClick}>
       <Box p='4' pt='3'>
@@ -112,17 +177,55 @@ export default function ProfilePage() {
             <Heading weight='regular' size='4'>
               {t(LOCAL_TEXT.WHAT_MEMO_FACTORY)}
             </Heading>
+            <Flex direction="column" gap='2'>
             <VideoCard
               videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'}
               thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'}
               altText='Tutorial'
             />
+              <AutotaskCardDefaults
+                markTaskCompleted={() => {
+                  webapp.openLink('https://drive.google.com/file/d/18zlq7Dn5gnXQImlNmQfwZAiyRFYcFULJ/view?usp=drive_link');
+                }}
+                title={t(LOCAL_TEXT.READ_PITCHDECK)}
+                description={t(
+                  LOCAL_TEXT.WEBURL_TASK_DESCRIPTION
+                )}
+                price={'1000'}
+                userId={12213132}
+                applied={false}
+                claimed={false}
+                category={'web-url'}
+                
+              />
+              <AutotaskCardDefaults
+                markTaskCompleted={() => {
+                  webapp.openLink('https://drive.google.com/file/d/1xN3bkArwN17_wCTOgFgA9jnBDrwJzuoe/view?usp=drive_link');
+                }}
+                title={t(LOCAL_TEXT.READ_WHITEPAPER)}
+                description={t(
+                  LOCAL_TEXT.WEBURL_TASK_DESCRIPTION
+                )}
+                price={'1000'}
+                userId={12213132}
+                applied={false}
+                claimed={false}
+                category={'web-url'}
+              />
+            </Flex>
           </Flex>
+          
 
           <Flex direction='column' gap='3'>
-            <Heading weight='regular' size='4'>
-              {t(LOCAL_TEXT.JOIN_OUR_WHITELIST)}
-            </Heading>
+            <Box>
+              <Heading weight='regular' size='4'>
+                {t(LOCAL_TEXT.JOIN_OUR_WHITELIST)}
+              </Heading>
+              <Text color='gray'>
+              {t(LOCAL_TEXT.WHITELIST_DESCRIPTION)}
+              </Text>
+            </Box>
+
 
               <div>
                 <Swiper

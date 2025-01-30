@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CaretRightIcon } from '@radix-ui/react-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Grid, Heading, Flex, Box, Text } from '@radix-ui/themes';
@@ -16,7 +16,7 @@ import { setUser } from '@shared/utils/redux/user/userSlice';
 import { LOCAL_TEXT } from '@shared/consts/local-text';
 import useDeveloperMenu from '@shared/hooks/useDeveloperMenu';
 import VideoCard from '@shared/components/VideoCard';
-import { SolidCard } from '@shared/components/Card/SolidCard';
+import { ActionCard, SolidCard } from '@shared/components/Card/SolidCard';
 import { connectWallet } from '@shared/utils/api/requests/ton/connect';
 import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
@@ -27,6 +27,8 @@ import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
 import DeveloperMenu from '@shared/components/DevMenu/DeveloperMenu';
 import { showSuccessMessage } from '@shared/utils/helpers/notify'
 import AutotaskCardDefaults from '@pages/AutotasksProject/components/Autotask/AutotaskCardDefaults';
+import useAutoTasks from './useAutoTasks';
+import { RootState } from '@shared/utils/redux/store';
 // import { Address, beginCell, toNano } from "ton-core";
 
 
@@ -158,21 +160,20 @@ export default function ProfilePage() {
   //   setLoading(false);
   // };
 
+  
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const {
+    tasks, markTaskAsCompleted
+  } = useAutoTasks()
+
 
   return (
     <Box height='90vh'
-    //  onClick={handleClick}
      >
       <Box p='4' pt='3'>
         <Header />
       </Box>
-      {/* {menuVisible && (
-        <DeveloperMenu
-          onClearTutorial={clearTutorial}
-          onClearGuides={clearGuides}
-          version={process.env.REACT_APP_VERSION || 'none'}
-        />
-      )} */}
       <Flex asChild p='4' gap='5' direction='column'>
         <Box pt='3' pb='3' style={{ maxHeight: '100%' }}>
           <Flex direction='column' gap='5'>
@@ -185,34 +186,32 @@ export default function ProfilePage() {
               thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'}
               altText='Tutorial'
             />
+            <Box mt="1"></Box>
               <AutotaskCardDefaults
-                markTaskCompleted={() => {
-                }}
+                markTaskCompleted={markTaskAsCompleted}
                 title={t(LOCAL_TEXT.READ_PITCHDECK)}
                 description={t(
                   LOCAL_TEXT.WEBURL_TASK_DESCRIPTION
                 )}
                 price={'1000'}
-                userId={12213132}
-                applied={false}
-                claimed={false}
+                userId={Number(user?.id)}
+                applied={tasks[12].completed}
+                claimed={tasks[12].completed}
                 category={'open-whitepaper'}
-                webUrl='https://drive.google.com/file/d/18zlq7Dn5gnXQImlNmQfwZAiyRFYcFULJ/view?usp=drive_link'
-                
+                webUrl='https://drive.google.com/file/d/1xN3bkArwN17_wCTOgFgA9jnBDrwJzuoe/view?usp=drive_link'
               />
               <AutotaskCardDefaults
-                markTaskCompleted={() => {
-                }}
+                markTaskCompleted={markTaskAsCompleted}
                 title={t(LOCAL_TEXT.READ_WHITEPAPER)}
                 description={t(
                   LOCAL_TEXT.WEBURL_TASK_DESCRIPTION
                 )}
                 price={'1000'}
-                userId={12213132}
-                applied={false}
-                claimed={false}
+                userId={Number(user?.id)}
+                applied={tasks[13].completed}
+                claimed={tasks[13].completed}
                 category={'open-pitchdek'}
-                webUrl='https://drive.google.com/file/d/1xN3bkArwN17_wCTOgFgA9jnBDrwJzuoe/view?usp=drive_link'
+                webUrl='https://drive.google.com/file/d/18zlq7Dn5gnXQImlNmQfwZAiyRFYcFULJ/view?usp=drive_link'
               />
             </Flex>
           </Flex>
@@ -310,7 +309,7 @@ export default function ProfilePage() {
               style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
               to='/friends'
             >
-              <SolidCard>
+              <ActionCard>
                 <Flex justify='between' align='center'>
                   <Flex gap='3' align='center'>
                     <Box
@@ -361,7 +360,7 @@ export default function ProfilePage() {
                   </Flex>
                   <CaretRightIcon width={24} height={24} color='#A8A8A8' />
                 </Flex>
-              </SolidCard>
+              </ActionCard>
             </Link>
 
             <Link
@@ -415,7 +414,7 @@ export default function ProfilePage() {
               style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
               to='/post-meme'
             >
-              <SolidCard>
+              <ActionCard>
                 <Flex justify='between' align='center'>
                   <Flex gap='3' align='center'>
                     <Box
@@ -478,7 +477,7 @@ export default function ProfilePage() {
                   </Flex>
                   <CaretRightIcon width={24} height={24} color='#A8A8A8' />
                 </Flex>
-              </SolidCard>
+              </ActionCard>
             </Link>
             <ConnectWallet />
           </Flex>

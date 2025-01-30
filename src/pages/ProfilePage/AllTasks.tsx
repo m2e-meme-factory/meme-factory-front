@@ -27,6 +27,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 import styled from 'styled-components';
 import AutotaskCard from '@pages/AutotasksProject/components/Autotask/Autotask';
 import { getIconByTaskId } from '@shared/utils/helpers/getIconByTaskId';
+import useAutoTasks from './useAutoTasks';
 
 const NftCard = styled(SolidCard)<{ glowing: boolean }>`
   min-height: 25vh;
@@ -253,64 +254,9 @@ export default function AllTasks() {
     // }
   };
 
-  const [tasks, setTasks] = useState<Task[]>([
-    { category: 'wallet', completed: tonConnectUI.connected },
-    { category: 'checkin', completed: false },
-    { category: 'welcome-bonus', completed: false },
-    { category: 'shere-in-stories', completed: false },
-    { category: 'account-bio', completed: false },
-    { category: 'web-url', completed: false },
-    { category: 'open-x', completed: false },
-    { category: 'open-tg', completed: false },
-    { category: 'open-youtube', completed: false },
-    { category: 'open-tiktok', completed: false },
-    { category: 'open-reddit', completed: false },
-    { category: 'open-discord', completed: false },
-  ]);
-
-  // Загрузка состояния задач из localStorage при монтировании компонента
-  useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks && savedTasks?.length > 0) {
-      setTasks(JSON.parse(savedTasks));
-    } else {
-      setTasks([
-        { category: 'wallet', completed: tonConnectUI.connected },
-        { category: 'checkin', completed: false },
-        { category: 'welcome-bonus', completed: false },
-        { category: 'shere-in-stories', completed: false },
-        { category: 'account-bio', completed: false },
-        { category: 'web-url', completed: false },
-        { category: 'open-x', completed: false },
-        { category: 'open-tg', completed: false },
-        { category: 'open-youtube', completed: false },
-        { category: 'open-tiktok', completed: false },
-        { category: 'open-reddit', completed: false },
-        { category: 'open-discord', completed: false },
-      ]);
-    }
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-      if (wallet) {
-        markTaskAsCompleted('wallet');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [tonConnectUI]);
-
-  // Функция для отметки задачи выполненной
-  const markTaskAsCompleted = (category: string) => {
-    const newtasks = tasks.map((task) =>
-      task.category === category ? { ...task, completed: true } : task
-    );
-
-    setTasks(newtasks);
-
-    localStorage.setItem('tasks', JSON.stringify(newtasks));
-  };
+  const {
+    tasks, markTaskAsCompleted
+  } = useAutoTasks()
 
   return (
     <Box height='90vh'>
@@ -554,8 +500,8 @@ export default function AllTasks() {
     description={'Stay updated with the latest news and updates by following Meme Factory on X.'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[1].completed}
-    claimed={tasks[1].completed}
+    applied={tasks[5].completed}
+    claimed={tasks[5].completed}
     category={'open-x'}
     webUrl="https://twitter.com/m2e_pro"
 />
@@ -566,8 +512,8 @@ export default function AllTasks() {
     description={'Become a part of the Meme Factory community by joining our Telegram channel.'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[2].completed}
-    claimed={tasks[2].completed}
+    applied={tasks[6].completed}
+    claimed={tasks[6].completed}
     category={'open-tg'}
     webUrl="https://t.me/m2e_pro"
 />
@@ -578,8 +524,8 @@ export default function AllTasks() {
     description={'Subscribe to our YouTube channel and be a part of our growing audience.'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[3].completed}
-    claimed={tasks[3].completed}
+    applied={tasks[7].completed}
+    claimed={tasks[7].completed}
     category={'open-youtube'}
     webUrl="https://www.youtube.com/channel/UCZ94hPs00bBTxWsZjGZp_gQ"
 />
@@ -590,22 +536,10 @@ export default function AllTasks() {
     description={'Subscribe to our TikTok channel and be a part of our growing audience.'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[4].completed}
-    claimed={tasks[4].completed}
+    applied={tasks[8].completed}
+    claimed={tasks[8].completed}
     category={'open-tiktok'}
     webUrl="https://www.tiktok.com/@m2e_pro"
-/>
-
-<AutotaskCardDefaults
-    markTaskCompleted={markTaskAsCompleted}
-    title={t(LOCAL_TEXT.FOLLOW_INSTAGRAM)}
-    description={'Follow MemeFactory on Instagram to stay updated with our latest posts, stories, and exclusive content.'}
-    price={'100'}
-    userId={Number(user?.id)}
-    applied={tasks[5].completed}
-    claimed={tasks[5].completed}
-    category={'web-url'}
-    webUrl="https://www.instagram.com/m2e__pro/"
 />
 
 <AutotaskCardDefaults
@@ -614,8 +548,8 @@ export default function AllTasks() {
     description={'Show your support by liking our post on Reddit.'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[6].completed}
-    claimed={tasks[6].completed}
+    applied={tasks[9].completed}
+    claimed={tasks[9].completed}
     category={'open-reddit'}
     webUrl="https://www.reddit.com/user/m2epro/"
 />
@@ -626,11 +560,23 @@ export default function AllTasks() {
     description={'Become a part of the Meme Factory community by joining our Discord channel.'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[7].completed}
-    claimed={tasks[7].completed}
+    applied={tasks[10].completed}
+    claimed={tasks[10].completed}
     category={'open-discord'}
     webUrl="https://discord.com/channels/@me"
 />
+
+{/* <AutotaskCardDefaults
+    markTaskCompleted={markTaskAsCompleted}
+    title={t(LOCAL_TEXT.FOLLOW_INSTAGRAM)}
+    description={'Follow MemeFactory on Instagram to stay updated with our latest posts, stories, and exclusive content.'}
+    price={'100'}
+    userId={Number(user?.id)}
+    applied={tasks[11].completed}
+    claimed={tasks[11].completed}
+    category={'web-url'}
+    webUrl="https://www.instagram.com/m2e__pro/"
+/> */}
 
 <AutotaskCardDefaults
     markTaskCompleted={markTaskAsCompleted}
@@ -638,8 +584,8 @@ export default function AllTasks() {
     description={'Get rewarded for simply visiting our website!'}
     price={'100'}
     userId={Number(user?.id)}
-    applied={tasks[8].completed}
-    claimed={tasks[8].completed}
+    applied={tasks[11].completed}
+    claimed={tasks[11].completed}
     category={'web-url'}
     webUrl="https://m2e.pro/"
 />

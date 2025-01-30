@@ -69,6 +69,16 @@
   "invite_friends": "Приглашайте друзей!",
   "invite_friends_lower": "Приглашайте друзей",
   "invite_friends_lower_imperaive": "Приглашай друзей",
+
+  "follow_x": "Подписаться на X",
+  "join_telegram": "Присоединиться к Telegram",
+  "subscribe_youtube": "Подписаться на YouTube",
+  "subscribe_tiktok": "Подписаться на TikTok",
+  "follow_instagram": "Подписаться на Instagram",
+  "visit_reddit": "Посетить Reddit",
+  "join_discord": "Присоединиться к Discord",
+  "visit_website": "Посетить сайт",
+
   "join_meme_to_earn_link_in_account_bio": "Присоединяйтесь к Meme, чтобы зарабатывать - ссылка в биографии аккаунта",
   "join_me_on_meme_factory_earn_together": "\"Присоединяйтесь ко мне на Meme Factory и давайте зарабатывать вместе!\"",
   "join_our_whitelist": "Купите M2E токены на пресейле",
@@ -152,5 +162,6 @@
   "your_friend_join": "Ваш друг присоединяется",
   "your_friend_join_meme_factory": "Ваш друг присоединился к Фабрике мемов",
   "read_pitchdech": "Прочитайте Питчдек",
-  "read_whitepaper": "Прочитайте WhitePaper"
+  "read_whitepaper": "Прочитайте WhitePaper",
+  "weburl_task_description": "Перейдите по ссылке, чтобы получить вознагрождение"
 }

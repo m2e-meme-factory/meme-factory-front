@@ -154,4 +154,13 @@ export enum LOCAL_TEXT {
   YOU_WILL_POST_CONTENT_IN_SOCIALS_AND_EARN_MORE_THAN_M2E_DAILY = 'you_will_post_content_in_socials_and_earn_more_than_M2E_daily',
   YOUR_FRIEND_JOIN = 'your_friend_join',
   YOUR_FRIEND_JOIN_MEME_FACTORY = 'your_friend_join_meme_factory',
+  FOLLOW_X = 'follow_x',
+  JOIN_TELEGRAM = 'join_telegram',
+  SUBSCRIBE_YOUTUBE = 'subscribe_youtube',
+  SUBSCRIBE_TIKTOK = 'subscribe_tiktok',
+  FOLLOW_INSTAGRAM = 'follow_instagram',
+  VISIT_REDDIT = 'visit_reddit',
+  JOIN_DISCORD = 'join_discord',
+  VISIT_WEBSITE = 'visit_website',
+
 }

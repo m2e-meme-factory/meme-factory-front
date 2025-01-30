@@ -69,8 +69,8 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
-  const { handleClick, menuVisible, setMenuVisible, clearTutorial, clearGuides } =
-    useDeveloperMenu();
+  // const { handleClick, menuVisible, setMenuVisible, clearTutorial, clearGuides } =
+  //   useDeveloperMenu();
 
   const [tonConnectUI] = useTonConnectUI();
   const [walletAddress, setWalletAddress] = useState<string>();
@@ -160,17 +160,19 @@ export default function ProfilePage() {
 
 
   return (
-    <Box height='90vh' onClick={handleClick}>
+    <Box height='90vh'
+    //  onClick={handleClick}
+     >
       <Box p='4' pt='3'>
         <Header />
       </Box>
-      {menuVisible && (
+      {/* {menuVisible && (
         <DeveloperMenu
           onClearTutorial={clearTutorial}
           onClearGuides={clearGuides}
           version={process.env.REACT_APP_VERSION || 'none'}
         />
-      )}
+      )} */}
       <Flex asChild p='4' gap='5' direction='column'>
         <Box pt='3' pb='3' style={{ maxHeight: '100%' }}>
           <Flex direction='column' gap='5'>
@@ -185,7 +187,6 @@ export default function ProfilePage() {
             />
               <AutotaskCardDefaults
                 markTaskCompleted={() => {
-                  webapp.openLink('https://drive.google.com/file/d/18zlq7Dn5gnXQImlNmQfwZAiyRFYcFULJ/view?usp=drive_link');
                 }}
                 title={t(LOCAL_TEXT.READ_PITCHDECK)}
                 description={t(
@@ -195,12 +196,12 @@ export default function ProfilePage() {
                 userId={12213132}
                 applied={false}
                 claimed={false}
-                category={'web-url'}
+                category={'open-whitepaper'}
+                webUrl='https://drive.google.com/file/d/18zlq7Dn5gnXQImlNmQfwZAiyRFYcFULJ/view?usp=drive_link'
                 
               />
               <AutotaskCardDefaults
                 markTaskCompleted={() => {
-                  webapp.openLink('https://drive.google.com/file/d/1xN3bkArwN17_wCTOgFgA9jnBDrwJzuoe/view?usp=drive_link');
                 }}
                 title={t(LOCAL_TEXT.READ_WHITEPAPER)}
                 description={t(
@@ -210,7 +211,8 @@ export default function ProfilePage() {
                 userId={12213132}
                 applied={false}
                 claimed={false}
-                category={'web-url'}
+                category={'open-pitchdek'}
+                webUrl='https://drive.google.com/file/d/1xN3bkArwN17_wCTOgFgA9jnBDrwJzuoe/view?usp=drive_link'
               />
             </Flex>
           </Flex>

@@ -21,7 +21,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
 import '@styles/CustomSheetsStyles.css';
 
-type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio' | 'web-url';
+type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio' | 'web-url' | "open-x" | "open-tg" | "open-youtube" | "open-tiktok" | "open-reddit" | "open-discord" | "open-pitchdek" | "open-whitepaper";
 
 interface AutotaskProps {
   title: string;
@@ -35,6 +35,7 @@ interface AutotaskProps {
   markTaskCompleted: (c: AutotaskCateory) => void;
   category: AutotaskCateory;
   walletAddress?: string;
+  webUrl?: string;
 }
 
 const getCardContent = (
@@ -117,7 +118,13 @@ const getCardContent = (
         </Flex>
       );
     default:
-      return null;
+      return isClaimed ? (
+        ''
+      ) :  (
+        <AccentButton onClick={otherProps?.onClick} size='4'>
+          Open
+        </AccentButton>
+      )
   }
 };
 
@@ -133,6 +140,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   category,
   refLink,
   markTaskCompleted,
+  webUrl
 }) => {
   const { t } = useTranslation();
   //   //State of autotask

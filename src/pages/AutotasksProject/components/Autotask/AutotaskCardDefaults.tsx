@@ -6,6 +6,7 @@ import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next/typescript/t';
 
 import ConnectWallet from '../../../WalletPage/ConnectWallet';
 import CopyableRef from '../CopyableField/CopyableRef';
@@ -21,7 +22,21 @@ import { LOCAL_TEXT } from '@shared/consts';
 import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
 import '@styles/CustomSheetsStyles.css';
 
-type AutotaskCateory = 'wallet' | 'checkin' | 'welcome-bonus' | 'shere-in-stories' | 'account-bio' | 'web-url' | "open-x" | "open-tg" | "open-youtube" | "open-tiktok" | "open-reddit" | "open-discord" | "open-pitchdek" | "open-whitepaper";
+type AutotaskCateory =
+  | 'wallet'
+  | 'checkin'
+  | 'welcome-bonus'
+  | 'shere-in-stories'
+  | 'account-bio'
+  | 'web-url'
+  | 'open-x'
+  | 'open-tg'
+  | 'open-youtube'
+  | 'open-tiktok'
+  | 'open-reddit'
+  | 'open-discord'
+  | 'open-pitchdek'
+  | 'open-whitepaper';
 
 interface AutotaskProps {
   title: string;
@@ -41,6 +56,7 @@ interface AutotaskProps {
 const getCardContent = (
   category: string,
   isClaimed: boolean = false,
+  t: (key: string) => string,
   otherProps?: {
     onClick?: () => void;
     setTextValue?: (v: string) => void;
@@ -56,35 +72,35 @@ const getCardContent = (
       );
     case 'checkin':
       return isClaimed ? (
-        'Come Back Tomorrow'
+        t(LOCAL_TEXT.COME_BACK_TOMORROW)
       ) : (
         <AccentButton onClick={otherProps?.onClick} size='4'>
-          Claim 1 Day
+          {t(LOCAL_TEXT.CLAIM_ONE_DAY)}
         </AccentButton>
       );
-    case "web-url":
+    case 'web-url':
       return isClaimed ? (
         ''
-      ) :  (
-        <AccentButton onClick={otherProps?.onClick} size='4'>
-          Open
-        </AccentButton>
-      )
-    case 'welcome-bonus':
-      return isClaimed ? (
-        'Thanks For Joining!)'
       ) : (
         <AccentButton onClick={otherProps?.onClick} size='4'>
-          Claim
+          {t(LOCAL_TEXT.OPEN)}
+        </AccentButton>
+      );
+    case 'welcome-bonus':
+      return isClaimed ? (
+        t(LOCAL_TEXT.THANKS_FOR_JOINING)
+      ) : (
+        <AccentButton onClick={otherProps?.onClick} size='4'>
+          {t(LOCAL_TEXT.CLAIM)}
         </AccentButton>
       );
     case 'shere-in-stories':
       return isClaimed ? (
-        'Thanks For Joining!)'
+        t(LOCAL_TEXT.THANKS_FOR_JOINING)
       ) : (
         <Flex direction='column' gap='2'>
           <Flex justify='between' align='center'>
-            <Text>Shere a story in your instagram account with your invite link</Text>
+            <Text>{t(LOCAL_TEXT.SHARE_STORY_YOUR_INSTAGRAM_ACCOUNT_INVITE_LINK)}</Text>
             <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
           </Flex>
           <TextField.Root
@@ -98,33 +114,33 @@ const getCardContent = (
             }}
           />
           <AccentButton onClick={otherProps?.onClick} size='4'>
-            Claim
+            {t(LOCAL_TEXT.CLAIM)}
           </AccentButton>
         </Flex>
       );
     case 'account-bio':
       return isClaimed ? (
-        'Thanks For Joining!)'
+        t(LOCAL_TEXT.THANKS_FOR_JOINING)
       ) : (
         <Flex direction='column' gap='2'>
           <Flex justify='between' align='center'>
-            <Text>Put your invite link in instagram account bio</Text>
+            <Text>{t(LOCAL_TEXT.PUT_YOUR_INVITE_LINK_INSTAGRAM_ACCOUNT_BIO)}</Text>
             <CopyableRef refLink='https://t.me/autotasks_bot' />
           </Flex>
           <TextField.Root size='3' mt='2' placeholder='Instagram url' />
           <AccentButton onClick={otherProps?.onClick} size='4'>
-            Claim
+            {t(LOCAL_TEXT.CLAIM)}
           </AccentButton>
         </Flex>
       );
     default:
       return isClaimed ? (
         ''
-      ) :  (
+      ) : (
         <AccentButton onClick={otherProps?.onClick} size='4'>
-          Open
+          {t(LOCAL_TEXT.OPEN)}
         </AccentButton>
-      )
+      );
   }
 };
 
@@ -140,7 +156,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   category,
   refLink,
   markTaskCompleted,
-  webUrl
+  webUrl,
 }) => {
   const { t } = useTranslation();
   //   //State of autotask
@@ -176,7 +192,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
     borderRadius: '12px',
     padding: '8px',
     backgroundColor: '#0B0B0B',
-    cursor: "pointer"
+    cursor: 'pointer',
   });
 
   useEffect(() => {
@@ -184,7 +200,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
       border: cardStyles[applicationStatus as ApplicationStatus],
       borderRadius: '12px',
       padding: '8px',
-      cursor: "pointer"
+      cursor: 'pointer',
     });
   }, [applicationStatus]);
 
@@ -344,73 +360,12 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                     </Flex>
                   </Flex>
                   <Flex direction='column' gap='2'>
-                    {getCardContent(category, claimed, {
+                    {getCardContent(category, claimed, t, {
                       onClick: handleApplyClick,
                       refLink,
                     })}
                     <p className={styles.warning}>{description}</p>
                   </Flex>
-
-                  {/* <Flex>
-                      <Flex direction='column' gap='2'>
-                        {isApplied && isClaimed ? (
-                          <div
-                            className={styles.link}
-                            onClick={handleApplyClick}
-                          >
-                            <div className={styles.card}>
-                              <div className={styles.cardContent}>
-                                <div className={styles.websiteInfo}>
-                                  {getIconByTaskСategory(category)}
-                                  <p className={styles.socialsName}>{title}</p>
-                                </div>
-                                <CheckIcon color='#45a951' width={20} height={20} />
-                              </div>
-                            </div>
-                          </div>
-                        ) : isApplied ? (
-                          <div className={styles.card} onClick={handleClaimClick}>
-                            <div className={styles.cardContent}>
-                              <Flex justify='center' align='center' style={{ width: '100%' }}>
-                                <p className={styles.socialsName}>Claim</p>
-                              </Flex>
-                            </div>
-                          </div>
-                        ) : (
-                          <div
-                            className={styles.link}
-                            onClick={handleApplyClick}
-                          >
-                            <div className={styles.card}>
-                              <div className={styles.cardContent}>
-                                {submitting || isClaiming ? (
-                                  <div className={styles.card}>
-                                    <div className={styles.cardContent}>
-                                      <Flex
-                                        justify='center'
-                                        align='center'
-                                        style={{ width: '100%' }}
-                                      >
-                                        <Spinner></Spinner>
-                                      </Flex>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <>
-                                    <div className={styles.websiteInfo}>
-                                      {getIconByTaskСategory(category)}
-                                      <p className={styles.socialsName}>{title}</p>
-                                    </div>
-                                    <CaretRightIcon width={20} height={20} />
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        <p className={styles.warning}>{description}</p>
-                      </Flex>
-                    </Flex> */}
                 </Flex>
               </Theme>
             </Sheet.Content>

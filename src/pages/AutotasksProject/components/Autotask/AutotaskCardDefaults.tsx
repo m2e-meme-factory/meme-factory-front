@@ -362,7 +362,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                   <Flex direction='column' gap='2'>
                     {getCardContent(category, claimed, t, {
                       onClick: handleApplyClick,
-                      refLink,
+                      refLink: refLink,
                     })}
                     <p className={styles.warning}>{description}</p>
                   </Flex>

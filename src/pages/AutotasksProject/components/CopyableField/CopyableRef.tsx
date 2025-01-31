@@ -7,7 +7,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 
 const CopyableRef: FC<{ refLink: string }> = ({ refLink }) => {
   const { t } = useTranslation();
-  const [copyButtonText, setCopyButtonText] = React.useState<string>('Copy');
+  const [copyButtonText, setCopyButtonText] = React.useState<string>(t(LOCAL_TEXT.COPY));
 
   const handleCopyText = () => {
     const textToCopy = refLink;

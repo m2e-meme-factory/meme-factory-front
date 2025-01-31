@@ -160,15 +160,17 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
 }) => {
   const { t } = useTranslation();
   //   //State of autotask
-  type ApplicationStatus = 'applied' | 'claimed' | 'unstarted';
+  type ApplicationStatus = LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED;
   const [isApplied, setIsApplied] = useState(applied);
   const [isClaimed, setIsClaimed] = useState(claimed);
   const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus>(
-    isApplied ? (isClaimed ? 'claimed' : 'applied') : 'unstarted'
+    isApplied ? (isClaimed ? LOCAL_TEXT.CLIMED : LOCAL_TEXT.APPLIED) : LOCAL_TEXT.UNSTARTED
   );
 
   useEffect(() => {
-    setApplicationStatus(isApplied ? (isClaimed ? 'claimed' : 'applied') : 'unstarted');
+    setApplicationStatus(
+      isApplied ? (isClaimed ? LOCAL_TEXT.CLIMED : LOCAL_TEXT.APPLIED) : LOCAL_TEXT.UNSTARTED
+    );
   }, [isApplied, isClaimed]);
 
   useEffect(() => {
@@ -180,7 +182,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   }, [applied]);
 
   //   //Card styles
-  type CardStyles = Record<'applied' | 'claimed' | 'unstarted', string>;
+  type CardStyles = Record<LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED, string>;
   const cardStyles: CardStyles = {
     applied: 'none',
     claimed: 'none',
@@ -225,7 +227,9 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
 
   useEffect(() => {
     if (application) {
-      const status: ApplicationStatus = application.isConfirmed ? 'claimed' : 'applied';
+      const status: ApplicationStatus = application.isConfirmed
+        ? LOCAL_TEXT.CLIMED
+        : LOCAL_TEXT.APPLIED;
       setApplicationStatus(status);
     }
   }, [application]);
@@ -270,14 +274,14 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   });
 
   const handleApplyClick = () => {
-    if (applicationStatus === 'unstarted' && !submitting) {
+    if (applicationStatus === LOCAL_TEXT.UNSTARTED && !submitting) {
       setSubmitting(true);
       apply({ params: { amount: price } });
     }
   };
 
   const handleClaimClick = () => {
-    if (isClaiming && applicationStatus === 'applied') return;
+    if (isClaiming && applicationStatus === LOCAL_TEXT.APPLIED) return;
 
     claim({ params: { taskCategory: category } });
   };
@@ -355,7 +359,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                         color={isApplied ? (isClaimed ? 'green' : 'yellow') : 'gray'}
                         variant='soft'
                       >
-                        {applicationStatus[0].toUpperCase() + applicationStatus.slice(1)}
+                        {t(applicationStatus)}
                       </Badge>
                     </Flex>
                   </Flex>

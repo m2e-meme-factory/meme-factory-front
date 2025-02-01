@@ -38,13 +38,11 @@
 }
 
 .rt-Heading {
-  font-family:"ME", monospace !important;
+  font-family: 'ME', 'Benzin', monospace !important;
   text-transform: uppercase;
   font-weight: 400 !important;
-  /* letter-spacing: 1px !important; */
-  /* font-size: 15px !important; */
 }
 
 * {
-  font-family: "SF", monospace;
+  font-family: 'SF', monospace;
 }

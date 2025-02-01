@@ -1,19 +1,12 @@
-import styled from 'styled-components';
+
 import { Card, Flex, Heading, IconButton } from '@radix-ui/themes';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
-const StyledCard = styled(Card)`
-  padding: 0;
-  margin: 0 0 15px;
-  width: 100%;
-  border: 1px solid var(--yellow-9);
-  background-color: var(--gray-2);
-`;
+import styled from 'styled-components';
 
 const SecondaryHeading = styled(Heading)`
-  font-family: 'ME', monospace !important;
+  font-family: 'ME', 'Benzin', monospace !important;
   text-transform: none;
 `;
 

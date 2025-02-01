@@ -4,7 +4,8 @@ import {
   Card,
   DataList,
   Flex,
-  Heading, IconButton,
+  Heading,
+  IconButton,
   Skeleton,
   Text,
   TextField,
@@ -224,14 +225,32 @@ export default function Friends() {
 
           <Box style={{ padding: '12px', background: '#1c1c1e', borderRadius: '10px' }}>
             <Flex direction='column' gap='2'>
-              <Heading size='3' weight='regular'>{t(LOCAL_TEXT.SHARE_YOUR_REF_LINK)}</Heading>
-              <Flex direction='row' align='center' justify='between' style={{width: '100%'}} gap='2'>
-                <TextField.Root size="3" placeholder="https://" defaultValue={refData?.refLink || ''} style={{width: '90%'}} disabled={true}/>
-                <IconButton size="3" variant="classic" onClick={() => handleCopyText(refData?.refLink || '')}>
-                  <CopyIcon height="16" width="16" />
+              <Heading size='3' weight='regular'>
+                {t(LOCAL_TEXT.SHARE_YOUR_REF_LINK)}
+              </Heading>
+              <Flex
+                direction='row'
+                align='center'
+                justify='between'
+                style={{ width: '100%' }}
+                gap='2'
+              >
+                <TextField.Root
+                  size='3'
+                  placeholder='https://'
+                  defaultValue={refData?.refLink || ''}
+                  style={{ width: '90%' }}
+                  disabled={true}
+                />
+                <IconButton
+                  size='3'
+                  variant='classic'
+                  onClick={() => handleCopyText(refData?.refLink || '')}
+                >
+                  <CopyIcon height='16' width='16' />
                 </IconButton>
               </Flex>
-              <DataList.Root mt='2' style={{ gap: '6px'}}>
+              <DataList.Root mt='2' style={{ gap: '6px' }}>
                 <DataList.Item align='center'>
                   <DataList.Item>
                     <DataList.Label minWidth='50px'>{t(LOCAL_TEXT.TOTAL_COUNT)}</DataList.Label>
@@ -261,7 +280,6 @@ export default function Friends() {
                   </GlowingButton>
                 </Skeleton>
               </Box>
-              
             </Flex>
           </Box>
         </Flex>

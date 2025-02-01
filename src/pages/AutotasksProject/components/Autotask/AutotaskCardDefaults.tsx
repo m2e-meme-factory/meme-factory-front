@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react';
+import React, { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import { Badge, Box, Flex, Heading, Text, TextField, Theme } from '@radix-ui/themes';
 import { showErrorMessage, showSuccessMessage } from '@shared/utils/helpers/notify';
 import { Sheet } from 'react-modal-sheet';
@@ -6,7 +6,6 @@ import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next/typescript/t';
 
 import ConnectWallet from '../../../WalletPage/ConnectWallet';
 import CopyableRef from '../CopyableField/CopyableRef';
@@ -57,8 +56,11 @@ const getCardContent = (
   category: string,
   isClaimed: boolean = false,
   t: (key: string) => string,
+  inputRef: RefObject<HTMLInputElement>,
   otherProps?: {
     onClick?: () => void;
+    handleBlur?: () => void;
+    handleFocus?: () => void;
     setTextValue?: (v: string) => void;
     refLink?: string;
   }
@@ -104,6 +106,7 @@ const getCardContent = (
             <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
           </Flex>
           <TextField.Root
+            ref={inputRef}
             size='3'
             mt='2'
             placeholder='Instagram url'
@@ -112,6 +115,8 @@ const getCardContent = (
                 otherProps.setTextValue(e.currentTarget.value.toString());
               }
             }}
+            onBlur={otherProps?.handleBlur}
+            onFocus={otherProps?.handleFocus}
           />
           <AccentButton onClick={otherProps?.onClick} size='4'>
             {t(LOCAL_TEXT.CLAIM)}
@@ -166,6 +171,27 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus>(
     isApplied ? (isClaimed ? LOCAL_TEXT.CLIMED : LOCAL_TEXT.APPLIED) : LOCAL_TEXT.UNSTARTED
   );
+
+  const [isIPhone, setIsIPhone] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFocus = () => {
+    const isIPhone = (): boolean => {
+      const userAgent = window.navigator.userAgent;
+      return /iPhone/.test(userAgent);
+    };
+
+    if (inputRef.current) {
+      setIsIPhone(isIPhone());
+    }
+  };
+
+  const handleBlur = () => {
+    if (inputRef.current) {
+      setIsIPhone(false);
+    }
+  };
 
   useEffect(() => {
     setApplicationStatus(
@@ -363,9 +389,11 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                       </Badge>
                     </Flex>
                   </Flex>
-                  <Flex direction='column' gap='2'>
-                    {getCardContent(category, claimed, t, {
+                  <Flex direction='column' gap='2' mb={isIPhone ? '100%' : 'unset'}>
+                    {getCardContent(category, claimed, t, inputRef, {
                       onClick: handleApplyClick,
+                      handleBlur: handleBlur,
+                      handleFocus: handleFocus,
                       refLink: refLink,
                     })}
                     <p className={styles.warning}>{description}</p>

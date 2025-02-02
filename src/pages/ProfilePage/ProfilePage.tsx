@@ -4,47 +4,43 @@ import { CaretRightIcon } from '@radix-ui/react-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Grid, Heading, Flex, Box, Text } from '@radix-ui/themes';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { useTonConnectUI } from '@tonconnect/ui-react';
+import { useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
 import { useTranslation } from 'react-i18next';
+import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
 
 import { Header } from '@widgets/header';
 
 import ConnectWallet from '../WalletPage/ConnectWallet';
+import useAutoTasks from './useAutoTasks';
+
+import { cyberNft, nfts } from '@pages/ProfilePage/ProfilePage.consts';
+import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
+import AutotaskCardDefaults from '@pages/AutotasksProject/components/Autotask/AutotaskCardDefaults';
+
+import VideoCard from '@shared/components/VideoCard';
+import { ActionCard, SolidCard } from '@shared/components/Card/SolidCard';
+import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
 
 import { useAuthMe } from '@shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '@shared/utils/redux/user/userSlice';
-import { LOCAL_TEXT } from '@shared/consts/local-text';
-import useDeveloperMenu from '@shared/hooks/useDeveloperMenu';
-import VideoCard from '@shared/components/VideoCard';
-import { ActionCard, SolidCard } from '@shared/components/Card/SolidCard';
-import { connectWallet } from '@shared/utils/api/requests/ton/connect';
-import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
-import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import { cyberNft, nfts } from '@pages/ProfilePage/ProfilePage.consts';
-import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
-import DeveloperMenu from '@shared/components/DevMenu/DeveloperMenu';
-import { showSuccessMessage } from '@shared/utils/helpers/notify'
-import AutotaskCardDefaults from '@pages/AutotasksProject/components/Autotask/AutotaskCardDefaults';
-import useAutoTasks from './useAutoTasks';
 import { RootState } from '@shared/utils/redux/store';
-// import { Address, beginCell, toNano } from "ton-core";
+import { usePayMF } from '@shared/utils/api/hooks/transactions/use-pay-mf';
 
+import { LOCAL_TEXT } from '@shared/consts/local-text';
 
-// const USDT_MASTER_CONTRACT = "EQDIkHWnkZoZpG2dKQUjPzL5Ly1L9tUXT57T992X2aWoS3Zi"; // USDT master contract
-
-// const getJettonWallet = async (userAddress: string) => {
-//   // Пример функции для поиска jetton wallet
-//   return Address.parse(userAddress).toString({ bounceable: false });
-// };
+import 'swiper/css';
 
 export default function ProfilePage() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { data: userDataResponse, isLoading: userDataLoading } = useAuthMe();
+  const { data: userDataResponse } = useAuthMe();
+  const wallet = useTonWallet();
+
+  const { functions } = usePayMF();
+
   const navigate = useNavigate();
-  const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null)
+  const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
   const [indexSlideshow, setIndexSlideshow] = useState(0);
 
   const webapp = useWebApp();
@@ -71,33 +67,15 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
-  // const { handleClick, menuVisible, setMenuVisible, clearTutorial, clearGuides } =
-  //   useDeveloperMenu();
+  const handleBuy = (value: number) => {
+    if (wallet?.account.address) {
+      functions.mintJettons({
+        jettonsAmountToMint: value,
+      });
+    }
+  };
 
   const [tonConnectUI] = useTonConnectUI();
-  const [walletAddress, setWalletAddress] = useState<string>();
-
-  useEffect(() => {
-    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-      if (wallet) {
-        setWalletAddress(wallet.account.address);
-      } else {
-        setWalletAddress('');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [tonConnectUI]);
-
-  useEffect(() => {
-    const connect = async (wallet: string) => {
-      await connectWallet({ params: { tonWalletAddress: wallet } });
-    };
-
-    if (walletAddress) {
-      connect(walletAddress);
-    }
-  }, [walletAddress]);
 
   const handlePaginationClick = (index: number) => {
     setIndexSlideshow(index);
@@ -106,71 +84,12 @@ export default function ProfilePage() {
     }
   };
 
-  // const { connected, connector, sendTransaction, account } = tonConnectUI;
-  // const [loading, setLoading] = useState(false);
-
-  // const handleBuyTokens = async () => {
-  //   if (!connected) {
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   try {
-  //     const planSeqno = 1; // Укажите актуальный seqno
-  //     const receiverAddress = Address.parse(account.address).toString({ bounceable: false }); // Адрес подключенного кошелька
-  //     const senderUsdtWallet = await getJettonWallet(receiverAddress); // Определяем Jetton Wallet
-  //     const presaleMaster = Address.parse("EQB...").toString({ bounceable: false }); // Адрес пресейла в V4 формате
-
-  //     let buyForwardPayload = beginCell()
-  //       .store(storeBuyTokens({
-  //         $$type: "BuyTokens",
-  //         plan_seqno: planSeqno,
-  //         receiver: Address.parse(receiverAddress),
-  //       }))
-  //       .endCell()
-  //       .asSlice();
-
-  //     const amountToSend = toNano(10); // Покупаем 10 токенов
-
-  //     const transaction = {
-  //       to: senderUsdtWallet,
-  //       value: toNano("0.2"),
-  //       body: beginCell()
-  //         .store(
-  //           storeTokenTransfer({
-  //             $$type: "TokenTransfer",
-  //             query_id: 0n,
-  //             amount: amountToSend,
-  //             sender: Address.parse(presaleMaster),
-  //             response_destination: Address.parse(presaleMaster),
-  //             custom_payload: null,
-  //             forward_payload: buyForwardPayload,
-  //             forward_ton_amount: toNano("0.1"),
-  //           })
-  //         )
-  //         .endCell().toBoc().toString("base64"),
-  //     };
-
-  //     await sendTransaction(transaction);
-  //     alert("Транзакция отправлена!");
-  //   } catch (error) {
-  //     console.error("Ошибка покупки токенов:", error);
-  //     alert("Ошибка при совершении транзакции");
-  //   }
-  //   setLoading(false);
-  // };
-
-  
   const user = useSelector((state: RootState) => state.user.user);
 
-  const {
-    tasks, markTaskAsCompleted
-  } = useAutoTasks()
-
+  const { tasks, markTaskAsCompleted } = useAutoTasks();
 
   return (
-    <Box height='90vh'
-     >
+    <Box height='90vh'>
       <Box p='4' pt='3'>
         <Header />
       </Box>
@@ -180,19 +99,17 @@ export default function ProfilePage() {
             <Heading weight='regular' size='4'>
               {t(LOCAL_TEXT.WHAT_MEMO_FACTORY)}
             </Heading>
-            <Flex direction="column" gap='2'>
-            <VideoCard
-              videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'}
-              thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'}
-              altText='Tutorial'
-            />
-            <Box mt="1"></Box>
+            <Flex direction='column' gap='2'>
+              <VideoCard
+                videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'}
+                thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'}
+                altText='Tutorial'
+              />
+              <Box mt='1'></Box>
               <AutotaskCardDefaults
                 markTaskCompleted={markTaskAsCompleted}
                 title={t(LOCAL_TEXT.READ_PITCHDECK)}
-                description={t(
-                  LOCAL_TEXT.WEBURL_TASK_DESCRIPTION
-                )}
+                description={t(LOCAL_TEXT.WEBURL_TASK_DESCRIPTION)}
                 price={'1000'}
                 userId={Number(user?.id)}
                 applied={tasks[12].completed}
@@ -203,9 +120,7 @@ export default function ProfilePage() {
               <AutotaskCardDefaults
                 markTaskCompleted={markTaskAsCompleted}
                 title={t(LOCAL_TEXT.READ_WHITEPAPER)}
-                description={t(
-                  LOCAL_TEXT.WEBURL_TASK_DESCRIPTION
-                )}
+                description={t(LOCAL_TEXT.WEBURL_TASK_DESCRIPTION)}
                 price={'1000'}
                 userId={Number(user?.id)}
                 applied={tasks[13].completed}
@@ -215,91 +130,72 @@ export default function ProfilePage() {
               />
             </Flex>
           </Flex>
-          
 
           <Flex direction='column' gap='3'>
             <Box>
               <Heading weight='regular' size='4'>
                 {t(LOCAL_TEXT.JOIN_OUR_WHITELIST)}
               </Heading>
-              <Text color='gray'>
-              {t(LOCAL_TEXT.WHITELIST_DESCRIPTION)}
-              </Text>
+              <Text color='gray'>{t(LOCAL_TEXT.WHITELIST_DESCRIPTION)}</Text>
             </Box>
 
+            <div>
+              <Swiper
+                modules={[Autoplay]}
+                autoplay={{ delay: 3000 }}
+                onSwiper={(swiper: SwiperClass) => setSwiperInstance(swiper)}
+                onSlideChange={(swiper: SwiperClass) => setIndexSlideshow(swiper.activeIndex)}
+              >
+                {nfts.map((nft, index) => (
+                  <SwiperSlide key={index}>
+                    <NftCardItem
+                      style={{ marginRight: '5px', marginLeft: '5px' }}
+                      wallet={wallet}
+                      tonConnectUI={tonConnectUI}
+                      handleBuy={handleBuy}
+                      nft={nft}
+                    />
+                  </SwiperSlide>
+                ))}
+                <SwiperSlide>
+                  <NftCardItem
+                    wallet={wallet}
+                    nft={cyberNft}
+                    tonConnectUI={tonConnectUI}
+                    handleBuy={handleBuy}
+                  />
+                </SwiperSlide>
+              </Swiper>
+            </div>
 
-              <div>
-                <Swiper
-                  modules={[Autoplay]}
-                  autoplay={{ delay: 3000 }}
-                  onSwiper={(swiper: SwiperClass) => setSwiperInstance(swiper)}
-                  onSlideChange={(swiper: SwiperClass) => setIndexSlideshow(swiper.activeIndex)}
+            <div className='slideshowDots'>
+              {nfts.map((nft, idx) => (
+                <div
+                  key={idx}
+                  className={`slideshowDot${indexSlideshow === idx ? ' active' : ''}`}
+                  onClick={() => {
+                    handlePaginationClick(idx);
+                  }}
+                  style={{
+                    padding: '6px 2px',
+                  }}
                 >
-                  {nfts.map((nft, index) => (
-                    <SwiperSlide>
-                      <NftCardItem
-                        style={{marginRight: '5px', marginLeft: '5px'}}
-                        wallet={{
-                          isWallet: tonConnectUI.connected,
-                          onConnect: () => {
-                            tonConnectUI.modal.open()
-                          }
-                        }} nft={nft} handleBuy={() => {
-                        if (walletAddress) {
-                          showSuccessMessage(t(LOCAL_TEXT.NTF_BOUGHT_SUCCESSFULLY));
-                        }
-                        else {
-                          tonConnectUI.modal.open()
-                        }
-                      }} key={index} /></SwiperSlide>
-                  ))}
-                  <SwiperSlide>
-                    <NftCardItem wallet={{
-                      isWallet: tonConnectUI.connected,
-                      onConnect: () => {
-                        tonConnectUI.modal.open()
-                      }
-                    }}
-                                 nft={cyberNft} handleBuy={() => {
-                      if (walletAddress) {
-                        showSuccessMessage(t(LOCAL_TEXT.NTF_BOUGHT_SUCCESSFULLY));
-                      }
-                      else {
-                        tonConnectUI.modal.open()
-                      }
-                    }}/>
-                    </SwiperSlide>
-                </Swiper>
-              </div>
-
-                <div className="slideshowDots">
-                  {nfts.map((nft, idx) => (
-                    <div
-                      key={idx}
-                      className={`slideshowDot${indexSlideshow === idx ? " active" : ""}`}
-                      onClick={() => {
-                        handlePaginationClick(idx);
-                      }}
-                      style={{
-                        padding: '6px 2px',
-                      }}
-                    >
-                      <Text>{t(nft.name)}</Text>
-                    </div>
-                  ))}
-                  <div
-                    className={`slideshowDot${indexSlideshow === 4 ? " active" : ""}`}
-                    onClick={() => {
-                      handlePaginationClick(4);
-                    }}
-                    style={{
-                      padding: '6px 2px',
-                    }}
-                  >
-                    <Text>{t(cyberNft.name)}</Text>
-                    </div>
+                  <Text>{t(nft.name)}</Text>
                 </div>
-            </Flex>
+              ))}
+              <div
+                className={`slideshowDot${indexSlideshow === 4 ? ' active' : ''}`}
+                onClick={() => {
+                  handlePaginationClick(4);
+                }}
+                style={{
+                  padding: '6px 2px',
+                }}
+              >
+                <Text>{t(cyberNft.name)}</Text>
+              </div>
+            </div>
+          </Flex>
 
           <Flex justify='center' align='center' gap='2' direction='column'>
             <Heading size='3'>{t(LOCAL_TEXT.OTHER_WAYS_INCREASE_AIRDROP_CHANCE)}</Heading>

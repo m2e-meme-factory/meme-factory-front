@@ -1,29 +1,31 @@
 import { CSSProperties, useState } from 'react';
+import { TonConnectUI, Wallet, WalletInfoWithOpenMethod } from '@tonconnect/ui-react';
 import { Badge, Box, Callout, Flex, Grid, Heading, Text, Theme } from '@radix-ui/themes';
-import YellowBorderButton from '../../shared/components/Buttons/YellowBorderButton';
 import { Sheet } from 'react-modal-sheet';
+import { useTranslation } from 'react-i18next';
+
+import { NftCard } from './NftCard';
+
+import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
 import { ResponsibleImage } from '@shared/components/ResponsibleImage';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
-import { NftCard } from './NftCard';
-import { useTranslation } from 'react-i18next';
 import { LOCAL_TEXT } from '@shared/consts';
 
 function numberWithSpaces(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 export const NftCardItem = ({
-                       nft,
-                       handleBuy,
-                       wallet,
-                       style,
-                     }: {
+  nft,
+  handleBuy,
+  tonConnectUI,
+  wallet,
+  style,
+}: {
   nft: any;
-  handleBuy: () => void;
-  wallet: {
-    isWallet: boolean;
-    onConnect: () => void;
-  };
+  tonConnectUI: TonConnectUI;
+  handleBuy: (value: number) => void;
+  wallet: Wallet | (Wallet & WalletInfoWithOpenMethod) | null;
   style?: CSSProperties;
 }) => {
   const { t } = useTranslation();
@@ -37,9 +39,9 @@ export const NftCardItem = ({
     setModalVisible(true);
   };
 
-  const handleVerify = () => {
+  const handleVerify = (value: number) => {
     handleDialogClose();
-    handleBuy();
+    handleBuy(value);
   };
 
   return (
@@ -121,21 +123,25 @@ export const NftCardItem = ({
                     </Callout.Root>
                   </Grid>
 
-                  {wallet.isWallet ? (
+                  {wallet ? (
+                    <GlowingButton
+                      size='4'
+                      onClick={() => handleVerify(nft.amount)}
+                      style={{ width: '100%' }}
+                    >
+                      {t(LOCAL_TEXT.PAY)} {nft.amount} USDT
+                    </GlowingButton>
+                  ) : (
                     <GlowingButton
                       size='4'
                       onClick={() => {
                         handleDialogClose();
                         console.log(isModalVisible);
-                        wallet.onConnect();
+                        tonConnectUI.openModal();
                       }}
                       style={{ width: '100%' }}
                     >
                       {t(LOCAL_TEXT.CONNECT_WALLET)}
-                    </GlowingButton>
-                  ) : (
-                    <GlowingButton size='4' onClick={handleVerify} style={{ width: '100%' }}>
-                      {t(LOCAL_TEXT.PAY)} {nft.amount} USDT
                     </GlowingButton>
                   )}
                 </Grid>

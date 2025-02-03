@@ -155,6 +155,7 @@ export default function ProfilePage() {
                       tonConnectUI={tonConnectUI}
                       handleBuy={handleBuy}
                       nft={nft}
+                      index={index}
                     />
                   </SwiperSlide>
                 ))}
@@ -164,6 +165,7 @@ export default function ProfilePage() {
                     nft={cyberNft}
                     tonConnectUI={tonConnectUI}
                     handleBuy={handleBuy}
+                    index={4}
                   />
                 </SwiperSlide>
               </Swiper>

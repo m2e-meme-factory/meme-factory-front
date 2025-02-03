@@ -67,10 +67,11 @@ export default function ProfilePage() {
     }
   }, [userDataResponse]);
 
-  const handleBuy = (value: number) => {
+  const handleBuy = (value: number, planSeqno: number) => {
     if (wallet?.account.address) {
       functions.mintJettons({
         jettonsAmountToMint: value,
+        planSeqno: planSeqno,
       });
     }
   };

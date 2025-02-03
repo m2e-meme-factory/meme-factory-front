@@ -24,7 +24,7 @@ export const NftCardItem = ({
 }: {
   nft: any;
   tonConnectUI: TonConnectUI;
-  handleBuy: (value: number) => void;
+  handleBuy: (value: number, planSeqno: number) => void;
   wallet: Wallet | (Wallet & WalletInfoWithOpenMethod) | null;
   style?: CSSProperties;
 }) => {
@@ -39,9 +39,9 @@ export const NftCardItem = ({
     setModalVisible(true);
   };
 
-  const handleVerify = (value: number) => {
+  const handleVerify = (value: number, planSeqno: number) => {
     handleDialogClose();
-    handleBuy(value);
+    handleBuy(value, planSeqno);
   };
 
   return (
@@ -126,7 +126,7 @@ export const NftCardItem = ({
                   {wallet ? (
                     <GlowingButton
                       size='4'
-                      onClick={() => handleVerify(nft.amount)}
+                      onClick={() => handleVerify(nft.amount, 0)}
                       style={{ width: '100%' }}
                     >
                       {t(LOCAL_TEXT.PAY)} {nft.amount} USDT

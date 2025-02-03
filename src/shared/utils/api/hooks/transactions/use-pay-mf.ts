@@ -4,10 +4,11 @@ import {
   useTonConnectUI,
   useTonWallet,
 } from '@tonconnect/ui-react';
-import { Address, beginCell, Cell } from 'ton-core';
+import { Address, beginCell, Cell, toNano } from 'ton-core';
 import { useTranslation } from 'react-i18next';
 
 import { getJettonWalletAddress, getJettonBalance } from '../../tonapi';
+import { storeBuyTokens, storeTokenTransfer } from './tact_PresaleMaster';
 
 import { showErrorMessage, showSuccessMessage } from '@shared/utils/helpers/notify';
 import { getBalanceJettonAddress } from '@shared/utils/helpers/get-balance-jetton-address';
@@ -16,6 +17,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 
 interface PayCheckParams {
   jettonsAmountToMint: number;
+  planSeqno: number;
 }
 
 export const usePayMF = () => {
@@ -23,20 +25,38 @@ export const usePayMF = () => {
   const [tonConnectUI] = useTonConnectUI();
   const wallet = useTonWallet();
 
+  const forwardPayload = (planSeqno: number, sender: Address) => {
+    return beginCell()
+      .store(
+        storeBuyTokens({
+          $$type: 'BuyTokens',
+          plan_seqno: BigInt(planSeqno),
+          receiver: sender,
+        })
+      )
+      .endCell()
+      .asSlice();
+  };
+
   const createPayload = (
     contractAddress: Address,
     sender: Address,
-    jettonsAmountToMint: number
+    jettonsAmountToMint: number,
+    planSeqno: number
   ) => {
     const payload: Cell = beginCell()
-      .storeUint(0x0f8a7ea5, 32) // op
-      .storeUint(0, 64) // query_id
-      .storeCoins(jettonsAmountToMint * 1000000)
-      .storeAddress(contractAddress)
-      .storeAddress(sender)
-      .storeBit(0)
-      .storeCoins(1)
-      .storeBit(0)
+      .store(
+        storeTokenTransfer({
+          $$type: 'TokenTransfer',
+          query_id: BigInt(0),
+          amount: BigInt(jettonsAmountToMint * 1000000),
+          sender: contractAddress,
+          response_destination: sender,
+          custom_payload: null,
+          forward_payload: forwardPayload(planSeqno, sender),
+          forward_ton_amount: toNano('0.1'),
+        })
+      )
       .endCell();
     return payload.toBoc().toString('base64');
   };
@@ -45,7 +65,8 @@ export const usePayMF = () => {
     contractAddress: string,
     senderAddress: string,
     jettonMinterAddress: string,
-    jettonsAmountToMint: number
+    jettonsAmountToMint: number,
+    planSeqno: number
   ) => {
     const contract: Address = Address.parseFriendly(contractAddress).address;
     const sender: Address = Address.parseFriendly(senderAddress).address;
@@ -58,12 +79,12 @@ export const usePayMF = () => {
 
     return {
       address: walletAddress as string,
-      amount: '50000000',
-      payload: createPayload(contract, sender, jettonsAmountToMint),
+      amount: '150000000',
+      payload: createPayload(contract, sender, jettonsAmountToMint, planSeqno),
     };
   };
 
-  const mintJettons = async ({ jettonsAmountToMint }: PayCheckParams) => {
+  const mintJettons = async ({ jettonsAmountToMint, planSeqno }: PayCheckParams) => {
     const senderAddress = wallet?.account.address;
     const jettonMinterAddress = env.minterUSDT;
     const contractAddress = env.minterContract;
@@ -87,7 +108,8 @@ export const usePayMF = () => {
             contractAddress,
             toUserFriendlyAddress(senderAddress),
             jettonMinterAddress,
-            jettonsAmountToMint
+            jettonsAmountToMint,
+            planSeqno
           );
 
           const secondsInMinute = 60;

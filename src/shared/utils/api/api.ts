@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { BASE_URL } from '../../consts/baseURL';
+import { env } from '@shared/consts/env';
+
+console.log('env.baseUrl', env.baseUrl);
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: env.baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },

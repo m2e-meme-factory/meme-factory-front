@@ -1,54 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Badge,
-  Button,
-  Flex,
-  Heading,
-  Text,
-  Dialog,
-  TextArea,
-  Separator,
-  Box,
-  Theme,
-  IconButton,
-  Callout,
-  ScrollArea,
-} from '@radix-ui/themes';
-import { UnorderedListOutlined } from '@ant-design/icons';
-import styles from './ProjectPage.module.css';
-import TaskDescriptionDisplay from './components/Description/DescriptionSection';
-import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
+import { useCallback, useEffect, useState } from 'react';
+import { Button } from '@radix-ui/themes';
+
+import { useGetProject } from '@shared/utils/api/hooks/project/useGetProject';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../shared/utils/redux/store';
-import Loading from '../../shared/components/Loading';
-import { setProject } from '../../shared/utils/redux/project/projectSlice';
+import { RootState } from '@shared/utils/redux/store';
+import Loading from '@shared/components/Loading';
+import { setProject } from '@shared/utils/redux/project/projectSlice';
 import { Project, ProjectProgress } from 'api';
-import { useApplyForProject } from '../../shared/utils/api/hooks/project/useApplyForProject';
-import { useGetProgress } from '../../shared/utils/api/hooks/project/useGetProjectProgress';
-import fallbackBanner from './../../shared/imgs/fallbackBanner.png';
-import { showErrorMessage } from '../../shared/utils/helpers/notify';
-import { Role } from '../../shared/consts/userRoles';
-import { shortenString } from '../../shared/utils/helpers/shortenString';
-import { BASE_URL } from '../../shared/consts/baseURL';
-import GlowingButton, { AccentButton } from '../../shared/components/Buttons/GlowingButton';
-import SheetSubtaskCard from './components/SubtaskCard/SheetSubtaskCard';
+
+import { useGetProgress } from '@shared/utils/api/hooks/project/useGetProjectProgress';
+
+import { Role } from '@shared/consts/userRoles';
+
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { DrawingPinIcon, InfoCircledIcon, Pencil2Icon } from '@radix-ui/react-icons';
-import { Sheet } from 'react-modal-sheet';
-import styled from 'styled-components';
-import AttachmentCard from './components/AttachmentCard/AttachmentCard';
-import QuestGuide from './components/QuestGuide/QuestGuide';
-import FileSection from './components/FileSection/FileSection';
-import ShibaAnimated from '../../shared/components/LottieIcons/Shiba/Shiba';
-import Lottie from 'lottie-react';
-import shiba from "../../shared/components/LottieIcons/Shiba/shiba.json";
-import PreProjectPage, { getSeenProjectGuide, setSeenProjectGuide } from './PreProjectPage';
+import { InfoCircledIcon, Pencil2Icon } from '@radix-ui/react-icons';
+
+import PreProjectPage, { getSeenProjectGuide } from './PreProjectPage';
 import ProjectOverivew from './ProjectOverivew';
 import ProjectTasks from './ProjectTasks';
-import SwipableTabs from '../../shared/components/useSwipableTabs';
-import useSwipableTabs from '../../shared/components/useSwipableTabs';
-import { GuideList } from './components/QuestGuide/GuideList';
+import SwipableTabs from '@shared/components/useSwipableTabs';
+
 import ProjectHistory from '../ProjectHistory/ProjectHistory';
 
 export type UserRoleInProject =
@@ -58,27 +30,18 @@ export type UserRoleInProject =
   | 'projectMember'
   | 'unconfirmedMember';
 
-const FixedHelpButton = styled(IconButton)`
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-`;
-
-
 const ProjectPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
 
   const [searchParams] = useSearchParams();
-  const defaultTab = searchParams.get('tab') || "";
+  const defaultTab = searchParams.get('tab') || '';
 
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<UserRoleInProject>('guestCreator');
   const [progress, setProgress] = useState<ProjectProgress>();
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isShowGuide, setShowGuide] = useState(true);
+
   const [tabIndex, setTabIndex] = useState(0);
 
   const webapp = useWebApp();
@@ -107,21 +70,19 @@ const ProjectPage = () => {
     userId: user?.id,
   });
 
-
   useEffect(() => {
     const seen = getSeenProjectGuide(id?.toString() ?? '');
-    setShowGuide(!seen);
 
-    if (defaultTab == "guide") return setTabIndex(0);
-    if (defaultTab == "overview") return setTabIndex(1);
-    if (defaultTab == "tasks") return setTabIndex(2);
-    if (defaultTab == "history") return setTabIndex(3);
+    if (defaultTab == 'guide') return setTabIndex(0);
+    if (defaultTab == 'overview') return setTabIndex(1);
+    if (defaultTab == 'tasks') return setTabIndex(2);
+    if (defaultTab == 'history') return setTabIndex(3);
 
     if (currentUserRole === 'projectOwner') return setTabIndex(1);
     if (currentUserRole === 'projectMember') return setTabIndex(2);
 
     if (seen) setTabIndex(1);
-  }, [currentUserRole])
+  }, [currentUserRole]);
 
   useEffect(() => {
     if (projectInfoResponse) {
@@ -131,13 +92,10 @@ const ProjectPage = () => {
   }, [projectInfoResponse, dispatch]);
 
   useEffect(() => {
-    console.log("progressesResponse: ", progressesResponse);
     if (progressesResponse && progressesResponse.data.length === 1) {
-
-
       const userProgress = progressesResponse.data[0];
       setProgress(userProgress);
-      console.log("userProgress: ", userProgress);
+
       if (userProgress) {
         setCurrentUserRoleFromProgress(userProgress.status);
       }
@@ -149,7 +107,6 @@ const ProjectPage = () => {
       determineUserRole(user, currentProject);
     }
   }, [user, currentProject]);
-
 
   const determineUserRole = (user: RootState['user']['user'] | undefined, project: Project) => {
     if (!user) return;
@@ -185,78 +142,76 @@ const ProjectPage = () => {
       <SwipableTabs
         tabs={[
           {
-            name: (<InfoCircledIcon color="var(--accent-indicator)" width="1.25rem" height="auto" />),
+            name: <InfoCircledIcon color='var(--accent-indicator)' width='1.25rem' height='auto' />,
             scrollable: false,
-            slideClass: "screen-without-tabs",
+            slideClass: 'screen-without-tabs',
             component: (
-              <PreProjectPage projectId={currentProject?.project.id || ""} btnClickHandler={() => {
-                setShowGuide(false);
-                setTabIndex(1);
-              }} />
-            )
+              <PreProjectPage
+                projectId={currentProject?.project.id || ''}
+                btnClickHandler={() => {
+                  setTabIndex(1);
+                }}
+              />
+            ),
           },
           {
             name: 'Overview',
             scrollable: true,
-            slideClass: "screen-without-tabs",
+            slideClass: 'screen-without-tabs',
             component: (
               <ProjectOverivew
                 progress={progress}
                 currentProject={currentProject}
                 setCurrentUserRole={setCurrentUserRole}
-                btnClickHandler={() => { }}
+                btnClickHandler={() => {}}
               />
             ),
           },
           {
-            name: "Tasks",
+            name: 'Tasks',
             scrollable: true,
-            component: <ProjectTasks
-              currentProject={currentProject}
-              currentUserRole={currentUserRole}
-              progress={progress}
-            />,
+            component: (
+              <ProjectTasks
+                currentProject={currentProject}
+                currentUserRole={currentUserRole}
+                progress={progress}
+              />
+            ),
           },
           {
-            name: "History",
+            name: 'History',
             scrollable: false,
-            slideClass: "screen-without-tabs",
-            component: (currentProject) ? (
+            slideClass: 'screen-without-tabs',
+            component: currentProject ? (
               <ProjectHistory currentProject={currentProject} user={user} />
             ) : (
               <Loading />
-            )
+            ),
           },
-          ...(
-            currentUserRole == 'projectOwner' ?
-            [
-              {
-                name: (
-                    <Pencil2Icon 
-                      color="var(--accent-indicator)" 
-                      width="1.25rem" 
-                      height="auto"
-                      onClick={() => navigate('details')} 
+          ...(currentUserRole == 'projectOwner'
+            ? [
+                {
+                  name: (
+                    <Pencil2Icon
+                      color='var(--accent-indicator)'
+                      width='1.25rem'
+                      height='auto'
+                      onClick={() => navigate('details')}
                     />
-                ),
-                scrollable: false,
-                slideClass: "screen-without-tabs",
-                component: (
-                  <></>
-                )
-              }
-            ] : []
-          )
-        ]
-
-        }
+                  ),
+                  scrollable: false,
+                  slideClass: 'screen-without-tabs',
+                  component: <></>,
+                },
+              ]
+            : []),
+        ]}
         currentTabIndex={tabIndex}
-        justifyTabs="center"
+        justifyTabs='center'
       />
       <Button />
     </>
   );
 };
-
 
 export default ProjectPage;

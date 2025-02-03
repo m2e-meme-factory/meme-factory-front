@@ -1,17 +1,18 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Text, Card, Flex, Heading, Box } from '@radix-ui/themes';
-import CardBanner from '../../../PublicProjectsPage/components/CardBanner/CardBanner';
+
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../shared/utils/redux/store';
-import { Role } from '../../../../shared/consts/userRoles';
-import { useGetProjectFreelancers } from '../../../../shared/utils/api/hooks/project/useGetProjectFreelancers';
-import { ProjectStatus } from '../../../../shared/consts/project-statuses';
-import { shortenString } from '../../../../shared/utils/helpers/shortenString';
+import { RootState } from '@shared/utils/redux/store';
+import { Role } from '@shared/consts/userRoles';
+import { useGetProjectFreelancers } from '@shared/utils/api/hooks/project/useGetProjectFreelancers';
+import { ProjectStatus } from '@shared/consts/project-statuses';
+import { shortenString } from '@shared/utils/helpers/shortenString';
 import styles from './BannerSection.module.css';
-import { BASE_URL } from '../../../../shared/consts/baseURL';
-import fallbackBanner from '../../../../shared/imgs/fallbackBanner.png';
+
+import fallbackBanner from '@shared/imgs/fallbackBanner.png';
+import { env } from '@shared/consts/env';
 
 interface MyProjectCardProps {
   id: string;
@@ -55,7 +56,7 @@ const MyProjectCard: FC<MyProjectCardProps> = ({ id, title, category, bannerUrl,
       <Flex direction='column'>
         <Flex className={styles.bannerContainer}>
           <img
-            src={bannerUrl ? `${BASE_URL}${bannerUrl}` : fallbackBanner}
+            src={bannerUrl ? `${env.baseUrl}${bannerUrl}` : fallbackBanner}
             className={styles.bannerImage}
             alt={' '}
           />

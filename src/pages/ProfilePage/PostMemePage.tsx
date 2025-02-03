@@ -511,7 +511,10 @@ export default function PostMemePage() {
           <NftCard
             onClick={handleDialogOpen}
             glowing={false}
-            style={{ background: '#1c1c1e url(imgs/earn.svg) no-repeat top right', minHeight: '14vh' }}
+            style={{
+              background: '#1c1c1e url(imgs/earn.svg) no-repeat top right',
+              minHeight: '14vh',
+            }}
           >
             <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Flex direction='row' gap='4'>
@@ -578,7 +581,17 @@ export default function PostMemePage() {
                                   alignItems: 'center',
                                 }}
                               >
-                                <Text size='4' weight='regular' style={{ fontFamily: 'ME' }}>
+                                <Text
+                                  size='4'
+                                  weight='regular'
+                                  style={{
+                                    fontFamily: 'ME',
+                                    display: 'flex',
+                                    minWidth: '36px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
                                   1
                                 </Text>
                               </Box>
@@ -609,7 +622,17 @@ export default function PostMemePage() {
                                   alignItems: 'center',
                                 }}
                               >
-                                <Text size='4' weight='regular' style={{ fontFamily: 'ME' }}>
+                                <Text
+                                  size='4'
+                                  weight='regular'
+                                  style={{
+                                    fontFamily: 'ME',
+                                    display: 'flex',
+                                    minWidth: '36px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
                                   2
                                 </Text>
                               </Box>
@@ -641,7 +664,17 @@ export default function PostMemePage() {
                                   alignItems: 'center',
                                 }}
                               >
-                                <Text size='4' weight='regular' style={{ fontFamily: 'ME' }}>
+                                <Text
+                                  size='4'
+                                  weight='regular'
+                                  style={{
+                                    fontFamily: 'ME',
+                                    display: 'flex',
+                                    minWidth: '36px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
                                   3
                                 </Text>
                               </Box>

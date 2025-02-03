@@ -1,10 +1,11 @@
 import { Card, Flex, IconButton, Text } from '@radix-ui/themes';
 import { FileOutlined } from '@ant-design/icons';
 import { FC } from 'react';
-import { processFileName } from '../../../../shared/utils/helpers/processFilename';
+import { processFileName } from '@shared/utils/helpers/processFilename';
 import { DownloadIcon } from '@radix-ui/react-icons';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { BASE_URL } from '../../../../shared/consts/baseURL';
+
+import { env } from '@shared/consts/env';
 
 interface AttachmentCardProps {
   name: string;
@@ -12,7 +13,7 @@ interface AttachmentCardProps {
 
 const AttachmentCard: FC<AttachmentCardProps> = ({ name }) => {
   const { fileName, fileExtension } = processFileName(name);
-  const downloadUrl = BASE_URL + '/uploads/projects/' + name;
+  const downloadUrl = env.baseUrl + '/uploads/projects/' + name;
   const WebApp = useWebApp();
 
   const handleDownloadClick = () => {

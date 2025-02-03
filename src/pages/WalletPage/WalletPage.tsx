@@ -85,7 +85,6 @@ export default function WalletPage() {
                 <Heading align='center' style={{ fontSize: '23px' }}>
                   {t(LOCAL_TEXT.CONNECT_WALLET)}
                 </Heading>
-                <Text style={{ fontSize: '16px' }}>{t(LOCAL_TEXT.TEXT_INFO)}</Text>
               </Flex>
             </Box>
           </Flex>

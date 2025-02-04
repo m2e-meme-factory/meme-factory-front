@@ -46,8 +46,6 @@ export const NftCardItem = ({
     handleBuy(value, planSeqno);
   };
 
-  console.log(index);
-
   return (
     <>
       <NftCard

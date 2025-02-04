@@ -33,9 +33,23 @@ const useAutoTasks = () => {
       // Загрузка состояния задач из localStorage при монтировании компонента
       useEffect(() => {
         const savedTasks = localStorage.getItem('tasks');
-        if (savedTasks && savedTasks?.length > 0) {
-          setTasks(JSON.parse(savedTasks));
+        if (savedTasks && savedTasks.length > 0) {
+          const parsedSavedTasks: Task[] = JSON.parse(savedTasks);
+          const savedCategories = new Set(parsedSavedTasks.map(t => t.category));
+          
+          // Добавляем задачи из baseTasks, которых нет в сохраненных
+          const missingBaseTasks = baseTasks.filter(t => !savedCategories.has(t.category));
+          let mergedTasks: Task[] = [...parsedSavedTasks, ...missingBaseTasks];
+          
+          // Проверяем наличие задачи 'wallet'
+          const hasWallet = parsedSavedTasks.some(t => t.category === 'wallet');
+          if (!hasWallet) {
+            mergedTasks = [{ category: 'wallet', completed: tonConnectUI.connected }, ...mergedTasks];
+          }
+          
+          setTasks(mergedTasks);
         } else {
+          // Инициализируем с базовыми задачами и 'wallet'
           setTasks([
             { category: 'wallet', completed: tonConnectUI.connected },
             ...baseTasks

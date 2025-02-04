@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 import { RootState } from '@shared/utils/redux/store';
+import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
 import { getLocalStorage, setLocalStorage } from '@shared/utils/helpers/local-storage';
+
 import { LOCAL_STORAGE_CONSTANTS } from '@shared/consts/local-storage-constants';
 
 function numberWithSpaces(x: number) {
@@ -53,7 +55,10 @@ export const Header = () => {
         size='2'
       >
         <Select.Trigger variant='soft' color='bronze' radius='full' />
-        <Select.Content color='gray'>
+        <Select.Content
+          color='gray'
+          style={isMobileDevice() ? { position: 'fixed', top: '10vh', zIndex: '1000' } : {}}
+        >
           <Select.Item value='en'>EN</Select.Item>
           <Select.Item value='ru'>RU</Select.Item>
         </Select.Content>

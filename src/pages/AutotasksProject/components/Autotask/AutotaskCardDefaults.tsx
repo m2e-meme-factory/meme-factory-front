@@ -15,6 +15,7 @@ import { getAutotaskDefautsApplications } from '@shared/utils/api/requests/autot
 import { applyForAutotaskDefaultsCompletion } from '@shared/utils/api/requests/autotask/applyForAutotaskDefaultsCompletion';
 import { claimAutotaskDefaultsReward } from '@shared/utils/api/requests/autotask/claimAutotaskDefaultsReward';
 import { formatNumberWithSpaces } from '@shared/utils/helpers/formatNumbers';
+import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
 import { AccentButton } from '@shared/components/Buttons/GlowingButton';
 import { LOCAL_TEXT } from '@shared/consts';
 
@@ -163,7 +164,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   markTaskCompleted,
   webUrl,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   //   //State of autotask
   type ApplicationStatus = LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED;
   const [isApplied, setIsApplied] = useState(applied);
@@ -173,6 +174,8 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   );
 
   const [isIPhone, setIsIPhone] = useState(false);
+  const isRu = i18n.language === 'ru';
+  const isMobile = isMobileDevice();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -333,7 +336,16 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
           </Box>
 
           <Flex direction='column' ml='4'>
-            <Text size='4' weight='bold' style={{ userSelect: 'text', textTransform: 'uppercase' }}>
+            <Text
+              size='4'
+              weight='bold'
+              style={{
+                userSelect: 'text',
+                textTransform: 'uppercase',
+                overflowWrap: 'break-word',
+                wordBreak: 'normal',
+              }}
+            >
               {title}
             </Text>
             <Text weight='regular' size='3' color='gray'>
@@ -371,7 +383,23 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                     <img width={'40%'} src={`${process.env.PUBLIC_URL}/imgs/hands_v2.png`} alt='' />
                   </Flex>
                   <Flex mb='5' mt='4' direction={'column'} gap='2'>
-                    <Heading align='center' style={{ userSelect: 'text' }}>
+                    <Heading
+                      align='center'
+                      style={
+                        isRu && isMobile
+                          ? {
+                              userSelect: 'text',
+                              overflowWrap: 'break-word',
+                              wordBreak: 'normal',
+                              fontSize: '22px',
+                            }
+                          : {
+                              userSelect: 'text',
+                              overflowWrap: 'break-word',
+                              wordBreak: 'normal',
+                            }
+                      }
+                    >
                       {title}
                     </Heading>
                     <Text align='center' color='gray'>

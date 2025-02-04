@@ -596,7 +596,7 @@ export default function PostMemePage() {
                                 </Text>
                               </Box>
                               <Box>
-                                <Heading size='1' weight='regular' style={{ lineHeight: '1.1' }}>
+                                <Heading size='1' weight='regular' style={{ lineHeight: '1.2' }}>
                                   {t(LOCAL_TEXT.POST_MEME)}
                                 </Heading>
                                 <Box>
@@ -637,7 +637,7 @@ export default function PostMemePage() {
                                 </Text>
                               </Box>
                               <Box>
-                                <Heading size='1' weight='regular' style={{ lineHeight: '1.1' }}>
+                                <Heading size='1' weight='regular' style={{ lineHeight: '1.2' }}>
                                   {t(LOCAL_TEXT.YOUR_MEME_GETS_VIEWS)}
                                 </Heading>
                                 <Box>
@@ -680,7 +680,7 @@ export default function PostMemePage() {
                               </Box>
                               <Flex justify='between' width='100%' align='center'>
                                 <Box>
-                                  <Heading size='1' weight='regular' style={{ lineHeight: '1.1' }}>
+                                  <Heading size='1' weight='regular' style={{ lineHeight: '1.2' }}>
                                     {t(LOCAL_TEXT.SEND_LINK_MODERATION)}
                                   </Heading>
                                   <Box style={{ lineHeight: '1.1' }}>

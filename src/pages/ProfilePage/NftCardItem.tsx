@@ -80,7 +80,7 @@ export const NftCardItem = ({
               style={{ fontSize: '11px', lineHeight: '145%', letterSpacing: '0.03em' }}
               weight='regular'
             >
-              {numberWithSpaces(nft.amount)} USDT = {numberWithSpaces(nft.amount)} MF
+              {numberWithSpaces(nft.amount)} USDT = {numberWithSpaces(nft.amount)} M2E
             </Text>
           </Box>
           <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px' }}>

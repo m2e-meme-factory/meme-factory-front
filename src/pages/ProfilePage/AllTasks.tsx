@@ -7,26 +7,27 @@ import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useTranslation } from 'react-i18next';
 
 import AutotaskCardDefaults from '../AutotasksProject/components/Autotask/AutotaskCardDefaults';
+import useAutoTasks from './useAutoTasks';
 
 import { Header } from '@widgets/header';
 
 import { useAuthMe } from '@shared/utils/api/hooks/auth/useAuthMe';
 import { setUser } from '@shared/utils/redux/user/userSlice';
-import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import { RootState } from '@shared/utils/redux/store';
 import { useGetRefData } from '@shared/utils/api/hooks/user/useGetRefData';
-import CoinbagAnimated from '@shared/components/LottieIcons/Coinbag/CoinbagAnimated';
-import yeyEmoji from '@shared/imgs/yey.png';
-import { ROUTES } from '@shared/consts/routes';
-import { SolidCard } from '@shared/components/Card/SolidCard';
-import BorderButton from '@shared/components/Buttons/BorderButton';
-import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
-import { LOCAL_TEXT } from '@shared/consts';
 import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
 
-import styled from 'styled-components';
+import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
+import { SolidCard } from '@shared/components/Card/SolidCard';
+import BorderButton from '@shared/components/Buttons/BorderButton';
+import GlowingButton from '@shared/components/Buttons/GlowingButton';
+import CoinbagAnimated from '@shared/components/LottieIcons/Coinbag/CoinbagAnimated';
 
-import useAutoTasks from './useAutoTasks';
+import { ROUTES } from '@shared/consts/routes';
+import { LOCAL_TEXT } from '@shared/consts';
+
+import yeyEmoji from '@shared/imgs/yey.png';
+import styled from 'styled-components';
 
 const NftCard = styled(SolidCard)<{ glowing: boolean }>`
   min-height: 25vh;
@@ -357,9 +358,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.FOLLOW_X)}
-                      description={
-                        'Stay updated with the latest news and updates by following Meme Factory on X.'
-                      }
+                      description={t(LOCAL_TEXT.STAY_UPDATED_NEWS_ON_X)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[5].completed}
@@ -371,9 +370,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.JOIN_TELEGRAM)}
-                      description={
-                        'Become a part of the Meme Factory community by joining our Telegram channel.'
-                      }
+                      description={t(LOCAL_TEXT.BECOME_PART_MEME_FACTORY_TELEGRAM_CHANNEL)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[6].completed}
@@ -385,9 +382,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.SUBSCRIBE_YOUTUBE)}
-                      description={
-                        'Subscribe to our YouTube channel and be a part of our growing audience.'
-                      }
+                      description={t(LOCAL_TEXT.SUBSCRIBE_YOUTUBE_CHANNEL_PART_GROWING_AUDIENCE)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[7].completed}
@@ -399,9 +394,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.SUBSCRIBE_TIKTOK)}
-                      description={
-                        'Subscribe to our TikTok channel and be a part of our growing audience.'
-                      }
+                      description={t(LOCAL_TEXT.SUBSCRIBE_TIKTOK_CHANNEL_PART_GROWING_AUDIENCE)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[8].completed}
@@ -413,7 +406,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.VISIT_REDDIT)}
-                      description={'Show your support by liking our post on Reddit.'}
+                      description={t(LOCAL_TEXT.SHOW_YOUR_SUPPORT_LIKING_POST_REDDIT)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[9].completed}
@@ -425,9 +418,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.JOIN_DISCORD)}
-                      description={
-                        'Become a part of the Meme Factory community by joining our Discord channel.'
-                      }
+                      description={t(LOCAL_TEXT.BECOME_PART_MEME_FACTORY_DISCORD_CHANNEL)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[10].completed}
@@ -451,7 +442,7 @@ export default function AllTasks() {
                     <AutotaskCardDefaults
                       markTaskCompleted={markTaskAsCompleted}
                       title={t(LOCAL_TEXT.VISIT_WEBSITE)}
-                      description={'Get rewarded for simply visiting our website!'}
+                      description={t(LOCAL_TEXT.GET_REWARDED_VISITING_WEBSITE)}
                       price={'100'}
                       userId={Number(user?.id)}
                       applied={tasks[11].completed}

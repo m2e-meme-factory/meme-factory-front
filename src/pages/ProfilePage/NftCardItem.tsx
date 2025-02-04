@@ -57,7 +57,7 @@ export const NftCardItem = ({
         dimonds={nft.name === LOCAL_TEXT.DIAMOND}
         investors={nft.name === LOCAL_TEXT.INVESTOR}
       >
-        <Flex direction='column' minHeight='10vh'>
+        <Flex direction='column' minHeight='10vh' gap={'1'}>
           <Box>
             <Flex gap='3' justify='between' align='center'>
               <Flex gap='1'>

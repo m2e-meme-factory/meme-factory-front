@@ -527,7 +527,7 @@ export default function PostMemePage() {
                   alt=''
                 />
 
-                <Flex direction='column'>
+                <Flex direction='column' mb={'1'}>
                   <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
                     {t(LOCAL_TEXT.GET_REVIEW)}
                   </Heading>

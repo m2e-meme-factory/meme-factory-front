@@ -111,6 +111,7 @@ export default function ProfilePage() {
 
               {AUTO_TASKS_PROFILE.map((task) => (
                 <AutotaskCardDefaults
+                  key={task.title}
                   markTaskCompleted={handleMarkTaskAsCompleted}
                   title={task.title !== '' ? t(task.title) : ''}
                   description={task.description !== '' ? t(task.description) : ''}

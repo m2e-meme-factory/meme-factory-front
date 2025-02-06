@@ -31,13 +31,13 @@ const useAutoTasks = () => {
 
   useEffect(() => {
     const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
-      if (wallet) {
+      if (wallet && mapAutoTasks && !mapAutoTasks?.get(CATEGORY_TASKS.WALLET)?.isClaimed) {
         handleMarkTaskAsCompleted(CATEGORY_TASKS.WALLET);
       }
     });
 
     return () => unsubscribe();
-  }, [handleMarkTaskAsCompleted, tonConnectUI]);
+  }, [handleMarkTaskAsCompleted, tonConnectUI, mapAutoTasks]);
 
   return {
     mapAutoTasks,

@@ -7,13 +7,14 @@ import { login, LoginConfig } from '../../requests/auth/login';
 import { useInitData } from '@vkruglikov/react-telegram-web-app';
 import { useTranslation } from 'react-i18next';
 import { LOCAL_TEXT } from '@shared/consts';
+import { QUERY_KEYS } from '@shared/consts/query-keys';
 
 export const useAuthMe = () => {
   const { t } = useTranslation();
   const [_initDataUnsafe, initData] = useInitData();
 
   const query = useQuery({
-    queryKey: ['me'],
+    queryKey: [QUERY_KEYS.ME],
     queryFn: async () => {
       try {
         return await authMe();

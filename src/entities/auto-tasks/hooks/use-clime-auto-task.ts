@@ -31,6 +31,7 @@ export const useClimeAutoTask = () => {
     onSettled: () => {
       client.resetQueries({ queryKey: [QUERY_KEYS.AUTOTASKS] });
       client.invalidateQueries({ queryKey: [QUERY_KEYS.AUTOTASKS] });
+      client.refetchQueries({ queryKey: [QUERY_KEYS.ME] });
     },
   });
 };

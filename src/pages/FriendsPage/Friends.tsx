@@ -21,6 +21,8 @@ import { CARD_CONSTANT } from './cards-constant';
 
 import { Header } from '@widgets/header';
 
+import { useGetTransactionsSumById } from '@entities/transactions';
+
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import WebappBackButton from '@shared/components/WebappBackButton';
 import HandshakeAnimated from '@shared/components/LottieIcons/Handshake/HandshakeAnimated';
@@ -37,10 +39,14 @@ import { RADIUS_CONSTANT } from '@styles/radius-constant';
 export default function Friends() {
   const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.user);
+
   const { data, isLoading: refLoading } = useGetRefData(user?.telegramId);
+  const { data: transactionsData } = useGetTransactionsSumById(user?.telegramId || '');
+
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
-  const webApp = useWebApp();
   const [copied, setCopied] = useState(false);
+
+  const webApp = useWebApp();
 
   const handleCopyText = (text: string) => {
     const textToCopy = text;
@@ -198,7 +204,7 @@ export default function Friends() {
                   <DataList.Item>
                     <DataList.Label minWidth='50px'>{t(LOCAL_TEXT.TOTAL_COUNT)}</DataList.Label>
                     <Skeleton loading={refLoading}>
-                      <DataList.Value>{refData?.count}</DataList.Value>
+                      <DataList.Value>{refData?.count || 0}</DataList.Value>
                     </Skeleton>
                   </DataList.Item>
                   <DataList.Item>
@@ -207,7 +213,7 @@ export default function Friends() {
                     </DataList.Label>
                     <Skeleton loading={refLoading}>
                       <DataList.Value>
-                        {(refData?.count || 0) * 5000}
+                        {transactionsData?.amount || 0}
                         <Badge color='bronze' ml='2'>
                           XP
                         </Badge>

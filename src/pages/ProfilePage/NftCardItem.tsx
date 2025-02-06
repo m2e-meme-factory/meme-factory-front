@@ -120,7 +120,7 @@ export const NftCardItem = ({
                       <Callout.Text size='4'>
                         {t(LOCAL_TEXT.PRICE_DISCOUNT)}: {nft.discount}%
                         <br />
-                        <Text weight='bold'>M2E/USDT {nft.price}$ </Text>
+                        <Text weight='bold'>M2E/USDT {numberWithSpaces(nft.price)}$ </Text>
                       </Callout.Text>
                     </Callout.Root>
                   </Grid>
@@ -131,7 +131,7 @@ export const NftCardItem = ({
                       onClick={() => handleVerify(nft.amount, index)}
                       style={{ width: '100%' }}
                     >
-                      {t(LOCAL_TEXT.PAY)} {nft.amount} USDT
+                      {t(LOCAL_TEXT.PAY)} {numberWithSpaces(nft.amount)} USDT
                     </GlowingButton>
                   ) : (
                     <GlowingButton

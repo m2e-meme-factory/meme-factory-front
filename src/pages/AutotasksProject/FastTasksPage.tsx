@@ -197,36 +197,39 @@ const FastTasksPage = () => {
                 {t(LOCAL_TEXT.YOU_REWARDED_IMMEDIATELY_WITH_M2E_POINTS_AFTER_EACH_TASK_COMPLETION)}
               </Text>
             </Flex>
-            <Flex justify='center' direction='column' gap='2'>
-              {autotasks?.map((task) => (
-                <AutotaskCard
-                  key={task.id}
-                  id={task.id}
-                  title={task.title}
-                  description={task.description}
-                  price={task.reward}
-                  url={task.url}
-                  userId={Number(user?.id)}
-                  applied={
-                    task.autoTaskApplication &&
-                    task.autoTaskApplication.some(
-                      (application) => application.userId === Number(user?.id)
-                    )
-                  }
-                  claimed={
-                    task.autoTaskApplication &&
-                    task.autoTaskApplication.some(
-                      (application) =>
-                        application.userId === Number(user?.id) && application.isConfirmed
-                    )
-                  }
-                  createdAt={task.createdAt}
-                  icon={getIconByTaskId(task.id)}
-                  category={task.isIntegrated ? 'ref' : 'default'}
-                  refLink={refData?.refLink}
-                />
-              ))}
-            </Flex>
+            {/* <Flex justify='center' direction='column' gap='2'>
+              {autotasks?.map((task) => {
+                console.log('task', task);
+                return (
+                  <AutotaskCard
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    description={task.description}
+                    price={task.reward}
+                    url={task.url}
+                    userId={Number(user?.id)}
+                    applied={
+                      task.autoTaskApplication &&
+                      task.autoTaskApplication.some(
+                        (application) => application.userId === Number(user?.id)
+                      )
+                    }
+                    claimed={
+                      task.autoTaskApplication &&
+                      task.autoTaskApplication.some(
+                        (application) =>
+                          application.userId === Number(user?.id) && application.isConfirmed
+                      )
+                    }
+                    createdAt={task.createdAt}
+                    icon={getIconByTaskId(task.id)}
+                    category={task.isIntegrated ? 'ref' : 'default'}
+                    refLink={refData?.refLink}
+                  />
+                );
+              })}
+            </Flex> */}
           </Flex>
         </Flex>
       </Flex>

@@ -1,0 +1,18 @@
+export const CATEGORY_TASKS = {
+  CHECKIN: 'checkin',
+  FRIEND_INVITE: 'friend-invite',
+  WALLET: 'wallet',
+  WELCOME_BONUS: 'welcome-bonus',
+  SHARE_IN_STORIES: 'shere-in-stories',
+  ACCOUNT_BIO: 'account-bio',
+  WEB_URL: 'web-url',
+  OPEN_X: 'open-x',
+  OPEN_TG: 'open-tg',
+  OPEN_YOUTUBE: 'open-youtube',
+  OPEN_TIKTOK: 'open-tiktok',
+  OPEN_REDDIT: 'open-reddit',
+  OPEN_DISCORD: 'open-discord',
+  OPEN_WHITEPAPER: 'open-whitepaper',
+  OPEN_PITCHDEK: 'open-pitchdek',
+  WATCH_START_VIDEO: 'watch-start-video',
+};

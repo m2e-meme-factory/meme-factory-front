@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import AutotaskCardDefaults from '../AutotasksProject/components/Autotask/AutotaskCardDefaults';
 import useAutoTasks from './useAutoTasks';
+import { AUTO_TASKS } from './constant/auto-tasks';
 
 import { Header } from '@widgets/header';
 
@@ -72,11 +73,13 @@ const ImgWrapper = styled(Flex)<{ opacity: number }>`
 
 export default function AllTasks() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
+
   const { data: refData } = useGetRefData(user?.telegramId);
   const { data: userDataResponse } = useAuthMe();
-  const navigate = useNavigate();
 
   const webapp = useWebApp();
   const isRu = i18n.language === 'ru';
@@ -114,7 +117,7 @@ export default function AllTasks() {
     setModalVisible(true);
   };
 
-  const { tasks, markTaskAsCompleted } = useAutoTasks();
+  const { mapAutoTasks, isLoading: isLoadingAutoTasks, handleMarkTaskAsCompleted } = useAutoTasks();
 
   return (
     <Box height='90vh'>
@@ -296,162 +299,22 @@ export default function AllTasks() {
                 </Text>
               </Flex>
               <Flex justify='center' direction='column' gap='3'>
-                {tasks.length > 0 && (
-                  <>
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.WELCOME_BONUS)}
-                      description={''}
-                      price={'5000'}
-                      userId={Number(user?.id)}
-                      applied={tasks[2].completed}
-                      claimed={tasks[2].completed}
-                      category={'welcome-bonus'}
-                    />
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.CONNECT_WALLET)}
-                      description={t(
-                        LOCAL_TEXT.SECURE_YOUR_ACCOUNT_CONNECTING_YOUR_WALLET_START_EARNING_REWARDS
-                      )}
-                      price={'5000'}
-                      userId={Number(user?.id)}
-                      applied={tasks[0].completed}
-                      claimed={tasks[0].completed}
-                      category={'wallet'}
-                    />
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.DAILY_CHECK_IN)}
-                      description={t(
-                        LOCAL_TEXT.LOG_IN_EVERY_DAY_CLAIM_YOUR_REWARD_AND_KEEP_YOUR_STREAK_ALIVE
-                      )}
-                      price={'1000'}
-                      userId={Number(user?.id)}
-                      applied={tasks[1].completed}
-                      claimed={tasks[1].completed}
-                      category={'checkin'}
-                    />
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      refLink={refData?.refLink}
-                      title={t(LOCAL_TEXT.SHARE_IN_STORIES)}
-                      description={''}
-                      price={'10000'}
-                      userId={Number(user?.id)}
-                      applied={tasks[3].completed}
-                      claimed={tasks[3].completed}
-                      category={'shere-in-stories'}
-                    />
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      refLink={refData?.refLink}
-                      title={t(LOCAL_TEXT.EDIT_ACCOUNT_INFO)}
-                      description={''}
-                      price={'10000'}
-                      userId={Number(user?.id)}
-                      applied={tasks[4].completed}
-                      claimed={tasks[4].completed}
-                      category={'account-bio'}
-                    />
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.FOLLOW_X)}
-                      description={t(LOCAL_TEXT.STAY_UPDATED_NEWS_ON_X)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[5].completed}
-                      claimed={tasks[5].completed}
-                      category={'open-x'}
-                      webUrl='https://twitter.com/m2e_pro'
-                    />
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.JOIN_TELEGRAM)}
-                      description={t(LOCAL_TEXT.BECOME_PART_MEME_FACTORY_TELEGRAM_CHANNEL)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[6].completed}
-                      claimed={tasks[6].completed}
-                      category={'open-tg'}
-                      webUrl='https://t.me/m2e_pro'
-                    />
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.SUBSCRIBE_YOUTUBE)}
-                      description={t(LOCAL_TEXT.SUBSCRIBE_YOUTUBE_CHANNEL_PART_GROWING_AUDIENCE)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[7].completed}
-                      claimed={tasks[7].completed}
-                      category={'open-youtube'}
-                      webUrl='https://www.youtube.com/channel/UCZ94hPs00bBTxWsZjGZp_gQ'
-                    />
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.SUBSCRIBE_TIKTOK)}
-                      description={t(LOCAL_TEXT.SUBSCRIBE_TIKTOK_CHANNEL_PART_GROWING_AUDIENCE)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[8].completed}
-                      claimed={tasks[8].completed}
-                      category={'open-tiktok'}
-                      webUrl='https://www.tiktok.com/@m2e_pro'
-                    />
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.VISIT_REDDIT)}
-                      description={t(LOCAL_TEXT.SHOW_YOUR_SUPPORT_LIKING_POST_REDDIT)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[9].completed}
-                      claimed={tasks[9].completed}
-                      category={'open-reddit'}
-                      webUrl='https://www.reddit.com/user/m2epro/'
-                    />
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.JOIN_DISCORD)}
-                      description={t(LOCAL_TEXT.BECOME_PART_MEME_FACTORY_DISCORD_CHANNEL)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[10].completed}
-                      claimed={tasks[10].completed}
-                      category={'open-discord'}
-                      webUrl='https://discord.com/channels/@me'
-                    />
-
-                    {/* <AutotaskCardDefaults
-    markTaskCompleted={markTaskAsCompleted}
-    title={t(LOCAL_TEXT.FOLLOW_INSTAGRAM)}
-    description={'Follow MemeFactory on Instagram to stay updated with our latest posts, stories, and exclusive content.'}
-    price={'100'}
-    userId={Number(user?.id)}
-    applied={tasks[11].completed}
-    claimed={tasks[11].completed}
-    category={'web-url'}
-    webUrl="https://www.instagram.com/m2e__pro/"
-/> */}
-
-                    <AutotaskCardDefaults
-                      markTaskCompleted={markTaskAsCompleted}
-                      title={t(LOCAL_TEXT.VISIT_WEBSITE)}
-                      description={t(LOCAL_TEXT.GET_REWARDED_VISITING_WEBSITE)}
-                      price={'100'}
-                      userId={Number(user?.id)}
-                      applied={tasks[11].completed}
-                      claimed={tasks[11].completed}
-                      category={'web-url'}
-                      webUrl='https://m2e.pro/'
-                    />
-                  </>
-                )}
+                {AUTO_TASKS.map((task) => (
+                  <AutotaskCardDefaults
+                    key={task.title}
+                    markTaskCompleted={handleMarkTaskAsCompleted}
+                    refLink={refData?.refLink}
+                    title={task.title !== '' ? t(task.title) : ''}
+                    description={task.description !== '' ? t(task.description) : ''}
+                    price={mapAutoTasks?.get(task.category)?.reward || 0}
+                    userId={Number(user?.id)}
+                    applied={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
+                    claimed={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
+                    category={task.category}
+                    webUrl={task.webUrl}
+                    isLoading={isLoadingAutoTasks}
+                  />
+                ))}
               </Flex>
             </Flex>
           </Flex>

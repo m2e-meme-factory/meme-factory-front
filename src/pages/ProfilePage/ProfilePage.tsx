@@ -13,6 +13,7 @@ import { Header } from '@widgets/header';
 
 import ConnectWallet from '../WalletPage/ConnectWallet';
 import useAutoTasks from './useAutoTasks';
+import { AUTO_TASKS_PROFILE } from './constant/auto-tasks-profile';
 
 import { cyberNft, nfts } from '@pages/ProfilePage/ProfilePage.consts';
 import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
@@ -87,7 +88,7 @@ export default function ProfilePage() {
 
   const user = useSelector((state: RootState) => state.user.user);
 
-  const { tasks, markTaskAsCompleted } = useAutoTasks();
+  const { mapAutoTasks, isLoading: isLoadingAutoTasks, handleMarkTaskAsCompleted } = useAutoTasks();
 
   return (
     <Box height='90vh'>
@@ -107,28 +108,21 @@ export default function ProfilePage() {
                 altText='Tutorial'
               />
               <Box mt='1'></Box>
-              <AutotaskCardDefaults
-                markTaskCompleted={markTaskAsCompleted}
-                title={t(LOCAL_TEXT.READ_PITCHDECK)}
-                description={t(LOCAL_TEXT.WEBURL_TASK_DESCRIPTION)}
-                price={'1000'}
-                userId={Number(user?.id)}
-                applied={tasks[12].completed}
-                claimed={tasks[12].completed}
-                category={'open-whitepaper'}
-                webUrl='https://drive.google.com/file/d/1xN3bkArwN17_wCTOgFgA9jnBDrwJzuoe/view?usp=drive_link'
-              />
-              <AutotaskCardDefaults
-                markTaskCompleted={markTaskAsCompleted}
-                title={t(LOCAL_TEXT.READ_WHITEPAPER)}
-                description={t(LOCAL_TEXT.WEBURL_TASK_DESCRIPTION)}
-                price={'1000'}
-                userId={Number(user?.id)}
-                applied={tasks[13].completed}
-                claimed={tasks[13].completed}
-                category={'open-pitchdek'}
-                webUrl='https://drive.google.com/file/d/18zlq7Dn5gnXQImlNmQfwZAiyRFYcFULJ/view?usp=drive_link'
-              />
+
+              {AUTO_TASKS_PROFILE.map((task) => (
+                <AutotaskCardDefaults
+                  markTaskCompleted={handleMarkTaskAsCompleted}
+                  title={task.title !== '' ? t(task.title) : ''}
+                  description={task.description !== '' ? t(task.description) : ''}
+                  price={mapAutoTasks?.get(task.category)?.reward || 0}
+                  userId={Number(user?.id)}
+                  applied={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
+                  claimed={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
+                  category={task.category}
+                  webUrl={task.webUrl}
+                  isLoading={isLoadingAutoTasks}
+                />
+              ))}
             </Flex>
           </Flex>
 

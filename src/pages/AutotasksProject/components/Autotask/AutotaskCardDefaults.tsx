@@ -1,47 +1,44 @@
 import React, { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
-import { Badge, Box, Flex, Heading, Text, TextField, Theme } from '@radix-ui/themes';
-import { showErrorMessage, showSuccessMessage } from '@shared/utils/helpers/notify';
+import { Badge, Box, Flex, Heading, Skeleton, Text, TextField, Theme } from '@radix-ui/themes';
 import { Sheet } from 'react-modal-sheet';
 import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 
 import ConnectWallet from '../../../WalletPage/ConnectWallet';
 import CopyableRef from '../CopyableField/CopyableRef';
 
+import { AccentButton } from '@shared/components/Buttons/GlowingButton';
+
 import { getIconByTaskСategory } from '@shared/utils/helpers/getIconByTaskCategory';
-import { getAutotaskDefautsApplications } from '@shared/utils/api/requests/autotask/getAutotaskDefautsApplications';
-import { applyForAutotaskDefaultsCompletion } from '@shared/utils/api/requests/autotask/applyForAutotaskDefaultsCompletion';
-import { claimAutotaskDefaultsReward } from '@shared/utils/api/requests/autotask/claimAutotaskDefaultsReward';
 import { formatNumberWithSpaces } from '@shared/utils/helpers/formatNumbers';
 import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
-import { AccentButton } from '@shared/components/Buttons/GlowingButton';
+
 import { LOCAL_TEXT } from '@shared/consts';
+import { CATEGORY_TASKS } from '@shared/consts/category-tasks';
 
 import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
 import '@styles/CustomSheetsStyles.css';
 
 type AutotaskCateory =
-  | 'wallet'
-  | 'checkin'
-  | 'welcome-bonus'
-  | 'shere-in-stories'
-  | 'account-bio'
-  | 'web-url'
-  | 'open-x'
-  | 'open-tg'
-  | 'open-youtube'
-  | 'open-tiktok'
-  | 'open-reddit'
-  | 'open-discord'
-  | 'open-pitchdek'
-  | 'open-whitepaper';
+  | typeof CATEGORY_TASKS.WALLET
+  | typeof CATEGORY_TASKS.CHECKIN
+  | typeof CATEGORY_TASKS.WELCOME_BONUS
+  | typeof CATEGORY_TASKS.SHARE_IN_STORIES
+  | typeof CATEGORY_TASKS.ACCOUNT_BIO
+  | typeof CATEGORY_TASKS.WEB_URL
+  | typeof CATEGORY_TASKS.OPEN_X
+  | typeof CATEGORY_TASKS.OPEN_TG
+  | typeof CATEGORY_TASKS.OPEN_YOUTUBE
+  | typeof CATEGORY_TASKS.OPEN_TIKTOK
+  | typeof CATEGORY_TASKS.OPEN_REDDIT
+  | typeof CATEGORY_TASKS.OPEN_DISCORD
+  | typeof CATEGORY_TASKS.OPEN_PITCHDEK
+  | typeof CATEGORY_TASKS.OPEN_WHITEPAPER;
 
 interface AutotaskProps {
   title: string;
   description: string;
-  price: string;
+  price: number;
   children?: ReactNode;
   userId: number;
   claimed: boolean;
@@ -49,6 +46,7 @@ interface AutotaskProps {
   refLink?: string;
   markTaskCompleted: (c: AutotaskCateory) => void;
   category: AutotaskCateory;
+  isLoading: boolean;
   walletAddress?: string;
   webUrl?: string;
 }
@@ -67,13 +65,13 @@ const getCardContent = (
   }
 ) => {
   switch (category) {
-    case 'wallet':
+    case CATEGORY_TASKS.WALLET:
       return isClaimed ? (
         ''
       ) : (
         <ConnectWallet onSuccess={() => (otherProps?.onClick ? otherProps?.onClick() : null)} />
       );
-    case 'checkin':
+    case CATEGORY_TASKS.CHECKIN:
       return isClaimed ? (
         t(LOCAL_TEXT.COME_BACK_TOMORROW)
       ) : (
@@ -81,7 +79,7 @@ const getCardContent = (
           {t(LOCAL_TEXT.CLAIM_ONE_DAY)}
         </AccentButton>
       );
-    case 'web-url':
+    case CATEGORY_TASKS.WEB_URL:
       return isClaimed ? (
         ''
       ) : (
@@ -89,7 +87,7 @@ const getCardContent = (
           {t(LOCAL_TEXT.OPEN)}
         </AccentButton>
       );
-    case 'welcome-bonus':
+    case CATEGORY_TASKS.WELCOME_BONUS:
       return isClaimed ? (
         t(LOCAL_TEXT.THANKS_FOR_JOINING)
       ) : (
@@ -97,7 +95,7 @@ const getCardContent = (
           {t(LOCAL_TEXT.CLAIM)}
         </AccentButton>
       );
-    case 'shere-in-stories':
+    case CATEGORY_TASKS.SHARE_IN_STORIES:
       return isClaimed ? (
         t(LOCAL_TEXT.THANKS_FOR_JOINING)
       ) : (
@@ -124,7 +122,7 @@ const getCardContent = (
           </AccentButton>
         </Flex>
       );
-    case 'account-bio':
+    case CATEGORY_TASKS.ACCOUNT_BIO:
       return isClaimed ? (
         t(LOCAL_TEXT.THANKS_FOR_JOINING)
       ) : (
@@ -150,12 +148,11 @@ const getCardContent = (
   }
 };
 
-// const AutotaskCardDefaults = () => {
 const AutotaskCardDefaults: FC<AutotaskProps> = ({
   title,
   description,
+  isLoading,
   price,
-  children,
   userId,
   applied,
   claimed,
@@ -246,73 +243,8 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
     if (!claimed) setModalVisible(true);
   };
 
-  const { data: application, refetch: refetchApplication } = useQuery({
-    queryFn: () =>
-      getAutotaskDefautsApplications({ params: { userId: userId, taskCategory: category } }),
-    queryKey: ['autotaskApplication', userId, category],
-    enabled: applied,
-    select: (data) => data.data[0],
-  });
-
-  useEffect(() => {
-    if (application) {
-      const status: ApplicationStatus = application.isConfirmed
-        ? LOCAL_TEXT.CLIMED
-        : LOCAL_TEXT.APPLIED;
-      setApplicationStatus(status);
-    }
-  }, [application]);
-
-  const [submitting, setSubmitting] = useState(false);
-
-  //Apply for autotask
-  const { mutate: apply } = useMutation({
-    mutationFn: applyForAutotaskDefaultsCompletion,
-    onError: () => {
-      showErrorMessage(t(LOCAL_TEXT.ERROR_WHILE_OCCURRED_APPLYING_AUTOTASK_COMPLETION));
-      setSubmitting(false);
-    },
-    onSuccess: () => {
-      showSuccessMessage(t(LOCAL_TEXT.SUCCESSFULLY_CLAIMED));
-      markTaskCompleted(category);
-    },
-  });
-
-  //Claim reward
-  const { mutate: claim, isPending: isClaiming } = useMutation({
-    mutationFn: claimAutotaskDefaultsReward,
-    onError: (error: AxiosError) => {
-      const response = error.response?.data as {
-        error: string;
-        message: string;
-        statusCode: number;
-      };
-      if (response) {
-        showErrorMessage(response.message || t(LOCAL_TEXT.AN_UNKNOWN_ERROR_OCCURRED));
-      } else {
-        showErrorMessage(t(LOCAL_TEXT.AN_UNKNOWN_ERROR_OCCURRED));
-      }
-    },
-    onSuccess: () => {
-      setIsClaimed(true);
-      showSuccessMessage(t(LOCAL_TEXT.REWARD_CLAIMED_SUCCESSFULLY));
-    },
-    onSettled: () => {
-      refetchApplication();
-    },
-  });
-
-  const handleApplyClick = () => {
-    if (applicationStatus === LOCAL_TEXT.UNSTARTED && !submitting) {
-      setSubmitting(true);
-      apply({ params: { amount: price } });
-    }
-  };
-
-  const handleClaimClick = () => {
-    if (isClaiming && applicationStatus === LOCAL_TEXT.APPLIED) return;
-
-    claim({ params: { taskCategory: category } });
+  const handleClaimClick = (category: string) => {
+    markTaskCompleted(category);
   };
 
   return (
@@ -348,12 +280,14 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
             >
               {title}
             </Text>
-            <Text weight='regular' size='3' color='gray'>
-              +{formatNumberWithSpaces(price)}{' '}
-              <Badge color='gold' radius='full'>
-                XP
-              </Badge>
-            </Text>
+            <Skeleton loading={!isLoading}>
+              <Text weight='regular' size='3' color='gray'>
+                +{formatNumberWithSpaces(price)}{' '}
+                <Badge color='gold' radius='full'>
+                  XP
+                </Badge>
+              </Text>
+            </Skeleton>
           </Flex>
         </Flex>
 
@@ -402,11 +336,13 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                     >
                       {title}
                     </Heading>
-                    <Text align='center' color='gray'>
-                      <i>
-                        +{formatNumberWithSpaces(price)} <Badge color='bronze'>XP</Badge>
-                      </i>
-                    </Text>
+                    <Skeleton loading={!isLoading}>
+                      <Text align='center' color='gray'>
+                        <i>
+                          +{formatNumberWithSpaces(price)} <Badge color='bronze'>XP</Badge>
+                        </i>
+                      </Text>
+                    </Skeleton>
                     <Flex justify='center'>
                       <Badge
                         size='3'
@@ -419,7 +355,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                   </Flex>
                   <Flex direction='column' gap='2' mb={isIPhone ? '100%' : 'unset'}>
                     {getCardContent(category, claimed, t, inputRef, {
-                      onClick: handleApplyClick,
+                      onClick: () => handleClaimClick(category),
                       handleBlur: handleBlur,
                       handleFocus: handleFocus,
                       refLink: refLink,

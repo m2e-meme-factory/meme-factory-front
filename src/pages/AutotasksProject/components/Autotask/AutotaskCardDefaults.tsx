@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import React, { FC, ReactNode, RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Box, Flex, Heading, Skeleton, Text, TextField, Theme } from '@radix-ui/themes';
 import { Sheet } from 'react-modal-sheet';
 import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
@@ -162,15 +162,33 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   webUrl,
 }) => {
   const { t, i18n } = useTranslation();
+
+  type CardStyles = Record<LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED, string>;
+  const cardStyles: CardStyles = useMemo(() => {
+    return {
+      applied: 'none',
+      claimed: 'none',
+      unstarted: '1px solid #1C1C1E',
+    };
+  }, []);
+
   //   //State of autotask
   type ApplicationStatus = LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED;
   const [isApplied, setIsApplied] = useState(applied);
   const [isClaimed, setIsClaimed] = useState(claimed);
+  const [isModalVisible, setModalVisible] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus>(
     isApplied ? (isClaimed ? LOCAL_TEXT.CLIMED : LOCAL_TEXT.APPLIED) : LOCAL_TEXT.UNSTARTED
   );
-
   const [isIPhone, setIsIPhone] = useState(false);
+  const [cardStyle, setCardStyle] = useState<React.CSSProperties>({
+    border: cardStyles[applicationStatus as ApplicationStatus],
+    borderRadius: '12px',
+    padding: '8px',
+    backgroundColor: '#0B0B0B',
+    cursor: 'pointer',
+  });
+
   const isRu = i18n.language === 'ru';
   const isMobile = isMobileDevice();
 
@@ -207,22 +225,6 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
     setIsApplied(applied);
   }, [applied]);
 
-  //   //Card styles
-  type CardStyles = Record<LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED, string>;
-  const cardStyles: CardStyles = {
-    applied: 'none',
-    claimed: 'none',
-    unstarted: '1px solid #1C1C1E',
-  };
-
-  const [cardStyle, setCardStyle] = useState<React.CSSProperties>({
-    border: cardStyles[applicationStatus as ApplicationStatus],
-    borderRadius: '12px',
-    padding: '8px',
-    backgroundColor: '#0B0B0B',
-    cursor: 'pointer',
-  });
-
   useEffect(() => {
     setCardStyle({
       border: cardStyles[applicationStatus as ApplicationStatus],
@@ -230,10 +232,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
       padding: '8px',
       cursor: 'pointer',
     });
-  }, [applicationStatus]);
-
-  //Modal controls
-  const [isModalVisible, setModalVisible] = useState(false);
+  }, [applicationStatus, cardStyles]);
 
   const handleDialogClose = () => {
     setModalVisible(false);
@@ -245,6 +244,9 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
 
   const handleClaimClick = (category: string) => {
     markTaskCompleted(category);
+    if (category !== CATEGORY_TASKS.CHECKIN) {
+      setTimeout(() => handleDialogClose(), 500);
+    }
   };
 
   return (

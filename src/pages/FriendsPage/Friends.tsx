@@ -209,7 +209,7 @@ export default function Friends() {
                       <DataList.Value>
                         {(refData?.count || 0) * 5000}
                         <Badge color='bronze' ml='2'>
-                          M2E
+                          XP
                         </Badge>
                       </DataList.Value>
                     </Skeleton>

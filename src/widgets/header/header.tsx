@@ -8,20 +8,20 @@ import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { RootState } from '@shared/utils/redux/store';
 import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
 import { getLocalStorage, setLocalStorage } from '@shared/utils/helpers/local-storage';
+import { useAuthMe } from '@shared/utils/api/hooks/auth/useAuthMe';
+import { formatNumberWithSpaces } from '@shared/utils/helpers/formatNumbers';
 
 import { LOCAL_STORAGE_CONSTANTS } from '@shared/consts/local-storage-constants';
-
-function numberWithSpaces(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
 
 export const Header = () => {
   const { i18n } = useTranslation();
 
+  const user = useSelector((state: RootState) => state.user.user);
+
   const webApp = useWebApp();
   const userLanguage = webApp?.initDataUnsafe?.user?.language_code;
 
-  const user = useSelector((state: RootState) => state.user.user);
+  const { data: userDataResponse } = useAuthMe();
 
   const initialLang = getLocalStorage(LOCAL_STORAGE_CONSTANTS.LANG) || userLanguage || 'en';
   const [lang, setLang] = useState(initialLang);
@@ -44,7 +44,9 @@ export const Header = () => {
         }}
         to='/wallet'
       >
-        <Heading align='center'>{numberWithSpaces(user ? Number(user.balance) : 0)}</Heading>
+        <Heading align='center'>
+          {formatNumberWithSpaces(user ? Number(userDataResponse?.balance) : 0)}
+        </Heading>
         <Badge size='3' color='gold' variant='soft' radius='full'>
           XP
         </Badge>

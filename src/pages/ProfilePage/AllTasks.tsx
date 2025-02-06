@@ -105,7 +105,7 @@ export default function AllTasks() {
     if (userDataResponse) {
       dispatch(setUser(userDataResponse));
     }
-  }, [userDataResponse]);
+  }, [dispatch, userDataResponse]);
 
   const [isModalVisible, setModalVisible] = useState(false);
 

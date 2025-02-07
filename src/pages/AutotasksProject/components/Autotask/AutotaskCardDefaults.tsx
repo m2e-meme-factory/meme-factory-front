@@ -1,5 +1,15 @@
 import React, { FC, ReactNode, RefObject, useEffect, useMemo, useRef, useState } from 'react';
-import { Badge, Box, Flex, Heading, Skeleton, Text, TextField, Theme } from '@radix-ui/themes';
+import {
+  Badge,
+  Box,
+  Flex,
+  Heading,
+  Link,
+  Skeleton,
+  Text,
+  TextField,
+  Theme,
+} from '@radix-ui/themes';
 import { Sheet } from 'react-modal-sheet';
 import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +28,7 @@ import { CATEGORY_TASKS } from '@shared/consts/category-tasks';
 
 import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
 import '@styles/CustomSheetsStyles.css';
+import { REGEX } from '@shared/consts/regex';
 
 type AutotaskCateory =
   | typeof CATEGORY_TASKS.WALLET
@@ -57,11 +68,14 @@ const getCardContent = (
   t: (key: string) => string,
   inputRef: RefObject<HTMLInputElement>,
   otherProps?: {
+    isValidUrl?: boolean;
     onClick?: () => void;
     handleBlur?: () => void;
     handleFocus?: () => void;
+    handleGoToLink: (category: string, url?: string) => void;
     setTextValue?: (v: string) => void;
     refLink?: string;
+    webUrl?: string;
   }
 ) => {
   switch (category) {
@@ -77,14 +91,6 @@ const getCardContent = (
       ) : (
         <AccentButton onClick={otherProps?.onClick} size='4'>
           {t(LOCAL_TEXT.CLAIM_ONE_DAY)}
-        </AccentButton>
-      );
-    case CATEGORY_TASKS.WEB_URL:
-      return isClaimed ? (
-        ''
-      ) : (
-        <AccentButton onClick={otherProps?.onClick} size='4'>
-          {t(LOCAL_TEXT.OPEN)}
         </AccentButton>
       );
     case CATEGORY_TASKS.WELCOME_BONUS:
@@ -104,20 +110,33 @@ const getCardContent = (
             <Text>{t(LOCAL_TEXT.SHARE_STORY_YOUR_INSTAGRAM_ACCOUNT_INVITE_LINK)}</Text>
             <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
           </Flex>
-          <TextField.Root
-            ref={inputRef}
-            size='3'
-            mt='2'
-            placeholder='Instagram url'
-            onChange={(e) => {
-              if (otherProps?.setTextValue) {
-                otherProps.setTextValue(e.currentTarget.value.toString());
-              }
-            }}
-            onBlur={otherProps?.handleBlur}
-            onFocus={otherProps?.handleFocus}
-          />
-          <AccentButton onClick={otherProps?.onClick} size='4'>
+          <Box position={'relative'} pb={'3'}>
+            <TextField.Root
+              ref={inputRef}
+              size='3'
+              mt='2'
+              placeholder='Instagram url'
+              onChange={(e) => {
+                if (otherProps?.setTextValue) {
+                  otherProps.setTextValue(e.currentTarget.value.toString());
+                }
+              }}
+              onBlur={otherProps?.handleBlur}
+              onFocus={otherProps?.handleFocus}
+            />
+            <Box
+              style={{
+                position: 'absolute',
+                bottom: '-4px',
+                display: otherProps?.isValidUrl ? 'none' : 'unset',
+                color: 'red',
+                fontSize: '10px',
+              }}
+            >
+              {t(LOCAL_TEXT.NOT_VALID_URL)}
+            </Box>
+          </Box>
+          <AccentButton onClick={() => otherProps?.handleGoToLink(category)} size='4'>
             {t(LOCAL_TEXT.CLAIM)}
           </AccentButton>
         </Flex>
@@ -131,17 +150,34 @@ const getCardContent = (
             <Text>{t(LOCAL_TEXT.PUT_YOUR_INVITE_LINK_INSTAGRAM_ACCOUNT_BIO)}</Text>
             <CopyableRef refLink='https://t.me/autotasks_bot' />
           </Flex>
-          <TextField.Root size='3' mt='2' placeholder='Instagram url' />
-          <AccentButton onClick={otherProps?.onClick} size='4'>
+          <Box position={'relative'} pb={'3'}>
+            <TextField.Root ref={inputRef} size='3' mt='2' placeholder='Instagram url' />
+            <Box
+              style={{
+                position: 'absolute',
+                bottom: '-4px',
+                display: otherProps?.isValidUrl ? 'none' : 'unset',
+                color: 'red',
+                fontSize: '10px',
+              }}
+            >
+              {t(LOCAL_TEXT.NOT_VALID_URL)}
+            </Box>
+          </Box>
+          <AccentButton onClick={() => otherProps?.handleGoToLink(category)} size='4'>
             {t(LOCAL_TEXT.CLAIM)}
           </AccentButton>
         </Flex>
       );
+
     default:
       return isClaimed ? (
         ''
       ) : (
-        <AccentButton onClick={otherProps?.onClick} size='4'>
+        <AccentButton
+          onClick={() => otherProps?.handleGoToLink(category, otherProps?.webUrl)}
+          size='4'
+        >
           {t(LOCAL_TEXT.OPEN)}
         </AccentButton>
       );
@@ -177,6 +213,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   const [isApplied, setIsApplied] = useState(applied);
   const [isClaimed, setIsClaimed] = useState(claimed);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isValidUrl, setIsValidUrl] = useState(true);
   const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus>(
     isApplied ? (isClaimed ? LOCAL_TEXT.CLIMED : LOCAL_TEXT.APPLIED) : LOCAL_TEXT.UNSTARTED
   );
@@ -195,6 +232,8 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFocus = () => {
+    setIsValidUrl(() => true);
+
     const isIPhone = (): boolean => {
       const userAgent = window.navigator.userAgent;
       return /iPhone/.test(userAgent);
@@ -208,6 +247,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   const handleBlur = () => {
     if (inputRef.current) {
       setIsIPhone(false);
+      setIsValidUrl(() => true);
     }
   };
 
@@ -247,6 +287,34 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
     if (category !== CATEGORY_TASKS.CHECKIN) {
       setTimeout(() => handleDialogClose(), 500);
     }
+  };
+
+  const handleGoToLink = (category: string, url?: string) => {
+    if (url) {
+      window.open(url, '_blank');
+    }
+
+    if (category === CATEGORY_TASKS.SHARE_IN_STORIES || category === CATEGORY_TASKS.ACCOUNT_BIO) {
+      const valueInput = inputRef.current?.value;
+
+      if (valueInput && REGEX.INSTAGRAM.test(valueInput)) {
+        setIsValidUrl(() => true);
+        setTimeout(() => handleDialogClose(), 500);
+      } else {
+        setIsValidUrl(() => false);
+        return;
+      }
+    }
+
+    setTimeout(() => {
+      handleClaimClick(category);
+    }, 5000);
+  };
+
+  const handleClickLink = () => {
+    setTimeout(() => {
+      handleClaimClick(category);
+    }, 5000);
   };
 
   return (
@@ -357,12 +425,34 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
                   </Flex>
                   <Flex direction='column' gap='2' mb={isIPhone ? '100%' : 'unset'}>
                     {getCardContent(category, claimed, t, inputRef, {
+                      isValidUrl: isValidUrl,
                       onClick: () => handleClaimClick(category),
                       handleBlur: handleBlur,
                       handleFocus: handleFocus,
+                      handleGoToLink: handleGoToLink,
                       refLink: refLink,
+                      webUrl: webUrl,
                     })}
-                    <p className={styles.warning}>{description}</p>
+                    {webUrl ? (
+                      <Link
+                        style={{
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          fontWeight: 'normal',
+                          color: 'dimgray',
+                          margin: '0 0 10px',
+                          textAlign: 'center',
+                        }}
+                        underline='always'
+                        href={webUrl}
+                        target='_blank'
+                        onClick={handleClickLink}
+                      >
+                        {description}
+                      </Link>
+                    ) : (
+                      <p className={styles.warning}>{description}</p>
+                    )}
                   </Flex>
                 </Flex>
               </Theme>

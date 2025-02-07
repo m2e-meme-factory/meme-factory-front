@@ -95,6 +95,7 @@ export enum LOCAL_TEXT {
   MORE_M2E_POINTS_YOU_GET_MORE_YOUR_AIRDROP_CHANCES = 'more_M2E_points_you_get_more_your_airdrop_chances',
   NOT_ENOUGH_TOKENS = 'not_enough_tokens',
   NOT_FOUND_FILE_ID = 'not_found_file_id',
+  NOT_VALID_URL = 'not_valid_url',
   NOW_JUST_WAIT_UNTIL_YOUR_MEME_REACH_VIEWS_AND = 'now_just_wait_until_your_meme_reach_views_and',
   NTF_BOUGHT_SUCCESSFULLY = 'ntf_bought_successfully',
   OPEN = 'open',

@@ -1,6 +1,10 @@
-import { Card } from '@radix-ui/themes';
 import React, { useState } from 'react';
+import { Card } from '@radix-ui/themes';
+
+import useAutoTasks from '@pages/ProfilePage/useAutoTasks';
+
 import styled from 'styled-components';
+import { CATEGORY_TASKS } from '@shared/consts/category-tasks';
 
 interface VideoCardProps {
   videoSrc: string; // URL видео
@@ -43,6 +47,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
   altText = 'Video preview',
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const { handleMarkTaskAsCompleted } = useAutoTasks();
 
   const handlePlay = () => {
     setIsPlaying(true); // Меняем состояние, чтобы заменить превью на видео
@@ -57,7 +62,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
         maxWidth: isPlaying ? '640px' : '100%',
         overflow: 'hidden',
         width: '100%',
-        margin: 'auto'
+        margin: 'auto',
       }}
     >
       {!isPlaying ? (
@@ -85,7 +90,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
           muted={true}
           src={videoSrc}
           onEnded={() => {
-            console.log('Video ended');
+            handleMarkTaskAsCompleted(CATEGORY_TASKS.WATCH_START_VIDEO);
             setIsPlaying(false);
           }}
           style={{

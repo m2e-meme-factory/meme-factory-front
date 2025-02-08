@@ -3,5 +3,6 @@ import api from '../../api';
 import { addAuthorizationHeader } from '../project/project-requests';
 
 export type GetAllAutotasksConfig = RequestConfig;
+
 export const getAllAutotasks = ({ config }: GetAllAutotasksConfig) =>
   api.get<Autotask[]>('/auto-tasks', addAuthorizationHeader(config));

@@ -300,14 +300,9 @@ declare module 'api' {
   }
 
   export interface Autotask {
-    id: number;
-    title: string;
-    description: string;
-    reward: string;
-    url: string | null;
-    createdAt: string;
-    isIntegrated: boolean;
-    autoTaskApplication: AutotaskApplication[];
+    name: sting;
+    reward: number;
+    isClaimed: boolean;
   }
 
   export interface AutotaskApplication {
@@ -325,7 +320,6 @@ declare module 'api' {
     taskId?: number;
   }
 
-  
   export interface GetAutotaskDefaultsApplicationsParams {
     userId?: number;
     taskCategory?: string;

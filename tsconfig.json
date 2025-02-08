@@ -18,12 +18,13 @@
     "downlevelIteration": true,
     "typeRoots": ["./src/@types"],
     "paths": {
+      "@entities/*": ["./src/entities/*"],
       "@providers/*": ["./src/providers/*"],
       "@public/*": ["./public/*"],
       "@pages/*": ["./src/pages/*"],
       "@shared/*": ["./src/shared/*"],
       "@styles/*": ["./src/styles/*"],
-      "@widgets/*": ["./src/widgets/*"],
+      "@widgets/*": ["./src/widgets/*"]
     }
   },
   "include": ["src"]

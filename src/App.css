@@ -43,6 +43,10 @@
   font-weight: 400 !important;
 }
 
+.rt-Box:has(.rt-Text) {
+  line-height: 1 ;
+}
+
 * {
   font-family: 'SF', monospace;
 }

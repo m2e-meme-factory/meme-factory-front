@@ -170,7 +170,7 @@ const AutotaskCard: FC<AutotaskProps> = ({
   const handleClaimClick = () => {
     if (isClaiming && applicationStatus === 'applied') return;
 
-    claim({ params: { taskId: id } });
+    // claim({ params: { taskId: id } });
   };
 
   return (

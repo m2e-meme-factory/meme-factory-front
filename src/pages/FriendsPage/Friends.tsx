@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Badge,
   Box,
@@ -10,29 +11,42 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes';
-import { useGetRefData } from '@shared/utils/api/hooks/user/useGetRefData';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-
 import { RefDataResponse } from 'api';
+import { CopyIcon } from '@radix-ui/react-icons';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+
+import { CARD_CONSTANT } from './cards-constant';
+
+import { Header } from '@widgets/header';
+
+import { useGetTransactionsSumById } from '@entities/transactions';
+
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import WebappBackButton from '@shared/components/WebappBackButton';
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { showSuccessMessage } from '@shared/utils/helpers/notify';
 import HandshakeAnimated from '@shared/components/LottieIcons/Handshake/HandshakeAnimated';
-import { CopyIcon } from '@radix-ui/react-icons';
-import { LOCAL_TEXT } from '@shared/consts';
+
 import { RootState } from '@shared/utils/redux/store';
-import { Header } from '@widgets/header';
+import { useGetRefData } from '@shared/utils/api/hooks/user/useGetRefData';
+import { showSuccessMessage } from '@shared/utils/helpers/notify';
+
+import { LOCAL_TEXT } from '@shared/consts';
+
+import { COLOR_CONSTANT } from '@styles/color-constant';
+import { RADIUS_CONSTANT } from '@styles/radius-constant';
 
 export default function Friends() {
   const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.user);
+
   const { data, isLoading: refLoading } = useGetRefData(user?.telegramId);
+  const { data: transactionsData } = useGetTransactionsSumById(user?.telegramId || '');
+
   const [refData, setRefData] = useState<RefDataResponse | null>(null);
-  const webApp = useWebApp();
   const [copied, setCopied] = useState(false);
+
+  const webApp = useWebApp();
 
   const handleCopyText = (text: string) => {
     const textToCopy = text;
@@ -123,102 +137,37 @@ export default function Friends() {
 
             <Box m='4'>
               <Flex direction='column' gap='2'>
-                <Card onClick={handleInviteClick} style={{ padding: '14px 12px' }}>
-                  <Flex gap='4' align='center'>
-                    <Box
-                      style={{
-                        backgroundColor: '#2b2b2b',
-                        borderRadius: '8px',
-                        padding: '7px 0 4px',
-                        width: '36px',
-                        height: '36px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Text size='3' weight='regular' style={{ fontFamily: 'ME', lineHeight: '1' }}>
-                        1
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                        {t(LOCAL_TEXT.INVITE_FRIENDS_LOWER)}
-                      </Heading>
-                      <Box>
-                        <Text size='1' color='gray'>
-                          {t(LOCAL_TEXT.COPY_LINK_SEND_YOUR_FRIEND)}
+                {CARD_CONSTANT.map((card, index) => (
+                  <Card key={card.title} onClick={index === 0 ? handleInviteClick : undefined}>
+                    <Flex gap='4' align='center'>
+                      <Flex
+                        justify={'center'}
+                        align={'center'}
+                        minWidth={'36px'}
+                        height={'36px'}
+                        p={'7px 0 4px'}
+                        style={{
+                          backgroundColor: COLOR_CONSTANT.BACK_GROUND_BADGE_NUMBER,
+                          borderRadius: RADIUS_CONSTANT.LG,
+                        }}
+                      >
+                        <Text size='3' weight='regular' style={{ fontFamily: 'ME' }}>
+                          {index + 1}
                         </Text>
-                      </Box>
-                    </Box>
-                  </Flex>
-                </Card>
-
-                <Card style={{ padding: '14px 12px' }}>
-                  <Flex gap='4' align='center'>
-                    <Box
-                      style={{
-                        backgroundColor: '#2b2b2b',
-                        borderRadius: '8px',
-                        padding: '7px 0 4px',
-                        width: '36px',
-                        height: '36px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Text size='3' weight='regular' style={{ fontFamily: 'ME' }}>
-                        2
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                        {t(LOCAL_TEXT.YOUR_FRIEND_JOIN)}
-                      </Heading>
+                      </Flex>
                       <Box>
-                        <Text size='1' color='gray'>
-                          {t(LOCAL_TEXT.YOUR_FRIEND_JOIN_MEME_FACTORY)}
-                        </Text>
-                      </Box>
-                    </Box>
-                  </Flex>
-                </Card>
-
-                <Card>
-                  <Flex gap='4' align='center'>
-                    <Box
-                      style={{
-                        backgroundColor: '#2b2b2b',
-                        borderRadius: '8px',
-                        padding: '7px 0 4px',
-                        width: '36px',
-                        height: '36px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Text size='3' weight='regular' style={{ fontFamily: 'ME' }}>
-                        3
-                      </Text>
-                    </Box>
-                    <Flex justify='between' width='100%' align='center'>
-                      <Box>
-                        <Heading size='3' weight='regular' style={{ lineHeight: '1.1' }}>
-                          {t(LOCAL_TEXT.YOU_GET_REWARD)}
+                        <Heading mb={'1'} size='3' weight='regular' style={{ lineHeight: '1.2' }}>
+                          {t(card.title)}
                         </Heading>
-                        <Box
-                          style={{ maxWidth: '24ch', lineHeight: '133%', letterSpacing: '0.03em' }}
-                        >
-                          <Text color='gray' style={{ fontSize: '12px' }}>
-                            {t(LOCAL_TEXT.YOU_GET_PER_EACH_FRIEND_HIS_INCOME)}
+                        <Box>
+                          <Text size='1' style={{ color: COLOR_CONSTANT.DISCRIPTION }}>
+                            {t(card.description)}
                           </Text>
                         </Box>
                       </Box>
                     </Flex>
-                  </Flex>
-                </Card>
+                  </Card>
+                ))}
               </Flex>
             </Box>
           </Box>
@@ -255,7 +204,7 @@ export default function Friends() {
                   <DataList.Item>
                     <DataList.Label minWidth='50px'>{t(LOCAL_TEXT.TOTAL_COUNT)}</DataList.Label>
                     <Skeleton loading={refLoading}>
-                      <DataList.Value>{refData?.count}</DataList.Value>
+                      <DataList.Value>{refData?.count || 0}</DataList.Value>
                     </Skeleton>
                   </DataList.Item>
                   <DataList.Item>
@@ -264,9 +213,9 @@ export default function Friends() {
                     </DataList.Label>
                     <Skeleton loading={refLoading}>
                       <DataList.Value>
-                        {(refData?.count || 0) * 5000}
+                        {transactionsData?.amount || 0}
                         <Badge color='bronze' ml='2'>
-                          M2E
+                          XP
                         </Badge>
                       </DataList.Value>
                     </Skeleton>

@@ -9,23 +9,24 @@ import { NftCard } from './NftCard';
 import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
 import { ResponsibleImage } from '@shared/components/ResponsibleImage';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
-import { LOCAL_TEXT } from '@shared/consts';
 
-function numberWithSpaces(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
+import { formatNumberWithSpaces } from '@shared/utils/helpers/formatNumbers';
+
+import { LOCAL_TEXT } from '@shared/consts';
 
 export const NftCardItem = ({
   nft,
   handleBuy,
   tonConnectUI,
   wallet,
+  index,
   style,
 }: {
   nft: any;
   tonConnectUI: TonConnectUI;
-  handleBuy: (value: number) => void;
+  handleBuy: (value: number, planSeqno: number) => void;
   wallet: Wallet | (Wallet & WalletInfoWithOpenMethod) | null;
+  index: number;
   style?: CSSProperties;
 }) => {
   const { t } = useTranslation();
@@ -39,9 +40,9 @@ export const NftCardItem = ({
     setModalVisible(true);
   };
 
-  const handleVerify = (value: number) => {
+  const handleVerify = (value: number, planSeqno: number) => {
     handleDialogClose();
-    handleBuy(value);
+    handleBuy(value, planSeqno);
   };
 
   return (
@@ -55,7 +56,7 @@ export const NftCardItem = ({
         dimonds={nft.name === LOCAL_TEXT.DIAMOND}
         investors={nft.name === LOCAL_TEXT.INVESTOR}
       >
-        <Flex direction='column' minHeight='10vh'>
+        <Flex direction='column' minHeight='10vh' gap={'1'}>
           <Box>
             <Flex gap='3' justify='between' align='center'>
               <Flex gap='1'>
@@ -78,7 +79,7 @@ export const NftCardItem = ({
               style={{ fontSize: '11px', lineHeight: '145%', letterSpacing: '0.03em' }}
               weight='regular'
             >
-              {numberWithSpaces(nft.amount)} USDT = {numberWithSpaces(nft.amount)} MF
+              {formatNumberWithSpaces(nft.amount)} USDT = {formatNumberWithSpaces(nft.amount)} M2E
             </Text>
           </Box>
           <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px' }}>
@@ -108,7 +109,9 @@ export const NftCardItem = ({
                     </Heading>
                     <Text size='4' align='center'>
                       {t(LOCAL_TEXT.GET)} 100% {t(LOCAL_TEXT.CHANCE_FOR)}{' '}
-                      <b>{numberWithSpaces(nft.amount + nft.amount * (nft.discount / 100))}</b>{' '}
+                      <b>
+                        {formatNumberWithSpaces(nft.amount + nft.amount * (nft.discount / 100))}
+                      </b>{' '}
                       <Badge color='yellow' size='3'>
                         M2E
                       </Badge>{' '}
@@ -118,7 +121,7 @@ export const NftCardItem = ({
                       <Callout.Text size='4'>
                         {t(LOCAL_TEXT.PRICE_DISCOUNT)}: {nft.discount}%
                         <br />
-                        <Text weight='bold'>M2E/USDT {nft.price}$ </Text>
+                        <Text weight='bold'>M2E/USDT {formatNumberWithSpaces(nft.price)}$ </Text>
                       </Callout.Text>
                     </Callout.Root>
                   </Grid>
@@ -126,17 +129,16 @@ export const NftCardItem = ({
                   {wallet ? (
                     <GlowingButton
                       size='4'
-                      onClick={() => handleVerify(nft.amount)}
+                      onClick={() => handleVerify(nft.amount, index)}
                       style={{ width: '100%' }}
                     >
-                      {t(LOCAL_TEXT.PAY)} {nft.amount} USDT
+                      {t(LOCAL_TEXT.PAY)} {formatNumberWithSpaces(nft.amount)} USDT
                     </GlowingButton>
                   ) : (
                     <GlowingButton
                       size='4'
                       onClick={() => {
                         handleDialogClose();
-                        console.log(isModalVisible);
                         tonConnectUI.openModal();
                       }}
                       style={{ width: '100%' }}

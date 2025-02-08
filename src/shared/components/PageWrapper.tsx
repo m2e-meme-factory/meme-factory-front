@@ -1,22 +1,26 @@
-import { Badge, Box, Callout } from '@radix-ui/themes';
 import { PropsWithChildren } from 'react';
-import NavigationMenu from './NavigationMenu';
 import { Outlet } from 'react-router-dom';
+import { Box } from '@radix-ui/themes';
+
+import NavigationMenu from './NavigationMenu';
+
+import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
 
 const PageWrapper = (props: PropsWithChildren) => {
+  const isMobile = isMobileDevice();
   return (
     <Box
       style={{
+        marginTop: isMobile ? '10vh' : 'unset',
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: '100dvh',
         overflow: 'hidden',
       }}
     >
-      {/* <Box p="2" style={{textAlign: 'center'}}>5 <Badge color='yellow'>M2E XP</Badge></Box> */}
       <Box
         style={{
-          height: '90vh',
+          height: isMobile ? '80vh' : '90vh',
           overflowY: 'auto',
         }}
       >

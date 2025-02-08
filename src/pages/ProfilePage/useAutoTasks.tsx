@@ -1,30 +1,13 @@
-import { useTonConnectUI } from "@tonconnect/ui-react";
-import { useState, useEffect } from "react";
+import { useEffect, useCallback, useRef } from 'react';
 
-interface Task {
-    category: string;
-    completed: boolean;
-  }
+import { useTonConnectUI } from '@tonconnect/ui-react';
 
-const baseTasks = [
-    { category: 'checkin', completed: false },
-    { category: 'welcome-bonus', completed: false },
-    { category: 'shere-in-stories', completed: false },
-    { category: 'account-bio', completed: false },
-    { category: 'web-url', completed: false },
-    { category: 'open-x', completed: false },
-    { category: 'open-tg', completed: false },
-    { category: 'open-youtube', completed: false },
-    { category: 'open-tiktok', completed: false },
-    { category: 'open-reddit', completed: false },
-    { category: 'open-discord', completed: false },
-    { category: 'open-whitepaper', completed: false },
-    { category: 'open-pitchdek', completed: false },
-]
-  
+import { useClimeAutoTask, useGetMapAutoTasks } from '@entities/auto-tasks';
+
+import { CATEGORY_TASKS } from '@shared/consts/category-tasks';
+
 const useAutoTasks = () => {
   const [tonConnectUI] = useTonConnectUI();
-    
       const [tasks, setTasks] = useState<Task[]>([
         { category: 'wallet', completed: tonConnectUI.connected },
         ...baseTasks
@@ -78,10 +61,31 @@ const useAutoTasks = () => {
         localStorage.setItem('tasks', JSON.stringify(newtasks));
       };
 
-      return {
-        tasks, 
-        markTaskAsCompleted
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      const params = { taskName: category };
+
+      onClimeAutoTask({ params, config: { signal: abortController.signal } });
+    },
+    [onClimeAutoTask]
+  );
+
+  useEffect(() => {
+    const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
+      if (wallet && mapAutoTasks && !mapAutoTasks?.get(CATEGORY_TASKS.WALLET)?.isClaimed) {
+        handleMarkTaskAsCompleted(CATEGORY_TASKS.WALLET);
       }
-}
+    });
+
+    return () => unsubscribe();
+  }, [handleMarkTaskAsCompleted, tonConnectUI, mapAutoTasks]);
+
+  return {
+    mapAutoTasks,
+    isLoading: isLoading || isFetched,
+    handleMarkTaskAsCompleted,
+  };
+};
 
 export default useAutoTasks;

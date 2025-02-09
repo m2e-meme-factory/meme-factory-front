@@ -14,8 +14,8 @@ import { Header } from '@widgets/header';
 import ConnectWallet from '../WalletPage/ConnectWallet';
 import useAutoTasks from './useAutoTasks';
 import { AUTO_TASKS_PROFILE } from './constant/auto-tasks-profile';
+import { CUBER_NFT, NFTS } from './constant/nfts';
 
-import { cyberNft, nfts } from '@pages/ProfilePage/ProfilePage.consts';
 import { NftCardItem } from '@pages/ProfilePage/NftCardItem';
 import AutotaskCardDefaults from '@pages/AutotasksProject/components/Autotask/AutotaskCardDefaults';
 
@@ -33,7 +33,7 @@ import { LOCAL_TEXT } from '@shared/consts/local-text';
 import 'swiper/css';
 
 export default function ProfilePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { data: userDataResponse } = useAuthMe();
   const wallet = useTonWallet();
@@ -45,6 +45,7 @@ export default function ProfilePage() {
   const [indexSlideshow, setIndexSlideshow] = useState(0);
 
   const webapp = useWebApp();
+  const isRu = i18n.language === 'ru';
 
   const handleBack = useCallback(() => {
     navigate(-1);
@@ -120,7 +121,7 @@ export default function ProfilePage() {
                   applied={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
                   claimed={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
                   category={task.category}
-                  webUrl={task.webUrl}
+                  webUrl={isRu ? task.webUrlRu || task.webUrl : task.webUrl}
                   isLoading={isLoadingAutoTasks}
                 />
               ))}
@@ -142,7 +143,7 @@ export default function ProfilePage() {
                 onSwiper={(swiper: SwiperClass) => setSwiperInstance(swiper)}
                 onSlideChange={(swiper: SwiperClass) => setIndexSlideshow(swiper.activeIndex)}
               >
-                {nfts.map((nft, index) => (
+                {NFTS.map((nft, index) => (
                   <SwiperSlide key={index}>
                     <NftCardItem
                       style={{ marginRight: '5px', marginLeft: '5px' }}
@@ -157,7 +158,7 @@ export default function ProfilePage() {
                 <SwiperSlide>
                   <NftCardItem
                     wallet={wallet}
-                    nft={cyberNft}
+                    nft={CUBER_NFT}
                     tonConnectUI={tonConnectUI}
                     handleBuy={handleBuy}
                     index={4}
@@ -167,7 +168,7 @@ export default function ProfilePage() {
             </div>
 
             <div className='slideshowDots'>
-              {nfts.map((nft, idx) => (
+              {NFTS.map((nft, idx) => (
                 <div
                   key={idx}
                   className={`slideshowDot${indexSlideshow === idx ? ' active' : ''}`}
@@ -190,7 +191,7 @@ export default function ProfilePage() {
                   padding: '6px 2px',
                 }}
               >
-                <Text>{t(cyberNft.name)}</Text>
+                <Text>{t(CUBER_NFT.name)}</Text>
               </div>
             </div>
           </Flex>

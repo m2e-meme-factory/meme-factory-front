@@ -1,8 +1,9 @@
-import React from 'react';
-import './App.css';
-import { Theme } from '@radix-ui/themes';
 import { RouterProvider } from 'react-router-dom';
+import { Theme } from '@radix-ui/themes';
+
 import { router } from './Router';
+
+import './App.css';
 
 function App() {
   return (

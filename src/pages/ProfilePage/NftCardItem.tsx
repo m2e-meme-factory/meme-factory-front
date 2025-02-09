@@ -79,7 +79,8 @@ export const NftCardItem = ({
               style={{ fontSize: '11px', lineHeight: '145%', letterSpacing: '0.03em' }}
               weight='regular'
             >
-              {formatNumberWithSpaces(nft.amount)} USDT = {formatNumberWithSpaces(nft.amount)} M2E
+              {formatNumberWithSpaces(nft.amount)} USDT ={' '}
+              {formatNumberWithSpaces(nft.amount + nft.amount * (nft.discount / 100))} M2E
             </Text>
           </Box>
           <YellowBorderButton size='4' style={{ marginTop: 'auto', height: '32px' }}>

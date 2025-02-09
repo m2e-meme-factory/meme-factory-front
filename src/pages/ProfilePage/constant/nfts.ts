@@ -1,6 +1,8 @@
+import { NftType } from '../model/nft';
+
 import { LOCAL_TEXT } from '@shared/consts';
 
-export const nfts = [
+export const NFTS: NftType[] = [
   {
     name: LOCAL_TEXT.BRONZE,
     img: 'bronze.svg',
@@ -31,7 +33,7 @@ export const nfts = [
   },
 ];
 
-export const cyberNft = {
+export const CUBER_NFT: NftType = {
   name: LOCAL_TEXT.INVESTOR,
   img: 'cool.svg',
   discount: 40,

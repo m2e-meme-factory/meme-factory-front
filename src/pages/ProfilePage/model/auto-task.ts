@@ -5,4 +5,5 @@ export type AutoTaskType = {
 
   isRef?: boolean;
   webUrl?: string;
+  webUrlRu?: string;
 };

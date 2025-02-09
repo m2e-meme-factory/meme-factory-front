@@ -33,7 +33,7 @@ import { LOCAL_TEXT } from '@shared/consts/local-text';
 import 'swiper/css';
 
 export default function ProfilePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { data: userDataResponse } = useAuthMe();
   const wallet = useTonWallet();
@@ -45,6 +45,7 @@ export default function ProfilePage() {
   const [indexSlideshow, setIndexSlideshow] = useState(0);
 
   const webapp = useWebApp();
+  const isRu = i18n.language === 'ru';
 
   const handleBack = useCallback(() => {
     navigate(-1);
@@ -120,7 +121,7 @@ export default function ProfilePage() {
                   applied={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
                   claimed={Boolean(mapAutoTasks?.get(task.category)?.isClaimed)}
                   category={task.category}
-                  webUrl={task.webUrl}
+                  webUrl={isRu ? task.webUrlRu || task.webUrl : task.webUrl}
                   isLoading={isLoadingAutoTasks}
                 />
               ))}

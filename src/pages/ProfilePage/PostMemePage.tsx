@@ -162,6 +162,7 @@ export default function PostMemePage() {
   const [videoUrl, setVideoUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [fileId, setFileId] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState('EN');
   const [isDownloaded, setIsDownloaded] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -185,7 +186,8 @@ export default function PostMemePage() {
       if (data.error) {
         setError(data.error);
       } else {
-        setFileId(data.file_id); // Сохраняем file_id
+        console.log('data.file_id', data.file_name);
+        setFileId(data.file_name); // Сохраняем file_id
         setIsSubmitedVideo(true); // Делаем видео отправленным
         setCurrentStep(2);
       }
@@ -221,7 +223,8 @@ export default function PostMemePage() {
       if (data.error) {
         setError(data.error);
       } else {
-        setFileId(data.file_id); // Сохраняем file_id
+        console.log('data.file_id', data.file_name);
+        setFileId(data.file_name); // Сохраняем file_id
         setIsSubmitedVideo(true); // Делаем видео отправленным
         setIsDownloaded(true);
       }
@@ -233,6 +236,7 @@ export default function PostMemePage() {
   };
 
   const handleOverlayVideo = async () => {
+    console.log('fileId', fileId);
     if (!fileId) {
       setError(t(LOCAL_TEXT.NOT_FOUND_FILE_ID));
       return;
@@ -241,15 +245,22 @@ export default function PostMemePage() {
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('file_id', fileId);
+      const data = {
+        file_name: fileId,
+        language: selectedLanguage,
+        overlay_type: 'ffmpeg', // Добавьте другие параметры, если нужно
+      };
 
-      const response = await axios.post(VIDEO_OVERLAY_API_URL + '/overlay-video/', formData, {
+      const response = await axios.post(`${VIDEO_OVERLAY_API_URL}/overlay-video/`, data, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
         timeout: 10000000,
       });
 
       const url = `${VIDEO_OVERLAY_API_URL}/download-video/${response.data.file_name}`;
-      console.log(url, response.data);
+
       setOverlyedVideoUrl(url);
 
       setIsDownloaded(true);
@@ -448,11 +459,11 @@ export default function PostMemePage() {
             <Flex direction='column' gap='4'>
               <Text>{t(LOCAL_TEXT.SELECT_LANGUAGE)}</Text>
 
-              <Select.Root defaultValue='en'>
+              <Select.Root defaultValue='EN' onValueChange={setSelectedLanguage}>
                 <Select.Trigger />
                 <Select.Content>
-                  <Select.Item value='en'>{t(LOCAL_TEXT.ENGLISH)}</Select.Item>
-                  <Select.Item value='ru'>{t(LOCAL_TEXT.RUSSIAN)}</Select.Item>
+                  <Select.Item value='EN'>{t(LOCAL_TEXT.ENGLISH)}</Select.Item>
+                  <Select.Item value='RU'>{t(LOCAL_TEXT.RUSSIAN)}</Select.Item>
                 </Select.Content>
               </Select.Root>
               <YellowBorderButton

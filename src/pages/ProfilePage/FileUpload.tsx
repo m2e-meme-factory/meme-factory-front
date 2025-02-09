@@ -95,7 +95,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange }) => {
         <HiddenFileInput
           ref={fileInputRef}
           type='file'
-          accept='.mp4' // Ограничиваем выбор только файлами mp4
+          accept='video/mp4, video/quicktime' // Ограничиваем выбор только файлами mp4
           onChange={handleFileChange}
         />
       </Flex>

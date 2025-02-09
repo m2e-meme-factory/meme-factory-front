@@ -6,10 +6,9 @@ export const AccentButton = styled(Button)`
 `;
 
 const GlowingButton = styled(AccentButton)`
-  /* box-shadow: 0px 0px 20px 0px var(--brand-color); */
   animation: glow 3s ease-in-out infinite alternate;
   color: #000 !important;
-    box-shadow: 0px 0px 0px 0px var(--brand-color);
+  box-shadow: 0px 0px 0px 0px var(--brand-color);
 
   @keyframes glow {
     0% {
@@ -35,7 +34,7 @@ const GlowingButton = styled(AccentButton)`
     opacity: 0.5;
   }
 
-  &:where("data-disabled") {
+  &:where('data-disabled') {
     color: #555;
     animation: none;
     box-shadow: none;

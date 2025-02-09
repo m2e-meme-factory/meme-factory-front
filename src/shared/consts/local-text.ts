@@ -94,6 +94,7 @@ export enum LOCAL_TEXT {
   MEME_TO_EARN = 'meme_to_eran',
   MORE = 'more',
   MORE_M2E_POINTS_YOU_GET_MORE_YOUR_AIRDROP_CHANCES = 'more_M2E_points_you_get_more_your_airdrop_chances',
+  NEXT = 'next',
   NOT_ENOUGH_TOKENS = 'not_enough_tokens',
   NOT_FOUND_FILE_ID = 'not_found_file_id',
   NOT_VALID_URL = 'not_valid_url',

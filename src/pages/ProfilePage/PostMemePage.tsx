@@ -90,24 +90,13 @@ const NftCard = styled(SolidCard)<{ glowing: boolean }>`
   }
 `;
 
-const ImgWrapper = styled(Flex)<{ opacity: number }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  height: 17vh;
-  position: absolute;
-  bottom: -10px;
-  right: -5px;
-  opacity: ${(props) => props.opacity};
-`;
-
 const Step = ({
   children,
   text,
   step,
   currentStep,
   handleDone,
+  handleReset,
   isProgress,
   btnText,
 }: PropsWithChildren<{
@@ -115,6 +104,7 @@ const Step = ({
   step: number;
   currentStep: number;
   handleDone: () => void;
+  handleReset?: () => void;
   isProgress?: boolean;
   btnText?: string;
 }>) => {
@@ -141,11 +131,18 @@ const Step = ({
             <>
               {children}
               <ChangableButton
-                disabled={isProgress == false}
-                glow={currentStep == step}
+                disabled={isProgress === false}
+                glow={currentStep === step}
                 onClick={handleDone}
                 text={btnText || t(LOCAL_TEXT.DONE).toUpperCase()}
               />
+              {handleReset && (isProgress === true || currentStep > 2) && (
+                <ChangableButton
+                  glow={currentStep === step}
+                  onClick={handleReset}
+                  text={t(LOCAL_TEXT.RESET).toUpperCase()}
+                />
+              )}
             </>
           )}
         </Flex>
@@ -161,12 +158,22 @@ export default function PostMemePage() {
   const [isSubmitedVideo, setIsSubmitedVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
-  const [fileId, setFileId] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState('EN');
   const [isDownloaded, setIsDownloaded] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleButtonReset = () => {
+    setCurrentStep(0);
+    setIsSubmitedVideo(false);
+    setVideoUrl('');
+    setFile(null);
+    setFileName(null);
+    setSelectedLanguage('EN');
+    setIsDownloaded(false);
+  };
 
   const handleUploadVideoUrl = async () => {
     if (!videoUrl) {
@@ -186,8 +193,7 @@ export default function PostMemePage() {
       if (data.error) {
         setError(data.error);
       } else {
-        console.log('data.file_id', data.file_name);
-        setFileId(data.file_name); // Сохраняем file_id
+        setFileName(data.file_name); // Сохраняем file_id
         setIsSubmitedVideo(true); // Делаем видео отправленным
         setCurrentStep(2);
       }
@@ -223,10 +229,8 @@ export default function PostMemePage() {
       if (data.error) {
         setError(data.error);
       } else {
-        console.log('data.file_id', data.file_name);
-        setFileId(data.file_name); // Сохраняем file_id
+        setFileName(data.file_name); // Сохраняем file_id
         setIsSubmitedVideo(true); // Делаем видео отправленным
-        setIsDownloaded(true);
       }
     } catch (err) {
       setError(t(LOCAL_TEXT.ERROR_LOADING_FILE));
@@ -236,8 +240,7 @@ export default function PostMemePage() {
   };
 
   const handleOverlayVideo = async () => {
-    console.log('fileId', fileId);
-    if (!fileId) {
+    if (!fileName) {
       setError(t(LOCAL_TEXT.NOT_FOUND_FILE_ID));
       return;
     }
@@ -246,9 +249,9 @@ export default function PostMemePage() {
 
     try {
       const data = {
-        file_name: fileId,
+        file_name: fileName,
         language: selectedLanguage,
-        overlay_type: 'ffmpeg', // Добавьте другие параметры, если нужно
+        overlay_type: 'ffmpeg',
       };
 
       const response = await axios.post(`${VIDEO_OVERLAY_API_URL}/overlay-video/`, data, {
@@ -354,6 +357,7 @@ export default function PostMemePage() {
             step={1}
             currentStep={currentStep}
             handleDone={() => setCurrentStep(2)}
+            handleReset={handleButtonReset}
             isProgress={isSubmitedVideo}
           >
             {!isSubmitedVideo ? (
@@ -411,7 +415,7 @@ export default function PostMemePage() {
             ) : (
               <Flex direction='column' gap='2'>
                 <Callout.Root>
-                  <Callout.Text style={{ color: 'white' }}>{'Meme.mp4'}</Callout.Text>
+                  <Callout.Text style={{ color: 'white' }}>{fileName}</Callout.Text>
                 </Callout.Root>
 
                 <Callout.Root
@@ -446,15 +450,16 @@ export default function PostMemePage() {
                 const downloadUrl = URL.createObjectURL(response1.data);
                 const link = document.createElement('a');
                 link.href = downloadUrl;
-                link.download = `${fileId}_overlayed.mp4`; // Задаём имя для скачиваемого файла
+                link.download = `${fileName}_overlayed.mp4`; // Задаём имя для скачиваемого файла
                 link.click(); // Имитируем клик по ссылке для начала скачивания
               }
               setLoading(false);
 
               setCurrentStep(3);
             }}
+            handleReset={handleButtonReset}
             isProgress={overlyedVideoUrl.length > 1 && !loading}
-            btnText={loading ? t(LOCAL_TEXT.DOWNLOADING) : t(LOCAL_TEXT.DOWNLOAD)}
+            btnText={t(LOCAL_TEXT.DOWNLOAD)}
           >
             <Flex direction='column' gap='4'>
               <Text>{t(LOCAL_TEXT.SELECT_LANGUAGE)}</Text>
@@ -463,14 +468,14 @@ export default function PostMemePage() {
                 <Select.Trigger />
                 <Select.Content>
                   <Select.Item value='EN'>{t(LOCAL_TEXT.ENGLISH)}</Select.Item>
-                  <Select.Item value='RU'>{t(LOCAL_TEXT.RUSSIAN)}</Select.Item>
+                  {/* <Select.Item value='RU'>{t(LOCAL_TEXT.RUSSIAN)}</Select.Item> */}
                 </Select.Content>
               </Select.Root>
               <YellowBorderButton
                 onClick={handleOverlayVideo}
                 size='3'
                 style={{ fontSize: '15px', textTransform: 'uppercase' }}
-                disabled={loading}
+                disabled={loading || isDownloaded}
               >
                 {loading ? t(LOCAL_TEXT.PROCESSING_VIDEO) : t(LOCAL_TEXT.PROCEED_VIDEO)}
               </YellowBorderButton>
@@ -481,8 +486,9 @@ export default function PostMemePage() {
             step={3}
             currentStep={currentStep}
             handleDone={() => setCurrentStep(4)}
+            handleReset={handleButtonReset}
           >
-            {fileId && !loading && (
+            {fileName && !loading && (
               <Flex direction='column' gap='4'>
                 <Text>{t(LOCAL_TEXT.COPY_DESCRIPTION_UPLOAD_VIDEO_YOUR_INSTAGRAM_ACCOUNT)}</Text>
                 <Callout.Root color='gray'>
@@ -503,6 +509,7 @@ export default function PostMemePage() {
             step={4}
             currentStep={currentStep}
             handleDone={() => {}}
+            handleReset={handleButtonReset}
             isProgress={false}
           >
             <Flex direction='column' gap='4'>

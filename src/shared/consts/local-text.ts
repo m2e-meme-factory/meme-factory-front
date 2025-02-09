@@ -119,6 +119,7 @@ export enum LOCAL_TEXT {
   PROVIDE_SOME_INFORMATION_ABOUT_YOUR_PROJECT = 'provide_some_information_about_your_project',
   PUT_YOUR_INVITE_LINK_INSTAGRAM_ACCOUNT_BIO = 'put_your_invite_link_instagram_account_bio',
   RE_CREATING_EVENT = 're_creating_event',
+  RESET = 'reset',
   REWARD_CLAIMED_SUCCESSFULLY = 'reward_claimed_successfully',
   RUSSIAN = 'russian',
   SAVE_CHANGES = 'save_changes',

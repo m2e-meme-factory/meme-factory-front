@@ -37,6 +37,7 @@ import VideoCard from '@shared/components/VideoCard';
 import { LOCAL_TEXT, ROUTES } from '@shared/consts';
 
 import styled from 'styled-components';
+import { COLOR_CONSTANT } from '@styles/color-constant';
 
 const VIDEO_OVERLAY_API_URL = 'https://video-api.egor-jan.tech';
 
@@ -358,6 +359,10 @@ export default function PostMemePage() {
                 <Box pt='3'>
                   <Tabs.Content value='web'>
                     <Flex direction='column' gap='2'>
+                      <Text size={'3'}>{t(LOCAL_TEXT.ENTER_LINK_VIDEO)}</Text>
+                      <Text size={'1'} style={{ color: `${COLOR_CONSTANT.PS}` }}>
+                        {t(LOCAL_TEXT.SERVICE_NOT_WORK_STABLY)}
+                      </Text>
                       <TextField.Root
                         size='3'
                         value={videoUrl}

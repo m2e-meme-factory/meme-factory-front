@@ -508,9 +508,11 @@ export default function PostMemePage() {
             text={`5. ${t(LOCAL_TEXT.COMPLETE_WAIT)}`}
             step={4}
             currentStep={currentStep}
-            handleDone={() => {}}
+            handleDone={() => {
+              navigate(ROUTES.PROFILE);
+            }}
             handleReset={handleButtonReset}
-            isProgress={false}
+            isProgress={true}
           >
             <Flex direction='column' gap='4'>
               <Callout.Root color='gray'>

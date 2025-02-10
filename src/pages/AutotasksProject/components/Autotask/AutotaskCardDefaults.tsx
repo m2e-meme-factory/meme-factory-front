@@ -102,72 +102,83 @@ const getCardContent = (
         </AccentButton>
       );
     case CATEGORY_TASKS.SHARE_IN_STORIES:
-      return isClaimed ? (
-        t(LOCAL_TEXT.THANKS_FOR_JOINING)
-      ) : (
-        <Flex direction='column' gap='2'>
-          <Flex justify='between' align='center'>
-            <Text>{t(LOCAL_TEXT.SHARE_STORY_YOUR_INSTAGRAM_ACCOUNT_INVITE_LINK)}</Text>
-            <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
+      return (
+        <>
+          {isClaimed && t(LOCAL_TEXT.THANKS_FOR_JOINING)}
+          <Flex direction='column' gap='2'>
+            <Flex justify='between' align='center'>
+              <Text>{t(LOCAL_TEXT.SHARE_STORY_YOUR_INSTAGRAM_ACCOUNT_INVITE_LINK)}</Text>
+              <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
+            </Flex>
+            {!isClaimed && (
+              <>
+                <Box position={'relative'} pb={'3'}>
+                  <TextField.Root
+                    ref={inputRef}
+                    size='3'
+                    mt='2'
+                    placeholder='Instagram url'
+                    onChange={(e) => {
+                      if (otherProps?.setTextValue) {
+                        otherProps.setTextValue(e.currentTarget.value.toString());
+                      }
+                    }}
+                    onBlur={otherProps?.handleBlur}
+                    onFocus={otherProps?.handleFocus}
+                  />
+                  <Box
+                    style={{
+                      position: 'absolute',
+                      bottom: '-4px',
+                      display: otherProps?.isValidUrl ? 'none' : 'unset',
+                      color: 'red',
+                      fontSize: '10px',
+                    }}
+                  >
+                    {t(LOCAL_TEXT.NOT_VALID_URL)}
+                  </Box>
+                </Box>
+                <AccentButton onClick={() => otherProps?.handleGoToLink(category)} size='4'>
+                  {t(LOCAL_TEXT.CLAIM)}
+                </AccentButton>
+              </>
+            )}
           </Flex>
-          <Box position={'relative'} pb={'3'}>
-            <TextField.Root
-              ref={inputRef}
-              size='3'
-              mt='2'
-              placeholder='Instagram url'
-              onChange={(e) => {
-                if (otherProps?.setTextValue) {
-                  otherProps.setTextValue(e.currentTarget.value.toString());
-                }
-              }}
-              onBlur={otherProps?.handleBlur}
-              onFocus={otherProps?.handleFocus}
-            />
-            <Box
-              style={{
-                position: 'absolute',
-                bottom: '-4px',
-                display: otherProps?.isValidUrl ? 'none' : 'unset',
-                color: 'red',
-                fontSize: '10px',
-              }}
-            >
-              {t(LOCAL_TEXT.NOT_VALID_URL)}
-            </Box>
-          </Box>
-          <AccentButton onClick={() => otherProps?.handleGoToLink(category)} size='4'>
-            {t(LOCAL_TEXT.CLAIM)}
-          </AccentButton>
-        </Flex>
+        </>
       );
     case CATEGORY_TASKS.ACCOUNT_BIO:
-      return isClaimed ? (
-        t(LOCAL_TEXT.THANKS_FOR_JOINING)
-      ) : (
-        <Flex direction='column' gap='2'>
-          <Flex justify='between' align='center'>
-            <Text>{t(LOCAL_TEXT.PUT_YOUR_INVITE_LINK_INSTAGRAM_ACCOUNT_BIO)}</Text>
-            <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
+      return (
+        <>
+          {isClaimed && t(LOCAL_TEXT.THANKS_FOR_JOINING)}
+
+          <Flex direction='column' gap='2'>
+            <Flex justify='between' align='center'>
+              <Text>{t(LOCAL_TEXT.PUT_YOUR_INVITE_LINK_INSTAGRAM_ACCOUNT_BIO)}</Text>
+              <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
+            </Flex>
+            {!isClaimed && (
+              <>
+                <Box position={'relative'} pb={'3'}>
+                  <TextField.Root ref={inputRef} size='3' mt='2' placeholder='Instagram url' />
+                  <Box
+                    style={{
+                      position: 'absolute',
+                      bottom: '-4px',
+                      display: otherProps?.isValidUrl ? 'none' : 'unset',
+                      color: 'red',
+                      fontSize: '10px',
+                    }}
+                  >
+                    {t(LOCAL_TEXT.NOT_VALID_URL)}
+                  </Box>
+                </Box>
+                <AccentButton onClick={() => otherProps?.handleGoToLink(category)} size='4'>
+                  {t(LOCAL_TEXT.CLAIM)}
+                </AccentButton>
+              </>
+            )}
           </Flex>
-          <Box position={'relative'} pb={'3'}>
-            <TextField.Root ref={inputRef} size='3' mt='2' placeholder='Instagram url' />
-            <Box
-              style={{
-                position: 'absolute',
-                bottom: '-4px',
-                display: otherProps?.isValidUrl ? 'none' : 'unset',
-                color: 'red',
-                fontSize: '10px',
-              }}
-            >
-              {t(LOCAL_TEXT.NOT_VALID_URL)}
-            </Box>
-          </Box>
-          <AccentButton onClick={() => otherProps?.handleGoToLink(category)} size='4'>
-            {t(LOCAL_TEXT.CLAIM)}
-          </AccentButton>
-        </Flex>
+        </>
       );
 
     default:
@@ -279,7 +290,13 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   };
 
   const handleDialogOpen = () => {
-    if (!claimed) setModalVisible(true);
+    if (
+      !claimed ||
+      webUrl ||
+      category === CATEGORY_TASKS.SHARE_IN_STORIES ||
+      category === CATEGORY_TASKS.ACCOUNT_BIO
+    )
+      setModalVisible(true);
   };
 
   const handleClaimClick = (category: string) => {
@@ -306,15 +323,23 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
       }
     }
 
-    setTimeout(() => {
-      handleClaimClick(category);
-    }, 5000);
+    if (!claimed && !isApplied) {
+      setTimeout(() => {
+        handleClaimClick(category);
+      }, 5000);
+    } else {
+      setTimeout(() => handleDialogClose(), 500);
+    }
   };
 
   const handleClickLink = () => {
-    setTimeout(() => {
-      handleClaimClick(category);
-    }, 5000);
+    if (!claimed && !isApplied) {
+      setTimeout(() => {
+        handleClaimClick(category);
+      }, 5000);
+    } else {
+      setTimeout(() => handleDialogClose(), 500);
+    }
   };
 
   return (

@@ -148,7 +148,7 @@ const getCardContent = (
         <Flex direction='column' gap='2'>
           <Flex justify='between' align='center'>
             <Text>{t(LOCAL_TEXT.PUT_YOUR_INVITE_LINK_INSTAGRAM_ACCOUNT_BIO)}</Text>
-            <CopyableRef refLink='https://t.me/autotasks_bot' />
+            <CopyableRef refLink={otherProps?.refLink || 'https://t.me/autotasks_bot'} />
           </Flex>
           <Box position={'relative'} pb={'3'}>
             <TextField.Root ref={inputRef} size='3' mt='2' placeholder='Instagram url' />

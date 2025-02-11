@@ -1,4 +1,5 @@
 import { ReactNode, useEffect } from 'react';
+import './with-i18n';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';

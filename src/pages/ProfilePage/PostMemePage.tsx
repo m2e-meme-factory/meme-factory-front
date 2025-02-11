@@ -54,7 +54,7 @@ const ChangableButton = ({
 }) => {
   if (glow)
     return (
-      <GlowingButton disabled={disabled} size='4' onClick={onClick}>
+      <GlowingButton disabled={disabled} size='4' onClick={onClick} style={{ flex: '1' }}>
         {text}
       </GlowingButton>
     );
@@ -116,33 +116,44 @@ const Step = ({
           padding: '12px',
           borderRadius: '10px',
           border: '1px solid #1c1c1e',
-          backgroundColor: currentStep == step ? '#202020' : '',
+          backgroundColor: currentStep === step ? '#202020' : '',
         }}
       >
         <Flex direction='column' gap='4'>
           <Heading
             weight='regular'
             size='3'
-            style={{ color: currentStep == step ? '#fff' : 'var(--gray-10)' }}
+            style={{ color: currentStep === step ? '#fff' : 'var(--gray-10)' }}
           >
             {text}
           </Heading>
           {currentStep >= step && (
             <>
               {children}
-              <ChangableButton
-                disabled={isProgress === false}
-                glow={currentStep === step}
-                onClick={handleDone}
-                text={btnText || t(LOCAL_TEXT.DONE).toUpperCase()}
-              />
-              {handleReset && (isProgress === true || currentStep > 2) && (
+              <Flex gap={'2'}>
                 <ChangableButton
+                  disabled={isProgress === false}
                   glow={currentStep === step}
-                  onClick={handleReset}
-                  text={t(LOCAL_TEXT.RESET).toUpperCase()}
+                  onClick={handleDone}
+                  text={btnText || t(LOCAL_TEXT.NEXT).toUpperCase()}
                 />
-              )}
+                {handleReset &&
+                  (isProgress === true || currentStep > 2) &&
+                  currentStep === step && (
+                    <YellowBorderButton
+                      onClick={handleReset}
+                      size='3'
+                      style={{
+                        flex: '1',
+                        height: '48px',
+                        fontSize: '15px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {t(LOCAL_TEXT.RESET).toUpperCase()}
+                    </YellowBorderButton>
+                  )}
+              </Flex>
             </>
           )}
         </Flex>
@@ -161,6 +172,7 @@ export default function PostMemePage() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState('EN');
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [overlyedVideoUrl, setOverlyedVideoUrl] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -173,6 +185,7 @@ export default function PostMemePage() {
     setFileName(null);
     setSelectedLanguage('EN');
     setIsDownloaded(false);
+    setOverlyedVideoUrl('');
   };
 
   const handleUploadVideoUrl = async () => {
@@ -274,7 +287,7 @@ export default function PostMemePage() {
     }
   };
 
-  const [copyText, setCopyText] = useState('Copy');
+  const [copyText, setCopyText] = useState(LOCAL_TEXT.COPY);
 
   const handleCopyText = (text: string) => {
     const textToCopy = text;
@@ -284,10 +297,10 @@ export default function PostMemePage() {
         .writeText(textToCopy)
         .then(() => {
           showSuccessMessage(t(LOCAL_TEXT.COPIED));
-          setCopyText(t(LOCAL_TEXT.COPIED));
+          setCopyText(LOCAL_TEXT.COPIED);
 
           setTimeout(() => {
-            setCopyText(t(LOCAL_TEXT.COPY));
+            setCopyText(LOCAL_TEXT.COPY);
           }, 5000);
         })
         .catch(() => {
@@ -307,10 +320,10 @@ export default function PostMemePage() {
     try {
       document.execCommand('copy');
       showSuccessMessage(t(LOCAL_TEXT.COPIED));
-      setCopyText(t(LOCAL_TEXT.COPIED));
+      setCopyText(LOCAL_TEXT.COPIED);
 
       setTimeout(() => {
-        setCopyText(t(LOCAL_TEXT.COPY));
+        setCopyText(LOCAL_TEXT.COPY);
       }, 5000);
     } catch (error) {
       console.error('Fallback copy failed.', error);
@@ -319,7 +332,6 @@ export default function PostMemePage() {
     document.body.removeChild(tempInput);
   };
 
-  const [overlyedVideoUrl, setOverlyedVideoUrl] = useState('');
   const WebApp = useWebApp();
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -499,7 +511,7 @@ export default function PostMemePage() {
                   color='gray'
                   size='3'
                 >
-                  {copyText}
+                  {t(copyText)}
                 </Button>
               </Flex>
             )}

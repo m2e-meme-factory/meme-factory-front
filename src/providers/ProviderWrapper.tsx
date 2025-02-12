@@ -4,8 +4,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { useExpand, useWebApp, WebAppProvider } from '@vkruglikov/react-telegram-web-app';
 
-import { store } from '@shared/utils/redux/store';
 import './with-i18n';
+import { MixPanelProvider } from './provider-mixpanel';
+
+import { store } from '@shared/utils/redux/store';
 
 const queryClient = new QueryClient();
 const manifestUrl =
@@ -35,7 +37,9 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
         }}
       >
         <Provider store={store}>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <MixPanelProvider>{children}</MixPanelProvider>
+          </QueryClientProvider>
         </Provider>
       </WebAppProvider>
     </TonConnectUIProvider>

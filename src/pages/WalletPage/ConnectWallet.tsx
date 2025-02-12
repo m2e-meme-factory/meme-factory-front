@@ -3,19 +3,24 @@ import { Grid, Card, Flex, Button, Box, AlertDialog } from '@radix-ui/themes';
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { useTranslation } from 'react-i18next';
 
+import { useMixpanelContext } from '@providers/provider-mixpanel';
+
 import { connectWallet } from '@shared/utils/api/requests/ton/connect';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import { LOCAL_TEXT } from '@shared/consts';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 export default function ConnectWallet({ onSuccess }: { onSuccess?: (value: string) => void }) {
   const { t } = useTranslation();
   const [tonConnectUI] = useTonConnectUI();
   const [walletAddress, setWalletAddress] = useState<string>();
+  const { trackEvent } = useMixpanelContext();
 
   useEffect(() => {
     const unsubscribe = tonConnectUI.onStatusChange((wallet) => {
       if (wallet) {
         setWalletAddress(wallet.account.address);
+        trackEvent(MIXPANEL_EVENT.WALLET_CONNECTED);
       } else {
         setWalletAddress('');
       }

@@ -14,6 +14,8 @@ import { Sheet } from 'react-modal-sheet';
 import { CaretRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
+import { useMixpanelContext } from '@providers/provider-mixpanel';
+
 import ConnectWallet from '../../../WalletPage/ConnectWallet';
 import CopyableRef from '../CopyableField/CopyableRef';
 
@@ -29,6 +31,7 @@ import { CATEGORY_TASKS } from '@shared/consts/category-tasks';
 import styles from '@shared/components/SocialsLink/SocialsLink.module.css';
 import '@styles/CustomSheetsStyles.css';
 import { REGEX } from '@shared/consts/regex';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 type AutotaskCateory =
   | typeof CATEGORY_TASKS.WALLET
@@ -209,6 +212,7 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
   webUrl,
 }) => {
   const { t, i18n } = useTranslation();
+  const { trackEvent } = useMixpanelContext();
 
   type CardStyles = Record<LOCAL_TEXT.APPLIED | LOCAL_TEXT.CLIMED | LOCAL_TEXT.UNSTARTED, string>;
   const cardStyles: CardStyles = useMemo(() => {
@@ -297,10 +301,12 @@ const AutotaskCardDefaults: FC<AutotaskProps> = ({
       category === CATEGORY_TASKS.ACCOUNT_BIO
     )
       setModalVisible(true);
+    trackEvent(MIXPANEL_EVENT.TASK_OPEN, { task: category });
   };
 
   const handleClaimClick = (category: string) => {
     markTaskCompleted(category);
+    trackEvent(MIXPANEL_EVENT.TASK_COMPLITED, { task: category });
     if (category !== CATEGORY_TASKS.CHECKIN) {
       setTimeout(() => handleDialogClose(), 500);
     }

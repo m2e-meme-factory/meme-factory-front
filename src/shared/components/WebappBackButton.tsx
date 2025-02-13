@@ -1,26 +1,35 @@
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+
+import { ROUTES } from '@shared/consts';
 
 const WebappBackButton = () => {
   const webapp = useWebApp();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  webapp.ready();
 
   const handleBack = useCallback(() => {
-    navigate(-1);
+    navigate(ROUTES.PROFILE);
     webapp.BackButton.hide();
   }, [navigate, webapp]);
 
   useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
+    if (location.pathname !== ROUTES.PROFILE) {
+      webapp.BackButton.show();
+    } else {
+      webapp.BackButton.hide();
+    }
+
     webapp.onEvent('backButtonClicked', handleBack);
 
     return () => {
       webapp.offEvent('backButtonClicked', handleBack);
       webapp.BackButton.hide();
     };
-  }, [handleBack, webapp]);
+  }, [handleBack, location.pathname, webapp]);
 
   return <></>;
 };

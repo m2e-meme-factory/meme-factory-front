@@ -1,5 +1,5 @@
 import { Button, Card, Flex, Heading, Skeleton, Text } from '@radix-ui/themes';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronRightIcon, MagnifyingGlassIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetProject } from '../../shared/utils/api/hooks/project/useGetProject';
@@ -10,7 +10,6 @@ import Loading from '../../shared/components/Loading';
 import FreelancersStats from './components/FreelancersStats';
 import PendingApplications from './components/PendingApplications';
 import { useGetTotalSpending } from '../../shared/utils/api/hooks/project/useGetTotalSpending';
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 const ProjectDetailsPage = () => {
   const dispatch = useDispatch();
@@ -21,24 +20,6 @@ const ProjectDetailsPage = () => {
     useGetTotalSpending(id);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [totalSpendings, setTotalSpendings] = useState<number>();
-
-  const webapp = useWebApp();
-
-  const handleBack = useCallback(() => {
-    navigate(-1);
-    webapp.BackButton.hide();
-  }, [navigate, webapp]);
-
-  useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
-    webapp.onEvent('backButtonClicked', handleBack);
-
-    return () => {
-      webapp.offEvent('backButtonClicked', handleBack);
-      webapp.BackButton.hide();
-    };
-  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (totalSpendingsResponse) {

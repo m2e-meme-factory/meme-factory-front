@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Box } from '@radix-ui/themes';
 
 import NavigationMenu from './NavigationMenu';
+import WebappBackButton from './WebappBackButton';
 
 import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
 import { MixPanelProvider } from '@providers/provider-mixpanel';
@@ -11,6 +12,7 @@ const PageWrapper = (props: PropsWithChildren) => {
   const isMobile = isMobileDevice();
   return (
     <MixPanelProvider>
+      <WebappBackButton />
       <Box
         style={{
           marginTop: isMobile ? '10vh' : 'unset',

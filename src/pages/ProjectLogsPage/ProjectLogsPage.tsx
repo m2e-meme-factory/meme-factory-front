@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Button, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes';
 import { PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CreateEventDto, Event, Project, ProjectProgress } from 'api';
+
 import { EventType, getEventType } from '@shared/utils/helpers/getEventType';
 import LogMessage from './components/LogMessage';
 import { useGetProgress } from '@shared/utils/api/hooks/project/useGetProjectProgress';
 import { useCreateEvent } from '@shared/utils/api/hooks/event/useCreateEvent';
-import { useSelector } from 'react-redux';
 import { RootState } from '@shared/utils/redux/store';
 import { showErrorMessage } from '@shared/utils/helpers/notify';
 import Loading from '@shared/components/Loading';
 import { Role } from '@shared/consts/userRoles';
 import { useGetProject } from '@shared/utils/api/hooks/project/useGetProject';
 import { shortenString } from '@shared/utils/helpers/shortenString';
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { useTranslation } from 'react-i18next';
 import { LOCAL_TEXT } from '@shared/consts';
 
 const ProjectLogsPage = () => {
@@ -39,23 +39,6 @@ const ProjectLogsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const webapp = useWebApp();
-
-  const handleBack = useCallback(() => {
-    navigate(-1);
-    webapp.BackButton.hide();
-  }, [navigate, webapp]);
-
-  useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
-    webapp.onEvent('backButtonClicked', handleBack);
-
-    return () => {
-      webapp.offEvent('backButtonClicked', handleBack);
-      webapp.BackButton.hide();
-    };
-  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (projectResponse) {

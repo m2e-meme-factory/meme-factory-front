@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretRightIcon } from '@radix-ui/react-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Grid, Heading, Flex, Box, Text } from '@radix-ui/themes';
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 import { useTonConnectUI, useTonWallet } from '@tonconnect/ui-react';
 import { useTranslation } from 'react-i18next';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
@@ -44,24 +43,7 @@ export default function ProfilePage() {
   const [swiperInstance, setSwiperInstance] = useState<SwiperClass | null>(null);
   const [indexSlideshow, setIndexSlideshow] = useState(0);
 
-  const webapp = useWebApp();
   const isRu = i18n.language === 'ru';
-
-  const handleBack = useCallback(() => {
-    navigate(-1);
-    webapp.BackButton.hide();
-  }, [navigate, webapp]);
-
-  useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
-    webapp.onEvent('backButtonClicked', handleBack);
-
-    return () => {
-      webapp.offEvent('backButtonClicked', handleBack);
-      webapp.BackButton.hide();
-    };
-  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (userDataResponse) {

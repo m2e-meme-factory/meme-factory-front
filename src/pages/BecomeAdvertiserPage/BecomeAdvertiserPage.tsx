@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Flex, Heading, TextArea, Text, Button, Box } from '@radix-ui/themes';
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
+
 import { useTranslation } from 'react-i18next';
 
 import { showSuccessMessage } from '@shared/utils/helpers/notify';
@@ -11,23 +11,6 @@ const BecomeAdvertiserPage = () => {
   const { t } = useTranslation();
   const [textareaInput, setTextareaInput] = React.useState('');
   const navigate = useNavigate();
-  const webapp = useWebApp();
-
-  const handleBack = useCallback(() => {
-    navigate(-1);
-    webapp.BackButton.hide();
-  }, [navigate, webapp]);
-
-  useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
-    webapp.onEvent('backButtonClicked', handleBack);
-
-    return () => {
-      webapp.offEvent('backButtonClicked', handleBack);
-      webapp.BackButton.hide();
-    };
-  }, [handleBack, webapp]);
 
   return (
     <Box m='4'>

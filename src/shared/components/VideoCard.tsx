@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Card } from '@radix-ui/themes';
 
+import { useMixpanelContext } from '@providers/provider-mixpanel';
+
 import useAutoTasks from '@pages/ProfilePage/useAutoTasks';
 
 import styled from 'styled-components';
 import { CATEGORY_TASKS } from '@shared/consts/category-tasks';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 interface VideoCardProps {
   videoSrc: string; // URL видео
@@ -48,6 +51,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const { handleMarkTaskAsCompleted } = useAutoTasks();
+  const { trackEvent } = useMixpanelContext();
 
   const handlePlay = () => {
     setIsPlaying(true); // Меняем состояние, чтобы заменить превью на видео
@@ -91,6 +95,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
           src={videoSrc}
           onEnded={() => {
             handleMarkTaskAsCompleted(CATEGORY_TASKS.WATCH_START_VIDEO);
+            trackEvent(MIXPANEL_EVENT.VIDEO_WATCHED);
             setIsPlaying(false);
           }}
           style={{

@@ -38,6 +38,8 @@ import { LOCAL_TEXT, ROUTES } from '@shared/consts';
 
 import styled from 'styled-components';
 import { COLOR_CONSTANT } from '@styles/color-constant';
+import { useMixpanelContext } from '@providers/provider-mixpanel';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 const VIDEO_OVERLAY_API_URL = 'https://video-api.egor-jan.tech';
 
@@ -173,6 +175,7 @@ export default function PostMemePage() {
   const [selectedLanguage, setSelectedLanguage] = useState('EN');
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [overlyedVideoUrl, setOverlyedVideoUrl] = useState('');
+  const { trackEvent } = useMixpanelContext();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -280,6 +283,7 @@ export default function PostMemePage() {
       setOverlyedVideoUrl(url);
 
       setIsDownloaded(true);
+      trackEvent(MIXPANEL_EVENT.VIDEO_UPLOADED);
     } catch (err) {
       setError(t(LOCAL_TEXT.ERROR_PROCESSING_VIDEO));
     } finally {
@@ -465,6 +469,7 @@ export default function PostMemePage() {
                 link.download = `${fileName}_overlayed.mp4`; // Задаём имя для скачиваемого файла
                 link.click(); // Имитируем клик по ссылке для начала скачивания
               }
+              trackEvent(MIXPANEL_EVENT.VIDEO_DOWNLOADED);
               setLoading(false);
 
               setCurrentStep(3);

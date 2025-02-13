@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import { NftCard } from './NftCard';
 
+import { useMixpanelContext } from '@providers/provider-mixpanel';
+
 import YellowBorderButton from '@shared/components/Buttons/YellowBorderButton';
 import { ResponsibleImage } from '@shared/components/ResponsibleImage';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
@@ -13,6 +15,7 @@ import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import { formatNumberWithSpaces } from '@shared/utils/helpers/formatNumbers';
 
 import { LOCAL_TEXT } from '@shared/consts';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 export const NftCardItem = ({
   nft,
@@ -31,6 +34,7 @@ export const NftCardItem = ({
 }) => {
   const { t } = useTranslation();
   const [isModalVisible, setModalVisible] = useState(false);
+  const { trackEvent } = useMixpanelContext();
 
   const handleDialogClose = () => {
     setModalVisible(false);
@@ -38,11 +42,13 @@ export const NftCardItem = ({
 
   const handleDialogOpen = () => {
     setModalVisible(true);
+    trackEvent(MIXPANEL_EVENT.PRE_SALE_CLICKED, { planSeqno: index });
   };
 
   const handleVerify = (value: number, planSeqno: number) => {
     handleDialogClose();
     handleBuy(value, planSeqno);
+    trackEvent(MIXPANEL_EVENT.BUY_TOKENS_CLICKED, { planSeqno: planSeqno });
   };
 
   return (

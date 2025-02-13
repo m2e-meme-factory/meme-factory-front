@@ -1,15 +1,17 @@
 import { ReactNode, useEffect } from 'react';
-import './with-i18n';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { useExpand, useWebApp, WebAppProvider } from '@vkruglikov/react-telegram-web-app';
 
+import './with-i18n';
+import { MixPanelProvider } from './provider-mixpanel';
+
 import { store } from '@shared/utils/redux/store';
-import { env } from '@shared/consts/env';
 
 const queryClient = new QueryClient();
-const manifestUrl = `${env.baseUrl}/uploads/files/3477b352-6cf7-4967-9b1f-fe96fc925753_tonconnect-manifest.json`;
+const manifestUrl =
+  'https://api.meme-factory.site/uploads/files/3477b352-6cf7-4967-9b1f-fe96fc925753_tonconnect-manifest.json';
 
 const ProviderWrapper = ({ children }: { children: ReactNode }) => {
   const [isExpanded, expand] = useExpand();
@@ -35,7 +37,9 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
         }}
       >
         <Provider store={store}>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <MixPanelProvider>{children}</MixPanelProvider>
+          </QueryClientProvider>
         </Provider>
       </WebAppProvider>
     </TonConnectUIProvider>

@@ -19,6 +19,8 @@ import { useWebApp } from '@vkruglikov/react-telegram-web-app';
 
 import { CARD_CONSTANT } from './cards-constant';
 
+import { useMixpanelContext } from '@providers/provider-mixpanel';
+
 import { Header } from '@widgets/header';
 
 import { useGetTransactionsSumById } from '@entities/transactions';
@@ -35,6 +37,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 
 import { COLOR_CONSTANT } from '@styles/color-constant';
 import { RADIUS_CONSTANT } from '@styles/radius-constant';
+import { MIXPANEL_EVENT, MIXPANEL_PAGE } from '@shared/consts/mixpanel-event';
 
 export default function Friends() {
   const { t } = useTranslation();
@@ -47,6 +50,7 @@ export default function Friends() {
   const [copied, setCopied] = useState(false);
 
   const webApp = useWebApp();
+  const { trackEvent } = useMixpanelContext();
 
   const handleCopyText = (text: string) => {
     const textToCopy = text;
@@ -95,6 +99,7 @@ export default function Friends() {
 
   const handleInviteClick = () => {
     handleCopyText(refData?.refLink || '');
+    trackEvent(MIXPANEL_EVENT.INVITE_FRIEND_COPY_LINK);
   };
 
   const handleShareClick = () => {
@@ -103,6 +108,7 @@ export default function Friends() {
       t(LOCAL_TEXT.USE_MY_INVITE_LINK_JOIN_FUN);
     const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(message)}&url=${encodeURIComponent(refData?.refLink || '')}`;
     webApp.openTelegramLink(shareUrl);
+    trackEvent(MIXPANEL_EVENT.INVITE_FRIEND_CLICKED);
   };
 
   useEffect(() => {

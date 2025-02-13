@@ -7,7 +7,6 @@ import UnauthorizedPage from '@pages/UnauthorizedPage/UnauthorizedPage';
 import AllTasks from '@pages/ProfilePage/AllTasks';
 import PostMemePage from '@pages/ProfilePage/PostMemePage';
 import Friends from '@pages/FriendsPage/Friends';
-import CreateProjectPage from '@pages/CreateProjectPage/CreateProjectPage';
 import BecomeAdvertiserPage from '@pages/BecomeAdvertiserPage/BecomeAdvertiserPage';
 import ProfilePage from '@pages/ProfilePage/ProfilePage';
 import ProjectLogsPage from '@pages/ProjectLogsPage/ProjectLogsPage';
@@ -29,11 +28,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.FRIENDS,
         element: <Friends />,
-      },
-      {
-        path: ROUTES.CREATE_PROJECT,
-        element: <CreateProjectPage />,
-      },
+      },      
       {
         path: ROUTES.BECOME_ADVERTISER,
         element: <BecomeAdvertiserPage />,

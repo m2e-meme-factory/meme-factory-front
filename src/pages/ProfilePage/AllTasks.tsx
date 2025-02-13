@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Text, Card, Heading, Flex, Box, ScrollArea, Theme, Badge } from '@radix-ui/themes';
@@ -84,22 +84,6 @@ export default function AllTasks() {
   const webapp = useWebApp();
   const isRu = i18n.language === 'ru';
   const isMobile = isMobileDevice();
-
-  const handleBack = useCallback(() => {
-    navigate(-1);
-    webapp.BackButton.hide();
-  }, [navigate, webapp]);
-
-  useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
-    webapp.onEvent('backButtonClicked', handleBack);
-
-    return () => {
-      webapp.offEvent('backButtonClicked', handleBack);
-      webapp.BackButton.hide();
-    };
-  }, [handleBack, webapp]);
 
   useEffect(() => {
     if (userDataResponse) {

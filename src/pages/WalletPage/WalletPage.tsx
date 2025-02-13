@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { Header } from '@widgets/header';
 
 import { connectWallet } from '@shared/utils/api/requests/ton/connect';
-import WebappBackButton from '@shared/components/WebappBackButton';
 import { RootState } from '@shared/utils/redux/store';
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
 import { LOCAL_TEXT } from '@shared/consts';
@@ -68,8 +67,6 @@ export default function WalletPage() {
         height='100%'
         style={{ paddingBottom: '12vh' }}
       >
-        <WebappBackButton />
-
         <Box
           style={{
             borderRadius: '10px',

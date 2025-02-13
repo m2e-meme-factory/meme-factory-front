@@ -7,10 +7,12 @@ import {
   useEffect,
   useMemo,
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import mixpanel from 'mixpanel-browser';
 
 import { useAuthMe } from '@shared/utils/api/hooks/auth/useAuthMe';
 import { env } from '@shared/consts/env';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 interface MixPanelActionsType {
   trackEvent: (eventName: string, properties?: {}) => void;
@@ -23,6 +25,7 @@ export const MixPanelProvider: FC<PropsWithChildren> = ({ children }) => {
   const tokenMixpanel = env.tokenMixpanel;
 
   const telegramId = userDataResponse?.telegramId;
+  const location = useLocation();
 
   useEffect(() => {
     if (telegramId) {
@@ -33,7 +36,7 @@ export const MixPanelProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const trackEvent = useCallback(
     (eventName: string, properties = {}) => {
-      if (mixpanel) {
+      if (telegramId && mixpanel.get_distinct_id()) {
         mixpanel.track(eventName, {
           ...properties,
           telegramId,
@@ -42,6 +45,10 @@ export const MixPanelProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [telegramId]
   );
+
+  useEffect(() => {
+    trackEvent(MIXPANEL_EVENT.PAGE_VIEWED, { path: location.pathname });
+  }, [location.pathname, trackEvent]);
 
   const actions = useMemo(() => {
     return {

@@ -26,7 +26,6 @@ import { Header } from '@widgets/header';
 import { useGetTransactionsSumById } from '@entities/transactions';
 
 import GlowingButton from '@shared/components/Buttons/GlowingButton';
-import WebappBackButton from '@shared/components/WebappBackButton';
 import HandshakeAnimated from '@shared/components/LottieIcons/Handshake/HandshakeAnimated';
 
 import { RootState } from '@shared/utils/redux/store';
@@ -37,7 +36,7 @@ import { LOCAL_TEXT } from '@shared/consts';
 
 import { COLOR_CONSTANT } from '@styles/color-constant';
 import { RADIUS_CONSTANT } from '@styles/radius-constant';
-import { MIXPANEL_EVENT, MIXPANEL_PAGE } from '@shared/consts/mixpanel-event';
+import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
 export default function Friends() {
   const { t } = useTranslation();
@@ -124,7 +123,6 @@ export default function Friends() {
           <Header />
         </Box>
 
-        <WebappBackButton />
         <Flex direction='column' gap='5' pl='4' pr='4' pb='8'>
           <Box
             pb='2'

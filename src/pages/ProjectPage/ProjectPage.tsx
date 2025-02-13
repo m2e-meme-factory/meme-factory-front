@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@radix-ui/themes';
+import { InfoCircledIcon, Pencil2Icon } from '@radix-ui/react-icons';
+
+import PreProjectPage, { getSeenProjectGuide } from './PreProjectPage';
+import ProjectOverivew from './ProjectOverivew';
+import ProjectHistory from '../ProjectHistory/ProjectHistory';
+import ProjectTasks from './ProjectTasks';
 
 import { useGetProject } from '@shared/utils/api/hooks/project/useGetProject';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -8,20 +14,9 @@ import { RootState } from '@shared/utils/redux/store';
 import Loading from '@shared/components/Loading';
 import { setProject } from '@shared/utils/redux/project/projectSlice';
 import { Project, ProjectProgress } from 'api';
-
 import { useGetProgress } from '@shared/utils/api/hooks/project/useGetProjectProgress';
-
 import { Role } from '@shared/consts/userRoles';
-
-import { useWebApp } from '@vkruglikov/react-telegram-web-app';
-import { InfoCircledIcon, Pencil2Icon } from '@radix-ui/react-icons';
-
-import PreProjectPage, { getSeenProjectGuide } from './PreProjectPage';
-import ProjectOverivew from './ProjectOverivew';
-import ProjectTasks from './ProjectTasks';
 import SwipableTabs from '@shared/components/useSwipableTabs';
-
-import ProjectHistory from '../ProjectHistory/ProjectHistory';
 
 export type UserRoleInProject =
   | 'projectOwner'
@@ -43,24 +38,6 @@ const ProjectPage = () => {
   const [progress, setProgress] = useState<ProjectProgress>();
 
   const [tabIndex, setTabIndex] = useState(0);
-
-  const webapp = useWebApp();
-
-  const handleBack = useCallback(() => {
-    navigate(-1);
-    webapp.BackButton.hide();
-  }, [navigate, webapp]);
-
-  useEffect(() => {
-    webapp.ready();
-    webapp.BackButton.show();
-    webapp.onEvent('backButtonClicked', handleBack);
-
-    return () => {
-      webapp.offEvent('backButtonClicked', handleBack);
-      webapp.BackButton.hide();
-    };
-  }, [handleBack, webapp]);
 
   const user = useSelector((state: RootState) => state.user.user);
 

@@ -5,7 +5,6 @@ import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { useExpand, useWebApp, WebAppProvider } from '@vkruglikov/react-telegram-web-app';
 
 import './with-i18n';
-import { MixPanelProvider } from './provider-mixpanel';
 
 import { store } from '@shared/utils/redux/store';
 
@@ -37,9 +36,7 @@ const ProviderWrapper = ({ children }: { children: ReactNode }) => {
         }}
       >
         <Provider store={store}>
-          <QueryClientProvider client={queryClient}>
-            <MixPanelProvider>{children}</MixPanelProvider>
-          </QueryClientProvider>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
         </Provider>
       </WebAppProvider>
     </TonConnectUIProvider>

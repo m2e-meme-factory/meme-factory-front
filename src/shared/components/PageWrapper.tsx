@@ -5,29 +5,32 @@ import { Box } from '@radix-ui/themes';
 import NavigationMenu from './NavigationMenu';
 
 import { isMobileDevice } from '@shared/utils/helpers/is-mobile-device';
+import { MixPanelProvider } from '@providers/provider-mixpanel';
 
 const PageWrapper = (props: PropsWithChildren) => {
   const isMobile = isMobileDevice();
   return (
-    <Box
-      style={{
-        marginTop: isMobile ? '10vh' : 'unset',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100dvh',
-        overflow: 'hidden',
-      }}
-    >
+    <MixPanelProvider>
       <Box
         style={{
-          height: isMobile ? '80vh' : '90vh',
-          overflowY: 'auto',
+          marginTop: isMobile ? '10vh' : 'unset',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100dvh',
+          overflow: 'hidden',
         }}
       >
-        <Outlet />
+        <Box
+          style={{
+            height: isMobile ? '80vh' : '90vh',
+            overflowY: 'auto',
+          }}
+        >
+          <Outlet />
+        </Box>
+        <NavigationMenu />
       </Box>
-      <NavigationMenu />
-    </Box>
+    </MixPanelProvider>
   );
 };
 

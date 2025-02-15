@@ -15,6 +15,7 @@ import { LOCAL_STORAGE_CONSTANTS } from '@shared/consts/local-storage-constants'
 
 export const Header = () => {
   const { i18n } = useTranslation();
+  const isMobile = isMobileDevice();
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -33,7 +34,7 @@ export const Header = () => {
   };
 
   return (
-    <Flex justify='between' align='center'>
+    <Flex justify='between' align='center' pt={isMobile ? '10vh' : 'unset'}>
       <Link
         style={{
           cursor: 'pointer',
@@ -59,7 +60,7 @@ export const Header = () => {
         <Select.Trigger variant='soft' color='bronze' radius='full' />
         <Select.Content
           color='gray'
-          style={isMobileDevice() ? { position: 'fixed', top: '10vh', zIndex: '1000' } : {}}
+          style={isMobile ? { position: 'fixed', top: '10vh', zIndex: '1000' } : {}}
         >
           <Select.Item value='en'>EN</Select.Item>
           <Select.Item value='ru'>RU</Select.Item>

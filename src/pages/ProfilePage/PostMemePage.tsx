@@ -369,39 +369,41 @@ export default function PostMemePage() {
           btnText={t(LOCAL_TEXT.DONE).toUpperCase()}
           isProgress={adType != null}
         >
-          <Box maxWidth="600px">
-            <RadioCards.Root defaultValue={adType || ""} onValueChange={(v) => setAdType(v as ("meme" | "alisher"))} columns={"2"}>
-              <RadioCards.Item value={"meme"}>
-                <Flex direction="column" width="100%" align="center">
-                  <Text weight="bold">Meme Factory</Text>
-                  <Text mb="2">Earn {" "}
-                  <Badge size='1' color='gold' variant='soft' radius='full'>
-                    XP
-                  </Badge>
-                  </Text>
-                  <Img
-                    src={`${process.env.PUBLIC_URL}/imgs/mf_logo.png`}
-                    alt="Meme Factory"
-                  />
-                </Flex>
-              </RadioCards.Item>
-              <RadioCards.Item value="alisher">
-                <Flex direction="column" width="100%" align="center">
-                  <Text weight="bold">ALISHER</Text>
-                  <Text mb="2">Earn {" "}
-                    <Badge size='1' color='green' variant='soft' radius='full'>
-                      ALISHER
-                    </Badge>
-                  </Text>
-                  <Img
-                    src={`${process.env.PUBLIC_URL}/imgs/alisher_logo.png`}
-                    alt="ALISHER"
-                  />
-
-                </Flex>
-              </RadioCards.Item>
-            </RadioCards.Root>
-          </Box>
+          {currentStep == 0 && (
+              <Box maxWidth="600px">
+                <RadioCards.Root defaultValue={adType || ""} onValueChange={(v) => setAdType(v as ("meme" | "alisher"))} columns={"2"}>
+                  <RadioCards.Item value={"meme"}>
+                    <Flex direction="column" width="100%" align="center">
+                      <Text weight="bold">Meme Factory</Text>
+                      <Text mb="2">Earn {" "}
+                      <Badge size='1' color='gold' variant='soft' radius='full'>
+                        XP
+                      </Badge>
+                      </Text>
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/imgs/mf_logo.png`}
+                        alt="Meme Factory"
+                      />
+                    </Flex>
+                  </RadioCards.Item>
+                  <RadioCards.Item value="alisher">
+                    <Flex direction="column" width="100%" align="center">
+                      <Text weight="bold">ALISHER</Text>
+                      <Text mb="2">Earn {" "}
+                        <Badge size='1' color='green' variant='soft' radius='full'>
+                          ALISHER
+                        </Badge>
+                      </Text>
+                      <Img
+                        src={`${process.env.PUBLIC_URL}/imgs/alisher_logo.png`}
+                        alt="ALISHER"
+                      />
+    
+                    </Flex>
+                  </RadioCards.Item>
+                </RadioCards.Root>
+              </Box>
+          )}
 
 
           {/* <VideoCard

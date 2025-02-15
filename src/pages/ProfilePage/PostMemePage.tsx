@@ -41,8 +41,8 @@ import { COLOR_CONSTANT } from '@styles/color-constant';
 import { useMixpanelContext } from '@providers/provider-mixpanel';
 import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
-// const VIDEO_OVERLAY_API_URL = 'https://video-api.egor-jan.tech';
-const VIDEO_OVERLAY_API_URL = 'http://127.0.0.1:8000';
+const VIDEO_OVERLAY_API_URL = 'https://video-api.egor-jan.tech';
+// const VIDEO_OVERLAY_API_URL = 'http://127.0.0.1:8000';
 
 const ChangableButton = ({
   text,

@@ -15,6 +15,7 @@ import {
   Grid,
   Theme,
   ThickCheckIcon,
+  RadioCards,
 } from '@radix-ui/themes';
 import { Sheet } from 'react-modal-sheet';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +41,8 @@ import { COLOR_CONSTANT } from '@styles/color-constant';
 import { useMixpanelContext } from '@providers/provider-mixpanel';
 import { MIXPANEL_EVENT } from '@shared/consts/mixpanel-event';
 
-const VIDEO_OVERLAY_API_URL = 'https://video-api.egor-jan.tech';
+// const VIDEO_OVERLAY_API_URL = 'https://video-api.egor-jan.tech';
+const VIDEO_OVERLAY_API_URL = 'http://127.0.0.1:8000';
 
 const ChangableButton = ({
   text,
@@ -62,8 +64,8 @@ const ChangableButton = ({
 
   return <></>;
 };
-
-const NftCard = styled(SolidCard)<{ glowing: boolean }>`
+ 
+const NftCard = styled(SolidCard) <{ glowing: boolean }>`
   min-height: 15vh;
   /* display: flex; */
   /* flex-direction: column; */
@@ -90,6 +92,11 @@ const NftCard = styled(SolidCard)<{ glowing: boolean }>`
     }
   }
 `;
+
+const Img = styled.img`
+  height: 12vh;
+  width: fit-content;
+`
 
 const Step = ({
   children,
@@ -167,6 +174,7 @@ export default function PostMemePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [adType, setAdType] = useState<"meme" | "alisher" | null>(null)
   const [isSubmitedVideo, setIsSubmitedVideo] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -267,6 +275,7 @@ export default function PostMemePage() {
         file_name: fileName,
         language: selectedLanguage,
         overlay_type: 'ffmpeg',
+        ad_type: adType?.toUpperCase() || 'MEME',
       };
 
       const response = await axios.post(`${VIDEO_OVERLAY_API_URL}/overlay-video/`, data, {
@@ -358,12 +367,48 @@ export default function PostMemePage() {
           currentStep={currentStep}
           handleDone={() => setCurrentStep(1)}
           btnText={t(LOCAL_TEXT.DONE).toUpperCase()}
+          isProgress={adType != null}
         >
-          <VideoCard
+          <Box maxWidth="600px">
+            <RadioCards.Root defaultValue={adType || ""} onValueChange={(v) => setAdType(v as ("meme" | "alisher"))} columns={"2"}>
+              <RadioCards.Item value={"meme"}>
+                <Flex direction="column" width="100%" align="center">
+                  <Text weight="bold">Meme Factory</Text>
+                  <Text mb="2">Earn {" "}
+                  <Badge size='1' color='gold' variant='soft' radius='full'>
+                    XP
+                  </Badge>
+                  </Text>
+                  <Img
+                    src={`${process.env.PUBLIC_URL}/imgs/mf_logo.png`}
+                    alt="Meme Factory"
+                  />
+                </Flex>
+              </RadioCards.Item>
+              <RadioCards.Item value="alisher">
+                <Flex direction="column" width="100%" align="center">
+                  <Text weight="bold">ALISHER</Text>
+                  <Text mb="2">Earn {" "}
+                    <Badge size='1' color='green' variant='soft' radius='full'>
+                      ALISHER
+                    </Badge>
+                  </Text>
+                  <Img
+                    src={`${process.env.PUBLIC_URL}/imgs/alisher_logo.png`}
+                    alt="ALISHER"
+                  />
+
+                </Flex>
+              </RadioCards.Item>
+            </RadioCards.Root>
+          </Box>
+
+
+          {/* <VideoCard
             videoSrc={process.env.PUBLIC_URL + '/video/about.mp4'}
             thumbnailSrc={process.env.PUBLIC_URL + '/imgs/thumbnail.png'}
             altText='Tutorial'
-          />
+          /> */}
         </Step>
         <Step
           text={`2. ${t(LOCAL_TEXT.UPLOAD_VIDEO)}`}
@@ -493,6 +538,11 @@ export default function PostMemePage() {
             >
               {loading ? t(LOCAL_TEXT.PROCESSING_VIDEO) : t(LOCAL_TEXT.PROCEED_VIDEO)}
             </YellowBorderButton>
+            <button onClick={() => {
+              setOverlyedVideoUrl("")
+              setCurrentStep(2)
+              setIsDownloaded(false)
+            }}>ads</button>
           </Flex>
         </Step>
         <Step

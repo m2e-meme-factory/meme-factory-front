@@ -540,11 +540,6 @@ export default function PostMemePage() {
             >
               {loading ? t(LOCAL_TEXT.PROCESSING_VIDEO) : t(LOCAL_TEXT.PROCEED_VIDEO)}
             </YellowBorderButton>
-            <button onClick={() => {
-              setOverlyedVideoUrl("")
-              setCurrentStep(2)
-              setIsDownloaded(false)
-            }}>ads</button>
           </Flex>
         </Step>
         <Step
